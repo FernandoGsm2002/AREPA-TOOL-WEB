@@ -1,6 +1,12 @@
 // Supabase Configuration
-const SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co'; // Reemplazar con tu URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0NjY1NjcsImV4cCI6MjA3OTA0MjU2N30.oXVYUjnSpDDQphLZJzglGaDSQTjuGzYgD-LMC5FwDHw'; // Reemplazar con tu key
+const SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0NjY1NjcsImV4cCI6MjA3OTA0MjU2N30.oXVYUjnSpDDQphLZJzglGaDSQTjuGzYgD-LMC5FwDHw';
+
+// Verificar que Supabase esté cargado
+if (typeof window.supabase === 'undefined') {
+    console.error('Supabase library not loaded!');
+    alert('Error: Supabase library not loaded. Please refresh the page.');
+}
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -10,17 +16,27 @@ let allUsers = [];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
-    await loadUsers();
-    await loadSessions();
-    await loadAuditLogs();
-    await updateStatistics();
+    console.log('Initializing AREPA-TOOL Admin Panel...');
+    console.log('Supabase URL:', SUPABASE_URL);
     
-    // Auto-refresh every 30 seconds
-    setInterval(async () => {
-        if (document.getElementById('users-section').style.display !== 'none') {
-            await loadUsers();
-        }
-    }, 30000);
+    try {
+        await loadUsers();
+        await loadSessions();
+        await loadAuditLogs();
+        await updateStatistics();
+        
+        console.log('Panel initialized successfully!');
+        
+        // Auto-refresh every 30 seconds
+        setInterval(async () => {
+            if (document.getElementById('users-section').style.display !== 'none') {
+                await loadUsers();
+            }
+        }, 30000);
+    } catch (error) {
+        console.error('Error initializing panel:', error);
+        alert('Error initializing panel. Check console for details.');
+    }
 });
 
 // Navigation
