@@ -1,0 +1,85 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.sidebar {
+    min-height: calc(100vh - 56px);
+    padding: 0;
+}
+
+.sidebar .list-group-item {
+    border: none;
+    border-radius: 0;
+    padding: 15px 20px;
+}
+
+.sidebar .list-group-item i {
+    margin-right: 10px;
+}
+
+.sidebar .list-group-item.active {
+    background-color: #0d6efd;
+    border-left: 4px solid #0a58ca;
+}
+
+.content-section {
+    padding: 20px;
+}
+
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.badge {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+}
+
+.status-badge {
+    min-width: 80px;
+    display: inline-block;
+    text-align: center;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.nav-tabs .nav-link {
+    color: #6c757d;
+}
+
+.nav-tabs .nav-link.active {
+    font-weight: 600;
+}
+
+.btn-action {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    margin: 0 2px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.spinner-border {
+    margin: 20px auto;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: auto;
+    }
+}
