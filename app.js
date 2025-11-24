@@ -16,7 +16,7 @@ let allUsers = [];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Initializing AREPA-TOOL Admin Panel...');
+    console.log('Initializing ArepaTool V1.0.1 Admin Panel...');
     console.log('Supabase URL:', SUPABASE_URL);
     
     try {
@@ -898,5 +898,275 @@ showSection = function(section) {
         case 'license':
             loadLicenseConfig();
             break;
+        case 'bypass':
+            loadBypassRegistrations();
+            break;
     }
 };
+
+
+// =====================================================
+// BYPASS REGISTRATIONS MANAGEMENT
+// =====================================================
+
+let bypassRegistrations = [];
+let bypassFilter = 'all';
+let bypassRealtimeChannel = null;
+
+async function loadBypassRegistrations() {
+    try {
+        const { data, error } = await supabase
+            .from('bypass_registrations')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        bypassRegistrations = data || [];
+        updateBypassCounts();
+        renderBypassTable();
+
+        // Iniciar realtime si no está activo
+        if (!bypassRealtimeChannel) {
+            subscribeToBypassChanges();
+        }
+    } catch (error) {
+        console.error('Error loading bypass registrations:', error);
+        document.getElementById('bypass-table-body').innerHTML = `
+            <tr><td colspan="7" class="text-center text-danger">Error loading data: ${error.message}</td></tr>
+        `;
+    }
+}
+
+function subscribeToBypassChanges() {
+    // Cancelar suscripción anterior si existe
+    if (bypassRealtimeChannel) {
+        supabase.removeChannel(bypassRealtimeChannel);
+    }
+
+    // Crear nueva suscripción
+    bypassRealtimeChannel = supabase
+        .channel('bypass_registrations_changes')
+        .on(
+            'postgres_changes',
+            {
+                event: '*',
+                schema: 'public',
+                table: 'bypass_registrations'
+            },
+            (payload) => {
+                console.log('Bypass registration change detected:', payload);
+                
+                // Actualizar la lista local
+                if (payload.eventType === 'INSERT') {
+                    bypassRegistrations.unshift(payload.new);
+                    showNotification('New bypass registration received!', 'info');
+                } else if (payload.eventType === 'UPDATE') {
+                    const index = bypassRegistrations.findIndex(r => r.id === payload.new.id);
+                    if (index !== -1) {
+                        bypassRegistrations[index] = payload.new;
+                    }
+                } else if (payload.eventType === 'DELETE') {
+                    bypassRegistrations = bypassRegistrations.filter(r => r.id !== payload.old.id);
+                }
+
+                updateBypassCounts();
+                renderBypassTable();
+            }
+        )
+        .subscribe();
+
+    console.log('Subscribed to bypass registrations realtime updates');
+}
+
+function updateBypassCounts() {
+    const counts = {
+        all: bypassRegistrations.length,
+        pending: bypassRegistrations.filter(r => r.status === 'pending').length,
+        approved: bypassRegistrations.filter(r => r.status === 'approved').length,
+        rejected: bypassRegistrations.filter(r => r.status === 'rejected').length
+    };
+
+    document.getElementById('bypass-count-all').textContent = counts.all;
+    document.getElementById('bypass-count-pending').textContent = counts.pending;
+    document.getElementById('bypass-count-approved').textContent = counts.approved;
+    document.getElementById('bypass-count-rejected').textContent = counts.rejected;
+
+    // Actualizar badge en sidebar
+    const badge = document.getElementById('bypass-pending-count');
+    if (counts.pending > 0) {
+        badge.textContent = counts.pending;
+        badge.style.display = 'inline';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function filterBypassRegistrations(status) {
+    bypassFilter = status;
+    
+    // Actualizar tabs activos
+    document.querySelectorAll('#bypass-section .nav-link').forEach(link => {
+        link.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    renderBypassTable();
+}
+
+function renderBypassTable() {
+    const tbody = document.getElementById('bypass-table-body');
+    
+    let filtered = bypassRegistrations;
+    if (bypassFilter !== 'all') {
+        filtered = bypassRegistrations.filter(r => r.status === bypassFilter);
+    }
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center">No registrations found</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(reg => {
+        const statusBadge = {
+            'pending': '<span class="badge bg-warning">Pending</span>',
+            'approved': '<span class="badge bg-success">Approved</span>',
+            'rejected': '<span class="badge bg-danger">Rejected</span>'
+        }[reg.status] || '<span class="badge bg-secondary">Unknown</span>';
+
+        const createdDate = new Date(reg.created_at).toLocaleString();
+        const updatedDate = new Date(reg.updated_at).toLocaleString();
+
+        return `
+            <tr>
+                <td><strong>${reg.serial_number}</strong></td>
+                <td>${reg.username}</td>
+                <td>${reg.user_email || '-'}</td>
+                <td>${statusBadge}</td>
+                <td>${createdDate}</td>
+                <td>${updatedDate}</td>
+                <td>
+                    ${reg.status === 'pending' ? `
+                        <button class="btn btn-sm btn-success me-1" onclick="approveBypass('${reg.id}')">
+                            <i class="bi bi-check-circle"></i> Approve
+                        </button>
+                        <button class="btn btn-sm btn-danger me-1" onclick="rejectBypass('${reg.id}')">
+                            <i class="bi bi-x-circle"></i> Reject
+                        </button>
+                    ` : ''}
+                    <button class="btn btn-sm btn-info me-1" onclick="viewBypassDetails('${reg.id}')">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteBypass('${reg.id}')">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+async function approveBypass(id) {
+    const notes = prompt('Enter approval notes (optional):');
+    if (notes === null) return; // User cancelled
+
+    try {
+        const { error } = await supabase
+            .from('bypass_registrations')
+            .update({
+                status: 'approved',
+                admin_notes: notes || 'Approved by admin',
+                approved_by: 'admin',
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', id);
+
+        if (error) throw error;
+
+        showNotification('Registration approved successfully!', 'success');
+    } catch (error) {
+        console.error('Error approving bypass:', error);
+        alert('Error approving registration: ' + error.message);
+    }
+}
+
+async function rejectBypass(id) {
+    const reason = prompt('Enter rejection reason:');
+    if (!reason) {
+        alert('Rejection reason is required');
+        return;
+    }
+
+    try {
+        const { error } = await supabase
+            .from('bypass_registrations')
+            .update({
+                status: 'rejected',
+                admin_notes: reason,
+                approved_by: 'admin',
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', id);
+
+        if (error) throw error;
+
+        showNotification('Registration rejected', 'warning');
+    } catch (error) {
+        console.error('Error rejecting bypass:', error);
+        alert('Error rejecting registration: ' + error.message);
+    }
+}
+
+async function deleteBypass(id) {
+    if (!confirm('Are you sure you want to delete this registration?')) return;
+
+    try {
+        const { error } = await supabase
+            .from('bypass_registrations')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+
+        showNotification('Registration deleted', 'info');
+    } catch (error) {
+        console.error('Error deleting bypass:', error);
+        alert('Error deleting registration: ' + error.message);
+    }
+}
+
+function viewBypassDetails(id) {
+    const reg = bypassRegistrations.find(r => r.id === id);
+    if (!reg) return;
+
+    const details = `
+Serial Number: ${reg.serial_number}
+Username: ${reg.username}
+Email: ${reg.user_email || 'N/A'}
+Status: ${reg.status.toUpperCase()}
+Admin Notes: ${reg.admin_notes || 'None'}
+Approved By: ${reg.approved_by || 'N/A'}
+Created: ${new Date(reg.created_at).toLocaleString()}
+Updated: ${new Date(reg.updated_at).toLocaleString()}
+Device Info: ${JSON.stringify(reg.device_info, null, 2)}
+    `;
+
+    alert(details);
+}
+
+function refreshBypassRegistrations() {
+    loadBypassRegistrations();
+}
+
+function showNotification(message, type = 'info') {
+    // Simple notification - you can enhance this with a toast library
+    console.log(`[${type.toUpperCase()}] ${message}`);
+    
+    // Optional: Show browser notification if permitted
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('ArepaTool V1.0.1 Admin', {
+            body: message,
+            icon: '/favicon.ico'
+        });
+    }
+}

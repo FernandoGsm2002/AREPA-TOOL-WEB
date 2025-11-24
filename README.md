@@ -97,7 +97,7 @@ O conecta tu repositorio de GitHub directamente en [vercel.com](https://vercel.c
 
 ## 📞 Soporte
 
-Para soporte técnico, contacta a LeoPE-GSM.COM
+Para soporte técnico, contacta al equipo de ArepaTool
 
 ---
 
