@@ -1,6 +1,12 @@
 {
   "version": 2,
   "name": "arepa-tool-admin",
+  "rewrites": [
+    {
+      "source": "/hide",
+      "destination": "/hide.html"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
