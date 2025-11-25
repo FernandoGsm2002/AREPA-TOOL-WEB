@@ -93,7 +93,6 @@ async function handlePlaceOrder(data, res) {
       .insert({
         username: username,
         email: email,
-        password_hash: password, // TODO: Implementar hash real
         status: 'active',
         subscription_end: subscription_end,
         dhru_order_id: orderid,
