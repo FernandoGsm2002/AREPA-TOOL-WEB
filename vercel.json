@@ -1,6 +1,8 @@
 {
   "version": 2,
   "name": "arepa-tool-admin",
+  "buildCommand": "echo 'No build needed'",
+  "outputDirectory": ".",
   "rewrites": [
     {
       "source": "/hide",
