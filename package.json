@@ -1,0 +1,16 @@
+{
+  "name": "arepa-tool-panel",
+  "version": "1.0.0",
+  "description": "AREPA Tool Panel with DHRU Integration",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site - no build needed'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

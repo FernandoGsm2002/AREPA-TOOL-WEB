@@ -1,0 +1,24 @@
+{
+  "name": "arepatool-dhru-integration",
+  "version": "1.0.0",
+  "description": "Integración entre ArepaTool y Dhru Fusion",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "logs": "vercel logs --follow",
+    "test": "node test-api.js"
+  },
+  "keywords": [
+    "arepatool",
+    "dhru",
+    "fusion",
+    "api"
+  ],
+  "author": "ArepaTool Team",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {}
+}
