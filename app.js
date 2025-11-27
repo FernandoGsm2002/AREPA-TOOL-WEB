@@ -272,23 +272,32 @@ async function sendPasswordResetEmail(userId) {
 
     try {
         console.log('Sending password reset to:', user.email);
-        console.log('Redirect URL:', `${window.location.origin}/reset-password`);
         
-        // Enviar email de recuperación usando Supabase Auth
-        // IMPORTANTE: redirectTo debe ser la URL completa sin .html
-        const { data, error } = await supabase.auth.resetPasswordForEmail(user.email, {
-            redirectTo: `${window.location.origin}/reset-password`
+        // Usar la API REST de Supabase directamente
+        // Esto asegura que use el template personalizado
+        const response = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_ANON_KEY
+            },
+            body: JSON.stringify({
+                email: user.email,
+                options: {
+                    redirectTo: `${window.location.origin}/reset-password`
+                }
+            })
         });
 
-        if (error) {
-            console.error('Supabase error:', error);
-            throw error;
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to send reset email');
         }
 
-        console.log('Password reset email sent successfully:', data);
+        console.log('Password reset email sent successfully');
 
         await logAudit(userId, 'password_reset_sent', `Password reset email sent to ${user.email}`);
-        showSuccess(`Password reset email sent to ${user.email}\n\nThe user will receive an email with a reset link that expires in 1 hour.`);
+        showSuccess(`✅ Password reset email sent to ${user.email}\n\nThe user will receive an email with a reset link that expires in 1 hour.`);
     } catch (error) {
         console.error('Error sending password reset:', error);
         showError('Failed to send password reset email: ' + error.message);
