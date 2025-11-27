@@ -271,15 +271,24 @@ async function sendPasswordResetEmail(userId) {
     }
 
     try {
+        console.log('Sending password reset to:', user.email);
+        console.log('Redirect URL:', `${window.location.origin}/reset-password`);
+        
         // Enviar email de recuperación usando Supabase Auth
+        // IMPORTANTE: redirectTo debe ser la URL completa sin .html
         const { data, error } = await supabase.auth.resetPasswordForEmail(user.email, {
-            redirectTo: `${window.location.origin}/reset-password.html`
+            redirectTo: `${window.location.origin}/reset-password`
         });
 
-        if (error) throw error;
+        if (error) {
+            console.error('Supabase error:', error);
+            throw error;
+        }
+
+        console.log('Password reset email sent successfully:', data);
 
         await logAudit(userId, 'password_reset_sent', `Password reset email sent to ${user.email}`);
-        showSuccess(`Password reset email sent to ${user.email}`);
+        showSuccess(`Password reset email sent to ${user.email}\n\nThe user will receive an email with a reset link that expires in 1 hour.`);
     } catch (error) {
         console.error('Error sending password reset:', error);
         showError('Failed to send password reset email: ' + error.message);
