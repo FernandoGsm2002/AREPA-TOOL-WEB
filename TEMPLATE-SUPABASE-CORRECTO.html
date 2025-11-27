@@ -1,0 +1,62 @@
+<!-- =====================================================
+     TEMPLATE CORRECTO PARA SUPABASE
+     =====================================================
+     COPIA TODO ESTE CONTENIDO Y PÉGALO EN SUPABASE
+     Reemplaza TODO el contenido actual
+     ===================================================== -->
+
+<h2>🔐 Recuperar Contraseña - AREPA-TOOL</h2>
+
+<p>Hola,</p>
+
+<p>Recibimos una solicitud para cambiar tu contraseña de <strong>AREPA-TOOL</strong>.</p>
+
+<p>Haz click en el siguiente botón para cambiar tu contraseña:</p>
+
+<p style="text-align: center; margin: 30px 0;">
+  <a href="{{ .SiteURL }}/reset-password?token={{ .Token }}&type=recovery" 
+     style="background-color: #667eea; 
+            color: white; 
+            padding: 14px 28px; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            display: inline-block; 
+            font-weight: bold;
+            font-size: 16px;">
+    🔑 Cambiar Contraseña
+  </a>
+</p>
+
+<p>O copia y pega este link en tu navegador:</p>
+
+<p style="background-color: #f5f5f5; 
+          padding: 12px; 
+          border-radius: 5px; 
+          word-break: break-all;
+          font-family: monospace;
+          font-size: 13px;">
+  {{ .SiteURL }}/reset-password?token={{ .Token }}&type=recovery
+</p>
+
+<div style="background-color: #fff3cd; 
+            border-left: 4px solid #ffc107; 
+            padding: 12px; 
+            margin: 20px 0;
+            border-radius: 4px;">
+  <p style="margin: 0; color: #856404;">
+    <strong>⚠️ Importante:</strong> Este link expira en <strong>1 hora</strong> y solo se puede usar una vez.
+  </p>
+</div>
+
+<p>Si no solicitaste este cambio, puedes ignorar este email de forma segura. Tu contraseña no será cambiada.</p>
+
+<hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+
+<p style="color: #666; font-size: 13px;">
+  Saludos,<br>
+  <strong>Equipo AREPA-TOOL</strong>
+</p>
+
+<p style="color: #999; font-size: 11px; margin-top: 20px;">
+  Este es un email automático, por favor no respondas a este mensaje.
+</p>
