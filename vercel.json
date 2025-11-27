@@ -7,6 +7,10 @@
     {
       "source": "/hide",
       "destination": "/hide.html"
+    },
+    {
+      "source": "/reset-password",
+      "destination": "/reset-password.html"
     }
   ],
   "headers": [
