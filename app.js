@@ -129,6 +129,9 @@ function displayUsers(users) {
                         <i class="bi bi-pause-circle"></i> Suspend
                     </button>
                 ` : ''}
+                <button class="btn btn-sm btn-info btn-action" onclick="sendPasswordResetEmail('${user.id}')" title="Send password reset email">
+                    <i class="bi bi-key"></i> Reset Password
+                </button>
             </td>
         </tr>
     `).join('');
@@ -249,6 +252,37 @@ async function saveUserChanges() {
     } catch (error) {
         console.error('Error updating user:', error);
         showError('Failed to update user');
+    }
+}
+
+// =====================================================
+// PASSWORD RESET MANAGEMENT
+// =====================================================
+
+async function sendPasswordResetEmail(userId) {
+    const user = allUsers.find(u => u.id === userId);
+    if (!user) {
+        showError('User not found');
+        return;
+    }
+
+    if (!confirm(`Send password reset email to ${user.email}?`)) {
+        return;
+    }
+
+    try {
+        // Enviar email de recuperación usando Supabase Auth
+        const { data, error } = await supabase.auth.resetPasswordForEmail(user.email, {
+            redirectTo: `${window.location.origin}/reset-password.html`
+        });
+
+        if (error) throw error;
+
+        await logAudit(userId, 'password_reset_sent', `Password reset email sent to ${user.email}`);
+        showSuccess(`Password reset email sent to ${user.email}`);
+    } catch (error) {
+        console.error('Error sending password reset:', error);
+        showError('Failed to send password reset email: ' + error.message);
     }
 }
 
