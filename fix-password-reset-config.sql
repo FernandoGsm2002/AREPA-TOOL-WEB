@@ -19,15 +19,6 @@ SELECT
     last_sign_in_at
 FROM auth.users
 ORDER BY created_at DESC;
-
--- =====================================================
--- 2. SINCRONIZAR USUARIOS EXISTENTES
--- =====================================================
--- Si tienes usuarios en public.users que no están en auth.users,
--- necesitarás recrearlos usando SignUp desde la aplicación
-
--- Ver usuarios que están en public.users pero NO en auth.users
-SELECT 
     u.id,
     u.username,
     u.email,
@@ -36,21 +27,12 @@ FROM public.users u
 LEFT JOIN auth.users au ON u.id = au.id::uuid
 WHERE au.id IS NULL;
 
--- =====================================================
--- 3. FUNCIÓN PARA ADMIN: ENVIAR EMAIL DE RESET
--- =====================================================
--- Esta función permite al admin enviar emails de reset manualmente
--- NOTA: Esto requiere usar el Service Role Key desde el backend
-
 CREATE OR REPLACE FUNCTION admin_send_password_reset(user_email TEXT)
 RETURNS JSON AS $
 DECLARE
     result JSON;
 BEGIN
-    -- Esta función es solo un placeholder
-    -- El envío real de emails se hace desde el frontend usando:
-    -- supabase.auth.resetPasswordForEmail(email)
-    
+
     result := json_build_object(
         'success', true,
         'message', 'Use supabase.auth.resetPasswordForEmail() from frontend'
@@ -60,40 +42,6 @@ BEGIN
 END;
 $ LANGUAGE plpgsql SECURITY DEFINER;
 
--- =====================================================
--- 4. VERIFICAR CONFIGURACIÓN DE EMAIL
--- =====================================================
--- Para ver la configuración actual de emails, ve a:
--- Supabase Dashboard → Authentication → Email Templates
-
--- Template recomendado para "Reset Password":
-/*
-<h2>Reset Password</h2>
-<p>Follow this link to reset the password for your AREPA-TOOL account:</p>
-<p><a href="{{ .SiteURL }}/reset-password?token={{ .Token }}&type=recovery">Reset Password</a></p>
-<p>If you didn't request this, you can safely ignore this email.</p>
-<p>This link expires in 1 hour.</p>
-*/
-
--- =====================================================
--- 5. CONFIGURACIÓN DE URLS (Dashboard)
--- =====================================================
--- Ve a: Authentication → URL Configuration
--- 
--- Site URL: https://tu-dominio-vercel.vercel.app
--- 
--- Redirect URLs (agregar):
--- - https://tu-dominio-vercel.vercel.app/reset-password
--- - https://tu-dominio-vercel.vercel.app/hide.html
--- - http://localhost:3000/reset-password (para desarrollo)
-
--- =====================================================
--- 6. POLÍTICAS DE SEGURIDAD
--- =====================================================
--- Las políticas actuales ya permiten lectura de usuarios
--- No necesitamos cambios adicionales
-
--- Verificar políticas existentes
 SELECT 
     schemaname,
     tablename,
@@ -106,33 +54,6 @@ SELECT
 FROM pg_policies
 WHERE schemaname = 'public' AND tablename = 'users';
 
--- =====================================================
--- 7. TESTING
--- =====================================================
--- Para probar el flujo completo:
-
--- 1. Desde el panel admin (hide.html):
---    - Click en "Reset Password" para un usuario
---    - Verifica que el email se envíe
-
--- 2. Revisa el email en:
---    - Supabase Dashboard → Authentication → Logs
---    - O en tu bandeja de entrada si configuraste SMTP
-
--- 3. Click en el link del email
---    - Debe redirigir a: https://tu-dominio.vercel.app/reset-password?token=...
-
--- 4. Ingresa nueva contraseña
---    - Debe actualizar y redirigir al login
-
--- =====================================================
--- 8. TROUBLESHOOTING
--- =====================================================
-
--- Ver logs de autenticación recientes
--- (Solo disponible en Supabase Dashboard → Authentication → Logs)
-
--- Ver usuarios con sus emails
 SELECT 
     u.username,
     u.email,

@@ -825,6 +825,9 @@ showSection = function(section) {
         case 'announcements':
             loadAnnouncements();
             break;
+        case 'apkmanager':
+            loadApkCatalog();
+            break;
     }
 };
 
@@ -1222,3 +1225,239 @@ function showNotification(message, type = 'info') {
         });
     }
 }
+
+// =====================================================
+// APK MANAGER
+// =====================================================
+
+let allApks = [];
+let apkFilter = 'all';
+
+async function loadApkCatalog() {
+    try {
+        const { data, error } = await supabase
+            .from('apk_catalog')
+            .select('*')
+            .order('name', { ascending: true });
+
+        if (error) throw error;
+        
+        allApks = data || [];
+        displayApks(allApks);
+        updateApkCounts(allApks);
+    } catch (error) {
+        console.error('Error loading APK catalog:', error);
+        document.getElementById('apk-table-body').innerHTML = 
+            '<tr><td colspan="8" class="text-center text-danger">Error loading APKs</td></tr>';
+    }
+}
+
+function displayApks(apks) {
+    const tbody = document.getElementById('apk-table-body');
+    
+    if (!apks || apks.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center">No APKs found. Click "Add APK" to add one.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = apks.map(apk => `
+        <tr>
+            <td>
+                ${apk.icon_file 
+                    ? `<img src="https://arepatool-icons.${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com/${apk.icon_file}" 
+                         alt="${apk.name}" style="width: 40px; height: 40px; border-radius: 8px;" 
+                         onerror="this.src='https://via.placeholder.com/40?text=APK'">`
+                    : '<i class="bi bi-box" style="font-size: 24px;"></i>'
+                }
+            </td>
+            <td><strong>${apk.name}</strong></td>
+            <td>${apk.version}</td>
+            <td><code>${apk.package_name || 'N/A'}</code></td>
+            <td><span class="badge bg-${getCategoryClass(apk.category)}">${apk.category}</span></td>
+            <td>${apk.size_mb ? apk.size_mb + ' MB' : 'N/A'}</td>
+            <td>
+                <span class="badge bg-${apk.is_active ? 'success' : 'secondary'}">
+                    ${apk.is_active ? 'Active' : 'Inactive'}
+                </span>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="editApk('${apk.id}')">
+                    <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-${apk.is_active ? 'warning' : 'success'}" 
+                        onclick="toggleApkStatus('${apk.id}', ${!apk.is_active})">
+                    <i class="bi bi-${apk.is_active ? 'pause' : 'play'}"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteApk('${apk.id}')">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function getCategoryClass(category) {
+    switch(category) {
+        case 'root': return 'success';
+        case 'banking': return 'info';
+        case 'tools': return 'warning';
+        case 'system': return 'primary';
+        default: return 'secondary';
+    }
+}
+
+function updateApkCounts(apks) {
+    document.getElementById('apk-count-all').textContent = apks.length;
+    document.getElementById('apk-count-root').textContent = apks.filter(a => a.category === 'root').length;
+    document.getElementById('apk-count-banking').textContent = apks.filter(a => a.category === 'banking').length;
+    document.getElementById('apk-count-tools').textContent = apks.filter(a => a.category === 'tools').length;
+    document.getElementById('apk-count-general').textContent = apks.filter(a => a.category === 'general').length;
+}
+
+function filterApks(category) {
+    apkFilter = category;
+    
+    // Update active tab
+    document.querySelectorAll('#apkmanager-section .nav-link').forEach(link => {
+        link.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    // Filter and display
+    if (category === 'all') {
+        displayApks(allApks);
+    } else {
+        const filtered = allApks.filter(a => a.category === category);
+        displayApks(filtered);
+    }
+}
+
+function showAddApkModal() {
+    // Clear form
+    document.getElementById('apk-edit-id').value = '';
+    document.getElementById('apk-name').value = '';
+    document.getElementById('apk-version').value = '';
+    document.getElementById('apk-file').value = '';
+    document.getElementById('apk-icon').value = '';
+    document.getElementById('apk-package').value = '';
+    document.getElementById('apk-category').value = 'general';
+    document.getElementById('apk-size').value = '';
+    document.getElementById('apk-description').value = '';
+    document.getElementById('apk-active').checked = true;
+    document.getElementById('apkModalTitle').textContent = 'Add New APK';
+    
+    new bootstrap.Modal(document.getElementById('addApkModal')).show();
+}
+
+function editApk(apkId) {
+    const apk = allApks.find(a => a.id === apkId);
+    if (!apk) return;
+
+    document.getElementById('apk-edit-id').value = apk.id;
+    document.getElementById('apk-name').value = apk.name;
+    document.getElementById('apk-version').value = apk.version;
+    document.getElementById('apk-file').value = apk.apk_file || '';
+    document.getElementById('apk-icon').value = apk.icon_file || '';
+    document.getElementById('apk-package').value = apk.package_name || '';
+    document.getElementById('apk-category').value = apk.category || 'general';
+    document.getElementById('apk-size').value = apk.size_mb || '';
+    document.getElementById('apk-description').value = apk.description || '';
+    document.getElementById('apk-active').checked = apk.is_active;
+    document.getElementById('apkModalTitle').textContent = 'Edit APK';
+
+    new bootstrap.Modal(document.getElementById('addApkModal')).show();
+}
+
+async function saveApk() {
+    const id = document.getElementById('apk-edit-id').value;
+    const name = document.getElementById('apk-name').value.trim();
+    const version = document.getElementById('apk-version').value.trim();
+    const apkFile = document.getElementById('apk-file').value.trim();
+    
+    if (!name || !version || !apkFile) {
+        alert('Please fill in required fields: Name, Version, and APK File Name');
+        return;
+    }
+
+    const apkData = {
+        name,
+        version,
+        apk_file: apkFile,
+        icon_file: document.getElementById('apk-icon').value.trim() || null,
+        package_name: document.getElementById('apk-package').value.trim() || null,
+        category: document.getElementById('apk-category').value,
+        size_mb: parseFloat(document.getElementById('apk-size').value) || null,
+        description: document.getElementById('apk-description').value.trim() || null,
+        is_active: document.getElementById('apk-active').checked
+    };
+
+    try {
+        let result;
+        if (id) {
+            // Update existing
+            result = await supabase
+                .from('apk_catalog')
+                .update(apkData)
+                .eq('id', id);
+        } else {
+            // Insert new
+            result = await supabase
+                .from('apk_catalog')
+                .insert([apkData]);
+        }
+
+        if (result.error) throw result.error;
+
+        bootstrap.Modal.getInstance(document.getElementById('addApkModal')).hide();
+        await loadApkCatalog();
+        showSuccess(id ? 'APK updated successfully!' : 'APK added successfully!');
+    } catch (error) {
+        console.error('Error saving APK:', error);
+        alert('Error saving APK: ' + error.message);
+    }
+}
+
+async function toggleApkStatus(apkId, newStatus) {
+    try {
+        const { error } = await supabase
+            .from('apk_catalog')
+            .update({ is_active: newStatus })
+            .eq('id', apkId);
+
+        if (error) throw error;
+        
+        await loadApkCatalog();
+        showSuccess(`APK ${newStatus ? 'activated' : 'deactivated'} successfully!`);
+    } catch (error) {
+        console.error('Error toggling APK status:', error);
+        alert('Error updating APK status: ' + error.message);
+    }
+}
+
+async function deleteApk(apkId) {
+    if (!confirm('Are you sure you want to delete this APK? This cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const { error } = await supabase
+            .from('apk_catalog')
+            .delete()
+            .eq('id', apkId);
+
+        if (error) throw error;
+        
+        await loadApkCatalog();
+        showSuccess('APK deleted successfully!');
+    } catch (error) {
+        console.error('Error deleting APK:', error);
+        alert('Error deleting APK: ' + error.message);
+    }
+}
+
+function refreshApkCatalog() {
+    loadApkCatalog();
+}
+
+// Add Cloudflare Account ID constant
+const CLOUDFLARE_ACCOUNT_ID = '8fc120a4cc06bc9a39d9555a416fa166';
