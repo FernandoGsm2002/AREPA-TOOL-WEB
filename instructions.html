@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ArepaTool - Instrucciones Rápidas</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="landing.css" />
+    <!-- AOS Animation Library CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        .manual-header {
+            text-align: center;
+            padding: 100px 0 40px;
+            background: linear-gradient(0deg, var(--bg-color) 0%, rgba(0,0,0,0.4) 100%);
+        }
+        .manual-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .faq-item {
+            background: rgba(30, 35, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 1.5rem;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 200, 255, 0.05);
+        }
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.02);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .faq-question i {
+            transition: transform 0.3s ease;
+            color: var(--accent-color);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .faq-answer-content {
+            padding: 1.5rem;
+            color: #ccc;
+            line-height: 1.7;
+            font-family: 'Inter', sans-serif;
+        }
+        .faq-answer-content ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        .faq-answer-content li {
+            margin-bottom: 8px;
+        }
+        .faq-answer-content code {
+            background: #111;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #00ffaa;
+            font-family: monospace;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        .faq-item.active .faq-question {
+            color: var(--accent-color);
+            background: rgba(0, 200, 255, 0.05);
+        }
+        
+        /* Floating edit button (simulated for user context) */
+        .edit-hint {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #aaa;
+            border: 1px solid #333;
+        }
+
+        .alert-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #ff6b6b;
+            border-left: 4px solid #dc3545;
+        }
+        .alert-danger h4 {
+            margin-top: 0;
+            color: #ff6b6b;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert-danger p {
+            margin-bottom: 0.5rem;
+            font-size: 0.95em;
+        }
+        .config-steps {
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 8px 0;
+            color: #eee;
+            font-size: 0.9em;
+        }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <img src="pngs/Arepaa12+.png" alt="ArepaTool V1" class="logo-img">
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="index.html#features">Características</a>
+                <a href="index.html#pricing">Precios</a>
+                <a href="#" class="active">Manuales</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="manual-header" data-aos="fade-down">
+        <h1>Instrucciones Rápidas</h1>
+        <p style="color: #aaa; margin-top: 10px;">Guías paso a paso para las operaciones más comunes</p>
+    </div>
+
+    <div class="manual-container">
+        
+        <!-- Manual 1: Install Drivers -->
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+            <div class="faq-question">
+                <span><i class="bi bi-hdd-network" style="margin-right: 10px;"></i> Instalación de Drivers Samsung</span>
+                <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p style="margin-bottom: 20px;">Una conexión estable es vital. Sigue estos pasos para instalar los drivers correctamente:</p>
+                    
+                    <!-- Paso 1 -->
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="color: #00d2ff; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">
+                            <i class="bi bi-1-circle-fill"></i> Descarga e Instalación
+                        </h5>
+                        <p>Descarga los drivers oficiales. Si ya tienes unos instalados pero dan problemas, desinstálalos primero.</p>
+                        <a href="https://developer.samsung.com/android-usb-driver" target="_blank" style="display: inline-block; background: #232938; padding: 10px 20px; border-radius: 6px; color: #fff; text-decoration: none; border: 1px solid #444; margin-top: 5px; transition: all 0.3s;">
+                            <i class="bi bi-download"></i> Descargar Samsung USB Drivers (Oficial)
+                        </a>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="color: #00d2ff; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">
+                            <i class="bi bi-2-circle-fill"></i> Verificación
+                        </h5>
+                        <ol style="margin-left: 20px; color: #ddd;">
+                            <li>Ejecuta el instalador como <strong>Administrador</strong>.</li>
+                            <li>Reinicia tu PC al finalizar.</li>
+                            <li>Conecta el móvil y abre el <strong>Administrador de Dispositivos</strong> de Windows.</li>
+                            <li>Debe aparecer bajo "Modems" o "Samsung Android Phone" sin signos de exclamación amarillos.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual 2: MDM Remove -->
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+            <div class="faq-question">
+                <span><i class="bi bi-shield-lock" style="margin-right: 10px;"></i> Proceso MDM Remove (ADB)</span>
+                <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    
+                    <!-- Paso 1 -->
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="color: #00d2ff; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">
+                            <i class="bi bi-1-circle-fill"></i> Preparación del Dispositivo
+                        </h5>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li style="margin-bottom: 8px;"><i class="bi bi-check-circle" style="color: #00ff88;"></i> Activa la <strong>Depuración USB</strong>.</li>
+                            <li style="margin-bottom: 8px;"><i class="bi bi-wifi-off" style="color: #ff6b6b;"></i> <strong>Desconecta el WiFi</strong> (Importante).</li>
+                            <li style="margin-bottom: 8px;"><i class="bi bi-phone"></i> Al conectar al PC, marca "Permitir siempre" y acepta la huella RSA o Depuración USB.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div style="margin-bottom: 25px;">
+                        <h5 style="color: #00d2ff; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">
+                            <i class="bi bi-2-circle-fill"></i> Ejecución
+                        </h5>
+                        <p>En ArepaTool:</p>
+                        <ol style="margin-left: 20px; color: #ddd;">
+                            <li>Ve a <strong>Android > Main Module</strong>.</li>
+                            <li>Selecciona <strong>MDM Remove</strong> y dale a Start.</li>
+                            <li>Espera el mensaje "Success". El dispositivo se reiniciará solo.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Alerta DNS -->
+                    <div class="alert-danger">
+                        <h4><i class="bi bi-exclamation-triangle-fill"></i> Atención: Error de Configuración Automática</h4>
+                        <p>Si la aplicación muestra error o no se aplica el bloqueo, es posible que el dispositivo bloquee la configuración automática del DNS.</p>
+                        
+                        <p style="margin-top: 10px; color: #fff;"><strong><i class="bi bi-gear-fill"></i> Configuración Manual de DNS:</strong></p>
+                        <div class="config-steps">
+                            1. Vaya a Ajustes > Conexiones > Más ajustes de conexión<br>
+                            2. Seleccione "DNS Privado"<br>
+                            3. Elija "Nombre de host de proveedor de DNS privado"<br>
+                            4. Ingrese el host que aparece en el log de la herramienta<br>
+                            5. Guarde los cambios.
+                        </div>
+                        
+                        <p style="margin-top: 10px; font-size: 0.9em;">
+                            Si no logra configurarlo, haga clic en el 
+                            <strong><i class="bi bi-whatsapp"></i> botón de asistencia</strong> en la herramienta.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual 3: Fix Banking Apps -->
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+            <div class="faq-question">
+                <span><i class="bi bi-bank" style="margin-right: 10px;"></i> Fix Apps Bancarias (Root)</span>
+                <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    
+                    <!-- Paso 1 -->
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="color: #00d2ff; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">
+                            <i class="bi bi-1-circle-fill"></i> Verificación de Root
+                        </h5>
+                        <p>Asegúrate de tener el dispositivo rooteado con <strong>Kitsune 27.2+</strong> o <strong>Magisk 28.0+</strong>.</p>
+                        
+                        <div style="background: rgba(0, 255, 136, 0.05); border: 1px solid rgba(0, 255, 136, 0.2); border-left: 3px solid #00ff88; padding: 12px; border-radius: 8px; font-size: 0.95em;">
+                            <strong style="color: #00ff88;"><i class="bi bi-question-circle"></i> ¿Cómo saber si está bien rooteado?</strong><br>
+                            Al abrir la app de Magisk o Kitsune, <span style="color: #fff; font-weight: 600;">NO debe pedir ninguna configuración adicional</span>. Si muestra un aviso de "Configuración adicional", dale a <strong>Aceptar</strong> y deja que se reinicie.
+                        </div>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="color: #00d2ff; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">
+                            <i class="bi bi-2-circle-fill"></i> Permisos de Superusuario
+                        </h5>
+                        <p>En las configuraciones de Magisk:</p>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; display: inline-block;">
+                                <i class="bi bi-gear-fill" style="margin-right: 5px;"></i> Respuesta Automática &rarr; <strong style="color: #00ff88;">PERMITIR SIEMPRE</strong>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Paso 3 -->
+                    <div style="margin-bottom: 25px;">
+                        <h5 style="color: #00d2ff; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">
+                            <i class="bi bi-3-circle-fill"></i> Ejecutar Fix en ArepaTool
+                        </h5>
+                        <ol style="margin-left: 20px; color: #ddd;">
+                            <li>Ve a la pestaña <strong>Samsung > Main Services</strong>.</li>
+                            <li>Click en el botón <strong>Fix Apps Bancarias</strong>.</li>
+                            <li>El dispositivo se reiniciará. ¡Listo!</li>
+                        </ol>
+                    </div>
+
+                    <!-- Recomendaciones -->
+                    <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-left: 4px solid #ffc107; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <h6 style="color: #ffc107; margin-top: 0; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="bi bi-lightbulb-fill"></i> Recomendaciones
+                        </h6>
+                        <ul style="margin-bottom: 0; padding-left: 20px; font-size: 0.9em; color: #eee;">
+                            <li style="margin-bottom: 5px;">Es preferible usar el <strong>método de parche manual</strong> de Magisk.</li>
+                            <li>Para mejores resultados, realiza el proceso en un sistema limpio (desde 0).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Aviso Root -->
+                    <div style="background: rgba(13, 110, 253, 0.1); border: 1px solid rgba(13, 110, 253, 0.3); border-left: 4px solid #0d6efd; padding: 15px; border-radius: 8px;">
+                        <h6 style="color: #6ea8fe; margin-top: 0; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="bi bi-info-circle-fill"></i> Aviso Importante
+                        </h6>
+                        <p style="margin-bottom: 0; font-size: 0.9em; color: #ccc;">
+                            Esta herramienta funciona correctamente siempre que el dispositivo esté <strong>correctamente rooteado</strong>. El Root es un procedimiento externo responsabilidad del usuario, por lo que no brindamos soporte sobre cómo rootear tu equipo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual 4: Bypass A12+ -->
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
+            <div class="faq-question">
+                <span><i class="bi bi-apple" style="margin-right: 10px;"></i> Bypass A12+ (Apple)</span>
+                <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <ol>
+                        <li>Registra el Serial Number (SN) de tu dispositivo en el panel.</li>
+                        <li>Pon el dispositivo en modo Hello/Restaurado.</li>
+                        <li>Conéctalo a la herramienta y selecciona "Bypass A12+".</li>
+                        <li>Espera a que el proceso termine. El dispositivo iniciará sin restricciones.</li>
+                        <li><strong>Importante:</strong> No restablecer de fábrica después del proceso (Disable OTA recomendado).</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual 5: Problemas Comunes -->
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+            <div class="faq-question">
+                <span><i class="bi bi-bug-fill" style="margin-right: 10px;"></i> ¿Problemas directos con ArepaTool?</span>
+                <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Si la aplicación no abre, arroja errores inesperados o faltan dependencias, sigue estos pasos de solución:</p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="color: #ff6b6b; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">
+                            <i class="bi bi-shield-check"></i> Recomendaciones Básicas
+                        </h5>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li style="margin-bottom: 10px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 6px;">
+                                <strong style="color: #00d2ff;">1. Ejecutar como Administrador</strong><br>
+                                Haz clic derecho en ArepaTool y selecciona "Ejecutar como administrador". Esto es necesario para acceder a dispositivos USB y ADB.
+                            </li>
+                            <li style="margin-bottom: 10px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 6px;">
+                                <strong style="color: #00d2ff;">2. Desactivar Antivirus / Defender</strong><br>
+                                A veces las herramientas de seguridad bloquean operaciones ADB o inyecciones de archivos. Desactiva temporalmente el antivirus.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div style="background: rgba(13, 110, 253, 0.1); border: 1px solid rgba(13, 110, 253, 0.3); border-left: 4px solid #0d6efd; padding: 15px; border-radius: 8px;">
+                        <h6 style="color: #6ea8fe; margin-top: 0; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="bi bi-arrow-repeat"></i> ¿Nada funcionó?
+                        </h6>
+                        <p style="margin-bottom: 0; font-size: 0.9em; color: #ccc;">
+                            Si el problema persiste, recomendamos <strong>volver a reinstalar el programa</strong> desde cero. Asegúrate de borrar la carpeta anterior antes de descomprimir la nueva versión.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Accordion Logic
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const faqItem = button.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all others
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                    item.querySelector('.faq-answer').style.maxHeight = null;
+                });
+
+                // Toggle current
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                    const answer = faqItem.querySelector('.faq-answer');
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                }
+            });
+        });
+    </script>
+  </body>
+</html>
