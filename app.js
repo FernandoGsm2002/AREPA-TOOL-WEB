@@ -8,7 +8,7 @@ if (typeof window.supabase === 'undefined') {
     alert('Error: Supabase library not loaded. Please refresh the page.');
 }
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentFilter = 'all';
 let currentUserId = null;
@@ -52,12 +52,21 @@ function showSection(section) {
     });
     
     // Show selected section
-    document.getElementById(`${section}-section`).style.display = 'block';
+    const targetSection = document.getElementById(`${section}-section`);
+    if (targetSection) {
+        targetSection.style.display = 'block';
+    } else {
+        console.error(`Section ${section}-section not found`);
+    }
     
     // Add active class to clicked nav item
-    event.target.closest('.list-group-item').classList.add('active');
+    if (event && event.target) {
+        const navItem = event.target.closest('.list-group-item');
+        if (navItem) navItem.classList.add('active');
+    }
     
     // Load data for section
+    console.log('Loading section:', section);
     switch(section) {
         case 'users':
             loadUsers();
@@ -71,13 +80,28 @@ function showSection(section) {
         case 'stats':
             updateStatistics();
             break;
+        case 'updates':
+            loadVersions();
+            break;
+        case 'announcements':
+            loadAnnouncements();
+            break;
+        case 'license':
+            loadLicenseConfig();
+            break;
+        case 'bypass':
+            loadBypassRegistrations();
+            break;
+        case 'apkmanager':
+            loadApkCatalog();
+            break;
     }
 }
 
 // Load Users
 async function loadUsers() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('users')
             .select('*')
             .order('created_at', { ascending: false });
@@ -176,7 +200,7 @@ async function approveUser(userId) {
         const now = new Date().toISOString();
         const oneYearLater = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
         
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('users')
             .update({ 
                 status: 'active',
@@ -200,7 +224,7 @@ async function suspendUser(userId) {
     if (!confirm('Suspend this user?')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('users')
             .update({ status: 'suspended' })
             .eq('id', userId);
@@ -234,7 +258,7 @@ async function saveUserChanges() {
         const status = document.getElementById('modal-status').value;
         const subscriptionEnd = document.getElementById('modal-subscription-end').value;
         
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('users')
             .update({ 
                 status,
@@ -307,7 +331,7 @@ async function sendPasswordResetEmail(userId) {
 // Load Sessions
 async function loadSessions() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('sessions')
             .select(`
                 *,
@@ -347,7 +371,7 @@ async function terminateSession(sessionId) {
     if (!confirm('Terminate this session?')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('sessions')
             .delete()
             .eq('id', sessionId);
@@ -365,7 +389,7 @@ async function terminateSession(sessionId) {
 // Load Audit Logs
 async function loadAuditLogs() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('audit_logs')
             .select(`
                 *,
@@ -399,7 +423,7 @@ async function loadAuditLogs() {
 
 async function logAudit(userId, action, details) {
     try {
-        await supabase
+        await supabaseClient
             .from('audit_logs')
             .insert({
                 user_id: userId,
@@ -415,8 +439,8 @@ async function logAudit(userId, action, details) {
 // Statistics
 async function updateStatistics() {
     try {
-        const { data: users } = await supabase.from('users').select('status');
-        const { data: sessions } = await supabase.from('sessions').select('id');
+        const { data: users } = await supabaseClient.from('users').select('status');
+        const { data: sessions } = await supabaseClient.from('sessions').select('id');
         
         document.getElementById('stat-total-users').textContent = users?.length || 0;
         document.getElementById('stat-active-users').textContent = 
@@ -488,7 +512,7 @@ function logout() {
 
 async function loadVersions() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('app_versions')
             .select('*')
             .order('release_date', { ascending: false });
@@ -552,7 +576,7 @@ async function saveNewVersion() {
             return;
         }
         
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('app_versions')
             .insert({
                 version,
@@ -584,7 +608,7 @@ async function activateVersion(versionId) {
     if (!confirm('Activate this version?')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('app_versions')
             .update({ is_active: true })
             .eq('id', versionId);
@@ -603,7 +627,7 @@ async function deactivateVersion(versionId) {
     if (!confirm('Deactivate this version?')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('app_versions')
             .update({ is_active: false })
             .eq('id', versionId);
@@ -622,7 +646,7 @@ async function deleteVersion(versionId) {
     if (!confirm('Delete this version? This action cannot be undone.')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('app_versions')
             .delete()
             .eq('id', versionId);
@@ -643,7 +667,7 @@ async function deleteVersion(versionId) {
 
 async function loadAnnouncements() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('announcements')
             .select('*')
             .order('priority', { ascending: false });
@@ -712,7 +736,7 @@ async function saveNewAnnouncement() {
             return;
         }
         
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('announcements')
             .insert({
                 title,
@@ -750,7 +774,7 @@ async function activateAnnouncement(announcementId) {
     if (!confirm('Activate this announcement?')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('announcements')
             .update({ is_active: true })
             .eq('id', announcementId);
@@ -769,7 +793,7 @@ async function deactivateAnnouncement(announcementId) {
     if (!confirm('Deactivate this announcement?')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('announcements')
             .update({ is_active: false })
             .eq('id', announcementId);
@@ -788,7 +812,7 @@ async function deleteAnnouncement(announcementId) {
     if (!confirm('Delete this announcement? This action cannot be undone.')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('announcements')
             .delete()
             .eq('id', announcementId);
@@ -813,23 +837,7 @@ function getAnnouncementTypeClass(type) {
     return classes[type] || 'bg-secondary';
 }
 
-// Update showSection to load data for new sections
-const originalShowSection = showSection;
-showSection = function(section) {
-    originalShowSection(section);
-    
-    switch(section) {
-        case 'updates':
-            loadVersions();
-            break;
-        case 'announcements':
-            loadAnnouncements();
-            break;
-        case 'apkmanager':
-            loadApkCatalog();
-            break;
-    }
-};
+
 
 
 // =====================================================
@@ -838,7 +846,7 @@ showSection = function(section) {
 
 async function loadLicenseConfig() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('app_config')
             .select('*');
         
@@ -891,7 +899,7 @@ async function saveLicenseConfig() {
         
         // Actualizar cada configuración
         for (const update of updates) {
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('app_config')
                 .update({ 
                     value: update.value,
@@ -911,53 +919,7 @@ async function saveLicenseConfig() {
     }
 }
 
-// Update showSection to load license config
-const originalShowSection2 = showSection;
-showSection = function(section) {
-    // Hide all sections
-    document.querySelectorAll('.content-section').forEach(el => {
-        el.style.display = 'none';
-    });
-    
-    // Remove active class from all nav items
-    document.querySelectorAll('.list-group-item').forEach(el => {
-        el.classList.remove('active');
-    });
-    
-    // Show selected section
-    document.getElementById(`${section}-section`).style.display = 'block';
-    
-    // Add active class to clicked nav item
-    event.target.closest('.list-group-item').classList.add('active');
-    
-    // Load data for section
-    switch(section) {
-        case 'users':
-            loadUsers();
-            break;
-        case 'sessions':
-            loadSessions();
-            break;
-        case 'audit':
-            loadAuditLogs();
-            break;
-        case 'stats':
-            updateStatistics();
-            break;
-        case 'updates':
-            loadVersions();
-            break;
-        case 'announcements':
-            loadAnnouncements();
-            break;
-        case 'license':
-            loadLicenseConfig();
-            break;
-        case 'bypass':
-            loadBypassRegistrations();
-            break;
-    }
-};
+
 
 
 // =====================================================
@@ -970,7 +932,7 @@ let bypassRealtimeChannel = null;
 
 async function loadBypassRegistrations() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('bypass_registrations')
             .select('*')
             .order('created_at', { ascending: false });
@@ -996,11 +958,11 @@ async function loadBypassRegistrations() {
 function subscribeToBypassChanges() {
     // Cancelar suscripción anterior si existe
     if (bypassRealtimeChannel) {
-        supabase.removeChannel(bypassRealtimeChannel);
+        supabaseClient.removeChannel(bypassRealtimeChannel);
     }
 
     // Crear nueva suscripción
-    bypassRealtimeChannel = supabase
+    bypassRealtimeChannel = supabaseClient
         .channel('bypass_registrations_changes')
         .on(
             'postgres_changes',
@@ -1126,7 +1088,7 @@ async function approveBypass(id) {
     if (notes === null) return; // User cancelled
 
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('bypass_registrations')
             .update({
                 status: 'approved',
@@ -1153,7 +1115,7 @@ async function rejectBypass(id) {
     }
 
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('bypass_registrations')
             .update({
                 status: 'rejected',
@@ -1176,7 +1138,7 @@ async function deleteBypass(id) {
     if (!confirm('Are you sure you want to delete this registration?')) return;
 
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('bypass_registrations')
             .delete()
             .eq('id', id);
@@ -1235,7 +1197,7 @@ let apkFilter = 'all';
 
 async function loadApkCatalog() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('apk_catalog')
             .select('*')
             .order('name', { ascending: true });
@@ -1395,13 +1357,13 @@ async function saveApk() {
         let result;
         if (id) {
             // Update existing
-            result = await supabase
+            result = await supabaseClient
                 .from('apk_catalog')
                 .update(apkData)
                 .eq('id', id);
         } else {
             // Insert new
-            result = await supabase
+            result = await supabaseClient
                 .from('apk_catalog')
                 .insert([apkData]);
         }
@@ -1419,7 +1381,7 @@ async function saveApk() {
 
 async function toggleApkStatus(apkId, newStatus) {
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('apk_catalog')
             .update({ is_active: newStatus })
             .eq('id', apkId);
@@ -1440,7 +1402,7 @@ async function deleteApk(apkId) {
     }
 
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('apk_catalog')
             .delete()
             .eq('id', apkId);
