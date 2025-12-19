@@ -1059,6 +1059,7 @@ function renderBypassTable() {
                 <td><strong>${reg.serial_number}</strong></td>
                 <td>${reg.username}</td>
                 <td>${reg.user_email || '-'}</td>
+                <td><span class="badge bg-primary">${reg.service_name || JSON.parse(JSON.stringify(reg.device_info || {})).tool || 'Unknown'}</span></td>
                 <td>${statusBadge}</td>
                 <td>${createdDate}</td>
                 <td>${updatedDate}</td>
