@@ -2,35 +2,35 @@
  * API PARA DHRU FUSION - ACTIVACIÓN DE LICENCIAS
  * ===============================================
  * 
- * Tipo: SERVER SERVICE (Other Script)
+ * Tipo: SERVER SERVICE (Other Script 84)
  * Campo: Mail (correo del cliente)
  * 
- * FLUJO:
- * 1. Cliente se registra en arepa-tool-web.vercel.app
- * 2. Cliente compra licencia en DHRU, ingresa su correo
- * 3. DHRU llama esta API
- * 4. API busca correo:
- *    - NO existe → Error: "Crea cuenta primero"
- *    - SÍ existe → Activa licencia
+ * Acciones soportadas:
+ * - accountinfo: Verificar conexión (DHRU lo usa al sincronizar)
+ * - placeorder: Activar licencia
+ * - status: Verificar estado de orden
  * 
- * URL: https://tu-app.vercel.app/api/dhru-license
+ * URL: https://arepa-tool-web.vercel.app/api/dhru-license
  */
 
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://lumhpjfndlqhexnjmvtu.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
-const REGISTRATION_URL = 'https://arepa-tool-web.vercel.app';
-
 export default async function handler(req, res) {
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Content-Type', 'application/json');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
+  
+  // Permitir GET para pruebas simples
+  if (req.method === 'GET') {
+    return res.status(200).json({
+      status: 'OK',
+      message: 'ArepaTool License API is running',
+      version: '1.0.0'
+    });
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ status: 'ERROR', message: 'Method not allowed' });
   }
@@ -38,87 +38,165 @@ export default async function handler(req, res) {
   console.log('[DHRU-LICENSE] ===== Nueva petición =====');
 
   try {
+    // Parsear body
     let body = req.body;
     if (typeof body === 'string') {
-      body = Object.fromEntries(new URLSearchParams(body));
+      try {
+        body = Object.fromEntries(new URLSearchParams(body));
+      } catch {
+        body = {};
+      }
     }
 
-    const { key, action, service, orderid, mail, Mail, email, EMAIL, imei, IMEI } = body;
+    console.log('[DHRU-LICENSE] Body:', JSON.stringify(body));
 
-    // Validar API Key (una sola key)
+    const { key, action, service, orderid, mail, Mail, email, EMAIL, imei, IMEI, username } = body;
+
+    // Validar API Key
     const API_SECRET = process.env.DHRU_API_SECRET;
     if (API_SECRET && key !== API_SECRET) {
       console.log('[DHRU-LICENSE] ❌ API Key inválida');
-      return res.status(401).json({ status: 'ERROR', message: 'Invalid API Key' });
-    }
-
-    // Obtener email del campo que venga
-    const clientEmail = (mail || Mail || email || EMAIL || imei || IMEI || '').trim().toLowerCase();
-    const dhruOrderId = orderid || `ORDER_${Date.now()}`;
-
-    console.log('[DHRU-LICENSE] Email:', clientEmail);
-    console.log('[DHRU-LICENSE] OrderID:', dhruOrderId);
-
-    if (!clientEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clientEmail)) {
-      return res.status(400).json({ status: 'ERROR', message: 'Email inválido' });
-    }
-
-    // Buscar usuario
-    const { data: user, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', clientEmail)
-      .maybeSingle();
-
-    if (error) throw error;
-
-    // NO EXISTE → Error
-    if (!user) {
-      console.log('[DHRU-LICENSE] ❌ Usuario NO encontrado');
-      return res.status(200).json({
-        status: 'ERROR',
-        orderid: dhruOrderId,
-        code: 'NOT_FOUND',
-        message: `Correo no encontrado. Crea una cuenta primero en: ${REGISTRATION_URL}`
+      return res.status(200).json({ 
+        status: 'error',
+        error: 'Invalid API Key'
       });
     }
 
-    // EXISTE → Activar
-    console.log('[DHRU-LICENSE] ✅ Usuario encontrado:', user.username, '- Estado:', user.status);
-
-    const now = new Date().toISOString();
-    const days = service?.toLowerCase().includes('1month') ? 30 : 365;
-    let expDate = new Date();
-    if (user.subscription_end && new Date(user.subscription_end) > expDate) {
-      expDate = new Date(user.subscription_end);
+    // ==================================================
+    // ACCIÓN: accountinfo (verificación de conexión)
+    // DHRU llama esto al sincronizar
+    // ==================================================
+    if (action === 'accountinfo' || action === 'getbalance' || action === 'balance') {
+      console.log('[DHRU-LICENSE] ✅ accountinfo/getbalance - Conexión verificada');
+      return res.status(200).json({
+        status: 'success',
+        balance: '999999.00',
+        currency: 'USD',
+        username: username || 'arepatool',
+        message: 'API Connected Successfully'
+      });
     }
-    expDate.setDate(expDate.getDate() + days);
 
-    await supabase.from('users').update({
-      status: 'active',
-      activated_at: user.status !== 'active' ? now : user.activated_at,
-      subscription_end: expDate.toISOString(),
-      dhru_order_id: dhruOrderId,
-      updated_at: now
-    }).eq('id', user.id);
+    // ==================================================
+    // ACCIÓN: getservices (lista de servicios)
+    // ==================================================
+    if (action === 'getservices' || action === 'services') {
+      console.log('[DHRU-LICENSE] ✅ getservices');
+      return res.status(200).json({
+        status: 'success',
+        services: [
+          { id: '1', name: 'ArepaTool License 1 Year', price: '50.00' },
+          { id: '2', name: 'ArepaTool License 6 Months', price: '30.00' },
+          { id: '3', name: 'ArepaTool License 1 Month', price: '10.00' }
+        ]
+      });
+    }
 
-    const expiresStr = expDate.toLocaleDateString('es-ES');
-    const msg = user.status === 'active' 
-      ? `¡Licencia renovada! Usuario: ${user.username} - Válida hasta: ${expiresStr}`
-      : `¡Licencia activada! Usuario: ${user.username} - Válida hasta: ${expiresStr}`;
+    // ==================================================
+    // ACCIÓN: placeorder (activar licencia)
+    // ==================================================
+    if (action === 'placeorder' || action === 'order' || !action) {
+      const clientEmail = (mail || Mail || email || EMAIL || imei || IMEI || '').trim().toLowerCase();
+      const dhruOrderId = orderid || `ORDER_${Date.now()}`;
 
-    console.log('[DHRU-LICENSE] ✅', msg);
+      console.log('[DHRU-LICENSE] placeorder - Email:', clientEmail);
 
+      if (!clientEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clientEmail)) {
+        return res.status(200).json({ 
+          status: 'error',
+          error: 'Invalid or missing email'
+        });
+      }
+
+      // Importar Supabase dinámicamente
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://lumhpjfndlqhexnjmvtu.supabase.co',
+        process.env.SUPABASE_SERVICE_ROLE_KEY
+      );
+
+      // Buscar usuario
+      const { data: user, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', clientEmail)
+        .maybeSingle();
+
+      if (error) {
+        console.error('[DHRU-LICENSE] DB Error:', error);
+        return res.status(200).json({ 
+          status: 'error',
+          error: 'Database error'
+        });
+      }
+
+      // NO EXISTE
+      if (!user) {
+        console.log('[DHRU-LICENSE] ❌ Usuario NO encontrado');
+        return res.status(200).json({
+          status: 'error',
+          error: `Correo no encontrado. Registrate primero en: https://arepa-tool-web.vercel.app`
+        });
+      }
+
+      // EXISTE - Activar
+      console.log('[DHRU-LICENSE] ✅ Usuario encontrado:', user.username);
+
+      const now = new Date().toISOString();
+      const days = service?.toLowerCase().includes('1month') ? 30 : 
+                   service?.toLowerCase().includes('6month') ? 180 : 365;
+      
+      let expDate = new Date();
+      if (user.subscription_end && new Date(user.subscription_end) > expDate) {
+        expDate = new Date(user.subscription_end);
+      }
+      expDate.setDate(expDate.getDate() + days);
+
+      await supabase.from('users').update({
+        status: 'active',
+        activated_at: user.status !== 'active' ? now : user.activated_at,
+        subscription_end: expDate.toISOString(),
+        dhru_order_id: dhruOrderId
+      }).eq('id', user.id);
+
+      const expiresStr = expDate.toLocaleDateString('es-ES');
+      const msg = user.status === 'active' 
+        ? `¡Licencia renovada! Usuario: ${user.username} - Válida hasta: ${expiresStr}`
+        : `¡Licencia activada! Usuario: ${user.username} - Válida hasta: ${expiresStr}`;
+
+      console.log('[DHRU-LICENSE] ✅', msg);
+
+      return res.status(200).json({
+        status: 'success',
+        order_id: dhruOrderId,
+        code: user.username,
+        message: msg
+      });
+    }
+
+    // ==================================================
+    // ACCIÓN: status (verificar orden)
+    // ==================================================
+    if (action === 'status' || action === 'orderstatus') {
+      return res.status(200).json({
+        status: 'success',
+        order_status: 'completed',
+        message: 'Order processed'
+      });
+    }
+
+    // Acción no reconocida
+    console.log('[DHRU-LICENSE] ⚠️ Acción no reconocida:', action);
     return res.status(200).json({
-      status: 'SUCCESS',
-      orderid: dhruOrderId,
-      code: user.username,
-      message: msg,
-      details: { username: user.username, email: clientEmail, expires: expiresStr }
+      status: 'success',
+      message: 'OK'
     });
 
   } catch (err) {
     console.error('[DHRU-LICENSE] Error:', err);
-    return res.status(500).json({ status: 'ERROR', message: err.message });
+    return res.status(200).json({ 
+      status: 'error',
+      error: err.message 
+    });
   }
 }
