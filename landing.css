@@ -478,22 +478,31 @@ p {
   padding: 100px 0;
 }
 
+.distributor-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 .distributor-card {
   background: var(--glass-bg);
   backdrop-filter: blur(8px);
   border-radius: 20px;
-  padding: 3rem;
+  padding: 2rem;
   text-align: center;
   box-shadow: var(--card-shadow);
-  max-width: 600px;
-  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .distributor-logo img {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   border: 4px solid #f3f4f6;
 }
 
