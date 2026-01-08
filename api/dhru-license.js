@@ -2,37 +2,37 @@
  * API PARA DHRU FUSION - ACTIVACIÓN DE LICENCIAS
  * ===============================================
  * 
+ * Formato de respuesta compatible con DHRU Fusion API Standards V6.1
+ * 
  * Tipo: SERVER SERVICE (Other Script 84)
  * Campo: Mail (correo del cliente)
- * 
- * Acciones soportadas:
- * - accountinfo: Verificar conexión (DHRU lo usa al sincronizar)
- * - placeorder: Activar licencia
- * - status: Verificar estado de orden
- * 
- * URL: https://arepa-tool-web.vercel.app/api/dhru-license
  */
 
 export default async function handler(req, res) {
-  // CORS
+  const apiversion = '6.1';
+  
+  // Headers que DHRU espera
+  res.setHeader('X-Powered-By', 'DHRU-FUSION');
+  res.setHeader('dhru-fusion-api-version', apiversion);
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Content-Type', 'application/json');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   
-  // Permitir GET para pruebas simples
   if (req.method === 'GET') {
     return res.status(200).json({
-      status: 'OK',
-      message: 'ArepaTool License API is running',
-      version: '1.0.0'
+      SUCCESS: [{ message: 'ArepaTool License API is running' }],
+      apiversion
     });
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ status: 'ERROR', message: 'Method not allowed' });
+    return res.status(200).json({
+      ERROR: [{ MESSAGE: 'Method not allowed' }],
+      apiversion
+    });
   }
 
   console.log('[DHRU-LICENSE] ===== Nueva petición =====');
@@ -48,67 +48,119 @@ export default async function handler(req, res) {
       }
     }
 
-    console.log('[DHRU-LICENSE] Body:', JSON.stringify(body));
+    // DHRU envía parámetros adicionales en 'parameters' como base64(JSON)
+    let parameters = {};
+    if (body.parameters) {
+      try {
+        parameters = JSON.parse(Buffer.from(body.parameters, 'base64').toString());
+      } catch (e) {
+        console.log('[DHRU-LICENSE] No se pudo parsear parameters');
+      }
+    }
 
-    const { key, action, service, orderid, mail, Mail, email, EMAIL, imei, IMEI, username } = body;
+    console.log('[DHRU-LICENSE] Body:', JSON.stringify(body));
+    console.log('[DHRU-LICENSE] Parameters:', JSON.stringify(parameters));
+
+    const { username, apiaccesskey, action } = body;
+    const key = body.key || apiaccesskey;
 
     // Validar API Key
     const API_SECRET = process.env.DHRU_API_SECRET;
     if (API_SECRET && key !== API_SECRET) {
-      console.log('[DHRU-LICENSE] ❌ API Key inválida');
-      return res.status(200).json({ 
-        status: 'error',
-        error: 'Invalid API Key'
-      });
-    }
-
-    // ==================================================
-    // ACCIÓN: accountinfo (verificación de conexión)
-    // DHRU llama esto al sincronizar
-    // ==================================================
-    if (action === 'accountinfo' || action === 'getbalance' || action === 'balance') {
-      console.log('[DHRU-LICENSE] ✅ accountinfo/getbalance - Conexión verificada');
+      console.log('[DHRU-LICENSE] ❌ Authentication Failed');
       return res.status(200).json({
-        status: 'success',
-        balance: '999999.00',
-        currency: 'USD',
-        username: username || 'arepatool',
-        message: 'API Connected Successfully'
+        ERROR: [{ MESSAGE: 'Authentication Failed' }],
+        apiversion
       });
     }
 
+    console.log('[DHRU-LICENSE] Action:', action);
+
     // ==================================================
-    // ACCIÓN: getservices (lista de servicios)
+    // ACCIÓN: accountinfo
     // ==================================================
-    if (action === 'getservices' || action === 'services') {
-      console.log('[DHRU-LICENSE] ✅ getservices');
+    if (action === 'accountinfo') {
+      console.log('[DHRU-LICENSE] ✅ accountinfo');
+      const AccoutInfo = {
+        credit: 999999,
+        mail: 'admin@arepatool.com',
+        currency: 'USD'
+      };
       return res.status(200).json({
-        status: 'success',
-        services: [
-          { id: '1', name: 'ArepaTool License 1 Year', price: '50.00' },
-          { id: '2', name: 'ArepaTool License 6 Months', price: '30.00' },
-          { id: '3', name: 'ArepaTool License 1 Month', price: '10.00' }
-        ]
+        SUCCESS: [{ message: 'Your Accout Info', AccoutInfo }],
+        apiversion
       });
     }
 
     // ==================================================
-    // ACCIÓN: placeorder (activar licencia)
+    // ACCIÓN: imeiservicelist (lista de servicios)
     // ==================================================
-    if (action === 'placeorder' || action === 'order' || !action) {
-      const clientEmail = (mail || Mail || email || EMAIL || imei || IMEI || '').trim().toLowerCase();
-      const dhruOrderId = orderid || `ORDER_${Date.now()}`;
+    if (action === 'imeiservicelist' || action === 'servicelist') {
+      console.log('[DHRU-LICENSE] ✅ imeiservicelist');
+      const Group = 'ArepaTool Licenses';
+      const ServiceList = {};
+      
+      ServiceList[Group] = {
+        GROUPNAME: Group,
+        GROUPTYPE: 'SERVER',
+        SERVICES: {
+          1: {
+            SERVICEID: 1,
+            SERVICETYPE: 'SERVER',
+            SERVICENAME: 'ArepaTool License 1 Year',
+            CREDIT: 50,
+            INFO: 'Licencia de 1 año para ArepaTool',
+            TIME: 'Instant',
+            QNT: 0
+          },
+          2: {
+            SERVICEID: 2,
+            SERVICETYPE: 'SERVER',
+            SERVICENAME: 'ArepaTool License 6 Months',
+            CREDIT: 30,
+            INFO: 'Licencia de 6 meses para ArepaTool',
+            TIME: 'Instant',
+            QNT: 0
+          }
+        }
+      };
 
-      console.log('[DHRU-LICENSE] placeorder - Email:', clientEmail);
+      return res.status(200).json({
+        SUCCESS: [{ MESSAGE: 'IMEI Service List', LIST: ServiceList }],
+        apiversion
+      });
+    }
+
+    // ==================================================
+    // ACCIÓN: placeimeiorder (activar licencia)
+    // ==================================================
+    if (action === 'placeimeiorder' || action === 'placeorder') {
+      // Obtener email del campo custom o del imei
+      const ServiceId = parameters.ID || body.serviceid || body.service;
+      const customField = parameters.customfield 
+        ? JSON.parse(Buffer.from(parameters.customfield, 'base64').toString()) 
+        : {};
+      
+      // El email puede venir de múltiples lugares
+      const clientEmail = (
+        customField.MAIL || customField.mail || customField.Mail ||
+        customField.EMAIL || customField.email ||
+        body.mail || body.Mail || body.email || body.EMAIL ||
+        body.imei || body.IMEI || ''
+      ).trim().toLowerCase();
+
+      console.log('[DHRU-LICENSE] placeimeiorder');
+      console.log('[DHRU-LICENSE] Email:', clientEmail);
+      console.log('[DHRU-LICENSE] ServiceId:', ServiceId);
 
       if (!clientEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clientEmail)) {
-        return res.status(200).json({ 
-          status: 'error',
-          error: 'Invalid or missing email'
+        return res.status(200).json({
+          ERROR: [{ MESSAGE: 'Invalid or missing email' }],
+          apiversion
         });
       }
 
-      // Importar Supabase dinámicamente
+      // Importar Supabase
       const { createClient } = await import('@supabase/supabase-js');
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://lumhpjfndlqhexnjmvtu.supabase.co',
@@ -124,9 +176,9 @@ export default async function handler(req, res) {
 
       if (error) {
         console.error('[DHRU-LICENSE] DB Error:', error);
-        return res.status(200).json({ 
-          status: 'error',
-          error: 'Database error'
+        return res.status(200).json({
+          ERROR: [{ MESSAGE: 'Database error' }],
+          apiversion
         });
       }
 
@@ -134,8 +186,8 @@ export default async function handler(req, res) {
       if (!user) {
         console.log('[DHRU-LICENSE] ❌ Usuario NO encontrado');
         return res.status(200).json({
-          status: 'error',
-          error: `Correo no encontrado. Registrate primero en: https://arepa-tool-web.vercel.app`
+          ERROR: [{ MESSAGE: 'Correo no encontrado. Registrate primero en: https://arepa-tool-web.vercel.app' }],
+          apiversion
         });
       }
 
@@ -143,8 +195,7 @@ export default async function handler(req, res) {
       console.log('[DHRU-LICENSE] ✅ Usuario encontrado:', user.username);
 
       const now = new Date().toISOString();
-      const days = service?.toLowerCase().includes('1month') ? 30 : 
-                   service?.toLowerCase().includes('6month') ? 180 : 365;
+      const days = ServiceId == 2 ? 180 : 365;
       
       let expDate = new Date();
       if (user.subscription_end && new Date(user.subscription_end) > expDate) {
@@ -152,51 +203,56 @@ export default async function handler(req, res) {
       }
       expDate.setDate(expDate.getDate() + days);
 
+      const orderId = `DHRU_${Date.now()}`;
+
       await supabase.from('users').update({
         status: 'active',
         activated_at: user.status !== 'active' ? now : user.activated_at,
         subscription_end: expDate.toISOString(),
-        dhru_order_id: dhruOrderId
+        dhru_order_id: orderId
       }).eq('id', user.id);
 
       const expiresStr = expDate.toLocaleDateString('es-ES');
       const msg = user.status === 'active' 
-        ? `¡Licencia renovada! Usuario: ${user.username} - Válida hasta: ${expiresStr}`
-        : `¡Licencia activada! Usuario: ${user.username} - Válida hasta: ${expiresStr}`;
+        ? `Licencia renovada! Usuario: ${user.username} - Valida hasta: ${expiresStr}`
+        : `Licencia activada! Usuario: ${user.username} - Valida hasta: ${expiresStr}`;
 
       console.log('[DHRU-LICENSE] ✅', msg);
 
       return res.status(200).json({
-        status: 'success',
-        order_id: dhruOrderId,
-        code: user.username,
-        message: msg
+        SUCCESS: [{ MESSAGE: msg, REFERENCEID: orderId }],
+        apiversion
       });
     }
 
     // ==================================================
-    // ACCIÓN: status (verificar orden)
+    // ACCIÓN: getimeiorder (verificar orden)
     // ==================================================
-    if (action === 'status' || action === 'orderstatus') {
+    if (action === 'getimeiorder' || action === 'getorder') {
+      const OrderID = parameters.ID || body.orderid;
+      console.log('[DHRU-LICENSE] getimeiorder:', OrderID);
+      
       return res.status(200).json({
-        status: 'success',
-        order_status: 'completed',
-        message: 'Order processed'
+        SUCCESS: [{
+          STATUS: 4, // 4 = Available(Success)
+          CODE: 'LICENSE_ACTIVATED'
+        }],
+        apiversion
       });
     }
 
     // Acción no reconocida
-    console.log('[DHRU-LICENSE] ⚠️ Acción no reconocida:', action);
+    console.log('[DHRU-LICENSE] ⚠️ Invalid Action:', action);
     return res.status(200).json({
-      status: 'success',
-      message: 'OK'
+      ERROR: [{ MESSAGE: 'Invalid Action' }],
+      apiversion
     });
 
   } catch (err) {
     console.error('[DHRU-LICENSE] Error:', err);
-    return res.status(200).json({ 
-      status: 'error',
-      error: err.message 
+    return res.status(200).json({
+      ERROR: [{ MESSAGE: err.message }],
+      apiversion: '6.1'
     });
   }
 }
