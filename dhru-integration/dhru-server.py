@@ -1,6 +1,6 @@
 """
 DHRU FUSION API - ArepaToolV2 License Activation
-Python Server - Soporta XML, CUSTOMFIELD base64 y multipart/form-data
+Con sistema de Resellers y Balance
 """
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -10,13 +10,16 @@ import requests
 import re
 import base64
 import xml.etree.ElementTree as ET
+from decimal import Decimal
 
 # ==================== CONFIGURACIÓN ====================
 PORT = 8080
-API_KEY = 'e7f8474a35b264bc688502f348cacb04fc9424251a77da53e217c4c08bccbea4'
 
 SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co'
 SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzQ2NjU2NywiZXhwIjoyMDc5MDQyNTY3fQ.8EGhQmddj46oO-qkBOrAiohGx3d0aFOXK10YSv4-qNM'
+
+# Precio por defecto del servicio
+DEFAULT_SERVICE_PRICE = 14.99
 
 
 def parse_multipart(content_type, body):
@@ -64,7 +67,6 @@ def parse_xml_parameters(xml_string):
                 result[elem.tag] = elem.text.strip()
         
     except Exception as e:
-        # Fallback: regex
         patterns = [
             (r'<CUSTOMFIELD>([^<]+)</CUSTOMFIELD>', 'CUSTOMFIELD'),
             (r'<MAIL>([^<]+)</MAIL>', 'MAIL'),
@@ -85,17 +87,13 @@ def parse_xml_parameters(xml_string):
 def decode_customfield(customfield_b64):
     """Decodifica CUSTOMFIELD de base64 a JSON y extrae el email"""
     try:
-        # Añadir padding si es necesario
         padding = 4 - len(customfield_b64) % 4
         if padding != 4:
             customfield_b64 += '=' * padding
         
         decoded = base64.b64decode(customfield_b64).decode('utf-8')
-        print(f"[DHRU] CUSTOMFIELD decoded: {decoded}")
-        
         cf_data = json.loads(decoded)
         
-        # Buscar email en el objeto
         email_fields = ['Mail', 'mail', 'MAIL', 'Email', 'email', 'EMAIL']
         for field in email_fields:
             if field in cf_data and cf_data[field]:
@@ -107,7 +105,107 @@ def decode_customfield(customfield_b64):
     return None
 
 
+class SupabaseClient:
+    """Cliente para interactuar con Supabase"""
+    
+    def __init__(self):
+        self.url = SUPABASE_URL
+        self.headers = {
+            'apikey': SUPABASE_KEY,
+            'Authorization': f'Bearer {SUPABASE_KEY}',
+            'Content-Type': 'application/json'
+        }
+    
+    def get_reseller(self, api_key=None, username=None):
+        """Obtiene un reseller por API Key o username"""
+        try:
+            if api_key:
+                url = f"{self.url}/rest/v1/resellers?api_key=eq.{api_key}&status=eq.active"
+            elif username:
+                url = f"{self.url}/rest/v1/resellers?username=eq.{username}&status=eq.active"
+            else:
+                return None
+            
+            response = requests.get(url, headers=self.headers)
+            if response.status_code == 200:
+                data = response.json()
+                return data[0] if data else None
+        except Exception as e:
+            print(f"[DHRU] Error getting reseller: {e}")
+        return None
+    
+    def get_user(self, email):
+        """Obtiene un usuario por email"""
+        try:
+            url = f"{self.url}/rest/v1/users?email=eq.{email}"
+            response = requests.get(url, headers=self.headers)
+            if response.status_code == 200:
+                data = response.json()
+                return data[0] if data else None
+        except Exception as e:
+            print(f"[DHRU] Error getting user: {e}")
+        return None
+    
+    def update_user(self, user_id, data):
+        """Actualiza un usuario"""
+        try:
+            url = f"{self.url}/rest/v1/users?id=eq.{user_id}"
+            headers = {**self.headers, 'Prefer': 'return=minimal'}
+            response = requests.patch(url, headers=headers, json=data)
+            return response.status_code in [200, 204]
+        except Exception as e:
+            print(f"[DHRU] Error updating user: {e}")
+        return False
+    
+    def deduct_balance(self, reseller_id, amount, order_id, description):
+        """Descuenta saldo del reseller y registra la transacción"""
+        try:
+            # Obtener reseller actual
+            url = f"{self.url}/rest/v1/resellers?id=eq.{reseller_id}"
+            response = requests.get(url, headers=self.headers)
+            if response.status_code != 200:
+                return False, 0
+            
+            reseller = response.json()[0]
+            current_balance = float(reseller['balance'])
+            
+            if current_balance < amount:
+                return False, current_balance
+            
+            new_balance = current_balance - amount
+            
+            # Actualizar balance
+            update_url = f"{self.url}/rest/v1/resellers?id=eq.{reseller_id}"
+            update_data = {
+                'balance': new_balance,
+                'total_orders': reseller['total_orders'] + 1,
+                'updated_at': 'now()'
+            }
+            headers = {**self.headers, 'Prefer': 'return=minimal'}
+            requests.patch(update_url, headers=headers, json=update_data)
+            
+            # Registrar transacción
+            tx_url = f"{self.url}/rest/v1/reseller_transactions"
+            tx_data = {
+                'reseller_id': reseller_id,
+                'type': 'debit',
+                'amount': amount,
+                'balance_after': new_balance,
+                'description': description,
+                'order_id': order_id
+            }
+            requests.post(tx_url, headers=self.headers, json=tx_data)
+            
+            return True, new_balance
+            
+        except Exception as e:
+            print(f"[DHRU] Error deducting balance: {e}")
+        return False, 0
+
+
 class DHRUHandler(BaseHTTPRequestHandler):
+    
+    db = SupabaseClient()
     
     def do_OPTIONS(self):
         self.send_response(200)
@@ -123,7 +221,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
             return self.handle_action(params)
         
         self.send_json_response({
-            'SUCCESS': [{'message': 'ArepaTool License API is running'}]
+            'SUCCESS': [{'message': 'ArepaTool License API v2.0 - Reseller System'}]
         })
     
     def do_POST(self):
@@ -132,17 +230,14 @@ class DHRUHandler(BaseHTTPRequestHandler):
         
         print(f"\n{'='*60}")
         print(f"[DHRU] POST Request")
-        print(f"[DHRU] Content-Type: {content_type}")
         
         params = {}
         
-        # Query params
         parsed = urlparse(self.path)
         query_params = parse_qs(parsed.query)
         for k, v in query_params.items():
             params[k] = v[0]
         
-        # Body
         body = self.rfile.read(content_length) if content_length > 0 else b''
         
         if 'multipart/form-data' in content_type:
@@ -156,40 +251,45 @@ class DHRUHandler(BaseHTTPRequestHandler):
             except:
                 pass
         
-        print(f"[DHRU] Params keys: {list(params.keys())}")
-        
-        # Parsear XML en 'parameters'
         if 'parameters' in params and params['parameters']:
             xml_data = parse_xml_parameters(params['parameters'])
             params.update(xml_data)
-            print(f"[DHRU] XML data: {xml_data}")
         
         return self.handle_action(params)
     
     def handle_action(self, params):
         action = params.get('action', '').lower()
-        key = params.get('key', params.get('apiaccesskey', ''))
+        api_key = params.get('key', params.get('apiaccesskey', ''))
+        username = params.get('username', '')
         
         if not action:
             action = 'accountinfo'
         
-        print(f"[DHRU] >>> Action: {action}")
+        print(f"[DHRU] Action: {action} | User: {username}")
         
-        # Validar API Key
-        if key and API_KEY and key != API_KEY:
+        # Validar reseller
+        reseller = None
+        if api_key:
+            reseller = self.db.get_reseller(api_key=api_key)
+        elif username:
+            reseller = self.db.get_reseller(username=username)
+        
+        if not reseller:
+            print(f"[DHRU] ❌ Invalid API Key or Username")
             return self.send_json_response({
-                'ERROR': [{'MESSAGE': 'Authentication Failed'}]
+                'ERROR': [{'MESSAGE': 'Authentication Failed - Invalid API Key'}]
             })
+        
+        print(f"[DHRU] ✅ Reseller: {reseller['name']} | Balance: ${reseller['balance']}")
         
         # ACCOUNTINFO
         if action == 'accountinfo':
-            print("[DHRU] ✅ accountinfo")
             return self.send_json_response({
                 'SUCCESS': [{
                     'message': 'Your Accout Info',
                     'AccoutInfo': {
-                        'credit': 999999,
-                        'mail': 'ArepaToolAPI',
+                        'credit': float(reseller['balance']),
+                        'mail': reseller['email'] or reseller['username'],
                         'currency': 'USD'
                     }
                 }]
@@ -197,7 +297,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
         
         # IMEISERVICELIST
         if action == 'imeiservicelist':
-            print("[DHRU] ✅ imeiservicelist")
+            service_price = float(reseller.get('service_price', DEFAULT_SERVICE_PRICE))
             
             group = 'ArepaToolV2 (Server Service)'
             
@@ -210,7 +310,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
                             'SERVICEID': 1,
                             'SERVICETYPE': 'SERVER',
                             'SERVICENAME': 'ArepaToolV2 - Active User (12 month licence)',
-                            'CREDIT': 14.99,
+                            'CREDIT': service_price,
                             'INFO': 'Activate license for 12 months.',
                             'TIME': 'Instant',
                             'QNT': 0,
@@ -236,46 +336,44 @@ class DHRUHandler(BaseHTTPRequestHandler):
         
         # PLACEIMEIORDER / PLACESERVERORDER
         if action in ['placeimeiorder', 'placeserverorder']:
-            print(f"[DHRU] Processing {action}")
+            print(f"[DHRU] Processing order for {reseller['name']}")
             
+            # Obtener email
             email = ''
             
-            # 1. Primero buscar en CUSTOMFIELD (base64 encoded JSON)
             if 'CUSTOMFIELD' in params and params['CUSTOMFIELD']:
                 email = decode_customfield(params['CUSTOMFIELD'])
-                if email:
-                    print(f"[DHRU] Email from CUSTOMFIELD: {email}")
             
-            # 2. Si no, buscar en campos directos
             if not email:
                 email_fields = ['MAIL', 'Mail', 'mail', 'EMAIL', 'Email', 'email', 'IMEI', 'Imei', 'imei']
                 for field in email_fields:
                     if field in params and params[field]:
                         email = params[field]
-                        print(f"[DHRU] Email from '{field}': {email}")
                         break
             
-            # 3. Regex en XML original
-            if not email and 'parameters' in params:
-                xml_str = params['parameters']
-                match = re.search(r'<(?:MAIL|Mail|EMAIL|IMEI)>([^<]+)</(?:MAIL|Mail|EMAIL|IMEI)>', xml_str, re.IGNORECASE)
-                if match:
-                    email = match.group(1)
-                    print(f"[DHRU] Email from regex: {email}")
-            
             email = str(email).strip().lower() if email else ''
-            print(f"[DHRU] Final email: '{email}'")
+            print(f"[DHRU] Customer email: '{email}'")
             
             if not email or '@' not in email:
                 return self.send_json_response({
                     'ERROR': [{'MESSAGE': 'Invalid or missing email'}]
                 })
             
-            user = self.supabase_query(email)
+            # Verificar que el usuario existe
+            user = self.db.get_user(email)
             
             if not user:
                 return self.send_json_response({
-                    'ERROR': [{'MESSAGE': f'Email {email} not found. Register at: https://arepa-tool-web.vercel.app'}]
+                    'ERROR': [{'MESSAGE': f'Email {email} not found. Customer must register at: https://arepatool.com'}]
+                })
+            
+            # Verificar saldo
+            service_price = float(reseller.get('service_price', DEFAULT_SERVICE_PRICE))
+            current_balance = float(reseller['balance'])
+            
+            if current_balance < service_price:
+                return self.send_json_response({
+                    'ERROR': [{'MESSAGE': f'Insufficient balance. Required: ${service_price}, Available: ${current_balance}'}]
                 })
             
             import time
@@ -285,25 +383,35 @@ class DHRUHandler(BaseHTTPRequestHandler):
             expiry = now + timedelta(days=365)
             order_id = f"AREPA_{int(time.time())}"
             
-            update_result = self.supabase_update(user['id'], {
+            # Descontar saldo
+            success, new_balance = self.db.deduct_balance(
+                reseller['id'],
+                service_price,
+                order_id,
+                f"License activation for {email}"
+            )
+            
+            if not success:
+                return self.send_json_response({
+                    'ERROR': [{'MESSAGE': 'Failed to process payment'}]
+                })
+            
+            # Activar usuario
+            self.db.update_user(user['id'], {
                 'status': 'active',
                 'subscription_end': expiry.isoformat(),
                 'dhru_order_id': order_id,
                 'activated_at': now.isoformat()
             })
             
-            if update_result:
-                print(f"[DHRU] ✅ License activated for: {user['username']}")
-                return self.send_json_response({
-                    'SUCCESS': [{
-                        'MESSAGE': f"License activated! User: {user['username']} - Valid until: {expiry.strftime('%m/%d/%Y')}",
-                        'REFERENCEID': order_id
-                    }]
-                })
-            else:
-                return self.send_json_response({
-                    'ERROR': [{'MESSAGE': 'Failed to update user'}]
-                })
+            print(f"[DHRU] ✅ Order complete! User: {user['username']} | New balance: ${new_balance}")
+            
+            return self.send_json_response({
+                'SUCCESS': [{
+                    'MESSAGE': f"License activated! User: {user['username']} - Valid until: {expiry.strftime('%m/%d/%Y')}. New balance: ${new_balance:.2f}",
+                    'REFERENCEID': order_id
+                }]
+            })
         
         # GETIMEIORDER
         if action in ['getimeiorder', 'getserverorder']:
@@ -315,7 +423,11 @@ class DHRUHandler(BaseHTTPRequestHandler):
         return self.send_json_response({
             'SUCCESS': [{
                 'message': 'Your Accout Info',
-                'AccoutInfo': {'credit': 999999, 'mail': 'ArepaToolAPI', 'currency': 'USD'}
+                'AccoutInfo': {
+                    'credit': float(reseller['balance']),
+                    'mail': reseller['email'] or reseller['username'],
+                    'currency': 'USD'
+                }
             }]
         })
     
@@ -334,35 +446,6 @@ class DHRUHandler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
     
-    def supabase_query(self, email):
-        try:
-            url = f"{SUPABASE_URL}/rest/v1/users?email=eq.{email}"
-            headers = {'apikey': SUPABASE_KEY, 'Authorization': f'Bearer {SUPABASE_KEY}'}
-            response = requests.get(url, headers=headers)
-            print(f"[DHRU] Supabase query: {response.status_code}")
-            if response.status_code == 200:
-                data = response.json()
-                return data[0] if data else None
-        except Exception as e:
-            print(f"[DHRU] Supabase error: {e}")
-        return None
-    
-    def supabase_update(self, user_id, data):
-        try:
-            url = f"{SUPABASE_URL}/rest/v1/users?id=eq.{user_id}"
-            headers = {
-                'apikey': SUPABASE_KEY,
-                'Authorization': f'Bearer {SUPABASE_KEY}',
-                'Content-Type': 'application/json',
-                'Prefer': 'return=minimal'
-            }
-            response = requests.patch(url, headers=headers, json=data)
-            print(f"[DHRU] Supabase update: {response.status_code}")
-            return response.status_code in [200, 204]
-        except Exception as e:
-            print(f"[DHRU] Supabase update error: {e}")
-        return False
-    
     def log_message(self, format, *args):
         pass
 
@@ -370,9 +453,10 @@ class DHRUHandler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
     print("=" * 60)
     print("  DHRU FUSION API - ArepaToolV2")
-    print("  Con soporte CUSTOMFIELD base64")
+    print("  Sistema de Resellers con Balance")
     print("=" * 60)
     print(f"  URL: http://localhost:{PORT}")
+    print(f"  API: https://api.arepatool.com")
     print("=" * 60)
     
     server = HTTPServer(('0.0.0.0', PORT), DHRUHandler)

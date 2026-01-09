@@ -95,6 +95,9 @@ function showSection(section) {
         case 'apkmanager':
             loadApkCatalog();
             break;
+        case 'resellers':
+            loadResellers();
+            break;
     }
 }
 
@@ -1424,3 +1427,335 @@ function refreshApkCatalog() {
 
 // Add Cloudflare Account ID constant
 const CLOUDFLARE_ACCOUNT_ID = '8fc120a4cc06bc9a39d9555a416fa166';
+
+// =====================================================
+// LOGIN SYSTEM
+// =====================================================
+
+const ADMIN_CREDENTIALS = {
+    username: 'arepatool',
+    password: 'Gsm@2026#Admin'
+};
+
+function checkLogin() {
+    const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+    const loginOverlay = document.getElementById('login-overlay');
+    
+    if (isLoggedIn === 'true') {
+        if (loginOverlay) loginOverlay.style.display = 'none';
+        return true;
+    }
+    return false;
+}
+
+function doLogin() {
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value;
+    const errorDiv = document.getElementById('login-error');
+    
+    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+        sessionStorage.setItem('adminLoggedIn', 'true');
+        document.getElementById('login-overlay').style.display = 'none';
+        errorDiv.classList.add('d-none');
+        console.log('Admin logged in successfully');
+    } else {
+        errorDiv.classList.remove('d-none');
+        document.getElementById('login-password').value = '';
+    }
+}
+
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        sessionStorage.removeItem('adminLoggedIn');
+        window.location.reload();
+    }
+}
+
+// Check login on page load
+document.addEventListener('DOMContentLoaded', () => {
+    checkLogin();
+});
+
+// =====================================================
+// RESELLERS MANAGEMENT
+// =====================================================
+
+let allResellers = [];
+
+async function loadResellers() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('resellers')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        allResellers = data;
+        displayResellers(data);
+        updateResellerStats(data);
+    } catch (error) {
+        console.error('Error loading resellers:', error);
+        showError('Failed to load resellers');
+    }
+}
+
+function displayResellers(resellers) {
+    const tbody = document.getElementById('resellers-table-body');
+    
+    if (!resellers || resellers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center">No resellers found</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = resellers.map(r => `
+        <tr>
+            <td><strong>${r.username}</strong></td>
+            <td>${r.name}</td>
+            <td>${r.email || '-'}</td>
+            <td><span class="badge bg-success fs-6">$${parseFloat(r.balance).toFixed(2)}</span></td>
+            <td>$${parseFloat(r.service_price).toFixed(2)}</td>
+            <td>${r.total_orders}</td>
+            <td>
+                <span class="badge ${r.status === 'active' ? 'bg-success' : 'bg-danger'}">
+                    ${r.status.toUpperCase()}
+                </span>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-success btn-action" onclick="showAddBalanceModal('${r.id}', '${r.name}', ${r.balance})">
+                    <i class="bi bi-plus-circle"></i> Add $
+                </button>
+                <button class="btn btn-sm btn-info btn-action" onclick="viewResellerApiKey('${r.id}')">
+                    <i class="bi bi-key"></i> API Key
+                </button>
+                <button class="btn btn-sm btn-primary btn-action" onclick="editReseller('${r.id}')">
+                    <i class="bi bi-pencil"></i>
+                </button>
+                ${r.username !== 'arepatool' ? `
+                    <button class="btn btn-sm btn-danger btn-action" onclick="deleteReseller('${r.id}')">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                ` : ''}
+            </td>
+        </tr>
+    `).join('');
+}
+
+function updateResellerStats(resellers) {
+    if (!resellers) return;
+    
+    const totalBalance = resellers.reduce((sum, r) => sum + parseFloat(r.balance || 0), 0);
+    const totalOrders = resellers.reduce((sum, r) => sum + (r.total_orders || 0), 0);
+    
+    const statTotal = document.getElementById('stat-total-resellers');
+    const statBalance = document.getElementById('stat-total-balance');
+    const statOrders = document.getElementById('stat-total-orders');
+    
+    if (statTotal) statTotal.textContent = resellers.length;
+    if (statBalance) statBalance.textContent = '$' + totalBalance.toFixed(2);
+    if (statOrders) statOrders.textContent = totalOrders;
+}
+
+function showAddResellerModal() {
+    document.getElementById('reseller-edit-id').value = '';
+    document.getElementById('reseller-username').value = '';
+    document.getElementById('reseller-name').value = '';
+    document.getElementById('reseller-email').value = '';
+    document.getElementById('reseller-balance').value = '0';
+    document.getElementById('reseller-price').value = '14.99';
+    document.getElementById('reseller-status').value = 'active';
+    document.getElementById('reseller-api-key-section').classList.add('d-none');
+    document.getElementById('resellerModalTitle').innerHTML = '<i class="bi bi-person-plus"></i> Add New Reseller';
+    
+    const modal = new bootstrap.Modal(document.getElementById('addResellerModal'));
+    modal.show();
+}
+
+async function saveReseller() {
+    try {
+        const editId = document.getElementById('reseller-edit-id').value;
+        const username = document.getElementById('reseller-username').value.trim().toLowerCase();
+        const name = document.getElementById('reseller-name').value.trim();
+        const email = document.getElementById('reseller-email').value.trim();
+        const balance = parseFloat(document.getElementById('reseller-balance').value) || 0;
+        const servicePrice = parseFloat(document.getElementById('reseller-price').value) || 14.99;
+        const status = document.getElementById('reseller-status').value;
+        
+        if (!username || !name) {
+            showError('Username and name are required');
+            return;
+        }
+        
+        if (editId) {
+            // Update existing
+            const { error } = await supabaseClient
+                .from('resellers')
+                .update({ name, email, balance, service_price: servicePrice, status, updated_at: new Date().toISOString() })
+                .eq('id', editId);
+            
+            if (error) throw error;
+            showSuccess('Reseller updated successfully');
+        } else {
+            // Create new with generated API key
+            const { data, error } = await supabaseClient
+                .from('resellers')
+                .insert({
+                    username,
+                    name,
+                    email,
+                    balance,
+                    service_price: servicePrice,
+                    status,
+                    api_key: generateApiKey()
+                })
+                .select()
+                .single();
+            
+            if (error) throw error;
+            
+            // Show the API key
+            document.getElementById('reseller-api-key-display').textContent = data.api_key;
+            document.getElementById('reseller-api-key-section').classList.remove('d-none');
+            
+            showSuccess('Reseller created! Copy the API Key below.');
+        }
+        
+        await loadResellers();
+    } catch (error) {
+        console.error('Error saving reseller:', error);
+        showError('Failed to save reseller: ' + error.message);
+    }
+}
+
+function generateApiKey() {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function editReseller(resellerId) {
+    const reseller = allResellers.find(r => r.id === resellerId);
+    if (!reseller) return;
+    
+    document.getElementById('reseller-edit-id').value = reseller.id;
+    document.getElementById('reseller-username').value = reseller.username;
+    document.getElementById('reseller-name').value = reseller.name;
+    document.getElementById('reseller-email').value = reseller.email || '';
+    document.getElementById('reseller-balance').value = reseller.balance;
+    document.getElementById('reseller-price').value = reseller.service_price;
+    document.getElementById('reseller-status').value = reseller.status;
+    document.getElementById('reseller-api-key-section').classList.add('d-none');
+    document.getElementById('resellerModalTitle').innerHTML = '<i class="bi bi-pencil"></i> Edit Reseller';
+    
+    const modal = new bootstrap.Modal(document.getElementById('addResellerModal'));
+    modal.show();
+}
+
+async function viewResellerApiKey(resellerId) {
+    const reseller = allResellers.find(r => r.id === resellerId);
+    if (!reseller) return;
+    
+    const credentials = `
+API URL: https://api.arepatool.com
+Username: ${reseller.username}
+API Key: ${reseller.api_key}
+Balance: $${parseFloat(reseller.balance).toFixed(2)}
+Price/License: $${parseFloat(reseller.service_price).toFixed(2)}
+    `.trim();
+    
+    if (navigator.clipboard) {
+        await navigator.clipboard.writeText(reseller.api_key);
+        alert('API Key copied to clipboard!\n\n' + credentials);
+    } else {
+        prompt('Copy the API Key:', reseller.api_key);
+    }
+}
+
+function copyApiKey() {
+    const apiKey = document.getElementById('reseller-api-key-display').textContent;
+    navigator.clipboard.writeText(apiKey).then(() => {
+        alert('API Key copied to clipboard!');
+    });
+}
+
+function showAddBalanceModal(resellerId, resellerName, currentBalance) {
+    document.getElementById('balance-reseller-id').value = resellerId;
+    document.getElementById('balance-reseller-name').textContent = resellerName;
+    document.getElementById('balance-current').textContent = parseFloat(currentBalance).toFixed(2);
+    document.getElementById('balance-amount').value = '100';
+    document.getElementById('balance-description').value = '';
+    
+    const modal = new bootstrap.Modal(document.getElementById('addBalanceModal'));
+    modal.show();
+}
+
+async function addBalance() {
+    try {
+        const resellerId = document.getElementById('balance-reseller-id').value;
+        const amount = parseFloat(document.getElementById('balance-amount').value) || 0;
+        const description = document.getElementById('balance-description').value.trim() || 'Balance added';
+        
+        if (amount <= 0) {
+            showError('Amount must be greater than 0');
+            return;
+        }
+        
+        const reseller = allResellers.find(r => r.id === resellerId);
+        if (!reseller) return;
+        
+        const newBalance = parseFloat(reseller.balance) + amount;
+        
+        // Update balance
+        const { error: updateError } = await supabaseClient
+            .from('resellers')
+            .update({ balance: newBalance, updated_at: new Date().toISOString() })
+            .eq('id', resellerId);
+        
+        if (updateError) throw updateError;
+        
+        // Log transaction
+        await supabaseClient
+            .from('reseller_transactions')
+            .insert({
+                reseller_id: resellerId,
+                type: 'credit',
+                amount: amount,
+                balance_after: newBalance,
+                description: description
+            });
+        
+        bootstrap.Modal.getInstance(document.getElementById('addBalanceModal')).hide();
+        await loadResellers();
+        showSuccess(`$${amount.toFixed(2)} added to ${reseller.name}. New balance: $${newBalance.toFixed(2)}`);
+    } catch (error) {
+        console.error('Error adding balance:', error);
+        showError('Failed to add balance: ' + error.message);
+    }
+}
+
+async function deleteReseller(resellerId) {
+    const reseller = allResellers.find(r => r.id === resellerId);
+    if (!reseller) return;
+    
+    if (!confirm(`Delete reseller "${reseller.name}"? This cannot be undone.`)) return;
+    
+    try {
+        const { error } = await supabaseClient
+            .from('resellers')
+            .delete()
+            .eq('id', resellerId);
+        
+        if (error) throw error;
+        
+        await loadResellers();
+        showSuccess('Reseller deleted');
+    } catch (error) {
+        console.error('Error deleting reseller:', error);
+        showError('Failed to delete reseller: ' + error.message);
+    }
+}
+
+function refreshResellers() {
+    loadResellers();
+    showSuccess('Resellers refreshed');
+}

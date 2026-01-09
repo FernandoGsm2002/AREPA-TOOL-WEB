@@ -1,0 +1,7 @@
+tunnel: 7f68a05e-f329-4019-977f-f919ad72b56b
+credentials-file: C:\Users\Fernando\.cloudflared\7f68a05e-f329-4019-977f-f919ad72b56b.json
+
+ingress:
+  - hostname: api.arepatool.com
+    service: http://localhost:8080
+  - service: http_status:404
