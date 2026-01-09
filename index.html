@@ -40,10 +40,14 @@
                 <a href="instructions.html">Manuales</a>
                 <a href="#resellers">Seller</a>
                 <a href="#tutorials">Tutoriales</a>
-                <a href="https://t.me/+3MYO_zn-1_BkNWIx" class="btn-telegram" target="_blank">
-                    <i class="bi bi-telegram"></i> Telegram Group
+                <a href="register.html" class="btn-register">
+                    <i class="bi bi-person-plus"></i> Regístrate
                 </a>
             </div>
+            <!-- Mobile Register Button -->
+            <a href="register.html" class="btn-register-mobile">
+                <i class="bi bi-person-plus"></i>
+            </a>
         </div>
     </nav>
 
@@ -292,10 +296,62 @@
         </div>
     </footer>
 
-    <!-- Floating Action Button (Telegram) -->
-    <a href="https://t.me/ctrone21" target="_blank" style="position: fixed; bottom: 30px; right: 30px; background: #0088cc; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 100; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+    <!-- Floating Action Button (Telegram Group) -->
+    <a href="https://t.me/+3MYO_zn-1_BkNWIx" target="_blank" class="fab-telegram" title="">
         <i class="bi bi-telegram"></i>
+        <span class="fab-tooltip">Grupo de Telegram</span>
     </a>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal-overlay" onclick="closeRegisterModal(event)">
+        <div class="modal-container" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeRegisterModal()">&times;</button>
+            
+            <div class="modal-header">
+                <img src="pngs/arepalanding.png" alt="ArepaTool" class="modal-logo">
+                <h2>Crear Cuenta</h2>
+                <p>Regístrate para obtener acceso a ArepaTool V2</p>
+            </div>
+            
+            <form id="registerForm" class="modal-form">
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <input type="text" id="regUsername" placeholder="Nombre de usuario (mín. 3 caracteres)" required minlength="3">
+                </div>
+                
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                    <input type="email" id="regEmail" placeholder="Correo electrónico" required>
+                </div>
+                
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <input type="password" id="regPassword" placeholder="Contraseña (mín. 6 caracteres)" required minlength="6">
+                </div>
+                
+                <div class="form-checkbox">
+                    <input type="checkbox" id="regTerms" required>
+                    <label for="regTerms">Acepto los <a href="#" target="_blank">términos y condiciones</a></label>
+                </div>
+                
+                <div id="registerStatus" class="form-status"></div>
+                
+                <button type="submit" class="btn-submit" id="btnSubmitRegister">
+                    <i class="bi bi-person-plus"></i> Crear Cuenta
+                </button>
+            </form>
+            
+            <div class="modal-footer">
+                <p>¿Ya tienes cuenta? <a href="https://t.me/ctrone21" target="_blank">Contacta soporte</a></p>
+            </div>
+        </div>
+    </div>
 
     <!-- AOS Animation Library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -353,6 +409,193 @@
              canvas.width = window.innerWidth;
              canvas.height = window.innerHeight;
         });
+    </script>
+
+    <!-- Register Modal Script -->
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0NjY1NjcsImV4cCI6MjA3OTA0MjU2N30.oXVYUjnSpDDQphLZJzglGaDSQTjuGzYgD-LMC5FwDHw';
+
+        // Modal Functions
+        function openRegisterModal() {
+            document.getElementById('registerModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRegisterModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('registerModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            // Reset form
+            document.getElementById('registerForm').reset();
+            document.getElementById('registerStatus').textContent = '';
+            document.getElementById('registerStatus').className = 'form-status';
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeRegisterModal();
+        });
+
+        // Registration Logic
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('regUsername').value.trim().toLowerCase();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value;
+            const terms = document.getElementById('regTerms').checked;
+            const statusEl = document.getElementById('registerStatus');
+            const btnSubmit = document.getElementById('btnSubmitRegister');
+
+            // Validations
+            if (username.length < 3) {
+                showStatus('El nombre de usuario debe tener al menos 3 caracteres', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showStatus('Ingresa un correo electrónico válido', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showStatus('La contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+
+            if (!terms) {
+                showStatus('Debes aceptar los términos y condiciones', 'error');
+                return;
+            }
+
+            // Disable form
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="bi bi-hourglass-split"></i> Creando cuenta...';
+            showStatus('Verificando datos...', 'info');
+
+            try {
+                // 1. Check if username exists
+                const checkUsername = await fetch(
+                    `${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=id`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                        }
+                    }
+                );
+                const existingUsername = await checkUsername.json();
+                if (existingUsername.length > 0) {
+                    showStatus('Este nombre de usuario ya está registrado', 'error');
+                    resetButton();
+                    return;
+                }
+
+                // 2. Check if email exists
+                const checkEmail = await fetch(
+                    `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                        }
+                    }
+                );
+                const existingEmail = await checkEmail.json();
+                if (existingEmail.length > 0) {
+                    showStatus('Este correo electrónico ya está registrado', 'error');
+                    resetButton();
+                    return;
+                }
+
+                showStatus('Creando cuenta de autenticación...', 'info');
+
+                // 3. Create user in Supabase Auth
+                const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const authData = await authResponse.json();
+                
+                if (!authResponse.ok) {
+                    let errorMsg = authData.error_description || authData.message || authData.msg || 'Error al crear cuenta';
+                    if (errorMsg.includes('already registered')) {
+                        errorMsg = 'Este correo electrónico ya está registrado en el sistema de autenticación';
+                    }
+                    showStatus(errorMsg, 'error');
+                    resetButton();
+                    return;
+                }
+
+                showStatus('Guardando información de usuario...', 'info');
+
+                // 4. Create user in public.users table
+                const newUser = {
+                    username: username,
+                    email: email,
+                    status: 'pending',
+                    created_at: new Date().toISOString()
+                };
+
+                const createUserResponse = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(newUser)
+                });
+
+                if (!createUserResponse.ok) {
+                    const errorText = await createUserResponse.text();
+                    if (errorText.includes('duplicate')) {
+                        showStatus('El usuario o email ya existe', 'error');
+                    } else {
+                        showStatus('Error al guardar usuario: ' + errorText, 'error');
+                    }
+                    resetButton();
+                    return;
+                }
+
+                // Success!
+                showStatus('✓ ¡Cuenta creada! Contacta a tu distribuidor para activar tu licencia.', 'success');
+                btnSubmit.innerHTML = '<i class="bi bi-check-circle"></i> ¡Cuenta Creada!';
+                btnSubmit.style.background = '#00bf63';
+
+                // Close modal after 3 seconds
+                setTimeout(() => {
+                    closeRegisterModal();
+                    resetButton();
+                }, 3500);
+
+            } catch (error) {
+                console.error('Registration error:', error);
+                showStatus('Error de conexión. Intenta de nuevo.', 'error');
+                resetButton();
+            }
+        });
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('registerStatus');
+            statusEl.textContent = message;
+            statusEl.className = 'form-status ' + type;
+        }
+
+        function resetButton() {
+            const btnSubmit = document.getElementById('btnSubmitRegister');
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
+            btnSubmit.style.background = '';
+        }
     </script>
 </body>
 </html>
