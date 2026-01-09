@@ -17,7 +17,18 @@ let allUsers = [];
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Initializing ArepaTool V1.0.1 Admin Panel...');
-    console.log('Supabase URL:', SUPABASE_URL);
+    
+    // Check login first - if not logged in, don't load data yet
+    if (!checkLogin()) {
+        console.log('Waiting for login...');
+        return;
+    }
+    
+    await initializePanel();
+});
+
+async function initializePanel() {
+    console.log('Loading panel data...');
     
     try {
         await loadUsers();
@@ -37,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error initializing panel:', error);
         alert('Error initializing panel. Check console for details.');
     }
-});
+}
 
 // Navigation
 function showSection(section) {
@@ -1458,6 +1469,8 @@ function doLogin() {
         document.getElementById('login-overlay').style.display = 'none';
         errorDiv.classList.add('d-none');
         console.log('Admin logged in successfully');
+        // Initialize panel after successful login
+        initializePanel();
     } else {
         errorDiv.classList.remove('d-none');
         document.getElementById('login-password').value = '';
@@ -1470,11 +1483,6 @@ function logout() {
         window.location.reload();
     }
 }
-
-// Check login on page load
-document.addEventListener('DOMContentLoaded', () => {
-    checkLogin();
-});
 
 // =====================================================
 // RESELLERS MANAGEMENT
