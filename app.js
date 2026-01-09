@@ -1453,7 +1453,9 @@ function checkLogin() {
     const loginOverlay = document.getElementById('login-overlay');
     
     if (isLoggedIn === 'true') {
-        if (loginOverlay) loginOverlay.style.display = 'none';
+        if (loginOverlay) {
+            loginOverlay.remove(); // Remove from DOM completely
+        }
         return true;
     }
     return false;
@@ -1463,10 +1465,16 @@ function doLogin() {
     const username = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value;
     const errorDiv = document.getElementById('login-error');
+    const loginOverlay = document.getElementById('login-overlay');
     
     if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
         sessionStorage.setItem('adminLoggedIn', 'true');
-        document.getElementById('login-overlay').style.display = 'none';
+        
+        // Remove overlay completely from DOM
+        if (loginOverlay) {
+            loginOverlay.remove();
+        }
+        
         errorDiv.classList.add('d-none');
         console.log('Admin logged in successfully');
         // Initialize panel after successful login
