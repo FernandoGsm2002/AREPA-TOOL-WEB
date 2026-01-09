@@ -1434,7 +1434,7 @@ const CLOUDFLARE_ACCOUNT_ID = '8fc120a4cc06bc9a39d9555a416fa166';
 
 const ADMIN_CREDENTIALS = {
     username: 'arepatool',
-    password: 'Gsm@2026#Admin'
+    password: 'nadiemeama123'
 };
 
 function checkLogin() {
