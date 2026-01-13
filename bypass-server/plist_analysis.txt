@@ -1,0 +1,14 @@
+﻿CacheData keys: 6210
+python : Traceback (most recent call last):
+En línea: 1 Carácter: 1
++ python analyze_plist.py 2>&1 | Out-File -FilePath plist_analysis.txt  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteExceptio 
+   n
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\Fernando\Desktop\ArepaToolV2\AREPA-TOOL-PANEL\bypass-server\analyze_plist.py", line 13, 
+in <module>
+    for k in cache_data.keys():
+             ^^^^^^^^^^^^^^^
+AttributeError: 'bytes' object has no attribute 'keys'

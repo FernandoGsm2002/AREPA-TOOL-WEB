@@ -1,0 +1,46 @@
+﻿======================================================================
+ANALYZING ORIGINAL SERVER PAYLOAD
+======================================================================
+File: C:\Users\Fernando\Desktop\ArepaToolV2\AREPA-TOOL-PANEL\bypass-server\public\analysis\iPhone12-3_B3A9BC8C\step3_downloads.28.sqlitedb
+Size: 122880 bytes
+
+Tables: ['application_id', 'asset', 'download', 'download_policy', 'download_state', 'finished_download', 'persistent_download', 'persistent_manager', 'persistent_manager_kind', 'preorder', 'canceled_preorder', 'client', 'purchase', 'purchase_manager', 'application_workspace_state', 'trnsaction']
+
+Asset count: 4
+
+======================================================================
+ASSET 1
+======================================================================
+  download_token: 466440000
+  is_external: 1
+
+======================================================================
+ASSET 2
+======================================================================
+  download_token: 466440000
+  is_external: 1
+
+======================================================================
+ASSET 3
+======================================================================
+  download_token: 466440000
+  is_external: 1
+
+======================================================================
+ASSET 4
+======================================================================
+  download_token: 466440000
+  is_external: 1
+
+======================================================================
+STEP1 FIXEDFILE (EPUB/ZIP)
+======================================================================
+Size: 1297 bytes
+Format: ZIP file
+Contents: ['Caches/mimetype', 'Caches/com.apple.MobileGestalt.plist']
+
+======================================================================
+STEP2 BLDATABASE
+======================================================================
+Size: 36864 bytes
+Format: SQLite database

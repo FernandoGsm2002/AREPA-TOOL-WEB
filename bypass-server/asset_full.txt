@@ -1,0 +1,73 @@
+﻿======================================================================
+FULL ASSET ANALYSIS
+======================================================================
+Asset columns: ['pid', 'download_id', 'asset_order', 'asset_type', 'bytes_total', 'url', 'local_path', 'destination_url', 'path_extension', 'retry_count', 'http_method', 'initial_odr_size', 'is_discretionary', 'is_downloaded', 'is_drm_free', 'is_external', 'is_hls', 'is_local_cache_server', 'is_zip_streamable', 'processing_types', 'video_dimensions', 'timeout_interval', 'store_flavor', 'download_token', 'blocked_reason', 'avfoundation_blocked', 'service_type', 'protection_type', 'store_download_key', 'etag', 'bytes_to_hash', 'hash_type', 'server_guid', 'file_protection', 'variant_id', 'hash_array', 'http_headers', 'request_parameters', 'body_data', 'body_data_file_path', 'sinfs_data', 'dpinfo_data', 'uncompressed_size', 'url_session_task_id']
+
+Total assets: 4
+
+======================================================================
+ASSET 1
+======================================================================
+  pid: 1234567890
+  download_id: 6936249076851270150
+  asset_type: media
+  url: https://codex-r1nderpest-a12.ru/cache/16686e99e407d0d618e392c6d508a457978b86f35e41910ba2d202c82072b533/2ndd/belliloveu.png
+  local_path: /private/var/containers/Shared/SystemGroup/B3A9BC8C-AB88-40A6-B240-D22C79789838/Documents/BLDatabaseManager/BLDatabaseManager.sqlite
+  path_extension: epub
+  retry_count: 6
+  http_method: GET
+  is_external: 1
+  timeout_interval: 60.0
+  download_token: 466440000
+  hash_array: bplist00í_ 6a8381da01ddbc939e73d110062bfc5f
+
+  url_session_task_id: 1
+
+======================================================================
+ASSET 2
+======================================================================
+  pid: 1234567891
+  download_id: 6936249076851270151
+  asset_type: media
+  url: http://codex-r1nderpest-a12.ru/badfile.plist
+  local_path: /private/var/containers/Shared/SystemGroup/B3A9BC8C-AB88-40A6-B240-D22C79789838/Documents/BLDatabaseManager/BLDatabaseManager.sqlite-shm
+  path_extension: epub
+  retry_count: 6
+  http_method: GET
+  is_external: 1
+  timeout_interval: 60.0
+  download_token: 466440000
+  url_session_task_id: -1
+
+======================================================================
+ASSET 3
+======================================================================
+  pid: 1234567892
+  download_id: 6936249076851270152
+  asset_type: media
+  url: http://codex-r1nderpest-a12.ru/badfile.plist
+  local_path: /private/var/containers/Shared/SystemGroup/B3A9BC8C-AB88-40A6-B240-D22C79789838/Documents/BLDatabaseManager/BLDatabaseManager.sqlite-wal
+  path_extension: epub
+  retry_count: 6
+  http_method: GET
+  is_external: 1
+  timeout_interval: 60.0
+  download_token: 466440000
+  url_session_task_id: -1
+
+======================================================================
+ASSET 4
+======================================================================
+  pid: 1234567893
+  download_id: 6936249076851270153
+  asset_type: media
+  url: http://codex-r1nderpest-a12.ru/badfile.plist
+  local_path: /private/var/mobile/Media/iTunes_Control/iTunes/iTunesMetadata.plist
+  path_extension: epub
+  retry_count: 6
+  http_method: GET
+  is_external: 1
+  timeout_interval: 60.0
+  download_token: 466440000
+  url_session_task_id: -1
+

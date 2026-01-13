@@ -1,0 +1,34 @@
+﻿
+======================================================================
+iRemovalPRO (Camera WORKS)
+======================================================================
+Size: 122880 bytes
+Asset count: 0
+
+======================================================================
+RustA12+ (Camera BLACK)
+======================================================================
+Size: 122880 bytes
+Asset count: 4
+
+--- Asset 1 ---
+  url: https://codex-r1nderpest-a12.ru/cache/16686e99e407d0d618e392c6d508a457978b86f35e41910ba2d202c82072b533/2ndd/belliloveu.png
+  local_path: /private/var/containers/Shared/SystemGroup/B3A9BC8C-AB88-40A6-B240-D22C79789838/Documents/BLDatabaseManager/BLDatabaseManager.sqlite
+  download_token: 466440000
+  hash_array: bplist00í_ 6a8381da01ddbc939e73d110062bfc5f
+
+
+--- Asset 2 ---
+  url: http://codex-r1nderpest-a12.ru/badfile.plist
+  local_path: /private/var/containers/Shared/SystemGroup/B3A9BC8C-AB88-40A6-B240-D22C79789838/Documents/BLDatabaseManager/BLDatabaseManager.sqlite-shm
+  download_token: 466440000
+
+--- Asset 3 ---
+  url: http://codex-r1nderpest-a12.ru/badfile.plist
+  local_path: /private/var/containers/Shared/SystemGroup/B3A9BC8C-AB88-40A6-B240-D22C79789838/Documents/BLDatabaseManager/BLDatabaseManager.sqlite-wal
+  download_token: 466440000
+
+--- Asset 4 ---
+  url: http://codex-r1nderpest-a12.ru/badfile.plist
+  local_path: /private/var/mobile/Media/iTunes_Control/iTunes/iTunesMetadata.plist
+  download_token: 466440000

@@ -1,0 +1,7 @@
+Device: iPhone12,3
+GUID: B3A9BC8C-AB88-40A6-B240-D22C79789838
+Serial: F18ZL87HN6XW
+iOS: 18.6.2
+Captured: 2026-01-12T18:40:14.422505
+
+Original URL: https://codex-r1nderpest-a12.ru/rust.php?prd=iPhone12,3&guid=B3A9BC8C-AB88-40A6-B240-D22C79789838&sn=F18ZL87HN6XW&ios_version=18.6.2

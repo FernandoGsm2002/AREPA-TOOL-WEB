@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "parameters": {
+    "prd": "iPhone12,3",
+    "guid": "B3A9BC8C-AB88-40A6-B240-D22C79789838",
+    "sn": "F18ZL87HN6XW"
+  },
+  "links": {
+    "step1_fixedfile": "https://codex-r1nderpest-a12.ru/cache/16686e99e407d0d618e392c6d508a457978b86f35e41910ba2d202c82072b533/firststp/fixedfile",
+    "step2_bldatabase": "https://codex-r1nderpest-a12.ru/cache/16686e99e407d0d618e392c6d508a457978b86f35e41910ba2d202c82072b533/2ndd/belliloveu.png",
+    "step3_final": "https://codex-r1nderpest-a12.ru/cache/16686e99e407d0d618e392c6d508a457978b86f35e41910ba2d202c82072b533/last/apllefuckedhhh.png"
+  },
+  "debug": {
+    "cache_hash": "16686e99e407d0d618e392c6d508a457978b86f35e41910ba2d202c82072b533",
+    "plist_used": "/var/www/p627430/data/www/codex-r1nderpest-a12.ru/Maker/iPhone12-3/18.6.2/com.apple.MobileGestalt.plist",
+    "plist_size": 8523
+  }
+}

@@ -4,4 +4,6 @@ credentials-file: C:\Users\Fernando\.cloudflared\7f68a05e-f329-4019-977f-f919ad7
 ingress:
   - hostname: api.arepatool.com
     service: http://localhost:8080
+  - hostname: bypass.arepatool.com
+    service: http://localhost:8090
   - service: http_status:404

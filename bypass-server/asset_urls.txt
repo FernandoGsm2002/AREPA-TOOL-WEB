@@ -1,0 +1,25 @@
+﻿======================================================================
+FULL ASSET ANALYSIS
+======================================================================
+python : Traceback (most recent call last):
+En línea: 1 Carácter: 1
++ python analyze_db.py 2>&1 | Out-File 
+-FilePath asset_urls.txt -Encodi ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (T 
+   raceback (most recent call last)::String)   
+  [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandErr 
+   or
+ 
+  File "C:\Users\Fernando\Desktop\ArepaToolV2\A
+REPA-TOOL-PANEL\bypass-server\analyze_db.py", 
+line 15, in <module>
+    cursor.execute("SELECT source_url, 
+destination_url, download_token, 
+store_download_key FROM asset")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^
+sqlite3.OperationalError: no such column: 
+source_url
