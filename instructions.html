@@ -283,8 +283,8 @@
                         </h5>
                         <p>En ArepaTool:</p>
                         <ol>
-                            <li>Ve a <strong>Android > Main Module</strong>.</li>
-                            <li>Selecciona <strong>MDM Remove</strong> y dale a Start.</li>
+                            <li>Ve a <strong>MDM Lock</strong>.</li>
+                            <li>Selecciona <strong>Tu tipo de MDM a Remover</strong> y dale en Iniciar.</li>
                             <li>Espera el mensaje "Success". El dispositivo se reiniciará solo.</li>
                         </ol>
                     </div>
@@ -391,12 +391,75 @@
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
-                    <ol>
-                        <li>Dipositivo en Hello Mode Ios 18.7.1 a 26.1.</li>
-                        <li>Ir a Apple y click en START BYPASS (Wifi necesario).</li>
-                        <li>Al terminar en algunos telefonos la camara no abrira, instala una aplicacion y solucionado".</li>
-                        <li><strong>Importante:</strong> No restablecer de fábrica después del proceso (Disable OTA recomendado).</li>
-                    </ol>
+                    
+                    <!-- Alert -->
+                    <div class="custom-alert alert-warning">
+                        <h6 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Limitación Importante</h6>
+                        <p style="margin-bottom: 0;">Dispositivos con <strong>Passcode NO son soportados</strong>. Solo Hello Screen.</p>
+                    </div>
+
+                    <!-- Paso 1 -->
+                    <div style="margin-bottom: 20px;">
+                        <h5 class="step-header">
+                            <i class="bi bi-1-circle-fill"></i> Preparación
+                        </h5>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li style="margin-bottom: 8px; display: flex; gap: 10px;">
+                                <i class="bi bi-phone" style="color: var(--primary-color);"></i> 
+                                Asegurar dispositivo en <strong>Modo Hola</strong> (Pantalla de inicio).
+                            </li>
+                            <li style="margin-bottom: 8px; display: flex; gap: 10px;">
+                                <i class="bi bi-wifi" style="color: #0ea5e9;"></i> 
+                                Conectar dispositivo a <strong>WiFi</strong> (Requisito Obligatorio).
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div style="margin-bottom: 20px;">
+                        <h5 class="step-header">
+                            <i class="bi bi-2-circle-fill"></i> Proceso en Herramienta
+                        </h5>
+                        <p>Abre <a href="https://dl.3u.com/update/v900/dl/3uTools_v9.01.012_Setup_x64.exe" target="_blank" style="color: #059669; text-decoration: underline;"><strong>3uTools</strong></a> para verificar conexión y luego en ArepaTool:</p>
+                        <ol>
+                            <li>Ve al apartado de <strong>Apple</strong>.</li>
+                            <li>Click en el botón <strong>Start Bypass</strong>.</li>
+                        </ol>
+                        <div style="background: #f1f5f9; padding: 10px; border-radius: 6px; border-left: 3px solid #64748b; font-size: 0.9em; margin-top: 10px;">
+                            <i class="bi bi-clock-history"></i> <strong>Tiempo estimado:</strong> 5-10 minutos.<br>
+                            <span style="color: #64748b; font-size: 0.9em;">Si sale "Exitoso" pero sigue "No activado", por favor reintente nuevamente.</span>
+                        </div>
+                    </div>
+
+                    <!-- Compatibility & Python Fix -->
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <!-- Compatibilidad (Red & Compact) -->
+                        <div class="alert-danger" style="flex: 1; padding: 12px; border-radius: 6px; font-size: 0.85em; margin-top: 0; min-width: 220px;">
+                            <div style="margin-bottom: 6px; display: flex; align-items: start; gap: 8px; line-height: 1.4;">
+                                <i class="bi bi-check-circle-fill" style="color: #059669; font-size: 1.1em; flex-shrink: 0;"></i>
+                                <span style="color: #0f172a;"><strong>iOS 18.6.1 a 26.1:</strong> Soportado</span>
+                            </div>
+                            <div style="margin-bottom: 6px; display: flex; align-items: start; gap: 8px; line-height: 1.4;">
+                                <i class="bi bi-flask" style="color: #d97706; font-size: 1.1em; flex-shrink: 0;"></i>
+                                <span style="color: #0f172a;"><strong>Inferior:</strong> Modo Prueba</span>
+                            </div>
+                            <div style="display: flex; align-items: start; gap: 8px; line-height: 1.4;">
+                                <i class="bi bi-x-circle-fill" style="color: #dc2626; font-size: 1.1em; flex-shrink: 0;"></i>
+                                <span style="color: #0f172a;"><strong>Posterior:</strong> NO Soportado</span>
+                            </div>
+                        </div>
+
+                        <!-- Python Fix -->
+                        <div style="flex: 1; background: #fffbeb; border: 1px solid #fcd34d; padding: 12px; border-radius: 6px; font-size: 0.85em; color: #92400e; min-width: 220px; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 6px;">
+                                <i class="bi bi-lightning-fill" style="color: #d97706;"></i> ¿Errores inesperados?
+                            </div>
+                            <p style="margin-bottom: 0; line-height: 1.4;">
+                                Si surgen errores distintos teniendo todo listo: <a href="https://www.python.org/ftp/python/3.14.2/python-3.14.2-amd64.exe" target="_blank" style="color: #b45309; text-decoration: underline; font-weight: bold;">Instale Python</a>.
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
