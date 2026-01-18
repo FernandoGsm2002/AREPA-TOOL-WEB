@@ -364,7 +364,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
             
             if not user:
                 return self.send_json_response({
-                    'ERROR': [{'MESSAGE': f'Email {email} not found. Customer must register at: https://arepatool.com'}]
+                    'ERROR': [{'MESSAGE': f'Email {email} no encontrado.Primero debes registrarse en: https://www.arepatool.com/register.html'}]
                 })
             
             # Verificar saldo
