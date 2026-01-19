@@ -416,7 +416,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
         # GETIMEIORDER
         if action in ['getimeiorder', 'getserverorder']:
             return self.send_json_response({
-                'SUCCESS': [{'STATUS': 4, 'CODE': 'LICENSE_ACTIVATED'}]
+                'SUCCESS': [{'STATUS': 4, 'CODE': 'LICENCIA_ACTIVADA✅'}]
             })
         
         # Default

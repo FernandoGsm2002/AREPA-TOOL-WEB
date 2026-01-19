@@ -94,14 +94,8 @@ function showSection(section) {
         case 'updates':
             loadVersions();
             break;
-        case 'announcements':
-            loadAnnouncements();
-            break;
         case 'license':
             loadLicenseConfig();
-            break;
-        case 'bypass':
-            loadBypassRegistrations();
             break;
         case 'apkmanager':
             loadApkCatalog();
@@ -358,14 +352,15 @@ async function loadSessions() {
         const tbody = document.getElementById('sessions-table-body');
         
         if (data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center">No active sessions</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center">No active sessions</td></tr>';
             return;
         }
         
         tbody.innerHTML = data.map(session => `
             <tr>
                 <td><strong>${session.users?.username || 'Unknown'}</strong></td>
-                <td><code>${session.device_id}</code></td>
+                <td>${session.machine_name || '<span class="text-muted">N/A</span>'}</td>
+                <td><code class="small">${session.device_id?.substring(0, 12)}...</code></td>
                 <td>${session.ip_address}</td>
                 <td>${formatDateTime(session.last_activity)}</td>
                 <td>

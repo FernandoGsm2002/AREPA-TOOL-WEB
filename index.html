@@ -45,6 +45,56 @@
     <link rel="stylesheet" href="landing.css" />
     <!-- AOS Animation Library CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Structured Data (JSON-LD) for Google Sitelinks -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "ArepaTool V2",
+          "operatingSystem": "Windows 10, Windows 11",
+          "applicationCategory": "UtilitiesApplication",
+          "image": "https://www.arepatool.com/pngs/arepalanding.png",
+          "url": "https://www.arepatool.com",
+          "description": "Professional mobile unlocking software. Features include MDM Bypass, Samsung FRP Unlock, and iOS Bypass.",
+          "softwareVersion": "2.0.2",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "350"
+          }
+        },
+        {
+          "@type": "Organization",
+          "name": "ArepaTool",
+          "url": "https://www.arepatool.com",
+          "logo": "https://www.arepatool.com/pngs/logo.ico",
+          "sameAs": [
+            "https://t.me/ctrone21",
+            "https://www.youtube.com/@arepatool"
+          ]
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "name": "Manuales y Tutoriales",
+          "url": "https://www.arepatool.com/instructions.html"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "name": "Registro de Usuario",
+          "url": "https://www.arepatool.com/register.html"
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <canvas id="matrixCanvas"></canvas>
@@ -78,8 +128,8 @@
                 <h1>ArepaTool V2 - Unlock & MDM Tool</h1>
                 <p class="hero-subtitle">ArepaTool V2 - Software simple y facil de usar, enfocado en dispositivos Android y IOS..</p>
                 <div class="hero-buttons">
-                    <a href="https://mega.nz/file/6C4RTIQJ#eW4SqfBRpyHR5HOTfAh42ETAvw66JLEjrVwU46OpVl4" target="_blank" class="btn btn-primary"><i class="bi bi-download"></i> New Setup</a>
-                    <a href="https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.416/dotnet-sdk-8.0.416-win-x64.exe" target="_blank" class="btn btn-secondary"><i class="bi bi-hdd-network"></i> Descargar Drivers</a>
+                    <a href="https://mega.nz/file/OTAgGS6A#jYeF714R5775mbVNzDFnttT4cDvK0grLBTf8UiQ9aqM" target="_blank" class="btn btn-primary"><i class="bi bi-download"></i> Download Now</a>
+                    <a href="https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.416/dotnet-sdk-8.0.416-win-x64.exe" target="_blank" class="btn btn-secondary"><i class="bi bi-hdd-network"></i> Download Drivers</a>
                 </div>
             </div>
             <div class="hero-image" data-aos="fade-left" data-aos-delay="200">
@@ -178,13 +228,13 @@
             <div class="pricing-products-grid">
 
 
-                <!-- AREPATOOL V1.1 -->
+                <!-- AREPATOOL V2.0.4 -->
                 <div class="pricing-product-card popular" data-aos="zoom-in" data-aos-delay="300">
                     <div class="pricing-product-image">
-                        <img src="pngs/arepalanding.png" alt="AREPATOOL V2.0.0">
+                        <img src="pngs/arepalanding.png" alt="AREPATOOL V2.0.4">
                     </div>
                     <div class="pricing-product-content">
-                        <h3>AREPATOOL V2.0.2</h3>
+                        <h3>AREPATOOL V2.0.4</h3>
                         <div class="product-price">Consultar Precio con tu distribuidor</div>
                         <ul class="product-features-list">
                             <li><i class="bi bi-check-circle-fill"></i> Licencia Anual</li>
@@ -327,7 +377,7 @@
                 <a href="#">Política de Privacidad</a>
                 <a href="https://t.me/ctrone21">Soporte</a>
             </div>
-            <p>&copy; 2025 ArepaTool V2.0.2 Professional Mobile Tool.</p>
+            <p>&copy; 2025 ArepaTool V2.0.4 Professional Mobile Tool.</p>
         </div>
     </footer>
 
