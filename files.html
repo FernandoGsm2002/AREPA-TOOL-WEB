@@ -696,6 +696,19 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="androidVersion">🤖 Versión de Android *</label>
+                    <select id="androidVersion" class="form-select" required>
+                        <option value="">Seleccionar versión</option>
+                        <option value="Android 16">Android 16</option>
+                        <option value="Android 15">Android 15</option>
+                        <option value="Android 14">Android 14</option>
+                        <option value="Android 13">Android 13</option>
+                        <option value="Android 12">Android 12</option>
+                        <option value="Android 11">Android 11</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
                     <label for="fileDescription">Descripción</label>
                     <textarea id="fileDescription" class="form-textarea" placeholder="Descripción del archivo..."></textarea>
                 </div>
@@ -826,16 +839,31 @@
                 return;
             }
             
+            const isAdmin = currentUser && currentUser.username === 'admin2';
+            
             const html = `
                 <div class="files-grid">
                     ${filtered.map(file => `
-                        <div class="file-card">
+                        <div class="file-card" data-file-id="${file.id}">
                             <div class="file-header">
                                 ${getCategoryImage(file.category)}
                                 <div class="file-info">
                                     <h3 class="file-title">${escapeHtml(file.title)}</h3>
-                                    <span class="file-category">${file.category}</span>
+                                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;">
+                                        <span class="file-category">${file.category}</span>
+                                        ${file.android_version ? `<span style="background: #3b82f6; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px;">🤖 ${file.android_version}</span>` : ''}
+                                    </div>
                                 </div>
+                                ${isAdmin ? `
+                                    <div style="display: flex; gap: 4px;">
+                                        <button onclick="editFile('${file.id}')" style="background: transparent; border: none; color: #f59e0b; cursor: pointer; padding: 4px;" title="Editar">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                        <button onclick="deleteFile('${file.id}', '${file.file_url}')" style="background: transparent; border: none; color: #ef4444; cursor: pointer; padding: 4px;" title="Eliminar">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </div>
+                                ` : ''}
                             </div>
                             <p class="file-description">${file.description ? escapeHtml(file.description) : 'Sin descripción'}</p>
                             
@@ -893,6 +921,137 @@
             } catch (error) {
                 console.error('Download error:', error);
                 alert('Error al descargar: ' + error.message);
+            }
+        }
+        
+        // Delete file (admin2 only)
+        async function deleteFile(fileId, fileKey) {
+            if (currentUser.username !== 'admin2') {
+                alert('No tienes permisos para eliminar archivos');
+                return;
+            }
+            
+            if (!confirm('¿Estás seguro de que quieres eliminar este archivo? Esta acción no se puede deshacer.')) {
+                return;
+            }
+            
+            try {
+                // Delete from Supabase
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/files?id=eq.${fileId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error al eliminar');
+                }
+                
+                // Remove from local array and re-render
+                allFiles = allFiles.filter(f => f.id !== fileId);
+                updateCounts();
+                renderFiles();
+                
+                alert('Archivo eliminado correctamente');
+                
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Error al eliminar: ' + error.message);
+            }
+        }
+        
+        // Edit file (admin2 only) - Opens edit modal
+        function editFile(fileId) {
+            if (currentUser.username !== 'admin2') {
+                alert('No tienes permisos para editar archivos');
+                return;
+            }
+            
+            const file = allFiles.find(f => f.id === fileId);
+            if (!file) {
+                alert('Archivo no encontrado');
+                return;
+            }
+            
+            // Create edit modal dynamically
+            const editHtml = `
+                <div class="modal-overlay active" id="editModal" onclick="if(event.target===this) closeEditModal()">
+                    <div class="modal">
+                        <div class="modal-header">
+                            <h2 class="modal-title">✏️ Editar Archivo</h2>
+                            <button class="modal-close" onclick="closeEditModal()">&times;</button>
+                        </div>
+                        <form id="editForm" onsubmit="saveEdit(event, '${fileId}')">
+                            <div class="form-group">
+                                <label>Título *</label>
+                                <input type="text" id="editTitle" class="form-input" value="${escapeHtml(file.title)}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Link Firmware (opcional)</label>
+                                <input type="url" id="editFirmwareLink" class="form-input" value="${file.firmware_link || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label>Descripción</label>
+                                <textarea id="editDescription" class="form-textarea">${file.description || ''}</textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">
+                                <i class="bi bi-check-lg"></i> Guardar Cambios
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', editHtml);
+        }
+        
+        function closeEditModal() {
+            const modal = document.getElementById('editModal');
+            if (modal) modal.remove();
+        }
+        
+        async function saveEdit(event, fileId) {
+            event.preventDefault();
+            
+            const updates = {
+                title: document.getElementById('editTitle').value.trim(),
+                firmware_link: document.getElementById('editFirmwareLink').value.trim() || null,
+                description: document.getElementById('editDescription').value.trim() || null
+            };
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/files?id=eq.${fileId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify(updates)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error al actualizar');
+                }
+                
+                const updated = await response.json();
+                
+                // Update local array
+                const index = allFiles.findIndex(f => f.id === fileId);
+                if (index !== -1) {
+                    allFiles[index] = { ...allFiles[index], ...updates };
+                }
+                
+                renderFiles();
+                closeEditModal();
+                alert('Archivo actualizado correctamente');
+                
+            } catch (error) {
+                console.error('Edit error:', error);
+                alert('Error al guardar: ' + error.message);
             }
         }
         
@@ -999,6 +1158,7 @@
             
             const title = document.getElementById('fileTitle').value.trim();
             const category = document.getElementById('fileCategory').value;
+            const androidVersion = document.getElementById('androidVersion').value;
             const description = document.getElementById('fileDescription').value.trim() || null;
             const firmwareLink = document.getElementById('firmwareLink').value.trim() || null;
             
@@ -1059,6 +1219,7 @@
                 const newFileData = {
                     title: title,
                     category: category,
+                    android_version: androidVersion,
                     file_url: key, // Store the R2 key
                     file_size: fileSize,
                     description: description,
@@ -1103,7 +1264,7 @@
                 alert('Error al subir el archivo: ' + error.message);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir a R2';
+                btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir a Panel';
             }
         });
         
