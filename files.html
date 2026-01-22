@@ -675,7 +675,7 @@
                 <div class="form-group">
                     <label for="fileInput">Archivo *</label>
                     <input type="file" id="fileInput" class="form-input" required style="padding: 10px;">
-                    <small style="color: var(--text-secondary); font-size: 12px; margin-top: 4px; display: block;">Máximo 100 MB por archivo</small>
+                    <small style="color: var(--text-secondary); font-size: 12px; margin-top: 4px; display: block;">Máximo 150 MB por archivo</small>
                 </div>
                 
                 <div class="form-group">
@@ -1140,9 +1140,9 @@
                 return;
             }
             
-            // Check file size (100 MB max)
-            if (file.size > 100 * 1024 * 1024) {
-                alert('El archivo es demasiado grande. Máximo 100 MB.');
+            // Check file size (150 MB max)
+            if (file.size > 150 * 1024 * 1024) {
+                alert('El archivo es demasiado grande. Máximo 150 MB.');
                 return;
             }
             
