@@ -700,6 +700,12 @@
                     <textarea id="fileDescription" class="form-textarea" placeholder="Descripción del archivo..."></textarea>
                 </div>
                 
+                <div class="form-group">
+                    <label for="firmwareLink">Link Firmware (opcional)</label>
+                    <input type="url" id="firmwareLink" class="form-input" placeholder="https://samfw.com/... o enlace de descarga del firmware">
+                    <small style="color: var(--text-secondary); font-size: 11px; margin-top: 4px; display: block;">Si tienes un enlace externo al firmware stock, agrégalo aquí</small>
+                </div>
+                
                 <!-- Upload Progress -->
                 <div id="uploadProgress" style="display: none; margin-bottom: 16px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
@@ -832,15 +838,30 @@
                                 </div>
                             </div>
                             <p class="file-description">${file.description ? escapeHtml(file.description) : 'Sin descripción'}</p>
+                            
+                            <!-- Posted by -->
+                            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px; padding: 8px 12px; background: rgba(0, 191, 99, 0.08); border-radius: 6px;">
+                                <i class="bi bi-person-circle" style="color: var(--accent); font-size: 14px;"></i>
+                                <span style="font-size: 12px; color: var(--text-secondary);">Posted by <strong style="color: var(--accent);">${file.uploader_username || 'Anónimo'}</strong></span>
+                            </div>
+                            
                             <div class="file-meta">
                                 <span class="file-size">
                                     <i class="bi bi-hdd"></i>
                                     ${file.file_size || 'N/A'}
                                 </span>
-                                <button onclick="downloadFile('${file.file_url}', '${escapeHtml(file.title)}')" class="btn-download">
-                                    <i class="bi bi-download"></i>
-                                    Descargar
-                                </button>
+                                <div style="display: flex; gap: 8px;">
+                                    ${file.firmware_link ? `
+                                        <a href="${file.firmware_link}" target="_blank" class="btn-download" style="background: #2563eb;">
+                                            <i class="bi bi-box-arrow-up-right"></i>
+                                            Firmware
+                                        </a>
+                                    ` : ''}
+                                    <button onclick="downloadFile('${file.file_url}', '${escapeHtml(file.title)}')" class="btn-download">
+                                        <i class="bi bi-download"></i>
+                                        Root
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     `).join('')}
@@ -979,6 +1000,7 @@
             const title = document.getElementById('fileTitle').value.trim();
             const category = document.getElementById('fileCategory').value;
             const description = document.getElementById('fileDescription').value.trim() || null;
+            const firmwareLink = document.getElementById('firmwareLink').value.trim() || null;
             
             try {
                 // 1. Get presigned upload URL from our API
@@ -1040,6 +1062,7 @@
                     file_url: key, // Store the R2 key
                     file_size: fileSize,
                     description: description,
+                    firmware_link: firmwareLink,
                     uploader_username: currentUser.username
                 };
                 

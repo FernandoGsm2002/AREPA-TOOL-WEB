@@ -1,13 +1,13 @@
 import { S3Client, PutObjectCommand, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-// R2 Configuration (same as C# project)
+// R2 Configuration - Using environment variables for security
 const R2_CONFIG = {
-    accountId: '8fc120a4cc06bc9a39d9555a416fa166',
-    endpoint: 'https://8fc120a4cc06bc9a39d9555a416fa166.r2.cloudflarestorage.com',
-    accessKeyId: 'ca1f0062efaa08d8af4e8f0be7fee5e3',
-    secretAccessKey: 'b420796aee7bdd0e79117023f3bb638dc037fb70a00935f6836119f8059df57b',
-    bucket: 'arepatoolfiles', // New bucket for panel files
+    accountId: process.env.R2_ACCOUNT_ID,
+    endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    accessKeyId: process.env.R2_ACCESS_KEY_ID,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+    bucket: process.env.R2_BUCKET || 'arepatoolfiles',
     region: 'auto'
 };
 
