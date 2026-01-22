@@ -8,7 +8,9 @@
     "build": "echo 'Static site - no build needed'"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0"
+    "@supabase/supabase-js": "^2.39.0",
+    "@aws-sdk/client-s3": "^3.500.0",
+    "@aws-sdk/s3-request-presigner": "^3.500.0"
   },
   "engines": {
     "node": ">=18.0.0"

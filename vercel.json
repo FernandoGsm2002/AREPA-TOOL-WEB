@@ -11,6 +11,14 @@
     {
       "source": "/reset-password",
       "destination": "/reset-password.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/auth/files",
+      "destination": "/files.html"
     }
   ],
   "headers": [
