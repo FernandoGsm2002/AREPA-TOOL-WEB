@@ -1,13 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
-import crypto from 'crypto';
 
-const supabase = createClient(
-    process.env.SUPABASE_URL || 'https://lumhpjfndlqhexnjmvtu.supabase.co',
-    process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY
-);
+const SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0NjY1NjcsImV4cCI6MjA3OTA0MjU2N30.oXVYUjnSpDDQphLZJzglGaDSQTjuGzYgD-LMC5FwDHw';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export default async function handler(req, res) {
-    // CORS
+    // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -23,48 +22,38 @@ export default async function handler(req, res) {
     try {
         const { email } = req.body;
 
-        if (!email) {
+        if (!email || !email.trim()) {
             return res.status(400).json({ error: 'Email is required' });
         }
 
-        // 1. Check if user exists in Supabase Auth
-        const { data: authData, error: authError } = await supabase.auth.admin.listUsers();
-        
-        if (authError) {
-            console.error('Error listing users:', authError);
-            // Don't reveal if user exists for security
-            return res.status(200).json({ 
-                message: 'If this email exists, you will receive a reset link' 
-            });
-        }
+        const emailTrimmed = email.trim().toLowerCase();
 
-        const authUser = authData.users.find(u => u.email === email);
+        console.log('Reset request for email:', emailTrimmed);
 
-        if (!authUser) {
-            // Don't reveal if user doesn't exist for security
-            return res.status(200).json({ 
-                message: 'If this email exists, you will receive a reset link' 
-            });
-        }
-
-        // 2. Generate password reset using Supabase Auth
-        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${process.env.VERCEL_URL || 'http://localhost:3000'}/reset-password.html`
+        // Use Supabase Auth resetPasswordForEmail
+        // This works with the ANON key as it's a public operation
+        const { data, error } = await supabase.auth.resetPasswordForEmail(emailTrimmed, {
+            redirectTo: 'https://www.arepatool.com/reset-password'
         });
 
         if (error) {
-            console.error('Error sending reset email:', error);
-            throw error;
+            console.error('Supabase Auth error:', error);
+            // Don't reveal if user exists for security
+            return res.status(200).json({
+                message: 'Si el email existe en nuestro sistema, recibirás un link de recuperación'
+            });
         }
 
+        console.log('Reset email sent successfully');
+
         return res.status(200).json({
-            message: 'Password reset email sent successfully'
+            message: 'Si el email existe en nuestro sistema, recibirás un link de recuperación'
         });
 
     } catch (error) {
         console.error('Request reset error:', error);
-        return res.status(500).json({ 
-            error: 'Failed to process request' 
+        return res.status(200).json({
+            message: 'Si el email existe en nuestro sistema, recibirás un link de recuperación'
         });
     }
 }
