@@ -709,13 +709,27 @@
                     </select>
                 </div>
                 
+                <!-- Device Brand (only for Firmwares) -->
+                <div class="form-group" id="deviceBrandGroup" style="display: none;">
+                    <label for="deviceBrand"><i class="bi bi-phone"></i> Marca del Dispositivo *</label>
+                    <select id="deviceBrand" class="form-select">
+                        <option value="">Seleccionar marca</option>
+                        <option value="Samsung">Samsung</option>
+                        <option value="Motorola">Motorola</option>
+                        <option value="Xiaomi">Xiaomi</option>
+                        <option value="Honor">Honor</option>
+                        <option value="Tecno">Tecno</option>
+                        <option value="Infinix">Infinix</option>
+                    </select>
+                </div>
+                
                 <div class="form-group">
                     <label for="fileDescription">Descripción</label>
                     <textarea id="fileDescription" class="form-textarea" placeholder="Descripción del archivo..."></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label for="firmwareLink">Link Firmware (opcional)</label>
+                    <label for="firmwareLink"><i class="bi bi-link-45deg"></i> Link Firmware (opcional)</label>
                     <input type="url" id="firmwareLink" class="form-input" placeholder="https://samfw.com/... o enlace de descarga del firmware">
                     <small style="color: var(--text-secondary); font-size: 11px; margin-top: 4px; display: block;">Si tienes un enlace externo al firmware stock, agrégalo aquí</small>
                 </div>
@@ -868,7 +882,10 @@
                                         </div>
                                     </td>
                                     <td style="padding: 16px;">
-                                        <span style="background: #334155; color: #94a3b8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500;">${file.category}</span>
+                                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                                            <span style="background: #334155; color: #94a3b8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500;">${file.category}</span>
+                                            ${file.device_brand ? `<span style="background: #7c3aed; color: #e9d5ff; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 500;">${file.device_brand}</span>` : ''}
+                                        </div>
                                     </td>
                                     <td style="padding: 16px;">
                                         <span style="background: #1e40af; color: #bfdbfe; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
@@ -1141,41 +1158,154 @@
         function closeUploadModal() {
             document.getElementById('uploadModal').classList.remove('active');
             document.getElementById('uploadForm').reset();
+            document.getElementById('deviceBrandGroup').style.display = 'none';
+            document.getElementById('deviceBrand').removeAttribute('required');
         }
+        
+        // Show/hide fields based on category
+        document.getElementById('fileCategory').addEventListener('change', function() {
+            const deviceBrandGroup = document.getElementById('deviceBrandGroup');
+            const deviceBrandSelect = document.getElementById('deviceBrand');
+            const fileInputGroup = document.querySelector('.form-group:has(#fileInput)');
+            const androidVersionGroup = document.querySelector('.form-group:has(#androidVersion)');
+            const fileInput = document.getElementById('fileInput');
+            const androidVersionSelect = document.getElementById('androidVersion');
+            const firmwareLinkInput = document.getElementById('firmwareLink');
+            const firmwareLinkLabel = document.querySelector('label[for="firmwareLink"]');
+            
+            if (this.value === 'Firmwares') {
+                // Show device brand (required)
+                deviceBrandGroup.style.display = 'block';
+                deviceBrandSelect.setAttribute('required', 'required');
+                
+                // Hide file input and android version
+                if (fileInputGroup) fileInputGroup.style.display = 'none';
+                if (androidVersionGroup) androidVersionGroup.style.display = 'none';
+                fileInput.removeAttribute('required');
+                androidVersionSelect.removeAttribute('required');
+                
+                // Make firmware link required
+                firmwareLinkInput.setAttribute('required', 'required');
+                firmwareLinkLabel.innerHTML = '<i class="bi bi-link-45deg"></i> Link Firmware (Google Drive / Descarga) *';
+                
+            } else {
+                // Hide device brand
+                deviceBrandGroup.style.display = 'none';
+                deviceBrandSelect.removeAttribute('required');
+                deviceBrandSelect.value = '';
+                
+                // Show file input and android version
+                if (fileInputGroup) fileInputGroup.style.display = 'block';
+                if (androidVersionGroup) androidVersionGroup.style.display = 'block';
+                fileInput.setAttribute('required', 'required');
+                androidVersionSelect.setAttribute('required', 'required');
+                
+                // Make firmware link optional
+                firmwareLinkInput.removeAttribute('required');
+                firmwareLinkLabel.innerHTML = '<i class="bi bi-link-45deg"></i> Link Firmware (opcional)';
+            }
+        });
         
         // Upload Form - R2 Integration
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            const category = document.getElementById('fileCategory').value;
+            const title = document.getElementById('fileTitle').value.trim();
+            const description = document.getElementById('fileDescription').value.trim() || null;
+            const firmwareLink = document.getElementById('firmwareLink').value.trim() || null;
+            
+            const btn = document.getElementById('btnSubmitFile');
+            const progressDiv = document.getElementById('uploadProgress');
+            const uploadStatus = document.getElementById('uploadStatus');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Guardando...';
+            
+            // FIRMWARES: No file upload, just save metadata with link
+            if (category === 'Firmwares') {
+                const deviceBrand = document.getElementById('deviceBrand').value;
+                
+                if (!deviceBrand || !firmwareLink) {
+                    alert('Completa todos los campos requeridos');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir';
+                    return;
+                }
+                
+                try {
+                    progressDiv.style.display = 'block';
+                    uploadStatus.textContent = 'Guardando firmware...';
+                    
+                    const firmwareData = {
+                        title: title,
+                        category: category,
+                        device_brand: deviceBrand,
+                        file_url: firmwareLink,
+                        file_size: 'Link externo',
+                        description: description,
+                        firmware_link: firmwareLink,
+                        android_version: null,
+                        uploader_username: currentUser.username
+                    };
+                    
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/files`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=representation'
+                        },
+                        body: JSON.stringify(firmwareData)
+                    });
+                    
+                    if (!response.ok) throw new Error('Error al guardar');
+                    
+                    const created = await response.json();
+                    allFiles.push(created[0]);
+                    updateCounts();
+                    renderFiles();
+                    
+                    alert('✓ Firmware agregado!');
+                    closeUploadModal();
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error: ' + error.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir';
+                    progressDiv.style.display = 'none';
+                }
+                return;
+            }
+            
+            // OTHER CATEGORIES: Normal file upload
             const fileInput = document.getElementById('fileInput');
             const file = fileInput.files[0];
+            const androidVersion = document.getElementById('androidVersion').value;
             
             if (!file) {
                 alert('Selecciona un archivo');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir a R2';
                 return;
             }
             
             // Check file size (150 MB max)
             if (file.size > 150 * 1024 * 1024) {
                 alert('El archivo es demasiado grande. Máximo 150 MB.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir a R2';
                 return;
             }
             
-            const btn = document.getElementById('btnSubmitFile');
-            const progressDiv = document.getElementById('uploadProgress');
             const uploadBar = document.getElementById('uploadBar');
             const uploadPercent = document.getElementById('uploadPercent');
-            const uploadStatus = document.getElementById('uploadStatus');
             
-            btn.disabled = true;
-            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Preparando...';
             progressDiv.style.display = 'block';
-            
-            const title = document.getElementById('fileTitle').value.trim();
-            const category = document.getElementById('fileCategory').value;
-            const androidVersion = document.getElementById('androidVersion').value;
-            const description = document.getElementById('fileDescription').value.trim() || null;
-            const firmwareLink = document.getElementById('firmwareLink').value.trim() || null;
+            const deviceBrand = null;
             
             try {
                 // 1. Get presigned upload URL from our API
@@ -1235,6 +1365,7 @@
                     title: title,
                     category: category,
                     android_version: androidVersion,
+                    device_brand: deviceBrand,
                     file_url: key, // Store the R2 key
                     file_size: fileSize,
                     description: description,
