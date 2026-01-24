@@ -28,12 +28,9 @@
     <link rel="icon" type="image/x-icon" href="pngs/logo.ico">
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 
     <!-- Icons -->
     <link
@@ -103,6 +100,7 @@
         <div class="container nav-content">
             <a href="#" class="logo">
                 <img src="pngs/arepalanding.png" alt="ArepaTool V1" class="logo-img">
+                <span class="brand-name">ArepaToolV2</span>
             </a>
             <div class="nav-links">
                 <a href="#features">Características</a>
@@ -477,8 +475,8 @@
         }
 
         function draw() {
-            // Light theme background fade (matches --bg-color #e5e7eb with opacity)
-            ctx.fillStyle = 'rgba(229, 231, 235, 0.1)';
+            // Dark theme background fade (matches --bg-color #0f172a with opacity)
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Matrix Green Text

@@ -903,14 +903,22 @@
                                     </td>
                                     <td style="padding: 16px;">
                                         <div style="display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;">
-                                            ${file.firmware_link ? `
-                                                <a href="${file.firmware_link}" target="_blank" style="background: #1e40af; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#1e3a8a'" onmouseout="this.style.background='#1e40af'">
+                                            ${file.category === 'Firmwares' ? `
+                                                <!-- Firmwares: Only show Firmware link -->
+                                                <a href="${file.firmware_link || file.file_url}" target="_blank" style="background: #1e40af; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#1e3a8a'" onmouseout="this.style.background='#1e40af'">
                                                     <i class="bi bi-box-arrow-up-right"></i> Firmware
                                                 </a>
-                                            ` : ''}
-                                            <button onclick="downloadFile('${file.file_url}', '${escapeHtml(file.title)}')" style="background: #00bf63; color: white; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#00a855'" onmouseout="this.style.background='#00bf63'">
-                                                <i class="bi bi-download"></i> Root
-                                            </button>
+                                            ` : `
+                                                <!-- Other categories: Show Root button + optional Firmware link -->
+                                                ${file.firmware_link ? `
+                                                    <a href="${file.firmware_link}" target="_blank" style="background: #1e40af; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#1e3a8a'" onmouseout="this.style.background='#1e40af'">
+                                                        <i class="bi bi-box-arrow-up-right"></i> Firmware
+                                                    </a>
+                                                ` : ''}
+                                                <button onclick="downloadFile('${file.file_url}', '${escapeHtml(file.title)}')" style="background: #00bf63; color: white; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#00a855'" onmouseout="this.style.background='#00bf63'">
+                                                    <i class="bi bi-download"></i> Root
+                                                </button>
+                                            `}
                                             ${isAdmin ? `
                                                 <button onclick="editFile('${file.id}')" style="background: #d97706; color: white; padding: 6px 10px; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;" title="Editar" onmouseover="this.style.background='#b45309'" onmouseout="this.style.background='#d97706'">
                                                     <i class="bi bi-pencil-fill"></i>
