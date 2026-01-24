@@ -801,8 +801,8 @@ p {
 }
 
 .distributor-logo img {
-  width: 100px;
-  height: 100px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   margin-bottom: 1rem;
   border: 4px solid rgba(0, 191, 99, 0.2);
@@ -1000,20 +1000,20 @@ footer p {
 }
 
 /* Floating Action Button */
-.fab-telegram {
+.fab-whatsapp {
   position: fixed;
   bottom: 30px;
   right: 30px;
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #0088cc 0%, #00a8e8 100%);
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-size: 28px;
-  box-shadow: 0 6px 25px rgba(0, 136, 204, 0.35);
+  box-shadow: 0 6px 25px rgba(37, 211, 102, 0.35);
   z-index: 100;
   transition: all 0.3s ease;
   animation: fabPulse 3s ease-in-out infinite;
@@ -1022,16 +1022,16 @@ footer p {
 @keyframes fabPulse {
   0%,
   100% {
-    box-shadow: 0 6px 25px rgba(0, 136, 204, 0.35);
+    box-shadow: 0 6px 25px rgba(37, 211, 102, 0.35);
   }
   50% {
-    box-shadow: 0 6px 40px rgba(0, 136, 204, 0.5);
+    box-shadow: 0 6px 40px rgba(37, 211, 102, 0.5);
   }
 }
 
-.fab-telegram:hover {
+.fab-whatsapp:hover {
   transform: scale(1.1) translateY(-5px);
-  box-shadow: 0 10px 40px rgba(0, 136, 204, 0.5);
+  box-shadow: 0 10px 40px rgba(37, 211, 102, 0.5);
 }
 
 /* Animated Tooltip */
@@ -1045,9 +1045,9 @@ footer p {
   font-size: 0.85rem;
   font-weight: 600;
   white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(10px);
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
@@ -1062,7 +1062,7 @@ footer p {
   border-left-color: #2d3748;
 }
 
-.fab-telegram:hover .fab-tooltip {
+.fab-whatsapp:hover .fab-tooltip {
   opacity: 1;
   visibility: visible;
   transform: translateX(0);
