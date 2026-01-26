@@ -1,1441 +1,619 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Archivos - ArepaTool</title>
-    <meta name="description" content="Centro de archivos de ArepaTool. Descarga firmwares, roots testeados y herramientas." />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archivos - ArepaTool Panel</title>
     <link rel="icon" type="image/x-icon" href="pngs/logo.ico">
     
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/skeleton-theme.css">
     <style>
-        :root {
-            --bg-dark: #0f1419;
-            --bg-card: #1a2332;
-            --bg-hover: #222d3f;
-            --bg-input: #242d3d;
-            --accent: #00bf63;
-            --accent-hover: #00a855;
-            --text-primary: #e8ecf0;
-            --text-secondary: #8899a6;
-            --border-color: #38444d;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-            --success: #00bf63;
+        /* Table Card Style */
+        .table-responsive {
+            overflow-x: auto;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        table {
+            border-collapse: collapse !important;
+            width: 100%;
         }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-dark);
-            min-height: 100vh;
-            color: var(--text-primary);
-        }
-        
-        /* Header */
-        .header {
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            padding: 16px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        
-        .header-logo {
-            height: 40px;
-            width: auto;
-        }
-        
-        .header-title {
-            font-size: 20px;
+        thead th {
+            border-bottom: 2px solid var(--surface-700) !important;
+            color: var(--surface-300);
             font-weight: 700;
-            color: var(--text-primary);
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 16px;
-            background: var(--bg-input);
-            border-radius: 8px;
-        }
-        
-        .user-info i {
-            color: var(--accent);
-        }
-        
-        .user-info span {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        
-        .btn-logout {
-            padding: 8px 16px;
-            background: transparent;
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .btn-logout:hover {
-            background: var(--danger);
-            color: white;
-        }
-        
-        /* Main Layout */
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 24px;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 24px;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 20px;
-            height: fit-content;
-            position: sticky;
-            top: 90px;
-        }
-        
-        .sidebar-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
+            padding: 1rem !important;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 16px;
-            padding-left: 12px;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
         }
-        
-        .category-list {
-            list-style: none;
+        tbody tr {
+            background: transparent !important;
+            border-bottom: 1px solid var(--surface-700);
+            transition: background 0.2s;
         }
-        
-        .category-item {
-            padding: 12px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 4px;
-            color: var(--text-secondary);
+        tbody tr:last-child {
+            border-bottom: none;
         }
-        
-        .category-item:hover {
-            background: var(--bg-hover);
-            color: var(--text-primary);
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02) !important;
         }
-        
-        .category-item.active {
-            background: rgba(0, 191, 99, 0.15);
-            color: var(--accent);
-        }
-        
-        .category-item i {
-            font-size: 18px;
-            width: 24px;
-            text-align: center;
-        }
-        
-        .category-count {
-            margin-left: auto;
-            background: var(--bg-input);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-        }
-        
-        /* Upload Section in Sidebar */
-        .upload-section {
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .btn-upload {
-            width: 100%;
-            padding: 12px;
-            background: var(--accent);
-            color: white;
+        td {
+            padding: 1.5rem 1rem !important;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
+            vertical-align: middle;
+            color: var(--surface-200);
         }
-        
-        .btn-upload:hover {
-            background: var(--accent-hover);
-        }
-        
-        /* Content Area */
-        .content {
-            min-height: 500px;
-        }
-        
-        .content-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-        }
-        
-        .content-title {
-            font-size: 24px;
-            font-weight: 700;
-        }
-        
-        .search-box {
-            position: relative;
-            width: 300px;
-        }
-        
-        .search-box i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: 12px 16px 12px 42px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-        
-        /* Files Grid */
-        .files-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 16px;
-        }
-        
-        .file-card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s;
-        }
-        
-        .file-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-        
-        .file-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            margin-bottom: 14px;
-        }
-        
-        .file-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(0, 191, 99, 0.15);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-        
-        .file-info {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .file-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .file-category {
-            font-size: 12px;
-            color: var(--accent);
-            background: rgba(0, 191, 99, 0.1);
-            padding: 2px 8px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-        
-        .file-description {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 14px;
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .file-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 14px;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .file-size {
-            font-size: 12px;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .btn-download {
-            padding: 8px 16px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
-        
-        .btn-download:hover {
-            background: var(--accent-hover);
-        }
-        
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-        
-        .empty-state i {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-        
-        .empty-state h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-        
-        /* Upload Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-        
-        .modal-overlay.active {
-            display: flex;
-        }
-        
-        .modal {
-            background: var(--bg-card);
+
+        /* Modal Polish */
+        .modal-panel {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--surface-700);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 2rem;
             border-radius: 16px;
-            width: 100%;
             max-width: 500px;
-            padding: 24px;
-            border: 1px solid var(--border-color);
+            width: 90%;
+            margin: auto; 
         }
-        
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-        }
-        
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .modal-close {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 4px;
-        }
-        
-        .modal-close:hover {
-            color: var(--text-primary);
-        }
-        
-        .form-group {
-            margin-bottom: 16px;
-        }
-        
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-        
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 12px 14px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 14px;
-            font-family: inherit;
-        }
-        
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-        
-        .form-textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        
-        .form-select {
-            cursor: pointer;
-        }
-        
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-        
-        .btn-submit:hover {
-            background: var(--accent-hover);
-        }
-        
-        .btn-submit:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        /* Loading */
-        .loading {
-            display: flex;
-            align-items: center;
+        .modal-overlay {
+            display: flex; 
+            align-items: center; 
             justify-content: center;
-            padding: 60px;
+            padding: 1rem;
         }
-        
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border-color);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .form-control {
+            background: var(--surface-900);
+            border-color: var(--surface-700);
+            padding: 0.75rem 1rem;
         }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .form-control:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
         }
-        
-        /* Responsive */
-        @media (max-width: 900px) {
-            .main-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                position: static;
-            }
-            
-            .category-list {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            
-            .category-item {
-                flex: 1;
-                min-width: 140px;
-                justify-content: center;
-            }
-            
-            .category-count {
-                display: none;
-            }
-        }
-        
-        @media (max-width: 600px) {
-            .header-content {
-                flex-wrap: wrap;
-                gap: 12px;
-            }
-            
-            .content-header {
-                flex-direction: column;
-                gap: 16px;
-                align-items: stretch;
-            }
-            
-            .search-box {
-                width: 100%;
-            }
-            
-            .files-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Specific fix for search input icon overlap */
+        .input-group .form-control {
+            padding-left: 2.8rem !important;
         }
     </style>
 </head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="header-left">
-                <a href="index.html">
-                    <img src="pngs/arepalanding.png" alt="ArepaTool" class="header-logo">
-                </a>
-                <span class="header-title">Centro de Archivos</span>
-            </div>
-            <div class="header-right">
-                <div class="user-info">
-                    <i class="bi bi-person-circle"></i>
-                    <span id="usernameDisplay">Cargando...</span>
+<body style="overflow: hidden;">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container navbar-content" style="max-width: 100%; padding: 0 1.5rem;">
+            <a href="index.html" class="brand">
+                <img src="pngs/logo.ico" alt="ArepaTool">
+                <span>Panel<span class="text-primary-500">V2</span></span>
+            </a>
+            
+            <div class="flex-center" style="gap: 1.5rem;">
+                <div class="text-sm text-subtle hidden-mobile">
+                    <i class="bi bi-person-circle text-primary-500 me-2"></i>
+                    <span id="usernameDisplay">Usuario</span>
                 </div>
-                <button class="btn-logout" onclick="logout()">
-                    <i class="bi bi-box-arrow-right"></i>
-                    Salir
+                <button onclick="logout()" class="btn btn-outline btn-sm" style="border-color: var(--surface-600); color: var(--surface-300);">
+                    <i class="bi bi-box-arrow-right"></i> Salir
                 </button>
             </div>
         </div>
-    </header>
-    
-    <!-- Main Content -->
-    <div class="main-container">
+    </nav>
+
+    <!-- App Shell -->
+    <div class="app-shell">
         <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-title">Categorías</div>
-            <ul class="category-list" id="categoryList">
-                <li class="category-item active" data-category="all">
-                    <i class="bi bi-grid"></i>
-                    <span>Todos</span>
-                    <span class="category-count" id="countAll">0</span>
-                </li>
-                <li class="category-item" data-category="Samsung Root">
-                    <img src="pngs/magisk.png" alt="Magisk" style="width: 20px; height: 20px; border-radius: 4px;">
-                    <span>Samsung Root</span>
-                    <span class="category-count" id="countRoot">0</span>
-                </li>
-                <li class="category-item" data-category="Firmwares">
-                    <i class="bi bi-hdd"></i>
-                    <span>Firmwares</span>
-                    <span class="category-count" id="countFirmwares">0</span>
-                </li>
-                <li class="category-item" data-category="Drivers">
-                    <i class="bi bi-usb-drive"></i>
-                    <span>Drivers</span>
-                    <span class="category-count" id="countDrivers">0</span>
-                </li>
-                <li class="category-item" data-category="Tools">
-                    <i class="bi bi-tools"></i>
-                    <span>Tools</span>
-                    <span class="category-count" id="countTools">0</span>
-                </li>
-                <li class="category-item" data-category="Otros">
-                    <i class="bi bi-folder"></i>
-                    <span>Otros</span>
-                    <span class="category-count" id="countOtros">0</span>
-                </li>
-            </ul>
-            
-            <div class="upload-section">
-                <button class="btn-upload" onclick="openUploadModal()">
-                    <i class="bi bi-cloud-upload"></i>
-                    Subir Archivo
+        <aside class="app-sidebar">
+            <h6 class="text-xs text-subtle uppercase tracking-wider mb-4 px-2">Categorías</h6>
+            <nav class="sidebar-nav" id="categoryList">
+                <div class="sidebar-item active" data-category="all">
+                    <i class="bi bi-grid"></i> <span>Todos</span>
+                    <span class="badge badge-secondary ms-auto text-xs" id="countAll">0</span>
+                </div>
+                <div class="sidebar-item" data-category="Samsung Root">
+                    <i class="bi bi-android2"></i> <span>Samsung Root</span>
+                    <span class="badge badge-secondary ms-auto text-xs" id="countRoot">0</span>
+                </div>
+                <div class="sidebar-item" data-category="Firmwares">
+                    <i class="bi bi-hdd"></i> <span>Firmwares</span>
+                    <span class="badge badge-secondary ms-auto text-xs" id="countFirmwares">0</span>
+                </div>
+                <div class="sidebar-item" data-category="Drivers">
+                    <i class="bi bi-usb-drive"></i> <span>Drivers</span>
+                    <span class="badge badge-secondary ms-auto text-xs" id="countDrivers">0</span>
+                </div>
+                <div class="sidebar-item" data-category="Tools">
+                    <i class="bi bi-tools"></i> <span>Tools</span>
+                    <span class="badge badge-secondary ms-auto text-xs" id="countTools">0</span>
+                </div>
+                <div class="sidebar-item" data-category="Otros">
+                    <i class="bi bi-folder"></i> <span>Otros</span>
+                    <span class="badge badge-secondary ms-auto text-xs" id="countOtros">0</span>
+                </div>
+            </nav>
+
+            <div class="mt-4 pt-4 border-t border-surface-700">
+                <button class="btn btn-primary btn-block" onclick="openUploadModal()">
+                    <i class="bi bi-cloud-upload"></i> Subir Archivo
                 </button>
             </div>
         </aside>
-        
-        <!-- Content -->
-        <main class="content">
-            <div class="content-header">
-                <h1 class="content-title" id="contentTitle">Todos los Archivos</h1>
-                <div class="search-box">
+
+        <!-- Main Content -->
+        <main class="app-main" style="overflow-y: auto; height: calc(100vh - 80px); padding: 3rem;">
+            <div class="flex-center mb-12" style="justify-content: space-between;">
+                <h2 id="contentTitle" style="margin-right: 2rem;">Todos los Archivos</h2>
+                <div class="input-group" style="width: 300px; margin-left: auto;"> <!-- margin-left: auto pushes it to the right -->
                     <i class="bi bi-search"></i>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar archivos...">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar firmware, root...">
                 </div>
             </div>
-            
-            <div id="filesContainer">
-                <div class="loading">
-                    <div class="loading-spinner"></div>
+
+            <!-- Files Table -->
+            <div id="filesContainer" class="table-responsive">
+                <div class="text-center py-5 w-full">
+                    <div class="spinner-border text-primary-500" style="width: 2rem; height: 2rem;"></div>
+                    <p class="text-subtle mt-2">Cargando recursos...</p>
                 </div>
             </div>
         </main>
     </div>
-    
+
     <!-- Upload Modal -->
-    <div class="modal-overlay" id="uploadModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Subir Nuevo Archivo</h2>
-                <button class="modal-close" onclick="closeUploadModal()">&times;</button>
+    <div id="uploadModal" class="modal-overlay">
+        <div class="modal-panel animate-fade-in" style="overflow: hidden;"> 
+            <div class="mb-6 border-b border-surface-700 pb-4 relative">
+                <h3 class="text-xl font-bold text-surface-50 m-0">Subir Nuevo Archivo</h3>
+                <button class="modal-close-btn" onclick="closeUploadModal()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
+            
+            <style>
+                .modal-close-btn {
+                    position: absolute;
+                    top: -10px;
+                    right: -10px;
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50%;
+                    background: var(--surface-800);
+                    border: 1px solid var(--surface-600);
+                    color: var(--surface-400);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                    z-index: 10;
+                }
+                .modal-close-btn:hover {
+                    background: var(--error-500, #ef4444);
+                    color: white;
+                    border-color: #ef4444;
+                    transform: rotate(90deg) scale(1.1);
+                    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+                }
+            </style>
             
             <form id="uploadForm">
                 <div class="form-group">
-                    <label for="fileInput">Archivo *</label>
-                    <input type="file" id="fileInput" class="form-input" required style="padding: 10px;">
-                    <small style="color: var(--text-secondary); font-size: 12px; margin-top: 4px; display: block;">Máximo 150 MB por archivo</small>
+                    <label class="form-label">Título del Archivo *</label>
+                    <input type="text" id="fileTitle" class="form-control" placeholder="Ej: Root Samsung S23 Ultra Bit 4" required>
                 </div>
-                
-                <div class="form-group">
-                    <label for="fileTitle">Título *</label>
-                    <input type="text" id="fileTitle" class="form-input" placeholder="Ej: Samsung S23 Root Package" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="fileCategory">Categoría *</label>
-                    <select id="fileCategory" class="form-select" required>
-                        <option value="">Seleccionar categoría</option>
-                        <option value="Samsung Root">Samsung Root</option>
-                        <option value="Firmwares">Firmwares</option>
-                        <option value="Drivers">Drivers</option>
-                        <option value="Tools">Tools</option>
-                        <option value="Otros">Otros</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="androidVersion"><i class="fa-brands fa-android" style="color: #a4c639;"></i> Versión de Android *</label>
-                    <select id="androidVersion" class="form-select" required>
-                        <option value="">Seleccionar versión</option>
-                        <option value="Android 16">Android 16</option>
-                        <option value="Android 15">Android 15</option>
-                        <option value="Android 14">Android 14</option>
-                        <option value="Android 13">Android 13</option>
-                        <option value="Android 12">Android 12</option>
-                        <option value="Android 11">Android 11</option>
-                    </select>
-                </div>
-                
-                <!-- Device Brand (only for Firmwares) -->
-                <div class="form-group" id="deviceBrandGroup" style="display: none;">
-                    <label for="deviceBrand"><i class="bi bi-phone"></i> Marca del Dispositivo *</label>
-                    <select id="deviceBrand" class="form-select">
-                        <option value="">Seleccionar marca</option>
-                        <option value="Samsung">Samsung</option>
-                        <option value="Motorola">Motorola</option>
-                        <option value="Xiaomi">Xiaomi</option>
-                        <option value="Honor">Honor</option>
-                        <option value="Tecno">Tecno</option>
-                        <option value="Infinix">Infinix</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="fileDescription">Descripción</label>
-                    <textarea id="fileDescription" class="form-textarea" placeholder="Descripción del archivo..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="firmwareLink"><i class="bi bi-link-45deg"></i> Link Firmware (opcional)</label>
-                    <input type="url" id="firmwareLink" class="form-input" placeholder="https://samfw.com/... o enlace de descarga del firmware">
-                    <small style="color: var(--text-secondary); font-size: 11px; margin-top: 4px; display: block;">Si tienes un enlace externo al firmware stock, agrégalo aquí</small>
-                </div>
-                
-                <!-- Upload Progress -->
-                <div id="uploadProgress" style="display: none; margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span id="uploadStatus" style="font-size: 13px; color: var(--text-secondary);">Subiendo...</span>
-                        <span id="uploadPercent" style="font-size: 13px; color: var(--accent);">0%</span>
-                    </div>
-                    <div style="height: 6px; background: var(--bg-input); border-radius: 3px; overflow: hidden;">
-                        <div id="uploadBar" style="height: 100%; background: var(--accent); width: 0%; transition: width 0.3s;"></div>
+
+                <div class="grid grid-2 gap-2">
+                    <div class="form-group">
+                        <label class="form-label">Categoría *</label>
+                        <select id="fileCategory" class="form-control" style="appearance: auto;" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="Samsung Root">Samsung Root</option>
+                            <option value="Firmwares">Firmwares</option>
+                            <option value="Drivers">Drivers</option>
+                            <option value="Tools">Tools</option>
+                            <option value="Otros">Otros</option>
+                        </select>
                     </div>
                 </div>
-                
-                <button type="submit" class="btn-submit" id="btnSubmitFile">
-                    <i class="bi bi-cloud-upload"></i> Subir a R2
+
+                <!-- Conditional Fields -->
+                <div id="firmwareFields" class="hidden">
+                    <div class="form-group">
+                        <label class="form-label">Marca *</label>
+                        <select id="deviceBrand" class="form-control" style="appearance: auto;">
+                            <option value="">Seleccionar...</option>
+                            <option value="Samsung">Samsung</option>
+                            <option value="Motorola">Motorola</option>
+                            <option value="Xiaomi">Xiaomi</option>
+                            <option value="Honor">Honor</option>
+                            <option value="Tecno">Tecno</option>
+                            <option value="Infinix">Infinix</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="normalFields">
+                    <div class="form-group">
+                        <label class="form-label">Seleccionar Archivo (Max 150MB)</label>
+                        <input type="file" id="fileInput" class="form-control" style="padding: 0.5rem;">
+                        <small class="text-subtle text-xs mt-1 block">Formatos permitidos: .zip, .rar, .tar, .md5, .apk, .exe</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Versión de Android</label>
+                        <select id="androidVersion" class="form-control" style="appearance: auto;">
+                            <option value="">No Aplica (N/A)</option>
+                            <option value="Android 16">Android 16</option>
+                            <option value="Android 15">Android 15</option>
+                            <option value="Android 14">Android 14</option>
+                            <option value="Android 13">Android 13</option>
+                            <option value="Android 12">Android 12</option>
+                            <option value="Android 11">Android 11</option>
+                            <option value="Android 10">Android 10</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" id="linkLabel">Link Externo (Opcional)</label>
+                    <input type="url" id="firmwareLink" class="form-control" placeholder="Ej: https://drive.google.com/..." pattern="https://.*">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Descripción Detallada</label>
+                    <textarea id="fileDescription" class="form-control" style="min-height:100px;" placeholder="Ingrese detalles importantes: binario, seguridad, notas de instalación..."></textarea>
+                </div>
+
+                <!-- Progress -->
+                <div id="uploadProgress" class="hidden mb-4">
+                    <div class="flex-center justify-between mb-1">
+                        <span class="text-xs text-subtle" id="uploadStatus">Iniciando...</span>
+                        <span class="text-xs text-primary-400" id="uploadPercent">0%</span>
+                    </div>
+                    <div style="height: 6px; background: var(--surface-800); border-radius: 3px;">
+                        <div id="uploadBar" style="height: 100%; width: 0%; background: var(--primary-500); border-radius: 3px; transition: width 0.2s;"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="btnSubmitFile">
+                    <i class="bi bi-cloud-arrow-up"></i> Iniciar Subida
                 </button>
             </form>
         </div>
     </div>
-    
+
+    <!-- SCRIPTS -->
     <script>
         const SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0NjY1NjcsImV4cCI6MjA3OTA0MjU2N30.oXVYUjnSpDDQphLZJzglGaDSQTjuGzYgD-LMC5FwDHw';
         
         let currentUser = null;
         let allFiles = [];
-        let currentCategory = 'all';
-        
-        // Check auth on load
-        document.addEventListener('DOMContentLoaded', () => {
-            const session = localStorage.getItem('arepatool_session');
-            
-            if (!session) {
-                window.location.href = 'login.html';
-                return;
-            }
-            
+        let currentCat = 'all';
+
+        /* --- AUTH --- */
+        (function init() {
+            const sess = localStorage.getItem('arepatool_session');
+            if(!sess) return window.location.href = 'login.html';
             try {
-                const data = JSON.parse(session);
-                if (!data.user || data.expires < Date.now()) {
-                    localStorage.removeItem('arepatool_session');
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
+                const data = JSON.parse(sess);
+                if(!data.user || data.expires < Date.now()) throw new Error('Expired');
                 currentUser = data.user;
                 document.getElementById('usernameDisplay').textContent = currentUser.username;
-                
                 loadFiles();
-            } catch (e) {
-                localStorage.removeItem('arepatool_session');
-                window.location.href = 'login.html';
-            }
-        });
-        
+            } catch(e) { window.location.href = 'login.html'; }
+        })();
+
         function logout() {
             localStorage.removeItem('arepatool_session');
             window.location.href = 'login.html';
         }
-        
+
+        /* --- DATA --- */
         async function loadFiles() {
             try {
-                const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/files?select=*&order=created_at.desc`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                        }
-                    }
-                );
-                
-                allFiles = await response.json();
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/files?select=*&order=created_at.desc`, {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                allFiles = await res.json();
                 updateCounts();
                 renderFiles();
-            } catch (error) {
-                console.error('Error loading files:', error);
-                document.getElementById('filesContainer').innerHTML = `
-                    <div class="empty-state">
-                        <i class="bi bi-exclamation-triangle"></i>
-                        <h3>Error al cargar archivos</h3>
-                        <p>Intenta recargar la página</p>
-                    </div>
-                `;
+            } catch(e) {
+                console.error(e);
+                document.getElementById('filesContainer').innerHTML = `<div class="w-full col-span-3 text-center text-error">Error cargando archivos</div>`;
             }
         }
-        
+
         function updateCounts() {
             document.getElementById('countAll').textContent = allFiles.length;
-            document.getElementById('countRoot').textContent = allFiles.filter(f => f.category === 'Samsung Root').length;
-            document.getElementById('countFirmwares').textContent = allFiles.filter(f => f.category === 'Firmwares').length;
-            document.getElementById('countDrivers').textContent = allFiles.filter(f => f.category === 'Drivers').length;
-            document.getElementById('countTools').textContent = allFiles.filter(f => f.category === 'Tools').length;
-            document.getElementById('countOtros').textContent = allFiles.filter(f => f.category === 'Otros').length;
+            
+            const mapping = {
+                'Samsung Root': 'countRoot',
+                'Firmwares': 'countFirmwares',
+                'Drivers': 'countDrivers',
+                'Tools': 'countTools',
+                'Otros': 'countOtros'
+            };
+
+            for (const [catName, elId] of Object.entries(mapping)) {
+                const count = allFiles.filter(f => f.category === catName).length;
+                const el = document.getElementById(elId);
+                if(el) el.textContent = count;
+            }
         }
-        
+
         function renderFiles() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            let filtered = allFiles;
-            
-            if (currentCategory !== 'all') {
-                filtered = filtered.filter(f => f.category === currentCategory);
-            }
-            
-            if (searchTerm) {
-                filtered = filtered.filter(f => 
-                    f.title.toLowerCase().includes(searchTerm) || 
-                    (f.description && f.description.toLowerCase().includes(searchTerm))
-                );
-            }
-            
-            if (filtered.length === 0) {
-                document.getElementById('filesContainer').innerHTML = `
-                    <div class="empty-state">
-                        <i class="bi bi-folder2-open"></i>
-                        <h3>No hay archivos</h3>
-                        <p>No se encontraron archivos en esta categoría</p>
-                    </div>
-                `;
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allFiles.filter(f => {
+                const matCat = currentCat === 'all' || f.category === currentCat;
+                const matTerm = f.title.toLowerCase().includes(term) || (f.description||'').toLowerCase().includes(term);
+                return matCat && matTerm;
+            });
+
+            const container = document.getElementById('filesContainer');
+            if(filtered.length === 0) {
+                container.innerHTML = `<div class="text-center col-span-3 py-5"><p class="text-subtle">No se encontraron archivos.</p></div>`;
                 return;
             }
-            
+
             const isAdmin = currentUser && currentUser.username === 'admin2';
-            
-            const html = `
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 8px; overflow: hidden;">
-                        <thead>
-                            <tr style="background: #0f172a; border-bottom: 2px solid #334155;">
-                                <th style="padding: 14px 16px; text-align: left; color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Archivo</th>
-                                <th style="padding: 14px 16px; text-align: left; color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Categoría</th>
-                                <th style="padding: 14px 16px; text-align: left; color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Android</th>
-                                <th style="padding: 14px 16px; text-align: left; color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Tamaño</th>
-                                <th style="padding: 14px 16px; text-align: left; color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Subido por</th>
-                                <th style="padding: 14px 16px; text-align: center; color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${filtered.map(file => `
-                                <tr style="border-bottom: 1px solid #334155; transition: background 0.2s;" onmouseover="this.style.background='#2d3748'" onmouseout="this.style.background='transparent'">
-                                    <td style="padding: 16px;">
-                                        <div style="display: flex; align-items: center; gap: 12px;">
-                                            ${getCategoryImage(file.category)}
-                                            <div>
-                                                <div style="font-size: 14px; font-weight: 600; color: #f1f5f9; margin-bottom: 4px;">${escapeHtml(file.title)}</div>
-                                                <div style="font-size: 12px; color: #64748b;">${file.description ? escapeHtml(file.description).substring(0, 60) + (file.description.length > 60 ? '...' : '') : 'Sin descripción'}</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="padding: 16px;">
-                                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                                            <span style="background: #334155; color: #94a3b8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500;">${file.category}</span>
-                                            ${file.device_brand ? `<span style="background: #7c3aed; color: #e9d5ff; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 500;">${file.device_brand}</span>` : ''}
-                                        </div>
-                                    </td>
-                                    <td style="padding: 16px;">
-                                        <span style="background: #1e40af; color: #bfdbfe; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
-                                            <i class="fa-brands fa-android" style="color: #a4c639;"></i> ${file.android_version || 'N/A'}
-                                        </span>
-                                    </td>
-                                    <td style="padding: 16px;">
-                                        <span style="color: #94a3b8; font-size: 13px;">${file.file_size || 'N/A'}</span>
-                                    </td>
-                                    <td style="padding: 16px;">
-                                        <div style="display: flex; align-items: center; gap: 6px;">
-                                            <i class="bi bi-person-circle" style="color: #00bf63; font-size: 14px;"></i>
-                                            <span style="color: #00bf63; font-size: 13px; font-weight: 500;">${file.uploader_username || 'Anónimo'}</span>
-                                        </div>
-                                    </td>
-                                    <td style="padding: 16px;">
-                                        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;">
-                                            ${file.category === 'Firmwares' ? `
-                                                <!-- Firmwares: Only show Firmware link -->
-                                                <a href="${file.firmware_link || file.file_url}" target="_blank" style="background: #1e40af; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#1e3a8a'" onmouseout="this.style.background='#1e40af'">
-                                                    <i class="bi bi-box-arrow-up-right"></i> Firmware
-                                                </a>
-                                            ` : `
-                                                <!-- Other categories: Show Root button + optional Firmware link -->
-                                                ${file.firmware_link ? `
-                                                    <a href="${file.firmware_link}" target="_blank" style="background: #1e40af; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#1e3a8a'" onmouseout="this.style.background='#1e40af'">
-                                                        <i class="bi bi-box-arrow-up-right"></i> Firmware
-                                                    </a>
-                                                ` : ''}
-                                                <button onclick="downloadFile('${file.file_url}', '${escapeHtml(file.title)}')" style="background: #00bf63; color: white; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#00a855'" onmouseout="this.style.background='#00bf63'">
-                                                    <i class="bi bi-download"></i> Root
-                                                </button>
-                                            `}
-                                            ${isAdmin ? `
-                                                <button onclick="editFile('${file.id}')" style="background: #d97706; color: white; padding: 6px 10px; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;" title="Editar" onmouseover="this.style.background='#b45309'" onmouseout="this.style.background='#d97706'">
-                                                    <i class="bi bi-pencil-fill"></i>
-                                                </button>
-                                                <button onclick="deleteFile('${file.id}', '${file.file_url}')" style="background: #dc2626; color: white; padding: 6px 10px; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;" title="Eliminar" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#dc2626'">
-                                                    <i class="bi bi-trash-fill"></i>
-                                                </button>
-                                            ` : ''}
-                                        </div>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
+
+            const tableHeader = `
+                <table class="w-full text-left">
+                    <thead>
+                        <tr>
+                            <th>ARCHIVO</th>
+                            <th>CATEGORÍA</th>
+                            <th>ANDROID</th>
+                            <th>TAMAÑO</th>
+                            <th class="text-center">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
             `;
-            
-            document.getElementById('filesContainer').innerHTML = html;
-        }
-        
-        // Download file from R2
-        async function downloadFile(key, title) {
-            // If it's an external URL (legacy), open directly
-            if (key.startsWith('http')) {
-                window.open(key, '_blank');
-                return;
-            }
-            
-            try {
-                // Get presigned download URL from R2 API
-                const response = await fetch(`/api/r2?action=download-url&key=${encodeURIComponent(key)}`);
+
+            const rows = filtered.map(f => {
+                // Determine Firmware Link Button availability
+                const hasFirmwareLink = f.firmware_link && f.firmware_link.startsWith('http');
                 
-                if (!response.ok) {
-                    throw new Error('Error al obtener URL de descarga');
-                }
-                
-                const { downloadUrl } = await response.json();
-                window.open(downloadUrl, '_blank');
-                
-            } catch (error) {
-                console.error('Download error:', error);
-                alert('Error al descargar: ' + error.message);
-            }
-        }
-        
-        // Delete file (admin2 only)
-        async function deleteFile(fileId, fileKey) {
-            if (currentUser.username !== 'admin2') {
-                alert('No tienes permisos para eliminar archivos');
-                return;
-            }
-            
-            if (!confirm('¿Estás seguro de que quieres eliminar este archivo? Esta acción no se puede deshacer.')) {
-                return;
-            }
-            
-            try {
-                // Delete from Supabase
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/files?id=eq.${fileId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Error al eliminar');
-                }
-                
-                // Remove from local array and re-render
-                allFiles = allFiles.filter(f => f.id !== fileId);
-                updateCounts();
-                renderFiles();
-                
-                alert('Archivo eliminado correctamente');
-                
-            } catch (error) {
-                console.error('Delete error:', error);
-                alert('Error al eliminar: ' + error.message);
-            }
-        }
-        
-        // Edit file (admin2 only) - Opens edit modal
-        function editFile(fileId) {
-            if (currentUser.username !== 'admin2') {
-                alert('No tienes permisos para editar archivos');
-                return;
-            }
-            
-            const file = allFiles.find(f => f.id === fileId);
-            if (!file) {
-                alert('Archivo no encontrado');
-                return;
-            }
-            
-            // Create edit modal dynamically
-            const editHtml = `
-                <div class="modal-overlay active" id="editModal" onclick="if(event.target===this) closeEditModal()">
-                    <div class="modal">
-                        <div class="modal-header">
-                            <h2 class="modal-title">✏️ Editar Archivo</h2>
-                            <button class="modal-close" onclick="closeEditModal()">&times;</button>
+                return `
+                <tr>
+                    <td>
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0">
+                                ${getIcon(f.category)}
+                            </div>
+                            <div class="min-w-0">
+                                <div class="font-bold text-surface-50 text-base mb-1">${escape(f.title)}</div>
+                                <div class="text-xs text-subtle truncate max-w-[250px] opacity-70" title="${escape(f.description||'')}">${escape(f.description || 'Sin descripción')}</div>
+                            </div>
                         </div>
-                        <form id="editForm" onsubmit="saveEdit(event, '${fileId}')">
-                            <div class="form-group">
-                                <label>Título *</label>
-                                <input type="text" id="editTitle" class="form-input" value="${escapeHtml(file.title)}" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Link Firmware (opcional)</label>
-                                <input type="url" id="editFirmwareLink" class="form-input" value="${file.firmware_link || ''}">
-                            </div>
-                            <div class="form-group">
-                                <label>Descripción</label>
-                                <textarea id="editDescription" class="form-textarea">${file.description || ''}</textarea>
-                            </div>
-                            <button type="submit" class="btn-submit">
-                                <i class="bi bi-check-lg"></i> Guardar Cambios
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            `;
-            
-            document.body.insertAdjacentHTML('beforeend', editHtml);
+                    </td>
+                    <td>
+                        <span class="badge badge-secondary" style="font-weight: 500;">${f.category}</span>
+                    </td>
+                    <td>
+                        ${f.android_version ? `<span class="badge badge-primary bg-primary-900 text-primary-300 border border-primary-700">${f.android_version}</span>` : '<span class="text-subtle text-xs">-</span>'}
+                    </td>
+                    <td class="text-subtle font-mono text-xs">
+                        ${f.file_size || 'N/A'}
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-center gap-3">
+                            ${hasFirmwareLink ? `
+                                <a href="${f.firmware_link}" target="_blank" class="btn btn-sm btn-outline" title="Descargar Firmware">
+                                    <i class="bi bi-hdd-network"></i> <span class="hidden-mobile">Firmware</span>
+                                </a>
+                            ` : ''}
+                            
+                            ${f.category !== 'Firmwares' ? `
+                                <button onclick="downloadFile('${f.file_url}')" class="btn btn-sm btn-success" title="Descargar Archivo">
+                                    <i class="bi bi-download"></i> <span class="hidden-mobile">Descargar</span>
+                                </button>
+                            ` : ''}
+
+                            ${isAdmin ? `
+                                <button onclick="deleteFile('${f.id}')" class="text-error hover:text-red-400 p-1" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `}).join('');
+
+            container.innerHTML = tableHeader + rows + '</tbody></table>';
         }
-        
-        function closeEditModal() {
-            const modal = document.getElementById('editModal');
-            if (modal) modal.remove();
+
+        function getIcon(c) {
+            if(c === 'Samsung Root') return '<img src="pngs/magisk.png" alt="Root" style="width: 32px; height: 32px; border-radius: 6px; object-fit: contain;">';
+            
+            let iconClass = 'bi-file-earmark';
+            if(c === 'Firmwares') iconClass = 'bi-hdd';
+            if(c === 'Drivers') iconClass = 'bi-usb-drive';
+            if(c === 'Tools') iconClass = 'bi-tools';
+            
+            return `<div class="p-2 bg-surface-700 rounded text-primary-400 text-lg flex items-center justify-center" style="width: 32px; height: 32px;"><i class="bi ${iconClass}"></i></div>`;
         }
-        
-        async function saveEdit(event, fileId) {
-            event.preventDefault();
-            
-            const updates = {
-                title: document.getElementById('editTitle').value.trim(),
-                firmware_link: document.getElementById('editFirmwareLink').value.trim() || null,
-                description: document.getElementById('editDescription').value.trim() || null
-            };
-            
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/files?id=eq.${fileId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=representation'
-                    },
-                    body: JSON.stringify(updates)
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Error al actualizar');
-                }
-                
-                const updated = await response.json();
-                
-                // Update local array
-                const index = allFiles.findIndex(f => f.id === fileId);
-                if (index !== -1) {
-                    allFiles[index] = { ...allFiles[index], ...updates };
-                }
-                
+
+        function escape(s) { return s ? s.replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }
+
+        /* --- INTERACTIONS --- */
+        document.querySelectorAll('.sidebar-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCat = btn.dataset.category;
+                document.getElementById('contentTitle').textContent = btn.innerText;
                 renderFiles();
-                closeEditModal();
-                alert('Archivo actualizado correctamente');
-                
-            } catch (error) {
-                console.error('Edit error:', error);
-                alert('Error al guardar: ' + error.message);
-            }
-        }
-        
-        function getCategoryImage(category) {
-            // Samsung Root uses magisk.png image
-            if (category === 'Samsung Root') {
-                return `<img src="pngs/magisk.png" alt="Magisk" style="width: 40px; height: 40px; border-radius: 8px; object-fit: contain; flex-shrink: 0;">`;
-            }
-            
-            // Other categories use icons
-            const icons = {
-                'Firmwares': 'bi-hdd',
-                'Drivers': 'bi-usb-drive',
-                'Tools': 'bi-tools',
-                'Otros': 'bi-folder'
-            };
-            const iconClass = icons[category] || 'bi-file-earmark';
-            
-            return `<div style="width: 40px; height: 40px; background: #334155; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #00bf63; font-size: 20px; flex-shrink: 0;"><i class="bi ${iconClass}"></i></div>`;
-        }
-        
-        function getCategoryIcon(category) {
-            const icons = {
-                'Samsung Root': 'bi-phone',
-                'Firmwares': 'bi-hdd',
-                'Drivers': 'bi-usb-drive',
-                'Tools': 'bi-tools',
-                'Otros': 'bi-folder'
-            };
-            return icons[category] || 'bi-file-earmark';
-        }
-        
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        // Category selection
-        document.getElementById('categoryList').addEventListener('click', (e) => {
-            const item = e.target.closest('.category-item');
-            if (!item) return;
-            
-            document.querySelectorAll('.category-item').forEach(el => el.classList.remove('active'));
-            item.classList.add('active');
-            
-            currentCategory = item.dataset.category;
-            
-            const titles = {
-                'all': 'Todos los Archivos',
-                'Root Testeados': 'Root Testeados',
-                'Firmwares': 'Firmwares',
-                'Drivers': 'Drivers',
-                'Tools': 'Tools',
-                'Otros': 'Otros'
-            };
-            document.getElementById('contentTitle').textContent = titles[currentCategory];
-            
-            renderFiles();
+            });
         });
+
+        document.getElementById('searchInput').addEventListener('input', renderFiles);
+
+        /* --- UPLOAD LOGIC --- */
+        const modal = document.getElementById('uploadModal');
+        const fileCat = document.getElementById('fileCategory');
         
-        // Search
-        document.getElementById('searchInput').addEventListener('input', () => {
-            renderFiles();
-        });
-        
-        // Upload Modal
-        function openUploadModal() {
-            document.getElementById('uploadModal').classList.add('active');
-        }
-        
-        function closeUploadModal() {
-            document.getElementById('uploadModal').classList.remove('active');
+        function openUploadModal() { modal.classList.add('active'); }
+        function closeUploadModal() { 
+            modal.classList.remove('active'); 
             document.getElementById('uploadForm').reset();
-            document.getElementById('deviceBrandGroup').style.display = 'none';
-            document.getElementById('deviceBrand').removeAttribute('required');
+            handleCatChange(); // Reset fields
         }
-        
-        // Show/hide fields based on category
-        document.getElementById('fileCategory').addEventListener('change', function() {
-            const deviceBrandGroup = document.getElementById('deviceBrandGroup');
-            const deviceBrandSelect = document.getElementById('deviceBrand');
-            const fileInputGroup = document.querySelector('.form-group:has(#fileInput)');
-            const androidVersionGroup = document.querySelector('.form-group:has(#androidVersion)');
-            const fileInput = document.getElementById('fileInput');
-            const androidVersionSelect = document.getElementById('androidVersion');
-            const firmwareLinkInput = document.getElementById('firmwareLink');
-            const firmwareLinkLabel = document.querySelector('label[for="firmwareLink"]');
-            
-            if (this.value === 'Firmwares') {
-                // Show device brand (required)
-                deviceBrandGroup.style.display = 'block';
-                deviceBrandSelect.setAttribute('required', 'required');
-                
-                // Hide file input and android version
-                if (fileInputGroup) fileInputGroup.style.display = 'none';
-                if (androidVersionGroup) androidVersionGroup.style.display = 'none';
-                fileInput.removeAttribute('required');
-                androidVersionSelect.removeAttribute('required');
-                
-                // Make firmware link required
-                firmwareLinkInput.setAttribute('required', 'required');
-                firmwareLinkLabel.innerHTML = '<i class="bi bi-link-45deg"></i> Link Firmware (Google Drive / Descarga) *';
-                
-            } else {
-                // Hide device brand
-                deviceBrandGroup.style.display = 'none';
-                deviceBrandSelect.removeAttribute('required');
-                deviceBrandSelect.value = '';
-                
-                // Show file input and android version
-                if (fileInputGroup) fileInputGroup.style.display = 'block';
-                if (androidVersionGroup) androidVersionGroup.style.display = 'block';
-                fileInput.setAttribute('required', 'required');
-                androidVersionSelect.setAttribute('required', 'required');
-                
-                // Make firmware link optional
-                firmwareLinkInput.removeAttribute('required');
-                firmwareLinkLabel.innerHTML = '<i class="bi bi-link-45deg"></i> Link Firmware (opcional)';
-            }
-        });
-        
-        // Upload Form - R2 Integration
+
+        fileCat.addEventListener('change', handleCatChange);
+
+        function handleCatChange() {
+             const val = fileCat.value;
+             const firmFields = document.getElementById('firmwareFields');
+             const normFields = document.getElementById('normalFields');
+             const linkLabel = document.getElementById('linkLabel');
+             const linkInput = document.getElementById('firmwareLink');
+             const fileInput = document.getElementById('fileInput');
+
+             if(val === 'Firmwares') {
+                 firmFields.classList.remove('hidden');
+                 normFields.classList.add('hidden');
+                 fileInput.required = false;
+                 linkInput.required = true;
+                 linkLabel.textContent = 'Link Firmware *';
+             } else {
+                 firmFields.classList.add('hidden');
+                 normFields.classList.remove('hidden');
+                 fileInput.required = true;
+                 linkInput.required = false;
+                 linkLabel.textContent = 'Link Externo (Opcional)';
+             }
+        }
+
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const category = document.getElementById('fileCategory').value;
-            const title = document.getElementById('fileTitle').value.trim();
-            const description = document.getElementById('fileDescription').value.trim() || null;
-            const firmwareLink = document.getElementById('firmwareLink').value.trim() || null;
-            
             const btn = document.getElementById('btnSubmitFile');
-            const progressDiv = document.getElementById('uploadProgress');
-            const uploadStatus = document.getElementById('uploadStatus');
+            const progress = document.getElementById('uploadProgress');
+            const status = document.getElementById('uploadStatus');
+            const bar = document.getElementById('uploadBar');
+            
+            const cat = fileCat.value;
+            const title = document.getElementById('fileTitle').value;
+            const desc = document.getElementById('fileDescription').value;
+            const link = document.getElementById('firmwareLink').value;
             
             btn.disabled = true;
-            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Guardando...';
-            
-            // FIRMWARES: No file upload, just save metadata with link
-            if (category === 'Firmwares') {
-                const deviceBrand = document.getElementById('deviceBrand').value;
-                
-                if (!deviceBrand || !firmwareLink) {
-                    alert('Completa todos los campos requeridos');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir';
-                    return;
-                }
-                
-                try {
-                    progressDiv.style.display = 'block';
-                    uploadStatus.textContent = 'Guardando firmware...';
-                    
-                    const firmwareData = {
-                        title: title,
-                        category: category,
-                        device_brand: deviceBrand,
-                        file_url: firmwareLink,
-                        file_size: 'Link externo',
-                        description: description,
-                        firmware_link: firmwareLink,
-                        android_version: null,
-                        uploader_username: currentUser.username
-                    };
-                    
-                    const response = await fetch(`${SUPABASE_URL}/rest/v1/files`, {
-                        method: 'POST',
-                        headers: {
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                            'Content-Type': 'application/json',
-                            'Prefer': 'return=representation'
-                        },
-                        body: JSON.stringify(firmwareData)
-                    });
-                    
-                    if (!response.ok) throw new Error('Error al guardar');
-                    
-                    const created = await response.json();
-                    allFiles.push(created[0]);
-                    updateCounts();
-                    renderFiles();
-                    
-                    alert('✓ Firmware agregado!');
-                    closeUploadModal();
-                    
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error: ' + error.message);
-                } finally {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir';
-                    progressDiv.style.display = 'none';
-                }
-                return;
-            }
-            
-            // OTHER CATEGORIES: Normal file upload
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            const androidVersion = document.getElementById('androidVersion').value;
-            
-            if (!file) {
-                alert('Selecciona un archivo');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir a R2';
-                return;
-            }
-            
-            // Check file size (150 MB max)
-            if (file.size > 150 * 1024 * 1024) {
-                alert('El archivo es demasiado grande. Máximo 150 MB.');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir a R2';
-                return;
-            }
-            
-            const uploadBar = document.getElementById('uploadBar');
-            const uploadPercent = document.getElementById('uploadPercent');
-            
-            progressDiv.style.display = 'block';
-            const deviceBrand = null;
             
             try {
-                // 1. Get presigned upload URL from our API
-                uploadStatus.textContent = 'Obteniendo URL de subida...';
-                
-                const presignResponse = await fetch('/api/r2?action=upload-url', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        fileName: file.name,
-                        contentType: file.type,
-                        category: category.replace(/ /g, '-') // Replace spaces for folder name
-                    })
-                });
-                
-                if (!presignResponse.ok) {
-                    throw new Error('No se pudo obtener URL de subida');
+                // If Firmware (No file upload)
+                if(cat === 'Firmwares') {
+                    const brand = document.getElementById('deviceBrand').value;
+                    const data = {
+                        title: title, category: cat, device_brand: brand,
+                        file_url: link, file_size: 'Link Externo', description: desc,
+                        firmware_link: link, uploader_username: currentUser.username
+                    };
+                    await saveToDb(data);
+                    alert('Firmware guardado');
+                    closeUploadModal();
+                    return;
                 }
-                
-                const { uploadUrl, key } = await presignResponse.json();
-                
-                // 2. Upload file directly to R2 with progress
-                uploadStatus.textContent = 'Subiendo archivo...';
-                
+
+                // Normal Upload
+                const file = document.getElementById('fileInput').files[0];
+                if(!file || file.size > 157286400) throw new Error('Archivo inválido o >150MB');
+
+                progress.classList.remove('hidden');
+                status.textContent = 'Iniciando carga...';
+
+                // 1. Get Signed URL
+                const r1 = await fetch('/api/r2?action=upload-url', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ fileName: file.name, contentType: file.type, category: cat })
+                });
+                if(!r1.ok) throw new Error('Error obteniendo URL');
+                const { uploadUrl, key } = await r1.json();
+
+                // 2. Upload via XHR
                 await new Promise((resolve, reject) => {
                     const xhr = new XMLHttpRequest();
-                    
-                    xhr.upload.addEventListener('progress', (e) => {
-                        if (e.lengthComputable) {
-                            const percent = Math.round((e.loaded / e.total) * 100);
-                            uploadBar.style.width = percent + '%';
-                            uploadPercent.textContent = percent + '%';
+                    xhr.upload.onprogress = ev => {
+                        if(ev.lengthComputable) {
+                            const p = Math.round((ev.loaded/ev.total)*100);
+                            bar.style.width = p+'%';
+                            document.getElementById('uploadPercent').textContent = p+'%';
                         }
-                    });
-                    
-                    xhr.addEventListener('load', () => {
-                        if (xhr.status >= 200 && xhr.status < 300) {
-                            resolve();
-                        } else {
-                            reject(new Error('Error al subir archivo'));
-                        }
-                    });
-                    
-                    xhr.addEventListener('error', () => reject(new Error('Error de red')));
-                    
+                    };
+                    xhr.onload = () => xhr.status < 300 ? resolve() : reject('Fallo subida');
+                    xhr.onerror = () => reject('Error red');
                     xhr.open('PUT', uploadUrl);
                     xhr.setRequestHeader('Content-Type', file.type);
                     xhr.send(file);
                 });
-                
-                // 3. Save metadata to Supabase
-                uploadStatus.textContent = 'Guardando información...';
-                
-                const fileSize = formatFileSize(file.size);
-                
-                const newFileData = {
-                    title: title,
-                    category: category,
-                    android_version: androidVersion,
-                    device_brand: deviceBrand,
-                    file_url: key, // Store the R2 key
-                    file_size: fileSize,
-                    description: description,
-                    firmware_link: firmwareLink,
-                    uploader_username: currentUser.username
-                };
-                
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/files`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=representation'
-                    },
-                    body: JSON.stringify(newFileData)
+
+                // 3. Save DB
+                status.textContent = 'Guardando DB...';
+                const android = document.getElementById('androidVersion').value;
+                await saveToDb({
+                    title: title, category: cat, android_version: android,
+                    file_url: key, file_size: formatSize(file.size),
+                    description: desc, firmware_link: link, uploader_username: currentUser.username
                 });
-                
-                if (!response.ok) {
-                    throw new Error('Error al guardar metadata');
-                }
-                
-                const created = await response.json();
-                allFiles.unshift(created[0]);
-                updateCounts();
-                renderFiles();
-                
-                uploadStatus.textContent = '✓ ¡Archivo subido exitosamente!';
-                uploadBar.style.background = '#00bf63';
-                
-                setTimeout(() => {
-                    closeUploadModal();
-                    progressDiv.style.display = 'none';
-                    uploadBar.style.width = '0%';
-                    uploadBar.style.background = 'var(--accent)';
-                }, 1500);
-                
-            } catch (error) {
-                console.error('Upload error:', error);
-                uploadStatus.textContent = '✗ Error: ' + error.message;
-                uploadBar.style.background = '#e74c3c';
-                alert('Error al subir el archivo: ' + error.message);
+
+                alert('Archivo subido con éxito');
+                closeUploadModal();
+
+            } catch(err) {
+                alert('Error: ' + err.message);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Subir a Panel';
+                progress.classList.add('hidden');
+                bar.style.width = '0%';
             }
         });
-        
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+
+        async function saveToDb(data) {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/files`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Content-Type': 'application/json', 'Prefer': 'return=representation'
+                },
+                body: JSON.stringify(data)
+            });
+            if(!res.ok) throw new Error('Error DB');
+            const item = (await res.json())[0];
+            allFiles.unshift(item);
+            renderFiles();
+            updateCounts();
         }
-        
-        // Close modal on overlay click
-        document.getElementById('uploadModal').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) {
-                closeUploadModal();
-            }
-        });
+
+        async function downloadFile(key) {
+            if(key.startsWith('http')) return window.open(key, '_blank');
+            try {
+                const r = await fetch(`/api/r2?action=download-url&key=${encodeURIComponent(key)}`);
+                const d = await r.json();
+                window.open(d.downloadUrl, '_blank');
+            } catch(e) { alert('Error descarga'); }
+        }
+
+        async function deleteFile(id) {
+            if(!confirm('Confirma eliminar?')) return;
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/files?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                allFiles = allFiles.filter(f => f.id !== id);
+                renderFiles();
+                updateCounts();
+            } catch(e) { alert('Error eliminando'); }
+        }
+
+        function formatSize(b) {
+            if(b===0)return '0B';
+            const i=Math.floor(Math.log(b)/Math.log(1024));
+            return parseFloat((b/Math.pow(1024,i)).toFixed(2))+' '+['B','KB','MB','GB'][i];
+        }
     </script>
 </body>
 </html>

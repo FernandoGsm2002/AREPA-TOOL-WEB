@@ -1,0 +1,257 @@
+/* ==========================================================================
+   LANDING PAGE SPECIFIC STYLES
+   Extends skeleton-theme.css
+   ========================================================================== */
+
+/* --- Matrix Canvas --- */
+#matrixCanvas {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    opacity: 0.3; /* Adjusted for better visibility of text */
+    pointer-events: none;
+}
+
+/* --- Hero Section --- */
+.hero {
+    position: relative;
+    padding: 180px 0 100px;
+    overflow: hidden;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+}
+
+.hero h1 {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, var(--primary-300) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--surface-300);
+    max-width: 600px;
+    margin-bottom: 2.5rem;
+}
+
+.hero-image-container {
+    position: relative;
+    perspective: 1000px;
+}
+
+.hero-img {
+    width: 100%;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: rotateY(-10deg) rotateX(5deg);
+    transition: transform 0.5s ease;
+}
+
+.hero-img:hover {
+    transform: rotateY(0) rotateX(0);
+}
+
+/* --- Video Facade --- */
+.video-card {
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--surface-700);
+    background: var(--surface-900);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.video-container iframe,
+.video-container img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border: none;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px; height: 60px;
+    background: rgba(5, 150, 105, 0.9);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 2rem;
+    box-shadow: 0 0 30px rgba(5, 150, 105, 0.5);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 5;
+}
+
+.video-card:hover .play-button {
+    transform: translate(-50%, -50%) scale(1.1);
+    background: var(--primary-500);
+}
+
+/* --- Features Grid --- */
+.features-section {
+    padding: 100px 0;
+}
+
+.feature-img-lg {
+    height: 80px; 
+    width: auto; 
+    object-fit: contain;
+    margin-bottom: 1rem;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Increased size for MDM logo as requested */
+.feature-img-xl {
+    height: 100px; /* Bigger than 80px */
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.feature-card-hover:hover .feature-img-lg,
+.feature-card-hover:hover .feature-img-xl {
+    transform: scale(1.1);
+}
+
+/* Ensures cards in grid align properly with content */
+.feature-list {
+    text-align: left;
+    margin-top: 1rem;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--surface-300);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.feature-list i {
+    color: var(--primary-400);
+    margin-top: 0.2rem; /* Align icon with first line of text */
+    flex-shrink: 0;
+}
+
+/* --- Pricing Section --- */
+.pricing-section {
+    padding: 100px 0;
+    position: relative;
+}
+
+.pricing-card-highlight {
+    border: 2px solid var(--primary-500);
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(5, 150, 105, 0.1) 100%);
+    overflow: visible !important; /* Allow badge to sit outside */
+}
+
+.pricing-badge {
+    position: absolute;
+    top: -15px; 
+    right: 50%; 
+    transform: translateX(50%); /* Center badge */
+    background: var(--primary-500);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
+    white-space: nowrap;
+    z-index: 10;
+}
+
+/* --- Resellers --- */
+.reseller-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+}
+
+.reseller-card {
+    background: var(--surface-800);
+    border: 1px solid var(--surface-700);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.reseller-card:hover {
+    border-color: var(--primary-500);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+}
+
+.verified-badge {
+    position: absolute;
+    top: 10px; right: 10px;
+    color: var(--primary-400);
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+.reseller-logo {
+    height: 90px;
+    width: 90px;
+    object-fit: contain; /* Changed to cover circular shape if needed, but contain is safer for logos */
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: var(--surface-900);
+    padding: 10px;
+    border: 1px solid var(--surface-700);
+}
+
+/* --- Floating Action Button --- */
+.fab {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    width: 60px; height: 60px;
+    background: #25d366; /* WhatsApp Green */
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    transition: transform 0.3s;
+    z-index: 100;
+}
+
+.fab:hover { transform: scale(1.1); }
+
+/* --- Responsive --- */
+@media (max-width: 992px) {
+    .hero h1 { font-size: 3rem; }
+    .hero { text-align: center; }
+    .hero-subtitle { margin: 0 auto 2rem; }
+    .hero-buttons { justify-content: center; }
+    .hero-image-container { margin-top: 3rem; transform: none; }
+    .hero-img { transform: none; }
+}

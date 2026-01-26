@@ -1,65 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ArepaTool Manuals - Guides for MDM Bypass & Unlock | Tutoriales de Desbloqueo</title>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manuales & Tutoriales - ArepaTool V2</title>
     
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Step-by-step guides and tutorials for ArepaTool V2. Learn how to remove MDM, unlock Samsung FRP, fix banking apps, and bypass iCloud. Manuales y tutoriales de desbloqueo." />
-    <meta name="keywords" content="arepatool manual, unlock tutorial, mdm removal guide, guia desbloqueo, como usar arepatool, samsung drivers, bypass instructions, tutorial gsm" />
-    <meta name="robots" content="index, follow" />
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="ArepaTool V2 Manuals & Tutorials" />
-    <meta property="og:description" content="Official guides for ArepaTool V2. Learn how to perform professional unlocks and repairs." />
-    <meta property="og:image" content="pngs/logo.ico" />
     <link rel="icon" type="image/x-icon" href="pngs/logo.ico">
-
+    
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="landing.css" />
-    <!-- AOS Animation Library CSS -->
+    <link rel="stylesheet" href="css/skeleton-theme.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
+    
+    <!-- Inline style overrides for colorful cards -->
     <style>
-        .manual-header {
-            text-align: center;
-            padding: 100px 0 40px;
-            background: linear-gradient(0deg, var(--bg-color) 0%, rgba(0,0,0,0.05) 100%);
-        }
-        .manual-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+        .border-l-4 { border-left-width: 4px; }
+        .border-l-blue-500 { border-left-color: #3b82f6; }
+        .border-l-orange-500 { border-left-color: #f97316; }
+        .border-l-green-500 { border-left-color: #22c55e; }
+        
+        .text-blue-400 { color: #60a5fa; }
+        .text-blue-300 { color: #93c5fd; }
+        .text-orange-400 { color: #fb923c; }
+        .text-orange-200 { color: #fed7aa; }
+        .text-green-400 { color: #4ade80; }
+        .text-green-300 { color: #86efac; }
+        .text-blue-500 { color: #3b82f6; }
+        .text-orange-500 { color: #f97316; }
+        .text-green-500 { color: #22c55e; }
+
+        .bg-blue-900\/20 { background-color: rgba(30, 58, 138, 0.2); }
+        .border-blue-500\/30 { border-color: rgba(59, 130, 246, 0.3); }
+        
+        .border-orange-500\/20 { border-color: rgba(249, 115, 22, 0.2); }
+
         .faq-item {
-            background: white;
-            border: 1px solid rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
-            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--surface-700);
+            border-radius: var(--radius-lg);
+            background: var(--surface-800);
             overflow: hidden;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
-        .faq-item:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(5, 150, 105, 0.1);
-        }
+
         .faq-question {
             padding: 1.5rem;
             cursor: pointer;
@@ -67,405 +58,406 @@
             justify-content: space-between;
             align-items: center;
             font-weight: 600;
-            font-size: 1.1rem;
-            color: var(--text-main);
-            background: white;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 0.5px;
+            color: var(--surface-50);
+            background: var(--surface-800);
         }
-        .faq-question i {
-            transition: transform 0.3s ease;
-            color: var(--primary-color);
+
+        .faq-question:hover {
+            background: var(--surface-700);
         }
+
         .faq-answer {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out;
-            background: #fafafa;
+            background: var(--surface-900);
+            border-top: 1px solid var(--surface-700);
         }
+
         .faq-answer-content {
             padding: 1.5rem;
-            color: #334155; /* Dark Slate Text */
+            color: var(--surface-300);
             line-height: 1.7;
-            font-family: 'Inter', sans-serif;
         }
-        .faq-answer-content ol, .faq-answer-content ul {
-            margin-left: 20px;
-            margin-top: 10px;
-            color: #334155;
-        }
-        .faq-answer-content li {
-            margin-bottom: 8px;
-        }
-        .faq-answer-content code {
-            background: #f1f5f9;
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: #0f172a;
-            font-family: monospace;
-            border: 1px solid #e2e8f0;
-            font-weight: 600;
+
+        .faq-item.active {
+            border-color: var(--primary-500);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
         
-        .faq-item.active .faq-question i {
+        .faq-item.active .faq-question {
+            color: var(--primary-400);
+        }
+
+        .faq-item.active .faq-question i.bi-chevron-down {
             transform: rotate(180deg);
         }
-        .faq-item.active .faq-question {
-            color: var(--primary-color);
-            background: rgba(5, 150, 105, 0.05);
-        }
 
-        /* Alert Box Styles */
-        .custom-alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 0.95em;
-        }
-        
-        .alert-success {
-            background: rgba(5, 150, 105, 0.1);
-            border: 1px solid rgba(5, 150, 105, 0.2);
-            border-left: 4px solid #059669;
-            color: #064e3b;
-        }
-        
-        .alert-warning {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            border-left: 4px solid #f59e0b;
-            color: #78350f;
-        }
-        
-        .alert-info {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-left: 4px solid #3b82f6;
-            color: #1e3a8a;
-        }
-        
-        .alert-danger {
-            background-color: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-            color: #991b1b;
-            border-left: 4px solid #dc2626;
-        }
-        
-        .alert-heading {
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 700;
-        }
-
-        /* Step Headers */
         .step-header {
-            color: #0f172a;
-            margin-bottom: 10px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.05rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .step-header i {
-            color: var(--primary-color);
+            display: flex; align-items: center; gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--surface-50);
         }
 
-        .config-steps {
-            background: #f8fafc;
-            padding: 12px;
-            border-radius: 6px;
-            font-family: monospace;
-            margin: 8px 0;
-            color: #334155;
-            font-size: 0.9em;
-            border: 1px solid #e2e8f0;
-        }
+        /* Essential Layout Utilities */
+        .flex { display: flex !important; }
+        .flex-col { flex-direction: column !important; }
+        .items-start { align-items: flex-start !important; }
+        .items-center { align-items: center !important; }
+        .justify-center { justify-content: center !important; }
+        .flex-shrink-0 { flex-shrink: 0 !important; }
+        .flex-center { display: flex !important; align-items: center !important; justify-content: center !important; }
+        .gap-3 { gap: 0.75rem !important; }
+        .gap-4 { gap: 1rem !important; }
+        .gap-5 { gap: 1.25rem !important; }
+        .grid { display: grid !important; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr) !important; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr !important; } }
         
-        /* Ensure Navbar links match Index */
-        .nav-links .active {
-            color: var(--primary-color) !important;
-            font-weight: 700;
-        }
+        .w-10 { width: 40px !important; }
+        .h-10 { height: 40px !important; }
+        .w-11 { width: 44px !important; }
+        .h-11 { height: 44px !important; }
+        .w-12 { width: 48px !important; }
+        .h-12 { height: 48px !important; }
+        .rounded-full { border-radius: 9999px !important; }
+        .rounded-xl { border-radius: 1rem !important; }
+        .rounded-2xl { border-radius: 1.5rem !important; }
+
+        /* Custom Alert Backgrounds (Ensuring they work) */
+        .bg-red-card { background: rgba(127, 29, 29, 0.4) !important; }
+        .bg-orange-card { background: rgba(124, 45, 18, 0.4) !important; }
+        .bg-blue-card { background: rgba(30, 58, 138, 0.4) !important; }
+        .bg-surface-card { background: rgba(15, 23, 42, 0.6) !important; }
     </style>
-  </head>
-  <body>
+</head>
+<body>
+
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="container nav-content">
-            <a href="index.html" class="logo">
-                <img src="pngs/logo.ico" alt="ArepaTool V2" class="logo-img">
+        <div class="container navbar-content">
+            <a href="index.html" class="brand">
+                <img src="pngs/logo.ico" alt="ArepaTool">
+                <span>ArepaTool</span>
             </a>
-            <div class="nav-links">
-                <a href="./">Inicio</a>
-                <a href="./#features">Características</a>
-                <a href="./#pricing">Precios</a>
-                <a href="instructions.html" class="active">Manuales</a>
-                <a href="./#resellers">Seller</a>
-                <a href="./#tutorials">Tutoriales</a>
-                <a href="register.html" class="btn-register">
-                    <i class="bi bi-person-plus"></i> Regístrate
-                </a>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="index.html#features" class="nav-link">Características</a>
+                <a href="instructions.html" class="nav-link active">Manuales</a>
+                <a href="login.html" class="btn btn-secondary btn-sm">Login</a>
             </div>
-            <!-- Mobile Register Button -->
-            <a href="register.html" class="btn-register-mobile">
-                <i class="bi bi-person-plus"></i>
-            </a>
         </div>
     </nav>
 
-    <div class="manual-header" data-aos="fade-down">
-        <h1>Instrucciones Rápidas</h1>
-        <p style="color: #64748b; margin-top: 10px; font-weight: 500;">Guías paso a paso para las operaciones más comunes</p>
+    <!-- Header -->
+    <div style="padding-top: 120px; padding-bottom: 60px; text-align: center;">
+        <div class="container" data-aos="fade-down">
+            <h1 class="text-gradient">Documentación Oficial</h1>
+            <p class="text-subtle mt-2" style="font-size: 1.2rem;">Preguntas Frecuentes</p>
+        </div>
     </div>
 
-    <div class="manual-container">
+    <!-- Content -->
+    <div class="container" style="max-width: 900px; padding-bottom: 100px;">
         
-        <!-- Manual 1: Install Drivers -->
+        <!-- Manual 1 -->
         <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
             <div class="faq-question">
-                <span><i class="bi bi-hdd-network" style="margin-right: 10px;"></i> Instalación de Drivers Samsung</span>
+                <span><i class="bi bi-hdd-network me-2"></i> Instalación de Drivers Samsung</span>
                 <i class="bi bi-chevron-down"></i>
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
-                    <p style="margin-bottom: 20px;">Una conexión estable es vital. Sigue estos pasos para instalar los drivers correctamente:</p>
+                    <p class="mb-4">Una conexión estable es vital. Sigue estos pasos para instalar los drivers correctamente:</p>
                     
-                    <!-- Paso 1 -->
-                    <div style="margin-bottom: 20px;">
-                        <h5 class="step-header">
-                            <i class="bi bi-1-circle-fill"></i> Descarga e Instalación
-                        </h5>
-                        <p>Descarga los drivers oficiales. Si ya tienes unos instalados pero dan problemas, desinstálalos primero.</p>
-                        <a href="https://developer.samsung.com/android-usb-driver" target="_blank" style="display: inline-block; background: #0f172a; padding: 10px 20px; border-radius: 6px; color: #fff; text-decoration: none; margin-top: 5px; transition: all 0.3s;">
-                            <i class="bi bi-download"></i> Descargar Samsung USB Drivers (Oficial)
+                    <div class="mb-4">
+                        <h5 class="step-header"><i class="bi bi-1-circle-fill text-primary-500"></i> Descarga</h5>
+                        <a href="https://developer.samsung.com/android-usb-driver" target="_blank" class="btn btn-outline btn-sm">
+                            <i class="bi bi-download"></i> Descargar Drivers Oficiales
                         </a>
                     </div>
 
-                    <!-- Paso 2 -->
-                    <div style="margin-bottom: 20px;">
-                        <h5 class="step-header">
-                            <i class="bi bi-2-circle-fill"></i> Verificación
-                        </h5>
-                        <ol>
-                            <li>Ejecuta el instalador como <strong>Administrador</strong>.</li>
-                            <li>Reinicia tu PC al finalizar.</li>
-                            <li>Conecta el móvil y abre el <strong>Administrador de Dispositivos</strong> de Windows.</li>
-                            <li>Debe aparecer bajo "Modems" o "Samsung Android Phone" sin signos de exclamación amarillos.</li>
-                        </ol>
+                    <div class="p-5 rounded-2xl bg-blue-900/20 border border-blue-500/30 flex items-center gap-4 shadow-lg group hover:border-blue-500/60 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex-center text-blue-400 border border-blue-400/20">
+                            <i class="fas fa-circle-info text-2xl"></i>
+                        </div>
+                        <div>
+                            <strong class="text-blue-300 block mb-1 uppercase text-xs tracking-widest">Recomendación Vital</strong>
+                            <p class="text-base text-surface-50">Reinicia tu PC después de instalar los drivers para asegurar la detección correcta.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Manual 2: MDM Remove -->
+        <!-- Manual 2: MDM -->
         <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
             <div class="faq-question">
-                <span><i class="bi bi-shield-lock" style="margin-right: 10px;"></i> Proceso MDM Remove (ADB)</span>
+                <span><i class="fas fa-shield-halved me-2 text-primary-500"></i>  Apartado MDM Lock - Configuracion directa & Manual (DNS Method)</span>
                 <i class="bi bi-chevron-down"></i>
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
                     
-                    <!-- Paso 1 -->
-                    <div style="margin-bottom: 20px;">
-                        <h5 class="step-header">
-                            <i class="bi bi-1-circle-fill"></i> Preparación del Dispositivo
-                        </h5>
-                        <ul style="list-style: none; padding-left: 0;">
-                            <li style="margin-bottom: 8px; display: flex; gap: 10px;"><i class="bi bi-check-circle" style="color: #059669;"></i> Activa la <strong>Depuración USB</strong>.</li>
-                            <li style="margin-bottom: 8px; display: flex; gap: 10px;"><i class="bi bi-wifi-off" style="color: #dc2626;"></i> <strong>Desconecta el WiFi</strong> (Importante).</li>
-                            <li style="margin-bottom: 8px; display: flex; gap: 10px;"><i class="bi bi-phone"></i> Al conectar al PC, marca "Permitir siempre" y acepta la huella RSA o Depuración USB.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Paso 2 -->
-                    <div style="margin-bottom: 25px;">
-                        <h5 class="step-header">
-                            <i class="bi bi-2-circle-fill"></i> Ejecución
-                        </h5>
-                        <p>En ArepaTool:</p>
-                        <ol>
-                            <li>Ve a <strong>MDM Lock</strong>.</li>
-                            <li>Selecciona <strong>Tu tipo de MDM a Remover</strong> y dale en Iniciar.</li>
-                            <li>Espera el mensaje "Success". El dispositivo se reiniciará solo.</li>
-                        </ol>
-                    </div>
-
-                    <!-- Alerta DNS -->
-                    <div class="alert-danger">
-                        <h4 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Atención: Error de Configuración Automática</h4>
-                        <p>Si la aplicación muestra error o no se aplica el bloqueo, es posible que el dispositivo bloquee la configuración automática del DNS.</p>
-                        
-                        <p style="margin-top: 10px; font-weight: 600;"><strong><i class="bi bi-gear-fill"></i> Configuración Manual de DNS:</strong></p>
-                        <div class="config-steps">
-                            1. Vaya a Ajustes > Conexiones > Más ajustes de conexión<br>
-                            2. Seleccione "DNS Privado"<br>
-                            3. Elija "Nombre de host de proveedor de DNS privado"<br>
-                            4. Ingrese el host que aparece en el log de la herramienta<br>
-                            5. Guarde los cambios.
+                    <!-- Pre-requisitos -->
+                    <div class="mb-8">
+                        <h5 class="step-header text-primary-400 font-bold text-xl mb-4"><i class="fas fa-list-check"></i> Preparación del Dispositivo</h5>
+                        <div class="grid grid-2 gap-4 mt-4">
+                            <!-- Card 1 -->
+                            <div class="card p-5 bg-gradient-to-br from-surface-800 to-surface-900 border border-surface-600 hover:border-primary-500 transition-all shadow-xl group">
+                                <div class="flex items-center gap-4">
+                                    <div class="p-3 bg-surface-800 rounded-xl text-primary-400 group-hover:bg-primary-500 group-hover:text-white transition-all shadow-inner">
+                                        <i class="fas fa-mobile-screen-button text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="font-bold text-surface-50 text-lg mb-1">Setup Inicial</h6>
+                                        <p class="text-sm text-surface-300 leading-relaxed">Completa la configuración inicial hasta llegar al menú principal.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card 2 -->
+                            <div class="card p-5 bg-gradient-to-br from-surface-800 to-surface-900 border border-surface-600 hover:border-primary-500 transition-all shadow-xl group">
+                                <div class="flex items-center gap-4">
+                                    <div class="p-3 bg-surface-800 rounded-xl text-primary-400 group-hover:bg-primary-500 group-hover:text-white transition-all shadow-inner">
+                                        <i class="fab fa-usb text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="font-bold text-surface-50 text-lg mb-1">Depuración USB</h6>
+                                        <p class="text-sm text-surface-300 leading-relaxed">Actívala en opciones de desarrollador para permitir la conexión ADB.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="p-5 rounded-2xl bg-orange-900/20 border-l-4 border-l-orange-500 border-t border-r border-b border-orange-500/20 flex items-center gap-5 shadow-2xl">
+                            <div class="w-14 h-14 rounded-2xl bg-orange-500/20 flex-center text-orange-500 border border-orange-500/30 shadow-inner">
+                                <i class="fas fa-wifi-slash text-3xl"></i>
+                            </div>
+                            <div>
+                                <strong class="uppercase tracking-[0.2em] text-sm block mb-1 text-orange-400 font-extrabold">¡REQUISITO OBLIGATORIO!</strong>
+                                <p class="text-lg text-white font-medium">El dispositivo debe estar <strong>SIN CONEXIÓN WIFI</strong> ni Datos móviles.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MÉTODOS -->
+                    <div class="space-y-8">
                         
-                        <p style="margin-top: 10px; font-size: 0.9em;">
-                            Si no logra configurarlo, haga clic en el 
-                            <strong><i class="bi bi-whatsapp"></i> botón de asistencia</strong> en la herramienta.
-                        </p>
+                        <!-- METHOD 1 -->
+                        <div>
+                            <h5 class="step-header text-primary-400 font-bold text-xl mb-4 flex items-center gap-3">
+                                <span class="bg-primary-500 text-white w-8 h-8 rounded-full flex-center text-sm shadow-lg">1</span>
+                                Método Automático (Recomendado)
+                            </h5>
+                            
+                            <div class="space-y-4 ml-2">
+                                <!-- Step 1.1 -->
+                                <div class="p-4 rounded-xl bg-surface-800 border-l-4 border-l-primary-500 hover:bg-surface-750 transition-all shadow-md flex items-start gap-4">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-primary-500/10 flex-center text-primary-400 border border-primary-500/20 shadow-inner">
+                                            <i class="fas fa-mouse-pointer text-base"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <strong class="text-surface-50 block text-lg">Seleccionar Bloqueo</strong>
+                                        <p class="text-base text-surface-300">En ArepaTool, ve a <strong>MDM Lock</strong> y elige el Tipo de Bloqueo a remover.</p>
+                                    </div>
+                                </div>
+                                <!-- Step 1.2 -->
+                                <div class="p-4 rounded-xl bg-surface-800 border-l-4 border-l-primary-500 hover:bg-surface-750 transition-all shadow-md flex items-start gap-4">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-primary-500/10 flex-center text-primary-400 border border-primary-500/20 shadow-inner">
+                                            <i class="fas fa-bolt text-base"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <strong class="text-surface-50 block text-lg">Ejecutar el Proceso</strong>
+                                        <p class="text-base text-surface-300">Haz click en <strong>ejecutar</strong> y espera a que el log termine sin errores.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NEW PREMIUM ANNOUNCEMENT CARD -->
+                        <div class="py-4">
+                            <div class="p-5 rounded-2xl bg-gradient-to-r from-blue-900/40 to-blue-800/10 border border-blue-500/40 shadow-xl flex items-start gap-4 transform hover:scale-[1.01] transition-transform">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex-center text-blue-400 border border-blue-400/30">
+                                        <i class="fas fa-circle-exclamation text-2xl"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="text-blue-300 font-bold text-lg mb-1 uppercase tracking-tight">Atención: En algunos Xiaomi, Redmi y Honor</h6>
+                                    <p class="text-surface-100 text-base leading-relaxed">
+                                        Si la activación automática ADB presenta errores de conexión o permisos en estos modelos específicos, 
+                                        <strong>sugerimos aplicar la siguiente configuración estratégica de DNS</strong> para un desbloqueo garantizado.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- METHOD 2 -->
+                        <div>
+                            <h5 class="step-header text-blue-400 font-bold text-xl mb-4 flex items-center gap-3">
+                                <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex-center text-sm shadow-lg">2</span>
+                                Método DNS Manual
+                            </h5>
+
+                            <div class="space-y-4 ml-2">
+                                <!-- Step 1 -->
+                                <div class="p-5 rounded-xl bg-surface-800 border-l-4 border-l-blue-500 hover:bg-surface-750 transition-all shadow-md group flex items-start gap-4">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-11 h-11 rounded-full bg-blue-500/10 flex-center text-blue-400 border border-blue-500/20 shadow-inner group-hover:bg-blue-500 group-hover:text-white transition-all">
+                                            <i class="fas fa-server text-base"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <strong class="text-blue-400 block text-lg">Paso 1: Generar el Host DNS</strong>
+                                        <p class="text-base text-surface-300 leading-relaxed">En ArepaTool (MDM Lock), pulsa <span class="badge badge-primary">GENERAR DNS MANUAL</span>. Escoge tu tipo de bloquea a remover y Copia el DNS generado.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="p-5 rounded-xl bg-surface-800 border-l-4 border-l-orange-500 hover:bg-surface-750 transition-all shadow-md group flex items-start gap-4">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-11 h-11 rounded-full bg-orange-500/10 flex-center text-orange-400 border border-orange-500/20 shadow-inner group-hover:bg-orange-500 group-hover:text-white transition-all">
+                                            <i class="fas fa-mobile-button text-base"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <strong class="text-orange-400 block text-lg">Paso 2: Configuración en Android</strong>
+                                        <p class="text-base text-surface-300 mb-2">Entra a: <code class="text-sm font-mono text-orange-200 bg-surface-950 px-2 py-1 rounded">Conexiones > Más Ajustes > DNS Privado</code></p>
+                                        <p class="text-base text-surface-300">Abran 3 opciones, Automatica, ninguna y privada, selecciona privada y pega el DNS.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="p-5 rounded-xl bg-surface-800 border-l-4 border-l-green-500 hover:bg-surface-750 transition-all shadow-md group flex items-start gap-4">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-11 h-11 rounded-full bg-green-500/10 flex-center text-green-400 border border-green-500/20 shadow-inner group-hover:bg-green-500 group-hover:text-white transition-all">
+                                            <i class="fas fa-check-to-slot text-base"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <strong class="text-green-400 block text-lg">Paso 3: Guardar y Validar</strong>
+                                        <p class="text-base text-surface-300 leading-relaxed">Guarda los cambios, activa el WiFi y verifica la navegación.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Manual 3: Fix Banking Apps -->
+        <!-- Manual 3: Root Fix -->
         <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
             <div class="faq-question">
-                <span><i class="bi bi-bank" style="margin-right: 10px;"></i> Fix Apps Bancarias (Root)</span>
+                <span><i class="fas fa-bank me-2 text-primary-500"></i> Fix Apps Bancarias (Root Method)</span>
                 <i class="bi bi-chevron-down"></i>
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
                     
-                    <!-- Paso 1 -->
-                    <div style="margin-bottom: 20px;">
-                        <h5 class="step-header">
-                            <i class="bi bi-1-circle-fill"></i> Verificación de Root
-                        </h5>
-                        <p>Asegúrate de tener el dispositivo rooteado con <strong>Kitsune 27.2+</strong> o <strong>Magisk 28.0+</strong>.</p>
-                        
-                        <div class="custom-alert alert-success">
-                            <strong style="display: block; margin-bottom: 5px;"><i class="bi bi-question-circle"></i> ¿Cómo saber si está bien rooteado?</strong>
-                            Al abrir la app de Magisk o Kitsune, <span style="font-weight: 700;">NO debe pedir ninguna configuración adicional</span>. Si muestra un aviso de "Configuración adicional", dale a <strong>Aceptar</strong> y deja que se reinicie.
+                    <!-- Requisitos para Fix Banks -->
+                    <div class="mb-8">
+                        <div class="p-6 rounded-2xl bg-surface-card border border-surface-700 shadow-xl">
+                            <h6 class="text-primary-400 font-bold text-xl mb-4 flex items-center gap-3">
+                                <i class="fas fa-list-check"></i> Requisitos para Fix Banks
+                            </h6>
+                            <ul class="space-y-3 text-lg text-surface-50 list-none">
+                                <li class="flex items-center gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-primary-500/20 flex-center text-primary-400 border border-primary-500/30 text-xs">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span>Magisk 27+, Magisk Alpha o Kitsune.</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-primary-500/20 flex-center text-primary-400 border border-primary-500/30 text-xs">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span>Dispositivo correctamente rooteado.</span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
 
-                    <!-- Paso 2 -->
-                    <div style="margin-bottom: 20px;">
-                        <h5 class="step-header">
-                            <i class="bi bi-2-circle-fill"></i> Permisos de Superusuario
-                        </h5>
-                        <p>En las configuraciones de Magisk:</p>
-                        <ul style="list-style: none; padding-left: 0;">
-                            <li style="background: #e2e8f0; padding: 8px; border-radius: 6px; display: inline-block; color: #0f172a;">
-                                <i class="bi bi-gear-fill" style="margin-right: 5px;"></i> Respuesta Automática &rarr; <strong style="color: #059669;">PERMITIR SIEMPRE</strong>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Paso 3 -->
-                    <div style="margin-bottom: 25px;">
-                        <h5 class="step-header">
-                            <i class="bi bi-3-circle-fill"></i> Ejecutar Fix en ArepaTool
-                        </h5>
-                        <ol>
-                            <li>Ve a la pestaña <strong>Samsung > Main Services</strong>.</li>
-                            <li>Click en el botón <strong>Fix Apps Bancarias</strong>.</li>
-                            <li>El dispositivo se reiniciará. ¡Listo!</li>
-                        </ol>
-                    </div>
-
-                    <!-- Recomendaciones -->
-                    <div class="custom-alert alert-warning">
-                        <h6 class="alert-heading">
-                            <i class="bi bi-lightbulb-fill"></i> Recomendaciones
-                        </h6>
-                        <ul style="margin-bottom: 0; padding-left: 20px; font-size: 0.9em;">
-                            <li style="margin-bottom: 5px;">Es preferible usar el <strong>método de parche manual</strong> de Magisk.</li>
-                            <li>Para mejores resultados, realiza el proceso en un sistema limpio (desde 0).</li>
-                        </ul>
-                    </div>
-
-                    <!-- Aviso Root -->
-                    <div class="custom-alert alert-info">
-                        <h6 class="alert-heading">
-                            <i class="bi bi-info-circle-fill"></i> Aviso Importante
-                        </h6>
-                        <p style="margin-bottom: 0; font-size: 0.9em;">
-                            Esta herramienta funciona correctamente siempre que el dispositivo esté <strong>correctamente rooteado</strong>. El Root es un procedimiento externo responsabilidad del usuario, por lo que no brindamos soporte sobre cómo rootear tu equipo.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Manual 4: Bypass A12+ -->
-        <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
-            <div class="faq-question">
-                <span><i class="bi bi-apple" style="margin-right: 10px;"></i> Bypass A12+ (Apple)</span>
-                <i class="bi bi-chevron-down"></i>
-            </div>
-            <div class="faq-answer">
-                <div class="faq-answer-content">
-                    
-                    <!-- Alert -->
-                    <div class="custom-alert alert-warning">
-                        <h6 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Limitación Importante</h6>
-                        <p style="margin-bottom: 0;">Dispositivos con <strong>Passcode NO son soportados</strong>. Solo Hello Screen.</p>
-                    </div>
-
-                    <!-- Paso 1 -->
-                    <div style="margin-bottom: 20px;">
-                        <h5 class="step-header">
-                            <i class="bi bi-1-circle-fill"></i> Preparación
-                        </h5>
-                        <ul style="list-style: none; padding-left: 0;">
-                            <li style="margin-bottom: 8px; display: flex; gap: 10px;">
-                                <i class="bi bi-phone" style="color: var(--primary-color);"></i> 
-                                Asegurar dispositivo en <strong>Modo Hola</strong> (Pantalla de inicio).
-                            </li>
-                            <li style="margin-bottom: 8px; display: flex; gap: 10px;">
-                                <i class="bi bi-wifi" style="color: #0ea5e9;"></i> 
-                                Conectar dispositivo a <strong>WiFi</strong> (Requisito Obligatorio).
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Paso 2 -->
-                    <div style="margin-bottom: 20px;">
-                        <h5 class="step-header">
-                            <i class="bi bi-2-circle-fill"></i> Proceso en Herramienta
-                        </h5>
-                        <p>Abre <a href="https://dl.3u.com/update/v900/dl/3uTools_v9.01.012_Setup_x64.exe" target="_blank" style="color: #059669; text-decoration: underline;"><strong>3uTools</strong></a> para verificar conexión y luego en ArepaTool:</p>
-                        <ol>
-                            <li>Ve al apartado de <strong>Apple</strong>.</li>
-                            <li>Click en el botón <strong>Start Bypass</strong>.</li>
-                        </ol>
-                        <div style="background: #f1f5f9; padding: 10px; border-radius: 6px; border-left: 3px solid #64748b; font-size: 0.9em; margin-top: 10px;">
-                            <i class="bi bi-clock-history"></i> <strong>Tiempo estimado:</strong> 5-10 minutos.<br>
-                            <span style="color: #64748b; font-size: 0.9em;">Si sale "Exitoso" pero sigue "No activado", por favor reintente nuevamente.</span>
+                    <!-- Chimera Special Note -->
+                    <div class="mb-6 flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex-center text-orange-500 flex-shrink-0 border border-orange-500/20">
+                            <i class="fas fa-circle-info text-xl"></i>
+                        </div>
+                        <div>
+                            <strong class="text-orange-500 block mb-1 uppercase text-sm tracking-widest font-bold">Importante: Usuarios de Chimera</strong>
+                            <p class="text-base text-surface-200 leading-relaxed">Si aplicaste Root con Chimera, recomendamos encarecidamente instalar <strong>Magisk Alpha 30.4 o 30.6</strong> para estabilidad total del fix.</p>
                         </div>
                     </div>
 
-                    <!-- Compatibility & Python Fix -->
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <!-- Compatibilidad (Red & Compact) -->
-                        <div class="alert-danger" style="flex: 1; padding: 12px; border-radius: 6px; font-size: 0.85em; margin-top: 0; min-width: 220px;">
-                            <div style="margin-bottom: 6px; display: flex; align-items: start; gap: 8px; line-height: 1.4;">
-                                <i class="bi bi-check-circle-fill" style="color: #059669; font-size: 1.1em; flex-shrink: 0;"></i>
-                                <span style="color: #0f172a;"><strong>iOS 18.6.1 a 26.1:</strong> Soportado</span>
+                    <!-- Download Section -->
+                    <div class="mb-8 p-5 bg-gradient-to-br from-surface-800 to-surface-700 rounded-2xl border border-primary-500/20 text-center shadow-xl">
+                        <p class="text-sm text-surface-300 mb-3">¿Necesitas los archivos de Root testeados?</p>
+                        <a href="login.html" class="btn btn-primary shadow-lg transform hover:scale-105 transition-all text-sm font-bold">
+                            <i class="fas fa-download me-2"></i> Root Testeados, Aqui
+                        </a>
+                    </div>
+
+                    <!-- Pasos Detallados -->
+                    <div class="space-y-4">
+                        <h5 class="text-surface-50 font-bold text-lg mb-4">Pasos para una Aplicación Correcta:</h5>
+
+                        <!-- Paso 1 -->
+                        <div class="p-4 rounded-xl bg-surface-800 border-l-4 border-l-blue-500 flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full bg-blue-500/10 flex-center text-blue-400 border border-blue-500/20 shadow-inner">
+                                    <i class="fas fa-triangle-exclamation text-base"></i>
+                                </div>
                             </div>
-                            <div style="margin-bottom: 6px; display: flex; align-items: start; gap: 8px; line-height: 1.4;">
-                                <i class="bi bi-flask" style="color: #d97706; font-size: 1.1em; flex-shrink: 0;"></i>
-                                <span style="color: #0f172a;"><strong>Inferior:</strong> Modo Prueba</span>
-                            </div>
-                            <div style="display: flex; align-items: start; gap: 8px; line-height: 1.4;">
-                                <i class="bi bi-x-circle-fill" style="color: #dc2626; font-size: 1.1em; flex-shrink: 0;"></i>
-                                <span style="color: #0f172a;"><strong>Posterior:</strong> NO Soportado</span>
+                            <div>
+                                <strong class="text-blue-400 block text-lg">Paso 1: Configuración Pendiente</strong>
+                                <p class="text-base text-surface-300">Entra a tu aplicación de Root. Si muestra un anuncio de <strong>"Configuración Pendiente"</strong>, dale a <strong>ACEPTAR</strong> y espera que reinicie.</p>
                             </div>
                         </div>
 
-                        <!-- Python Fix -->
-                        <div style="flex: 1; background: #fffbeb; border: 1px solid #fcd34d; padding: 12px; border-radius: 6px; font-size: 0.85em; color: #92400e; min-width: 220px; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 6px;">
-                                <i class="bi bi-lightning-fill" style="color: #d97706;"></i> ¿Errores inesperados?
+                        <!-- Paso 2 -->
+                        <div class="p-4 rounded-xl bg-surface-800 border-l-4 border-l-orange-500 flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full bg-orange-500/10 flex-center text-orange-400 border border-orange-500/20 shadow-inner">
+                                    <i class="fas fa-user-shield text-base"></i>
+                                </div>
                             </div>
-                            <p style="margin-bottom: 0; line-height: 1.4;">
-                                Si surgen errores distintos teniendo todo listo: <a href="https://www.python.org/ftp/python/3.14.2/python-3.14.2-amd64.exe" target="_blank" style="color: #b45309; text-decoration: underline; font-weight: bold;">Instale Python</a>.
+                            <div>
+                                <strong class="text-orange-400 block text-lg">Paso 2: Permisos de Superusuario</strong>
+                                <p class="text-base text-surface-300">En los ajustes de tu App Root (Magisk/Alpha), configura el acceso de superusuario para <strong>"Conceder siempre"</strong> y <strong>"No preguntar"</strong>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Paso 3 -->
+                        <div class="p-4 rounded-xl bg-surface-800 border-l-4 border-l-green-500 flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full bg-green-500/10 flex-center text-green-400 border border-green-500/20 shadow-inner">
+                                    <i class="fas fa-play text-base"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <strong class="text-green-400 block text-lg">Paso 3: Ejecutar en ArepaTool</strong>
+                                <p class="text-base text-surface-300">Conecta el equipo y presiona el botón <span class="badge badge-primary">Fix Apps Bancarias</span>. ¡Listo!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CRITICAL WARNING FOR CHIMERA USERS -->
+                    <div class="mt-10 py-6 border-t border-red-500/20 flex items-start gap-5">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 rounded-xl bg-red-500/10 flex-center text-red-500 border border-red-500/20">
+                                <i class="fas fa-skull-crossbones text-2xl"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="text-red-500 font-extrabold text-xl mb-2 uppercase tracking-tighter">¡ADVERTENCIA CRÍTICA DE PELIGRO!</h6>
+                            <p class="text-surface-100 text-lg leading-relaxed">
+                                <strong>Recuerda usar el "Fix Banks" como último paso absoluto.</strong> 
+                                <br><br>
+                                Este procedimiento oculta el Root completamente del sistema; una vez aplicado, <span class="text-red-400 font-bold decoration-red-500 decoration-2">quedarás sin acceso root visible</span> y no podrás realizar funciones adicionales con <strong>Chimera Tool</strong>.
                             </p>
                         </div>
                     </div>
@@ -474,74 +466,292 @@
             </div>
         </div>
 
-        <!-- Manual 5: Problemas Comunes -->
-        <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+        <!-- Manual 4: Apple -->
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
             <div class="faq-question">
-                <span><i class="bi bi-bug-fill" style="margin-right: 10px;"></i> ¿Problemas directos con ArepaTool?</span>
+                <span><i class="fab fa-apple me-2 text-primary-400"></i> Bypass A12+ (No Signal)</span>
                 <i class="bi bi-chevron-down"></i>
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
-                    <p>Si la aplicación no abre, arroja errores inesperados o faltan dependencias, sigue estos pasos de solución:</p>
                     
-                    <div style="margin-bottom: 20px;">
-                        <h5 style="color: #dc2626; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">
-                            <i class="bi bi-shield-check"></i> Recomendaciones Básicas
-                        </h5>
-                        <ul style="list-style: none; padding-left: 0;">
-                            <li style="margin-bottom: 10px; background: #f1f5f9; padding: 10px; border-radius: 6px; color: #334155;">
-                                <strong style="color: #0369a1;">1. Ejecutar como Administrador</strong><br>
-                                Haz clic derecho en ArepaTool y selecciona "Ejecutar como administrador". Esto es necesario para acceder a dispositivos USB y ADB.
-                            </li>
-                            <li style="margin-bottom: 10px; background: #f1f5f9; padding: 10px; border-radius: 6px; color: #334155;">
-                                <strong style="color: #0369a1;">2. Desactivar Antivirus / Defender</strong><br>
-                                A veces las herramientas de seguridad bloquean operaciones ADB o inyecciones de archivos. Desactiva temporalmente el antivirus.
-                            </li>
-                        </ul>
+                    <!-- Versiones Soportadas -->
+                    <div class="mb-8">
+                        <div class="p-6 rounded-2xl bg-surface-card border border-surface-700 shadow-xl">
+                            <h5 class="text-primary-400 font-bold text-xl mb-4 flex items-center gap-3">
+                                <i class="fas fa-check-double"></i> Compatibilidad de Sistema
+                            </h5>
+                            <div class="space-y-3">
+                                <p class="text-lg text-surface-50">Soportado: <span class="text-primary-300 font-bold">iOS 18.7.2</span> hasta <span class="text-primary-300 font-bold">26.2 Beta 2</span></p>
+                                <div class="p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3">
+                                    <i class="fas fa-info-circle text-red-400"></i>
+                                    <p class="text-base text-surface-100 italic"><strong>Nota iPhone XR:</strong> Solo soporta hasta la versión 18.7.2 máximo.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="custom-alert alert-info">
-                        <h6 class="alert-heading">
-                            <i class="bi bi-arrow-repeat"></i> ¿Nada funcionó?
-                        </h6>
-                        <p style="margin-bottom: 0; font-size: 0.9em;">
-                            Si el problema persiste, recomendamos <strong>volver a reinstalar el programa</strong> desde cero. Asegúrate de borrar la carpeta anterior antes de descomprimir la nueva versión.
+                    <!-- Restricción Crítica -->
+                    <div class="mb-8 p-1 border-b border-surface-700 pb-6 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/10 flex-center text-red-500 border border-red-500/20">
+                            <i class="fas fa-hand-dots text-2xl"></i>
+                        </div>
+                        <div>
+                            <strong class="text-red-500 block mb-1 uppercase text-sm tracking-widest font-black">Estado Obligatorio</strong>
+                            <p class="text-lg text-surface-50 leading-relaxed font-medium">El dispositivo debe estar en pantalla de <span class="text-white border-b border-white/30">Hello (Bienvenida)</span>. <br>Dispositivos con bloqueo de código (Passcode) <strong>no son soportados</strong>.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pasos Detallados -->
+                    <div class="space-y-5 mb-10">
+                        <h5 class="text-primary-400 font-bold text-xl mb-6 uppercase tracking-tight"><i class="fas fa-stairs me-2"></i> Instrucciones de Desbloqueo</h5>
+
+                        <!-- Paso 1 -->
+                        <div class="flex items-start gap-5 group">
+                            <div class="w-10 h-10 rounded-full bg-primary-500/10 flex-center text-primary-400 border border-primary-500/30 text-base font-bold flex-shrink-0 group-hover:bg-primary-500 group-hover:text-white transition-all shadow-md">1</div>
+                            <div>
+                                <strong class="text-surface-50 block text-lg mb-1">Preparación de Herramientas</strong>
+                                <p class="text-base text-surface-300">Asegúrate de que <strong>3uTools esté abierto</strong> a la par con ArepaTool para mejorar la estabilidad de conexión.</p>
+                            </div>
+                        </div>
+
+                        <!-- Paso 2 -->
+                        <div class="flex items-start gap-5 group">
+                            <div class="w-10 h-10 rounded-full bg-primary-500/10 flex-center text-primary-400 border border-primary-500/30 text-base font-bold flex-shrink-0 group-hover:bg-primary-500 group-hover:text-white transition-all shadow-md">2</div>
+                            <div>
+                                <strong class="text-surface-50 block text-lg mb-1">Configuración de Red</strong>
+                                <p class="text-base text-surface-300">Conecta el iPhone y el ordenador a la <strong>misma red WiFi</strong> (Obligatorio).</p>
+                            </div>
+                        </div>
+
+                        <!-- Paso 3 -->
+                        <div class="flex items-start gap-5 group">
+                            <div class="w-10 h-10 rounded-full bg-primary-500/10 flex-center text-primary-400 border border-primary-500/30 text-base font-bold flex-shrink-0 group-hover:bg-primary-500 group-hover:text-white transition-all shadow-md">3</div>
+                            <div>
+                                <strong class="text-surface-50 block text-lg mb-1">Ejecutar Bypass</strong>
+                                <p class="text-base text-surface-300">En ArepaTool, dirígete al apartado de <strong>Apple</strong> y presiona el botón <span class="badge badge-primary">Bypass</span>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Paso 4 (Camera Note) -->
+                        <div class="flex items-start gap-5 bg-orange-900/10 p-4 rounded-xl border-l-4 border-l-orange-500">
+                            <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex-center text-orange-400 text-xl flex-shrink-0"><i class="fas fa-camera"></i></div>
+                            <div>
+                                <strong class="text-orange-400 block text-sm mb-1 uppercase font-bold tracking-wider">Nota Importante de Cámara</strong>
+                                <p class="text-base text-surface-200">En algunos modelos la cámara nativa puede fallar. Recomendamos descargar cualquier aplicación de cámara desde la <strong>App Store</strong> para restaurar la función.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Support Note -->
+                    <div class="py-5 border-t border-surface-700">
+                        <h6 class="text-blue-400 font-bold mb-2 uppercase text-xs tracking-widest">¿Tu versión de iOS no aparece?</h6>
+                        <p class="text-sm text-surface-300 leading-relaxed mb-3">
+                            Podemos agregar soporte para nuevas versiones. Para ello, necesitamos extraer un archivo específico de tu dispositivo. 
+                            Si tu versión no está listada, contacta con nuestro <strong>Soporte Oficial en Telegram</strong>.
+                        </p>
+                        <a href="https://t.me/arepatool_soporte" target="_blank" class="text-blue-400 font-bold hover:underline flex items-center gap-2">
+                            <i class="fab fa-telegram"></i> Contactar Soporte Técnico
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual 5: E-SIM to SIM -->
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+            <div class="faq-question">
+                <span><i class="fas fa-sim-card me-2 text-primary-400"></i> E-SIM to SIM (Samsung)</span>
+                <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    
+                    <!-- Intro -->
+                    <p class="text-surface-200 mb-8 border-l-4 border-l-primary-500 pl-4">
+                        Este apartado permite la conversión de E-SIM a SIM física habilitando el segundo IMEI en dispositivos Samsung.
+                    </p>
+
+                    <!-- Método 1 -->
+                    <div class="mb-10">
+                        <div class="flex items-center gap-3 mb-6">
+                            <span class="px-3 py-1 bg-primary-500/10 text-primary-400 border border-primary-500/20 rounded-lg text-xs font-bold uppercase tracking-widest">Método 1</span>
+                            <h5 class="text-surface-50 font-bold text-xl">Dispositivo Rooteado (Directo)</h5>
+                        </div>
+                        
+                        <div class="space-y-4 ml-2">
+                            <div class="p-4 rounded-xl bg-surface-card border border-surface-700 flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-primary-500/10 flex-center text-primary-400 flex-shrink-0 border border-primary-500/20">1</div>
+                                <div>
+                                    <p class="text-base text-surface-200">En ArepaTool, dirígete al <strong>Panel de Samsung</strong>.</p>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-surface-card border border-surface-700 flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-primary-500/10 flex-center text-primary-400 flex-shrink-0 border border-primary-500/20">2</div>
+                                <div>
+                                    <p class="text-base text-surface-200">Activa la opción <span class="badge badge-primary">Enable IMEI 2 Samsung</span>.</p>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-surface-card border border-surface-700 flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-primary-500/10 flex-center text-primary-400 flex-shrink-0 border border-primary-500/20">3</div>
+                                <div>
+                                    <p class="text-base text-surface-200">Presiona el botón <span class="badge badge-primary">ADB Root</span> y espera el proceso.</p>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-green-900/10 border border-green-500/20 flex items-center gap-3">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                                <p class="text-sm text-surface-100">Al terminar, puedes restablecer de fábrica o pasar firmware; <strong>el cambio es permanente</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Método 2 -->
+                    <div class="mb-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg text-xs font-bold uppercase tracking-widest">Método 2</span>
+                            <h5 class="text-surface-50 font-bold text-xl">Manual EFS (Extracción)</h5>
+                        </div>
+
+                        <div class="space-y-4 ml-2">
+                            <div class="p-5 rounded-2xl bg-surface-card border border-surface-700">
+                                <h6 class="text-blue-400 font-bold mb-3 uppercase text-xs tracking-tighter">Proceso de Edición:</h6>
+                                <ol class="space-y-3 text-base text-surface-200">
+                                    <li class="flex gap-3">
+                                        <span class="text-blue-500 font-bold">1.</span>
+                                        <span>Extrae la partición <strong>EFS</strong> de tu dispositivo con tu herramienta de preferencia.</span>
+                                    </li>
+                                    <li class="flex gap-3">
+                                        <span class="text-blue-500 font-bold">2.</span>
+                                        <span>En ArepaTool > Samsung, activa <span class="badge badge-primary">Enable IMEI 2 Samsung</span>.</span>
+                                    </li>
+                                    <li class="flex gap-3">
+                                        <span class="text-blue-500 font-bold">3.</span>
+                                        <span>Click en <span class="badge badge-primary">Manual EFS</span> y carga el archivo extraído anteriormente.</span>
+                                    </li>
+                                    <li class="flex gap-3">
+                                        <span class="text-blue-500 font-bold">4.</span>
+                                        <span>La herramienta editará el archivo y te entregará el nuevo EFS en la <strong>misma carpeta</strong> de origen.</span>
+                                    </li>
+                                    <li class="flex gap-3">
+                                        <span class="text-blue-500 font-bold">5.</span>
+                                        <span>Escribe el nuevo archivo editado en el dispositivo.</span>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Backup Note -->
+                    <div class="mt-6 p-4 bg-blue-900/10 border-l-4 border-l-blue-400 rounded-lg flex items-center gap-4">
+                        <i class="fas fa-shield-heart text-blue-400 text-xl"></i>
+                        <p class="text-sm text-surface-200 italic">
+                            No te preocupes por la seguridad: ArepaTool siempre crea un <strong>Backup automático</strong> por si algo sale mal.
                         </p>
                     </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual 6: Arepa Admin -->
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
+            <div class="faq-question">
+                <span><i class="fas fa-user-gear me-2 text-primary-400"></i> Anclaje de DNS & Disable Factory Reset (Arepa Admin)</span>
+                <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    
+                    <!-- REQUISITOS CRÍTICOS -->
+                    <div class="mb-8">
+                        <h5 class="text-red-500 font-bold text-xl mb-4 uppercase tracking-tighter">¡REQUISITOS 100% OBLIGATORIOS!</h5>
+                        <div class="space-y-3">
+                            <div class="p-4 rounded-xl border border-red-500/20 flex items-center gap-4 bg-red-500/5">
+                                <i class="fas fa-user-slash text-red-500 text-xl w-8 text-center"></i>
+                                <p class="text-base text-surface-50">El dispositivo <strong>NO debe tener Device Owner</strong> configurado.</p>
+                            </div>
+                            <div class="p-4 rounded-xl border border-red-500/20 flex items-center gap-4 bg-red-500/5">
+                                <i class="fab fa-google text-red-500 text-xl w-8 text-center"></i>
+                                <p class="text-base text-surface-50"><strong>SIN CUENTAS GOOGLE</strong> agregadas en el sistema.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NOTA TÉCNICA ADB -->
+                    <div class="mb-8 p-5 rounded-2xl bg-orange-900/10 border border-orange-500/30">
+                        <h6 class="text-orange-400 font-bold mb-2 flex items-center gap-2">
+                            <i class="fas fa-triangle-exclamation"></i> Nota sobre activación ADB
+                        </h6>
+                        <p class="text-surface-200 text-base leading-relaxed">
+                            Si el ADB fue activado mediante métodos externos (Apps de terceros, códigos QR o <em>ADB enable OS16</em>), <strong>este procedimiento NO funcionará</strong>. 
+                            Es indispensable que la depuración ADB se active desde la <strong>configuración completa</strong> del equipo tras un inicio limpio.
+                        </p>
+                    </div>
+
+                    <!-- CASO DE USO -->
+                    <div class="mb-8 p-5 bg-surface-card rounded-xl border border-surface-700">
+                        <p class="text-base text-surface-50">
+                            <i class="fas fa-circle-info text-blue-400 me-2"></i> Este método es utilizado principalmente en dispositivos <strong>Samsung</strong> para realizar el bypass de <strong>KG Locked</strong> de manera efectiva.
+                        </p>
+                    </div>
+
+                    <!-- PASOS -->
+                    <div class="space-y-4">
+                        <h5 class="text-surface-50 font-bold text-lg mb-4">Instrucciones de Aplicación:</h5>
+                        
+                        <div class="p-4 rounded-xl bg-surface-800 border-l-4 border-l-primary-500 flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-primary-500/10 flex-center text-primary-400 flex-shrink-0 border border-primary-500/20 shadow-md">1</div>
+                            <div>
+                                <strong class="text-surface-50 block text-lg">Navegación</strong>
+                                <p class="text-base text-surface-300">En el panel principal, ve a <strong>MDM Lock</strong> y luego entra a la pestaña <strong>Arepa Apks / Utilidades</strong>.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-surface-800 border-l-4 border-l-primary-500 flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-primary-500/10 flex-center text-primary-400 flex-shrink-0 border border-primary-500/20 shadow-md">2</div>
+                            <div>
+                                <strong class="text-surface-50 block text-lg">Ejecución</strong>
+                                <p class="text-base text-surface-300">Realiza click en el botón <span class="badge badge-primary">ArepaAdmin</span>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUCCESS NOTE -->
+                    <div class="mt-8 py-4 border-t border-surface-700">
+                        <p class="text-sm text-surface-400 italic text-center">
+                            Si el dispositivo Samsung ha sido programado siguiendo estas pautas, el método funcionará a la perfección.
+                        </p>
+                    </div>
+
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- AOS Animation Library -->
+    <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({
-            duration: 800,
-            once: true
-        });
+        AOS.init({ duration: 800, once: true });
 
-        // Accordion Logic
         document.querySelectorAll('.faq-question').forEach(button => {
             button.addEventListener('click', () => {
-                const faqItem = button.parentElement;
-                const isActive = faqItem.classList.contains('active');
+                const item = button.parentElement;
+                const isActive = item.classList.contains('active');
                 
-                // Close all others
-                document.querySelectorAll('.faq-item').forEach(item => {
-                    item.classList.remove('active');
-                    item.querySelector('.faq-answer').style.maxHeight = null;
+                document.querySelectorAll('.faq-item').forEach(i => {
+                    i.classList.remove('active');
+                    i.querySelector('.faq-answer').style.maxHeight = null;
                 });
 
-                // Toggle current
                 if (!isActive) {
-                    faqItem.classList.add('active');
-                    const answer = faqItem.querySelector('.faq-answer');
+                    item.classList.add('active');
+                    const answer = item.querySelector('.faq-answer');
                     answer.style.maxHeight = answer.scrollHeight + "px";
                 }
             });
         });
     </script>
-  </body>
+</body>
 </html>

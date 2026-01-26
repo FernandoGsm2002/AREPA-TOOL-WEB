@@ -1,465 +1,178 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Account - ArepaTool V2 | Registro de Usuario</title>
-    <meta name="description" content="Create your ArepaTool V2 account to access professional unlocking and MDM bypass features. Registro de nueva cuenta." />
-    <meta name="robots" content="noindex, follow" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - ArepaTool</title>
     <link rel="icon" type="image/x-icon" href="pngs/logo.ico">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/skeleton-theme.css">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card animate-fade-in">
+            <div class="text-center mb-4">
+                <a href="index.html">
+                    <img src="pngs/arepalanding.png" alt="ArepaTool" style="width: 70px; height: auto; margin: 0 auto 1rem;">
+                </a>
+                <h3>Crear Cuenta</h3>
+                <p class="text-subtle">Únete a la comunidad de ArepaTool</p>
+            </div>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+            <div id="statusMessage" class="alert hidden"></div>
 
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label">Usuario</label>
+                    <div class="input-group">
+                        <i class="bi bi-person"></i>
+                        <input type="text" id="username" class="form-control" placeholder="Mínimo 3 caracteres" required minlength="3">
+                    </div>
+                </div>
 
-    <style>
-      :root {
-        --primary-color: #059669;
-        --primary-hover: #047857;
-        --primary-light: rgba(5, 150, 105, 0.1);
-        --bg-color: #f8fafc;
-        --card-bg: #ffffff;
-        --text-main: #1e293b;
-        --text-secondary: #64748b;
-        --border-color: #e2e8f0;
-        --error-color: #dc2626;
-        --success-color: #059669;
-        --info-color: #0284c7;
-      }
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <div class="input-group">
+                        <i class="bi bi-envelope"></i>
+                        <input type="email" id="email" class="form-control" placeholder="ejemplo@correo.com" required>
+                    </div>
+                </div>
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <i class="bi bi-lock"></i>
+                        <input type="password" id="password" class="form-control" placeholder="Mínimo 6 caracteres" required minlength="6">
+                    </div>
+                </div>
 
-      body {
-        font-family: "Inter", sans-serif;
-        background: var(--bg-color);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-      }
+                <div class="mb-4">
+                    <label class="form-check">
+                        <input type="checkbox" id="terms" required>
+                        <span class="text-sm text-subtle">Acepto los <a href="#" class="text-primary-400">términos</a> y condiciones</span>
+                    </label>
+                </div>
 
-      .register-container {
-        width: 100%;
-        max-width: 440px;
-      }
+                <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">
+                    <i class="bi bi-person-plus"></i> Crear Cuenta
+                </button>
+            </form>
 
-      .register-card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        padding: 2.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        border: 1px solid var(--border-color);
-      }
-
-      .register-header {
-        text-align: center;
-        margin-bottom: 2rem;
-      }
-
-      .register-logo {
-        width: 70px;
-        height: auto;
-        margin-bottom: 1.25rem;
-      }
-
-      .register-header h1 {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: var(--text-main);
-        margin-bottom: 0.5rem;
-      }
-
-      .register-header p {
-        color: var(--text-secondary);
-        font-size: 0.95rem;
-      }
-
-      .form-group {
-        margin-bottom: 1.25rem;
-      }
-
-      .form-label {
-        display: block;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--text-main);
-        margin-bottom: 0.5rem;
-      }
-
-      .input-wrapper {
-        position: relative;
-      }
-
-      .input-icon {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-secondary);
-        font-size: 1.1rem;
-      }
-
-      .form-input {
-        width: 100%;
-        padding: 0.875rem 1rem 0.875rem 2.75rem;
-        border: 1.5px solid var(--border-color);
-        border-radius: 10px;
-        font-size: 0.95rem;
-        font-family: inherit;
-        background: var(--card-bg);
-        color: var(--text-main);
-        transition: all 0.2s ease;
-      }
-
-      .form-input::placeholder {
-        color: var(--text-secondary);
-      }
-
-      .form-input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px var(--primary-light);
-      }
-
-      .form-checkbox {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
-      }
-
-      .form-checkbox input {
-        width: 18px;
-        height: 18px;
-        accent-color: var(--primary-color);
-        margin-top: 2px;
-        cursor: pointer;
-        flex-shrink: 0;
-      }
-
-      .form-checkbox label {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        line-height: 1.5;
-      }
-
-      .form-checkbox label a {
-        color: var(--primary-color);
-        text-decoration: none;
-      }
-
-      .form-checkbox label a:hover {
-        text-decoration: underline;
-      }
-
-      .form-status {
-        padding: 0.875rem;
-        border-radius: 8px;
-        font-size: 0.875rem;
-        margin-bottom: 1rem;
-        display: none;
-      }
-
-      .form-status.show {
-        display: block;
-      }
-
-      .form-status.error {
-        background: rgba(220, 38, 38, 0.1);
-        color: var(--error-color);
-        border: 1px solid rgba(220, 38, 38, 0.2);
-      }
-
-      .form-status.success {
-        background: rgba(5, 150, 105, 0.1);
-        color: var(--success-color);
-        border: 1px solid rgba(5, 150, 105, 0.2);
-      }
-
-      .form-status.info {
-        background: rgba(2, 132, 199, 0.1);
-        color: var(--info-color);
-        border: 1px solid rgba(2, 132, 199, 0.2);
-      }
-
-      .btn-submit {
-        width: 100%;
-        padding: 0.875rem;
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 600;
-        font-family: inherit;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        transition: all 0.2s ease;
-      }
-
-      .btn-submit:hover:not(:disabled) {
-        background: var(--primary-hover);
-      }
-
-      .btn-submit:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-      }
-
-      .register-footer {
-        text-align: center;
-        margin-top: 1.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid var(--border-color);
-      }
-
-      .register-footer p {
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-      }
-
-      .register-footer a {
-        color: var(--primary-color);
-        font-weight: 500;
-        text-decoration: none;
-      }
-
-      .register-footer a:hover {
-        text-decoration: underline;
-      }
-
-      .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-        text-decoration: none;
-        margin-bottom: 1.5rem;
-        transition: color 0.2s ease;
-      }
-
-      .back-link:hover {
-        color: var(--primary-color);
-      }
-
-      @media (max-width: 480px) {
-        body {
-          padding: 1rem;
-        }
-        
-        .register-card {
-          padding: 1.75rem;
-        }
-
-        .register-header h1 {
-          font-size: 1.5rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="register-container">
-      <a href="./" class="back-link">
-        <i class="bi bi-arrow-left"></i> Volver al inicio
-      </a>
-
-      <div class="register-card">
-        <div class="register-header">
-          <img src="pngs/arepalanding.png" alt="ArepaTool" class="register-logo">
-          <h1>Crear Cuenta</h1>
-          <p>Regístrate para obtener acceso a ArepaTool V2</p>
+            <div class="text-center mt-4 pt-4" style="border-top: 1px solid var(--surface-700);">
+                <p class="text-subtle text-sm">¿Ya tienes cuenta? <a href="login.html" class="text-primary-400 font-bold">Inicia Sesión</a></p>
+                <div class="mt-2">
+                     <a href="index.html" class="text-xs text-subtle hover:text-white"><i class="bi bi-arrow-left"></i> Volver al Inicio</a>
+                </div>
+            </div>
         </div>
-
-        <form id="registerForm">
-          <div class="form-group">
-            <label class="form-label" for="username">Nombre de usuario</label>
-            <div class="input-wrapper">
-              <i class="bi bi-person input-icon"></i>
-              <input type="text" id="username" class="form-input" placeholder="Mínimo 3 caracteres" required minlength="3">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="email">Correo electrónico</label>
-            <div class="input-wrapper">
-              <i class="bi bi-envelope input-icon"></i>
-              <input type="email" id="email" class="form-input" placeholder="ejemplo@correo.com" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="password">Contraseña</label>
-            <div class="input-wrapper">
-              <i class="bi bi-lock input-icon"></i>
-              <input type="password" id="password" class="form-input" placeholder="Mínimo 6 caracteres" required minlength="6">
-            </div>
-          </div>
-
-          <div class="form-checkbox">
-            <input type="checkbox" id="terms" required>
-            <label for="terms">Acepto los <a href="#">términos y condiciones</a> y la <a href="#">política de privacidad</a></label>
-          </div>
-
-          <div id="statusMessage" class="form-status"></div>
-
-          <button type="submit" class="btn-submit" id="btnSubmit">
-            <i class="bi bi-person-plus"></i> Crear Cuenta
-          </button>
-        </form>
-
-        <div class="register-footer">
-          <p>¿Ya tienes cuenta? <a href="https://t.me/ctrone21">Contacta soporte</a></p>
-        </div>
-      </div>
     </div>
 
     <script>
-      const SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0NjY1NjcsImV4cCI6MjA3OTA0MjU2N30.oXVYUjnSpDDQphLZJzglGaDSQTjuGzYgD-LMC5FwDHw';
-
-      document.getElementById('registerForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const username = document.getElementById('username').value.trim().toLowerCase();
-        const email = document.getElementById('email').value.trim().toLowerCase();
-        const password = document.getElementById('password').value;
-        const terms = document.getElementById('terms').checked;
-        const btnSubmit = document.getElementById('btnSubmit');
-
-        // Validations
-        if (username.length < 3) {
-          showStatus('El nombre de usuario debe tener al menos 3 caracteres', 'error');
-          return;
+        const SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0NjY1NjcsImV4cCI6MjA3OTA0MjU2N30.oXVYUjnSpDDQphLZJzglGaDSQTjuGzYgD-LMC5FwDHw';
+        
+        function showStatus(msg, type='info') {
+            const el = document.getElementById('statusMessage');
+            el.textContent = msg;
+            el.className = `alert alert-${type}`;
+            el.classList.remove('hidden');
         }
 
-        if (!email.includes('@')) {
-          showStatus('Ingresa un correo electrónico válido', 'error');
-          return;
-        }
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim().toLowerCase();
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+            const terms = document.getElementById('terms').checked;
+            const btn = document.getElementById('btnSubmit');
 
-        if (password.length < 6) {
-          showStatus('La contraseña debe tener al menos 6 caracteres', 'error');
-          return;
-        }
+            if(username.length < 3) return showStatus('Usuario muy corto', 'error');
+            if(!email.includes('@')) return showStatus('Email inválido', 'error');
+            if(password.length < 6) return showStatus('Contraseña muy corta', 'error');
+            if(!terms) return showStatus('Debes aceptar los términos', 'error');
 
-        if (!terms) {
-          showStatus('Debes aceptar los términos y condiciones', 'error');
-          return;
-        }
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border"></span> Procesando...';
+            showStatus('Verificando disponibilidad...', 'info');
 
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<i class="bi bi-hourglass-split"></i> Creando cuenta...';
-        showStatus('Verificando datos...', 'info');
+            try {
+                // Check Username
+                const c1 = await fetch(`${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=id`, {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                const d1 = await c1.json();
+                if(d1.length > 0) {
+                    btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
+                    return showStatus('El usuario ya existe', 'error');
+                }
 
-        try {
-          // Check if username exists
-          const checkUsername = await fetch(
-            `${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=id`,
-            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
-          );
-          const existingUsername = await checkUsername.json();
-          if (existingUsername.length > 0) {
-            showStatus('Este nombre de usuario ya está registrado', 'error');
-            resetButton();
-            return;
-          }
+                // Check Email (DB)
+                const c2 = await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id`, {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                const d2 = await c2.json();
+                if(d2.length > 0) {
+                    btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
+                    return showStatus('El email ya está registrado', 'error');
+                }
 
-          // Check if email exists
-          const checkEmail = await fetch(
-            `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id`,
-            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
-          );
-          const existingEmail = await checkEmail.json();
-          if (existingEmail.length > 0) {
-            showStatus('Este correo electrónico ya está registrado', 'error');
-            resetButton();
-            return;
-          }
+                showStatus('Creando credenciales...', 'info');
 
-          showStatus('Creando cuenta...', 'info');
+                // Sign Up
+                const authRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+                    method: 'POST',
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const authData = await authRes.json();
+                
+                if(!authRes.ok) {
+                    let msg = authData.message || 'Error en registro';
+                    if(msg.includes('already registered')) msg = 'El email ya está en uso';
+                    btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
+                    return showStatus(msg, 'error');
+                }
 
-          // Create user in Supabase Auth
-          const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
-            method: 'POST',
-            headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-          });
+                // Save Profile
+                const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        status: 'pending',
+                        created_at: new Date().toISOString()
+                    })
+                });
 
-          const authData = await authResponse.json();
-          
-          if (!authResponse.ok) {
-            let errorMsg = authData.error_description || authData.message || 'Error al crear cuenta';
-            if (errorMsg.includes('already registered')) {
-              errorMsg = 'Este correo ya está registrado en el sistema';
+                if(!profileRes.ok) {
+                    btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
+                    return showStatus('Error guardando perfil. Contacta soporte.', 'error');
+                }
+
+                showStatus('✓ Cuenta Creada. Contacta a tu distribuidor para activar.', 'success');
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> ¡Listo!';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    document.getElementById('registerForm').reset();
+                    // Optional: redirect to login
+                }, 3000);
+
+            } catch(e) {
+                console.error(e);
+                btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
+                showStatus('Error de red', 'error');
             }
-            showStatus(errorMsg, 'error');
-            resetButton();
-            return;
-          }
-
-          // Create user in public.users table
-          const createUserResponse = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
-            method: 'POST',
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-              'Content-Type': 'application/json',
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify({
-              username: username,
-              email: email,
-              status: 'pending',
-              created_at: new Date().toISOString()
-            })
-          });
-
-          if (!createUserResponse.ok) {
-            const errorText = await createUserResponse.text();
-            showStatus('Error al guardar usuario', 'error');
-            resetButton();
-            return;
-          }
-
-          // Success
-          showStatus('✓ ¡Cuenta creada! Contacta a tu distribuidor para activar tu licencia.', 'success');
-          btnSubmit.innerHTML = '<i class="bi bi-check-circle"></i> ¡Cuenta Creada!';
-          btnSubmit.style.background = '#059669';
-          
-          document.getElementById('registerForm').reset();
-
-        } catch (error) {
-          console.error('Registration error:', error);
-          showStatus('Error de conexión. Intenta de nuevo.', 'error');
-          resetButton();
-        }
-      });
-
-      function showStatus(message, type) {
-        const statusEl = document.getElementById('statusMessage');
-        statusEl.textContent = message;
-        statusEl.className = 'form-status show ' + type;
-      }
-
-      function resetButton() {
-        const btnSubmit = document.getElementById('btnSubmit');
-        btnSubmit.disabled = false;
-        btnSubmit.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
-        btnSubmit.style.background = '';
-      }
+        });
     </script>
-  </body>
+</body>
 </html>

@@ -1,488 +1,354 @@
-
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ArepaTool V2 - Unlock & MDM Bypass Tool | Desbloqueo Android & iOS</title>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArepaTool V2 - Professional Unlock & MDM Tool</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="ArepaTool V2 is the ultimate professional unlocking software for Android and iOS. Features include MDM bypass, Samsung FRP unlock, banking app fixes, and iCloud bypass. Herramienta profesional de desbloqueo y reparación." />
-    <meta name="keywords" content="arepatool, arepa tool, unlock, desbloqueo, mdm bypass, frp samsung, unlocker, removal tool, bypass a12, ios bypass, reparar celular, gsm tools, mdm remove" />
+    <meta name="description" content="ArepaTool V2 is the ultimate professional unlocking software for Android and iOS. Features include MDM bypass, Samsung FRP unlock, banking app fixes, and iCloud bypass." />
+    <meta name="keywords" content="arepatool, unlock, desbloqueo, mdm bypass, frp samsung, unlocker, removal tool, bypass a12, ios bypass, reparar celular, gsm tools" />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="ArepaTool Team" />
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.arepatool.com/" />
     <meta property="og:title" content="ArepaTool V2 - Professional Unlock & MDM Tool" />
-    <meta property="og:description" content="The best tool for MDM Bypass, FRP Unlock, and Android/iOS repairs. La mejor herramienta para técnicos GSM." />
+    <meta property="og:description" content="The best tool for MDM Bypass, FRP Unlock, and Android/iOS repairs." />
     <meta property="og:image" content="pngs/arepalanding.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://www.arepatool.com/" />
-    <meta property="twitter:title" content="ArepaTool V2 - Professional Unlock & MDM Tool" />
+    <meta property="twitter:title" content="ArepaTool V2" />
     <meta property="twitter:description" content="Professional MDM Bypass and Unlocking Tool for Android & iOS." />
     <meta property="twitter:image" content="pngs/arepalanding.png" />
+    
     <link rel="icon" type="image/x-icon" href="pngs/logo.ico">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
 
     <!-- Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="landing.css" />
-    <!-- AOS Animation Library CSS -->
+    <link rel="stylesheet" href="css/skeleton-theme.css">
+    <link rel="stylesheet" href="css/landing.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-    <!-- Structured Data (JSON-LD) for Google Sitelinks -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "SoftwareApplication",
-          "name": "ArepaTool V2",
-          "operatingSystem": "Windows 10, Windows 11",
-          "applicationCategory": "UtilitiesApplication",
-          "image": "https://www.arepatool.com/pngs/arepalanding.png",
-          "url": "https://www.arepatool.com",
-          "description": "Professional mobile unlocking software. Features include MDM Bypass, Samsung FRP Unlock, and iOS Bypass.",
-          "softwareVersion": "2.0.2",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD",
-            "availability": "https://schema.org/InStock"
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "ratingCount": "350"
-          }
-        },
-        {
-          "@type": "Organization",
-          "name": "ArepaTool",
-          "url": "https://www.arepatool.com",
-          "logo": "https://www.arepatool.com/pngs/logo.ico",
-          "sameAs": [
-            "https://t.me/ctrone21",
-            "https://www.youtube.com/@arepatool"
-          ]
-        },
-        {
-          "@type": "SiteNavigationElement",
-          "name": "Manuales y Tutoriales",
-          "url": "https://www.arepatool.com/instructions.html"
-        },
-        {
-          "@type": "SiteNavigationElement",
-          "name": "Registro de Usuario",
-          "url": "https://www.arepatool.com/register.html"
+    
+    <style>
+        .tutorial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
-      ]
-    }
-    </script>
-  </head>
-  <body>
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--surface-700);
+            background: var(--surface-900);
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
     <canvas id="matrixCanvas"></canvas>
+
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="container nav-content">
-            <a href="/" class="logo">
-                <img src="pngs/arepalanding.png" alt="ArepaTool V1" class="logo-img">
-                <span class="brand-name">ArepaToolV2</span>
+        <div class="container navbar-content">
+            <a href="/" class="brand">
+                <img src="pngs/logo.ico" alt="ArepaTool">
+                <span>ArepaTool<span style="color:var(--primary-500)">V2</span></span>
             </a>
-            <div class="nav-links">
-                <a href="#features">Características</a>
-                <a href="#pricing">Precios</a>
-                <a href="instructions.html">Manuales</a>
-                <a href="#resellers">Seller</a>
-                <a href="#tutorials">Tutoriales</a>
-                <a href="login.html" class="btn-login-nav">
+            
+            <div class="nav-menu">
+                <a href="#features" class="nav-link">Características</a>
+                <a href="#tutorials" class="nav-link">Tutoriales</a>
+                <a href="#pricing" class="nav-link">Precios</a>
+                <a href="instructions.html" class="nav-link">Manuales</a>
+                <a href="login.html" class="btn btn-secondary btn-sm">
                     <i class="bi bi-box-arrow-in-right"></i> Login
                 </a>
-                <a href="register.html" class="btn-register">
+                <a href="register.html" class="btn btn-primary btn-sm">
                     <i class="bi bi-person-plus"></i> Regístrate
                 </a>
             </div>
-            <!-- Mobile Buttons -->
-            <div class="mobile-nav-btns">
-                <a href="/login" class="btn-login-mobile">
-                    <i class="bi bi-box-arrow-in-right"></i>
-                </a>
-                <a href="register.html" class="btn-register-mobile">
-                    <i class="bi bi-person-plus"></i>
-                </a>
+            
+            <div class="mobile-toggle">
+                <i class="bi bi-list"></i>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container hero-wrapper">
-            <div class="hero-content" data-aos="fade-right">
-                <h1>ArepaTool V2 - Unlock & MDM Tool</h1>
-                <p class="hero-subtitle">ArepaTool V2 - Software simple y facil de usar, enfocado en dispositivos Android y IOS..</p>
-                <div class="hero-buttons">
-                    <a href="https://mega.nz/file/KOxRlYCJ#0n9kwTCXfG_091O5IlDmLXLGcy7D-1fuDJ3nr_Al7cI" target="_blank" class="btn btn-primary"><i class="bi bi-download"></i> Download Now</a>
-                    <a href="https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.416/dotnet-sdk-8.0.416-win-x64.exe" target="_blank" class="btn btn-secondary"><i class="bi bi-hdd-network"></i> Download Drivers</a>
-                </div>
-            </div>
-            <div class="hero-image" data-aos="fade-left" data-aos-delay="200">
-                <img src="pngs/landingdisplay.png" alt="ArepaTool Interface">
-            </div>
-        </div>
-    </section>
-
-    <!-- Announcement Banner -->
-    <section class="announcement-banner">
         <div class="container">
-            <div class="announcement-content" data-aos="zoom-in">
-                <div class="announcement-text">
-                    <h2><i class="bi bi-lightning-charge-fill"></i> ¡OBTÉN TU LICENCIA AHORA!</h2>
-                    <p>Consulta precios con distribuidores autorizados</p>
-                </div>
-                <a href="#resellers" class="btn-announcement">CONTACTAR</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container">
-            <h2 data-aos="fade-up">Características Premium</h2>
-            <div class="premium-features-grid">
-                <!-- FIX APPS BANCARIAS -->
-                <div class="premium-feature-card" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="premium-feature-image">
-                        <img src="pngs/FIXYAPE.png" alt="Fix Apps Bancarias">
-                    </div>
-                    <div class="premium-feature-content">
-                        <h3>FIX APPS BANCARIAS</h3>
-                        <ul class="premium-feature-list">
-                            <li><i class="bi bi-check-circle-fill"></i> Con solo un Click, corregirás los problemas al entrar a las apps bancarias después de rootear tu dispositivo Samsung</li>
-                            <li><i class="bi bi-check-circle-fill"></i> Soporte para muchos bancos de LATAM!</li>
-                        </ul>
+            <div class="grid grid-2" style="align-items: center;">
+                <div class="hero-content" data-aos="fade-right">
+                    <h1>Unlock Your <br><span class="text-gradient">Potential</span></h1>
+                    <p class="hero-subtitle">
+                         Herramienta profesional enfocada para técnicos, con funciones como MDM Bypass, FRP Unlock, y mas funciones avanzadas para Android e iOS.
+                    </p>
+                    <div class="flex-center" style="justify-content: flex-start; gap: 1rem; flex-wrap: wrap;">
+                        <a href="https://mega.nz/file/KOxRlYCJ#0n9kwTCXfG_091O5IlDmLXLGcy7D-1fuDJ3nr_Al7cI" target="_blank" class="btn btn-primary btn-lg">
+                            <i class="bi bi-windows"></i> Descargar Tool
+                        </a>
+                        <a href="https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.416/dotnet-sdk-8.0.416-win-x64.exe" target="_blank" class="btn btn-outline btn-lg">
+                            <i class="bi bi-hdd-network"></i> Drivers
+                        </a>
                     </div>
                 </div>
-
-                <!-- MDM REMOVE -->
-                <div class="premium-feature-card" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="premium-feature-image">
-                        <img src="pngs/MDM.png" alt="MDM Remove">
-                    </div>
-                    <div class="premium-feature-content">
-                        <h3>BYPASS MDM LOCKS (DNS METHOD)</h3>
-                        <ul class="premium-feature-list">
-                            <li><i class="bi bi-check-circle-fill"></i>Creacion de DNS ilimitada </li>
-                            <li><i class="bi bi-check-circle-fill"></i> KG LOCKED </li>
-                            <li><i class="bi bi-check-circle-fill"></i> All IT Admin Remove</li>
-                            <li><i class="bi bi-check-circle-fill"></i> Claro/Telcel Locks</li>
-                            <li><i class="bi bi-check-circle-fill"></i>White screen Motorola </li>
-                            <li><i class="bi bi-check-circle-fill"></i>White screen Oppo </li>
-                            <li><i class="bi bi-check-circle-fill"></i>Arepa Apk - Desactiva factory reset y modificacion de DNS </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- BYPASS A12+ -->
-                <div class="premium-feature-card" data-aos="zoom-in" data-aos-delay="500">
-                    <div class="premium-feature-image">
-                        <img src="pngs/Arepaa12+.png" alt="BYPASS A12+">
-                    </div>
-                    <div class="premium-feature-content">
-                        <h3>SAMSUNG FRP</h3>
-                        <ul class="premium-feature-list">
-                            <li><i class="bi bi-check-circle-fill"></i> Android 16 soportado (No all Models)</li>
-                            <li><i class="bi bi-check-circle-fill"></i>MTP mode & wifi conectado</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- BYPASS A12+ -->
-                <div class="premium-feature-card" data-aos="zoom-in" data-aos-delay="700">
-                    <div class="premium-feature-image">
-                        <img src="pngs/ios26hello.png" alt="Bypass A12+">
-                    </div>
-                    <div class="premium-feature-content">
-                        <h3>Bypass A12+</h3>
-                        <ul class="premium-feature-list">
-                            <li><i class="bi bi-check-circle-fill"></i> IOS 18.7.1 TO 26.1 </li>
-                            <li><i class="bi bi-check-circle-fill"></i> OTA disable</li>
-                            <li><i class="bi bi-check-circle-fill"></i> XR to 17 PROMAX </li>
-                        </ul>
-                    </div>
+                <div class="hero-image-container" data-aos="fade-left" data-aos-delay="200">
+                    <img src="pngs/landingdisplay.png" alt="ArepaTool UI" class="hero-img">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
+    <!-- Features -->
+    <section id="features" class="features-section">
         <div class="container">
-            <h2 data-aos="fade-up">Precios Simples</h2>
-            <div class="pricing-products-grid">
-
-
-                <!-- AREPATOOL V2.0.4 -->
-                <div class="pricing-product-card popular" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="pricing-product-image">
-                        <img src="pngs/arepalanding.png" alt="AREPATOOL V2.0.4">
-                    </div>
-                    <div class="pricing-product-content">
-                        <h3>AREPATOOL V2.0.4</h3>
-                        <div class="product-price">Consultar Precio con tu distribuidor</div>
-                        <ul class="product-features-list">
-                            <li><i class="bi bi-check-circle-fill"></i> Licencia Anual</li>
-                            <li><i class="bi bi-check-circle-fill"></i> Soporte Multimarcas</li>
-                            <li><i class="bi bi-check-circle-fill"></i> Premium Features</li>
-                            <li><i class="bi bi-check-circle-fill"></i> Asistencia 24/7</li>
-                            <li><i class="bi bi-check-circle-fill"></i> 3h Unlock Pc</li>
-                        </ul>
-                        <a href="#resellers" class="btn btn-primary"><i class="bi bi-person-badge"></i> Contactar Distribuidor</a>
-                    </div>
-                </div>
-            </div>
+            <h2 class="text-center mb-4" data-aos="fade-up">Características <span class="text-gradient">Premium</span></h2>
             
-            <!-- Reseller Promo -->
-            <div class="reseller-promo-container" data-aos="fade-up" data-aos-delay="400">
-                <a href="https://chat.whatsapp.com/JsZTjMnBpVc1kuMpw5g2hr" target="_blank" class="reseller-link">
-                    <i class="bi bi-shop-window"></i> ¿Quieres ser revendedor?
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Resellers Section -->
-    <section id="resellers" class="resellers">
-        <div class="container">
-            <h2 data-aos="fade-up">Distribuidores Oficiales</h2>
-            <div class="distributor-container">
-                <div class="distributor-card" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="distributor-logo">
-                        <img src="pngs/leopepe.png" alt="ArepaTool">
+            <div class="grid grid-3"> <!-- Changed to grid-3 for 6 items layout (3 per row) -->
+                <!-- Card 1: MDM -->
+                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="flex-center w-full justify-center" style="height: 120px;">
+                        <img src="pngs/MDM.png" alt="MDM" class="feature-img-xl"> <!-- Updated Class for larger size -->
                     </div>
-                    <div class="distributor-content">
-                        <h3>Leope-Gsm</h3>
-                        <p>Distribuidor Oficial</p>
-                        <div class="distributor-links">
-                            <a href="#" target="_blank" class="social-link web" title="Sitio Web">
-                                <i class="bi bi-globe"></i>
-                                <span>Web</span>
-                            </a>
-                            <a href="https://chat.whatsapp.com/ItqFr6uwlrOEvkXZQLiYaj" target="_blank" class="social-link whatsapp" title="WhatsApp">
-                                <i class="bi bi-whatsapp"></i>
-                                <span>WhatsApp</span>
-                            </a>
-                            <a href="https://t.me/ctrone21" target="_blank" class="social-link telegram" title="Telegram">
-                                <i class="bi bi-telegram"></i>
-                                <span>Telegram</span>
-                            </a>
-                        </div>
-                    </div>
+                    <h3>MDM Bypass (DNS)</h3>
+                    <ul class="feature-list"> <!-- Cleaned up list class -->
+                        <li><i class="bi bi-check-circle"></i> Creacion de DNS ilimitada</li>
+                        <li><i class="bi bi-check-circle"></i> Generacion manual y instalacion automatica</li>
+                        <li><i class="bi bi-check-circle"></i> White Screen Motorola</li>
+                        <li><i class="bi bi-check-circle"></i> IT Admin (Movistar, Entel, Claro, etc)</li>
+                        <li><i class="bi bi-check-circle"></i> Claro & Telcel PIN</li>
+                        <li><i class="bi bi-check-circle"></i> Samsung KG & DNS anclada</li>
+                    </ul>
                 </div>
 
-                <!-- Gsm Xpert Card -->
-                <div class="distributor-card" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="distributor-logo">
-                        <img src="pngs/gsmxpert.jpg" alt="Gsm Xpert">
+                <!-- Card 2: Samsung/Magisk -->
+                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="flex-center w-full justify-center" style="height: 120px;">
+                        <img src="pngs/magisk.png" alt="Root" class="feature-img-lg">
                     </div>
-                    <div class="distributor-content">
-                        <h3>Gsm Xpert</h3>
-                        <p>Distribuidor Oficial</p>
-                        <div class="distributor-links">
-                            <a href="https://www.xpert-gsm.com" target="_blank" class="social-link web" title="Sitio Web">
-                                <i class="bi bi-globe"></i>
-                                <span>Web</span>
-                            </a>
-                            <a href="https://chat.whatsapp.com/BoQIuhYLMhgJCsaLPiSB7t" target="_blank" class="social-link whatsapp" title="WhatsApp">
-                                <i class="bi bi-whatsapp"></i>
-                                <span>WhatsApp</span>
-                            </a>
-                            <a href="https://t.me/XpertGsmServer" target="_blank" class="social-link telegram" title="Telegram">
-                                <i class="bi bi-telegram"></i>
-                                <span>Telegram</span>
-                            </a>
-                        </div>
-                    </div>
+                    <h3>Samsung Root & Odin</h3>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle"></i> Samsung Root Maker (Beta)</li>
+                        <li><i class="bi bi-check-circle"></i> Odin Flash Protocol</li>
+                        <li><i class="bi bi-check-circle"></i> Acceso a Boot Root Creados</li>
+                    </ul>
                 </div>
 
-                <!-- SMARTBEUNLOCK Card -->
-                <div class="distributor-card" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="distributor-logo">
-                        <img src="pngs/smartbeunlock.png" alt="SMARTBEUNLOCK">
+                <!-- Card 3: Fix Apps -->
+                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="flex-center w-full justify-center" style="height: 120px;">
+                        <img src="pngs/FIXYAPE.png" alt="Fix Apps" class="feature-img-lg">
                     </div>
-                    <div class="distributor-content">
-                        <h3>SMARTBEUNLOCK</h3>
-                        <p>Distribuidor Oficial</p>
-                        <div class="distributor-links">
-                            <a href="https://smartbeunlock.com" target="_blank" class="social-link web" title="Sitio Web">
-                                <i class="bi bi-globe"></i>
-                                <span>Web</span>
-                            </a>
-                            <a href="https://wa.me/573226859899?text=%22Smartbeunlock.com%20Proveedor%20de%20servicios%20de%20desbloqueo%20de%20dispositivos%20m%C3%B3viles%20y%20soluciones%20de%20registro%20y%20activaci%C3%B3n.%20Gestionamos%20pagos%20y%20cobros%20de%20manera%20eficiente%20para%20ofrecerte%20los%20mejores%20servicios.%20%C2%A1Cont%C3%A1ctanos%20para%20m%C3%A1s%20informaci%C3%B3n!%22" target="_blank" class="social-link whatsapp" title="WhatsApp">
-                                <i class="bi bi-whatsapp"></i>
-                                <span>WhatsApp</span>
-                            </a>
-                            <a href="https://t.me/albeiro1991" target="_blank" class="social-link telegram" title="Telegram">
-                                <i class="bi bi-telegram"></i>
-                                <span>Telegram</span>
-                            </a>
-                        </div>
-                    </div>
+                    <h3>Fix Apps Bancarias</h3>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle"></i> Bancos de todo Latam Soportados</li>
+                        <li><i class="bi bi-check-circle"></i> Ocultar Root Avanzado</li>
+                        <li><i class="bi bi-check-circle"></i> Magisk 27+ / Delta / Alpha</li>
+                    </ul>
                 </div>
 
-                <!-- OHIDERA-UNLOCKER Card -->
-                <div class="distributor-card" data-aos="zoom-in" data-aos-delay="400">
-                    <div class="distributor-logo">
-                        <img src="pngs/ohideraunlocker.jpg" alt="OHIDERA-UNLOCKER">
+                <!-- Card 4: iOS -->
+                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="flex-center w-full justify-center" style="height: 120px;">
+                        <img src="pngs/ios26hello.png" alt="iOS" class="feature-img-lg">
                     </div>
-                    <div class="distributor-content">
-                        <h3>OHIDERA-UNLOCKER</h3>
-                        <p>Distribuidor Oficial</p>
-                        <div class="distributor-links">
-                            <a href="https://ohideraunlocker.com" target="_blank" class="social-link web" title="Sitio Web">
-                                <i class="bi bi-globe"></i>
-                                <span>Web</span>
-                            </a>
-                            <a href="https://wa.me/+8801660122234" target="_blank" class="social-link whatsapp" title="WhatsApp">
-                                <i class="bi bi-whatsapp"></i>
-                                <span>WhatsApp</span>
-                            </a>
-                            <a href="https://t.me/ohideraunlockerofficialchannel" target="_blank" class="social-link telegram" title="Telegram">
-                                <i class="bi bi-telegram"></i>
-                                <span>Telegram</span>
-                            </a>
-                        </div>
+                    <h3>iOS Bypass A12+</h3>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle"></i> Soporte iOS 18.7.1 - 26.1</li>
+                        <li><i class="bi bi-check-circle"></i> Hello Screen Support</li>
+                        <li><i class="bi bi-check-circle"></i> Ipads & Iphones Support</li>
+                    </ul>
+                </div>
+
+                <!-- Card 5: Motorola -->
+                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="flex-center w-full justify-center" style="height: 120px;">
+                        <img src="pngs/cricket.png" alt="ArepaTool" class="feature-img-lg">
                     </div>
+                    <h3>Motorola Cricket MDM</h3>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle"></i> Support Moto 5G Phones</li>
+                        <li><i class="bi bi-check-circle"></i> Security december 2025 (Beta)</li>
+                    </ul>
+                </div>
+
+                <!-- Card 6: Samsung FRP -->
+                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="600">
+                    <div class="flex-center w-full justify-center" style="height: 120px;">
+                         <img src="pngs/samsungfrp.png" alt="ArepaTool" class="feature-img-lg">
+                    </div>
+                    <h3>Samsung Enable ADB</h3>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle"></i> Some Devices Support</li>
+                        <li><i class="bi bi-check-circle"></i> Setup Mode & Wifi connect</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Tutorials Section -->
-    <section id="tutorials" class="tutorials">
-        <div class="container">
-            <h2 data-aos="fade-up">Tutoriales</h2>
-            <p data-aos="fade-up" data-aos-delay="100">Encuentra videos y guías paso a paso para sacar el máximo provecho a ArepaTool.</p>
-            <div class="tutorial-grid">
-                <div class="tutorial-card" data-aos="zoom-in" data-aos-delay="200">
-                    <iframe src="https://www.youtube.com/embed/nHY0MUdkfBA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <h3>Fix Warning Logo</h3>
-                    <p> Fix warning logo para dispositivos Samsung rooteados.</p>
+    <section id="tutorials" class="container py-5">
+        <h2 class="text-center mb-4" data-aos="fade-up">Tutoriales <span class="text-gradient">Oficiales</span></h2>
+        <div class="tutorial-grid">
+            <!-- Video 1 -->
+            <div class="video-card" data-aos="fade-up" onclick="playVideo(this, 'xV3EEy-3qO4')">
+                <div class="video-container">
+                    <img src="https://img.youtube.com/vi/xV3EEy-3qO4/hqdefault.jpg" alt="Thumbnail">
+                    <div class="play-button"><i class="bi bi-play-fill"></i></div>
                 </div>
-                <div class="tutorial-card" data-aos="zoom-in" data-aos-delay="300">
-                    <a href="https://www.youtube.com/watch?v=K-MmrArDFmU" target="_blank" class="video-thumbnail">
-                        <img src="https://img.youtube.com/vi/K-MmrArDFmU/maxresdefault.jpg" alt="Video Thumbnail">
-                        <div class="play-button">
-                            <i class="bi bi-play-fill"></i>
-                        </div>
+                <h4 class="mt-3 text-center text-lg">instalacion de DNS para remover Bloqueos Tutorial</h4>
+            </div>
+            <!-- Video 2 -->
+             <div class="video-card" data-aos="fade-up" data-aos-delay="100" onclick="playVideo(this, 'K-MmrArDFmU')">
+                <div class="video-container">
+                    <img src="https://img.youtube.com/vi/K-MmrArDFmU/hqdefault.jpg" alt="Thumbnail">
+                    <div class="play-button"><i class="bi bi-play-fill"></i></div>
+                </div>
+                <h4 class="mt-3 text-center text-lg">Fix Apps bancarias y como rootear Tutorial</h4>
+            </div>
+            <!-- Video 3 -->
+             <div class="video-card" data-aos="fade-up" data-aos-delay="200" onclick="playVideo(this, 'nHY0MUdkfBA')">
+                <div class="video-container">
+                     <img src="https://img.youtube.com/vi/nHY0MUdkfBA/hqdefault.jpg" alt="Thumbnail">
+                     <div class="play-button"><i class="bi bi-play-fill"></i></div>
+                </div>
+                <h4 class="mt-3 text-center text-lg">Fix Anuncio de alerta despues de Rootear Tutorial</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="pricing-section">
+        <div class="container text-center">
+            <h2 class="mb-4" data-aos="fade-up">Precios</h2>
+            <div class="card pricing-card-highlight" style="max-width: 600px; margin: 0 auto; overflow: visible !important;" data-aos="zoom-in">
+                <div class="pricing-badge">Mas Popular</div>
+                <div class="card-header flex-center" style="gap: 2rem; flex-wrap: wrap;">
+                    <img src="pngs/arepalanding.png" alt="Licencia" style="height: 120px;">
+                    <div>
+                        <h3>Licencia Activation</h3>
+                        <p class="text-primary-400 text-xl font-bold">Consultar Precio</p>
+                    </div>
+                </div>
+                <hr style="border-color: rgba(255,255,255,0.1); margin: 1rem 0;">
+                <div class="grid grid-2 text-left">
+                    <div><i class="bi bi-check-circle text-primary-500"></i> Licencia valida por 12 meses</div>
+                    <div><i class="bi bi-check-circle text-primary-500"></i> Generacion ilimitada de DNS</div>
+                    <div><i class="bi bi-check-circle text-primary-500"></i> Actualizaciones constantes</div>
+                    <div><i class="bi bi-check-circle text-primary-500"></i> Cambio de PC cada 3 horas</div>
+                    <div><i class="bi bi-check-circle text-primary-500"></i> Grupo Oficial de soporte y dudas</div>
+                </div>
+                <div class="mt-4">
+                    <a href="#resellers" class="btn btn-primary btn-block">
+                        <i class="bi bi-shop"></i> Activar Ahora!
                     </a>
-                    <h3>Fix Apps Bancarias Tutorial</h3>
-                    <p> Guia paso a paso para solucionar problemas con apps bancarias despues de rootear tu dispositivo.</p>
                 </div>
-                <div class="tutorial-card" data-aos="zoom-in" data-aos-delay="400">
-                    <iframe src="https://www.youtube.com/embed/xV3EEy-3qO4" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <h3>Bypass MDM By: DNS Tutorial</h3>
-                    <p>Tutorial paso a paso para eliminar MDM de tu dispositivo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resellers -->
+    <section id="resellers" class="container py-5" style="padding-bottom: 100px;">
+        <h2 class="text-center mb-4" data-aos="fade-up">Distribuidores Oficiales</h2>
+        <div class="reseller-grid">
+            <!-- Seller 1 -->
+            <div class="reseller-card text-center" data-aos="fade-up" data-aos-delay="100">
+                <i class="bi bi-patch-check-fill verified-badge" title="Distribuidor Verificado"></i>
+                <img src="pngs/leopepe.png" alt="Leope" class="reseller-logo">
+                <h4>Leope-Gsm</h4>
+                <p class="text-xs text-subtle mt-1"><i class="bi bi-globe-americas"></i> Worldwide</p>
+                <p class="text-xs text-primary-400 mt-1" style="font-weight:600">Payments: USDT - BINANCE - PEN</p>
+                <div class="flex-center mt-2" style="gap: 1rem;">
+                    <a href="https://chat.whatsapp.com/ItqFr6uwlrOEvkXZQLiYaj" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-whatsapp"></i></a>
+                    <a href="https://t.me/ctrone21" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-telegram"></i></a>
+                </div>
+            </div>
+            <!-- Seller 2 -->
+             <div class="reseller-card text-center" data-aos="fade-up" data-aos-delay="200">
+                <i class="bi bi-patch-check-fill verified-badge" title="Distribuidor Verificado"></i>
+                <img src="pngs/gsmxpert.jpg" alt="GSM Xpert" class="reseller-logo">
+                <h4>GSM Xpert</h4>
+                <p class="text-xs text-subtle mt-1"><i class="bi bi-globe-americas"></i> Worldwide</p>
+                <p class="text-xs text-primary-400 mt-1" style="font-weight:600">Payments: USDT - BINANCE</p>
+                <div class="flex-center mt-2" style="gap: 1rem;">
+                    <a href="https://www.xpert-gsm.com" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-globe"></i></a>
+                    <a href="https://chat.whatsapp.com/BoQIuhYLMhgJCsaLPiSB7t" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-whatsapp"></i></a>
+                </div>
+            </div>
+             <!-- Seller 3 -->
+             <div class="reseller-card text-center" data-aos="fade-up" data-aos-delay="300">
+                <i class="bi bi-patch-check-fill verified-badge" title="Distribuidor Verificado"></i>
+                <img src="pngs/smartbeunlock.png" alt="SmartBeUnlock" class="reseller-logo">
+                <h4>SmartBeUnlock</h4>
+                <p class="text-xs text-subtle mt-1"><i class="bi bi-globe-americas"></i> Worldwide</p>
+                <p class="text-xs text-primary-400 mt-1" style="font-weight:600">Payments: USDT - BINANCE</p>
+                <div class="flex-center mt-2" style="gap: 1rem;">
+                    <a href="https://smartbeunlock.com" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-globe"></i></a>
+                     <a href="https://wa.me/573226859899" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-whatsapp"></i></a>
+                </div>
+            </div>
+            <!-- Seller 4 -->
+             <div class="reseller-card text-center" data-aos="fade-up" data-aos-delay="400">
+                <i class="bi bi-patch-check-fill verified-badge" title="Distribuidor Verificado"></i>
+                <img src="pngs/ohideraunlocker.jpg" alt="Ohidera" class="reseller-logo">
+                <h4>Ohidera Unlocker</h4>
+                <p class="text-xs text-subtle mt-1"><i class="bi bi-globe-americas"></i> Worldwide</p>
+                <p class="text-xs text-primary-400 mt-1" style="font-weight:600">Payments: USDT - BINANCE</p>
+                <div class="flex-center mt-2" style="gap: 1rem;">
+                    <a href="https://ohideraunlocker.com" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-globe"></i></a>
+                     <a href="https://wa.me/+8801660122234" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-whatsapp"></i></a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer>
+    <footer class="text-center py-5" style="border-top: 1px solid var(--surface-800); margin-top: 4rem; padding: 2rem;">
         <div class="container">
-            <div class="footer-links">
-                <a href="#">Términos de Servicio</a>
-                <a href="#">Política de Privacidad</a>
-                <a href="https://t.me/ctrone21">Soporte</a>
+            <p class="text-subtle">&copy; 2026 ArepaToolV2- Desarrollado con ❤️ .</p>
+            <div class="mt-2" style="display: flex; justify-content: center; gap: 2rem;">
+                <a href="#" class="text-sm">Términos</a>
+                <a href="#" class="text-sm">Privacidad</a>
             </div>
-            <p>&copy; 2025 ArepaTool V2.0.4 Professional Mobile Tool.</p>
         </div>
     </footer>
 
-    <!-- Floating Action Button (WhatsApp Group) -->
-    <a href="https://chat.whatsapp.com/IWwwpYBnxDGLZvbWlvI90L" target="_blank" class="fab-whatsapp" title="">
+    <!-- FAB -->
+    <a href="https://chat.whatsapp.com/IWwwpYBnxDGLZvbWlvI90L" target="_blank" class="fab">
         <i class="bi bi-whatsapp"></i>
-        <span class="fab-tooltip">Grupo de WhatsApp</span>
     </a>
 
-    <!-- Register Modal -->
-    <div id="registerModal" class="modal-overlay" onclick="closeRegisterModal(event)">
-        <div class="modal-container" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeRegisterModal()">&times;</button>
-            
-            <div class="modal-header">
-                <img src="pngs/arepalanding.png" alt="ArepaTool" class="modal-logo">
-                <h2>Crear Cuenta</h2>
-                <p>Regístrate para obtener acceso a ArepaTool V2</p>
-            </div>
-            
-            <form id="registerForm" class="modal-form">
-                <div class="form-group">
-                    <div class="input-icon">
-                        <i class="bi bi-person"></i>
-                    </div>
-                    <input type="text" id="regUsername" placeholder="Nombre de usuario (mín. 3 caracteres)" required minlength="3">
-                </div>
-                
-                <div class="form-group">
-                    <div class="input-icon">
-                        <i class="bi bi-envelope"></i>
-                    </div>
-                    <input type="email" id="regEmail" placeholder="Correo electrónico" required>
-                </div>
-                
-                <div class="form-group">
-                    <div class="input-icon">
-                        <i class="bi bi-shield-lock"></i>
-                    </div>
-                    <input type="password" id="regPassword" placeholder="Contraseña (mín. 6 caracteres)" required minlength="6">
-                </div>
-                
-                <div class="form-checkbox">
-                    <input type="checkbox" id="regTerms" required>
-                    <label for="regTerms">Acepto los <a href="#" target="_blank">términos y condiciones</a></label>
-                </div>
-                
-                <div id="registerStatus" class="form-status"></div>
-                
-                <button type="submit" class="btn-submit" id="btnSubmitRegister">
-                    <i class="bi bi-person-plus"></i> Crear Cuenta
-                </button>
-            </form>
-            
-            <div class="modal-footer">
-                <p>¿Ya tienes cuenta? <a href="https://t.me/ctrone21" target="_blank">Contacta soporte</a></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- AOS Animation Library -->
+    <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({
-            duration: 800,
-            once: true
-        });
-    </script>
-    <!-- Matrix Rain Script -->
-    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Matrix Rain
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Set canvas size
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
@@ -490,227 +356,31 @@
         const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const nums = '0123456789';
         const alphabet = katakana + latin + nums;
-
         const fontSize = 16;
         const columns = canvas.width / fontSize;
-
         const drops = [];
-        for (let i = 0; i < columns; i++) {
-            drops[i] = 1;
-        }
+        for (let i = 0; i < columns; i++) drops[i] = 1;
 
         function draw() {
-            // Dark theme background fade (matches --bg-color #0f172a with opacity)
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.1)';
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Matrix Green Text
-            ctx.fillStyle = '#00bf63';
+            ctx.fillStyle = '#059669'; // Primary Green
             ctx.font = fontSize + 'px monospace';
 
             for (let i = 0; i < drops.length; i++) {
                 const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                 ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
         }
-
         setInterval(draw, 33);
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
-        window.addEventListener('resize', () => {
-             canvas.width = window.innerWidth;
-             canvas.height = window.innerHeight;
-        });
-    </script>
-
-    <!-- Register Modal Script -->
-    <script>
-        // Supabase Configuration
-        const SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0NjY1NjcsImV4cCI6MjA3OTA0MjU2N30.oXVYUjnSpDDQphLZJzglGaDSQTjuGzYgD-LMC5FwDHw';
-
-        // Modal Functions
-        function openRegisterModal() {
-            document.getElementById('registerModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeRegisterModal(event) {
-            if (event && event.target !== event.currentTarget) return;
-            document.getElementById('registerModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-            // Reset form
-            document.getElementById('registerForm').reset();
-            document.getElementById('registerStatus').textContent = '';
-            document.getElementById('registerStatus').className = 'form-status';
-        }
-
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeRegisterModal();
-        });
-
-        // Registration Logic
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const username = document.getElementById('regUsername').value.trim().toLowerCase();
-            const email = document.getElementById('regEmail').value.trim().toLowerCase();
-            const password = document.getElementById('regPassword').value;
-            const terms = document.getElementById('regTerms').checked;
-            const statusEl = document.getElementById('registerStatus');
-            const btnSubmit = document.getElementById('btnSubmitRegister');
-
-            // Validations
-            if (username.length < 3) {
-                showStatus('El nombre de usuario debe tener al menos 3 caracteres', 'error');
-                return;
-            }
-
-            if (!email.includes('@')) {
-                showStatus('Ingresa un correo electrónico válido', 'error');
-                return;
-            }
-
-            if (password.length < 6) {
-                showStatus('La contraseña debe tener al menos 6 caracteres', 'error');
-                return;
-            }
-
-            if (!terms) {
-                showStatus('Debes aceptar los términos y condiciones', 'error');
-                return;
-            }
-
-            // Disable form
-            btnSubmit.disabled = true;
-            btnSubmit.innerHTML = '<i class="bi bi-hourglass-split"></i> Creando cuenta...';
-            showStatus('Verificando datos...', 'info');
-
-            try {
-                // 1. Check if username exists
-                const checkUsername = await fetch(
-                    `${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=id`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                        }
-                    }
-                );
-                const existingUsername = await checkUsername.json();
-                if (existingUsername.length > 0) {
-                    showStatus('Este nombre de usuario ya está registrado', 'error');
-                    resetButton();
-                    return;
-                }
-
-                // 2. Check if email exists
-                const checkEmail = await fetch(
-                    `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                        }
-                    }
-                );
-                const existingEmail = await checkEmail.json();
-                if (existingEmail.length > 0) {
-                    showStatus('Este correo electrónico ya está registrado', 'error');
-                    resetButton();
-                    return;
-                }
-
-                showStatus('Creando cuenta de autenticación...', 'info');
-
-                // 3. Create user in Supabase Auth
-                const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const authData = await authResponse.json();
-                
-                if (!authResponse.ok) {
-                    let errorMsg = authData.error_description || authData.message || authData.msg || 'Error al crear cuenta';
-                    if (errorMsg.includes('already registered')) {
-                        errorMsg = 'Este correo electrónico ya está registrado en el sistema de autenticación';
-                    }
-                    showStatus(errorMsg, 'error');
-                    resetButton();
-                    return;
-                }
-
-                showStatus('Guardando información de usuario...', 'info');
-
-                // 4. Create user in public.users table
-                const newUser = {
-                    username: username,
-                    email: email,
-                    status: 'pending',
-                    created_at: new Date().toISOString()
-                };
-
-                const createUserResponse = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify(newUser)
-                });
-
-                if (!createUserResponse.ok) {
-                    const errorText = await createUserResponse.text();
-                    if (errorText.includes('duplicate')) {
-                        showStatus('El usuario o email ya existe', 'error');
-                    } else {
-                        showStatus('Error al guardar usuario: ' + errorText, 'error');
-                    }
-                    resetButton();
-                    return;
-                }
-
-                // Success!
-                showStatus('✓ ¡Cuenta creada! Contacta a tu distribuidor para activar tu licencia.', 'success');
-                btnSubmit.innerHTML = '<i class="bi bi-check-circle"></i> ¡Cuenta Creada!';
-                btnSubmit.style.background = '#00bf63';
-
-                // Close modal after 3 seconds
-                setTimeout(() => {
-                    closeRegisterModal();
-                    resetButton();
-                }, 3500);
-
-            } catch (error) {
-                console.error('Registration error:', error);
-                showStatus('Error de conexión. Intenta de nuevo.', 'error');
-                resetButton();
-            }
-        });
-
-        function showStatus(message, type) {
-            const statusEl = document.getElementById('registerStatus');
-            statusEl.textContent = message;
-            statusEl.className = 'form-status ' + type;
-        }
-
-        function resetButton() {
-            const btnSubmit = document.getElementById('btnSubmitRegister');
-            btnSubmit.disabled = false;
-            btnSubmit.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
-            btnSubmit.style.background = '';
+        // Video Player Logic
+        function playVideo(card, videoId) {
+            const container = card.querySelector('.video-container');
+            container.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
         }
     </script>
 </body>
