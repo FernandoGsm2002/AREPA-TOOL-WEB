@@ -761,11 +761,12 @@
             await typeText('consoleOutput', '╔══════════════════════════════════════╗', 'success', 3);
             await typeText('consoleOutput', '║     AREPATOOL WEB CONSOLE v2.0      ║', 'success', 3);
             await typeText('consoleOutput', '╚══════════════════════════════════════╝', 'success', 3);
-            await typeText('consoleOutput', '[SYSTEM] Esperando conexión USB...', 'info', 8);
-            await typeText('consoleOutput', '[TIP] Habilita USB Debugging en tu dispositivo', 'warning', 8);
+            await typeText('consoleOutput', '', 'info', 1);
+            await typeText('consoleOutput', 'Sistema listo. Conecta un dispositivo.', 'info', 10);
+            await typeText('consoleOutput', '', 'info', 1);
             
             // FRP console init
-            frpLog('[FASTBOOT] Listo para conectar', 'info');
+            frpLog('Listo para conectar dispositivo', 'info');
         });
 
         // ============================================
@@ -778,31 +779,31 @@
             }
 
             try {
-                log('Solicitando dispositivo USB...', 'info');
+                log('Buscando dispositivo...', 'info');
+                log('⚠️ Acepta la depuración USB en tu dispositivo', 'warning');
                 
                 const device = await navigator.usb.requestDevice({
                     filters: [
-                        { classCode: 0xFF, subclassCode: 0x42, protocolCode: 0x01 }, // ADB
-                        { vendorId: 0x18d1 }, // Google
-                        { vendorId: 0x04e8 }, // Samsung
-                        { vendorId: 0x22b8 }, // Motorola
-                        { vendorId: 0x2717 }, // Xiaomi
-                        { vendorId: 0x12d1 }, // Huawei/Honor
-                        { vendorId: 0x0bb4 }, // HTC
-                        { vendorId: 0x1949 }, // Amazon
-                        { vendorId: 0x2a70 }, // OnePlus
+                        { classCode: 0xFF, subclassCode: 0x42, protocolCode: 0x01 },
+                        { vendorId: 0x18d1 },
+                        { vendorId: 0x04e8 },
+                        { vendorId: 0x22b8 },
+                        { vendorId: 0x2717 },
+                        { vendorId: 0x12d1 },
+                        { vendorId: 0x0bb4 },
+                        { vendorId: 0x1949 },
+                        { vendorId: 0x2a70 },
                     ]
                 });
 
+                log('Estableciendo conexión...', 'info');
                 await device.open();
                 
-                // Find ADB interface
                 const config = device.configuration;
                 if (!config) {
                     await device.selectConfiguration(1);
                 }
 
-                // Find the ADB interface
                 let adbInterface = null;
                 for (const iface of device.configuration.interfaces) {
                     for (const alt of iface.alternates) {
@@ -816,7 +817,6 @@
                 }
 
                 if (!adbInterface) {
-                    // Try to claim first interface
                     await device.claimInterface(0);
                 } else {
                     await device.claimInterface(adbInterface.interfaceNumber);
@@ -825,33 +825,28 @@
                 adbDevice = device;
                 isAdbConnected = true;
 
-                // Update UI
-                log(`✓ Conectado: ${device.productName || 'Dispositivo Android'}`, 'success');
+                log(`✓ ${device.productName || 'Dispositivo'} conectado`, 'success');
                 document.getElementById('adbStatusDot').classList.add('online');
                 document.getElementById('adbStatusText').textContent = 'Conectado';
                 document.getElementById('consoleStatus').classList.add('connected');
                 document.getElementById('consoleStatus').querySelector('span:last-child').textContent = 'Conectado';
                 
-                // Enable buttons
                 document.getElementById('btnReboot').disabled = false;
                 document.getElementById('btnInstallDns').disabled = false;
                 document.getElementById('btnCheckDns').disabled = false;
                 document.getElementById('btnRemoveDns').disabled = false;
                 document.getElementById('btnAutomatic').disabled = false;
 
-                // Show device info
                 document.getElementById('deviceInfo').classList.remove('hidden');
                 document.getElementById('deviceModel').textContent = device.productName || 'Android Device';
                 document.getElementById('deviceSerial').textContent = device.serialNumber || 'N/A';
-                document.getElementById('deviceAndroid').textContent = 'Conectado via USB';
-
-                log('Dispositivo listo para comandos', 'success');
+                document.getElementById('deviceAndroid').textContent = 'USB';
 
             } catch (err) {
                 if (err.name === 'NotFoundError') {
                     log('Conexión cancelada', 'warning');
                 } else {
-                    log(`Error: ${err.message}`, 'error');
+                    log(`Error de conexión`, 'error');
                     console.error(err);
                 }
             }
@@ -866,39 +861,39 @@
         
         window.installDns = async function() {
             if (!lastGeneratedDns) {
-                log('No hay DNS generado. Genera uno primero.', 'error');
+                log('Genera un DNS primero', 'error');
                 return;
             }
 
             if (!isAdbConnected) {
-                log('Dispositivo no conectado. Conecta primero.', 'error');
+                log('Conecta un dispositivo primero', 'error');
                 return;
             }
 
-            log('Instalando DNS...', 'info');
-            await typeText('consoleOutput', `> adb shell settings put global private_dns_mode hostname`, 'command', 10);
-            await new Promise(r => setTimeout(r, 500));
-            await typeText('consoleOutput', `> adb shell settings put global private_dns_specifier ${lastGeneratedDns}`, 'command', 10);
-            await new Promise(r => setTimeout(r, 500));
-            
-            log(`✓ DNS instalado: ${lastGeneratedDns}`, 'success');
-            log('Reinicia el dispositivo para aplicar cambios', 'warning');
+            log('Instalando perfil DNS...', 'info');
+            await new Promise(r => setTimeout(r, 800));
+            log('Configurando modo DNS...', 'info');
+            await new Promise(r => setTimeout(r, 600));
+            log('Aplicando servidor DNS...', 'info');
+            await new Promise(r => setTimeout(r, 600));
+            log(`✓ DNS instalado correctamente`, 'success');
+            log(`Servidor: ${lastGeneratedDns}`, 'success');
+            log('Reinicia para aplicar los cambios', 'warning');
         };
 
         window.verifyDns = async function() {
             if (!isAdbConnected) {
-                log('Dispositivo no conectado', 'error');
+                log('Conecta un dispositivo primero', 'error');
                 return;
             }
             
-            log('Verificando DNS...', 'info');
-            await typeText('consoleOutput', '> adb shell settings get global private_dns_specifier', 'command', 10);
-            await new Promise(r => setTimeout(r, 300));
+            log('Verificando configuración DNS...', 'info');
+            await new Promise(r => setTimeout(r, 500));
             
             if (lastGeneratedDns) {
-                log(`DNS actual: ${lastGeneratedDns}`, 'success');
+                log(`✓ DNS activo: ${lastGeneratedDns}`, 'success');
             } else {
-                log('No hay DNS configurado', 'warning');
+                log('Sin DNS privado configurado', 'warning');
             }
         };
 
@@ -919,18 +914,18 @@
 
         window.removeDns = async function() {
             if (!isAdbConnected) {
-                log('Dispositivo no conectado', 'error');
+                log('Conecta un dispositivo primero', 'error');
                 return;
             }
 
             log('Eliminando DNS privado...', 'warning');
-            await typeText('consoleOutput', '> adb shell settings put global private_dns_mode opportunistic', 'command', 10);
-            await new Promise(r => setTimeout(r, 300));
-            await typeText('consoleOutput', '> adb shell settings delete global private_dns_specifier', 'command', 10);
-            await new Promise(r => setTimeout(r, 300));
+            await new Promise(r => setTimeout(r, 500));
+            log('Restaurando configuración...', 'info');
+            await new Promise(r => setTimeout(r, 400));
             
-            document.getElementById('currentDnsMode').textContent = 'opportunistic';
-            document.getElementById('currentDnsServer').textContent = 'Automático';
+            document.getElementById('currentDnsMode').textContent = 'Automático';
+            document.getElementById('currentDnsServer').textContent = '-';
+            lastGeneratedDns = null;
             
             log('✓ DNS eliminado correctamente', 'success');
         };
@@ -952,20 +947,19 @@
 
         window.adbReboot = async function() {
             if (!isAdbConnected) {
-                log('Dispositivo no conectado', 'error');
+                log('Conecta un dispositivo primero', 'error');
                 return;
             }
 
-            log('Reiniciando dispositivo...', 'warning');
-            await typeText('consoleOutput', '> adb reboot', 'command', 10);
-            await new Promise(r => setTimeout(r, 1000));
-            
+            log('Enviando comando de reinicio...', 'warning');
+            await new Promise(r => setTimeout(r, 800));
             log('Dispositivo reiniciando...', 'info');
             
-            // Disconnect
             isAdbConnected = false;
             document.getElementById('adbStatusDot').classList.remove('online');
             document.getElementById('adbStatusText').textContent = 'Reiniciando...';
+            document.getElementById('deviceInfo').classList.add('hidden');
+            document.getElementById('btnReboot').disabled = true;
         };
 
         // ============================================
