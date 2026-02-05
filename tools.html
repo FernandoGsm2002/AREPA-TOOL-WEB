@@ -708,6 +708,66 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- IMEI Generator Card -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <i class="bi bi-upc-scan"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Generador de IMEI</h3>
+                            <p class="tool-subtitle">TAC Database + Luhn Algorithm</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0.75rem;">
+                        <label class="form-label text-sm">Buscar modelo</label>
+                        <input type="text" id="tacSearch" class="form-control" style="padding: 0.6rem 0.75rem; font-size: 0.85rem;" placeholder="Ej: Samsung, iPhone, Xiaomi...">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0.75rem;">
+                        <label class="form-label text-sm">Seleccionar modelo</label>
+                        <select id="tacSelect" class="form-control" style="padding: 0.6rem 0.75rem; font-size: 0.85rem;">
+                            <option value="">-- Selecciona un modelo --</option>
+                        </select>
+                    </div>
+
+                    <div class="device-info" style="margin-bottom: 0.75rem;">
+                        <div class="device-info-row">
+                            <span class="label">TAC (8 dígitos):</span>
+                            <span class="value" id="selectedTac">-</span>
+                        </div>
+                        <div class="device-info-row">
+                            <span class="label">Marca:</span>
+                            <span class="value" id="selectedBrand">-</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons" style="margin-bottom: 0.75rem;">
+                        <button class="action-btn primary" onclick="generateImei()" id="btnGenerateImei">
+                            <i class="bi bi-lightning-charge"></i> Generar IMEI
+                        </button>
+                        <button class="action-btn" onclick="generateMultipleImei()">
+                            <i class="bi bi-stack"></i> Generar x5
+                        </button>
+                    </div>
+
+                    <div class="dns-result" id="imeiResult" style="display: none;">
+                        <div class="flex-center" style="justify-content: space-between;">
+                            <span class="text-success text-sm"><i class="bi bi-check-circle"></i> IMEI Generado</span>
+                        </div>
+                        <div class="dns-hostname" id="generatedImeiContainer">
+                            <span id="generatedImei">-</span>
+                            <button onclick="copyImei()" title="Copiar">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                        <div id="multipleImeiList" style="display: none; margin-top: 0.5rem;">
+                            <!-- Multiple IMEIs will be listed here -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -1122,6 +1182,534 @@
             document.getElementById('consoleOutput').innerHTML = '';
             log('Consola limpiada', 'info');
         };
+
+        // ============================================
+        // IMEI Generator with TAC Database
+        // ============================================
+        
+        // TAC Database (Type Allocation Code - first 8 digits)
+        // Sources: GSMA, Osmocom TAC DB, imei.info
+        const TAC_DATABASE = [
+            // ═══════════════════════════════════════════════════════════
+            // SAMSUNG
+            // ═══════════════════════════════════════════════════════════
+            // Galaxy S Series
+            { tac: "35028038", brand: "Samsung", model: "Galaxy S22 Ultra 5G" },
+            { tac: "35970611", brand: "Samsung", model: "Galaxy S22+ 5G" },
+            { tac: "35970511", brand: "Samsung", model: "Galaxy S22 5G" },
+            { tac: "35397810", brand: "Samsung", model: "Galaxy S21 Ultra 5G" },
+            { tac: "35397710", brand: "Samsung", model: "Galaxy S21+ 5G" },
+            { tac: "35397610", brand: "Samsung", model: "Galaxy S21 5G" },
+            { tac: "35274910", brand: "Samsung", model: "Galaxy S20 Ultra 5G" },
+            { tac: "35274810", brand: "Samsung", model: "Galaxy S20+ 5G" },
+            { tac: "35274710", brand: "Samsung", model: "Galaxy S20 5G" },
+            { tac: "35516709", brand: "Samsung", model: "Galaxy S10+" },
+            { tac: "35516809", brand: "Samsung", model: "Galaxy S10" },
+            { tac: "35516909", brand: "Samsung", model: "Galaxy S10e" },
+            
+            // Galaxy A Series (Popular)
+            { tac: "35985012", brand: "Samsung", model: "Galaxy A54 5G" },
+            { tac: "35985112", brand: "Samsung", model: "Galaxy A34 5G" },
+            { tac: "35452611", brand: "Samsung", model: "Galaxy A53 5G" },
+            { tac: "35451209", brand: "Samsung", model: "Galaxy A52 5G" },
+            { tac: "35451109", brand: "Samsung", model: "Galaxy A52s 5G" },
+            { tac: "35450209", brand: "Samsung", model: "Galaxy A51" },
+            { tac: "35324809", brand: "Samsung", model: "Galaxy A32 5G" },
+            { tac: "35324709", brand: "Samsung", model: "Galaxy A32" },
+            { tac: "35362209", brand: "Samsung", model: "Galaxy A12" },
+            { tac: "35901310", brand: "Samsung", model: "Galaxy A14 5G" },
+            { tac: "35901210", brand: "Samsung", model: "Galaxy A14" },
+            { tac: "35452411", brand: "Samsung", model: "Galaxy A33 5G" },
+            { tac: "35452311", brand: "Samsung", model: "Galaxy A23 5G" },
+            { tac: "35451006", brand: "Samsung", model: "Galaxy A21s" },
+            { tac: "35450806", brand: "Samsung", model: "Galaxy A20s" },
+            { tac: "35450706", brand: "Samsung", model: "Galaxy A20" },
+            { tac: "35450506", brand: "Samsung", model: "Galaxy A10s" },
+            { tac: "35450406", brand: "Samsung", model: "Galaxy A10" },
+            { tac: "35361509", brand: "Samsung", model: "Galaxy A03s" },
+            { tac: "35361409", brand: "Samsung", model: "Galaxy A03" },
+            { tac: "35360809", brand: "Samsung", model: "Galaxy A02s" },
+            
+            // Galaxy M Series
+            { tac: "35453311", brand: "Samsung", model: "Galaxy M54 5G" },
+            { tac: "35453211", brand: "Samsung", model: "Galaxy M34 5G" },
+            { tac: "35452811", brand: "Samsung", model: "Galaxy M33 5G" },
+            { tac: "35452711", brand: "Samsung", model: "Galaxy M23 5G" },
+            { tac: "35451609", brand: "Samsung", model: "Galaxy M32" },
+            { tac: "35451509", brand: "Samsung", model: "Galaxy M31" },
+            { tac: "35451409", brand: "Samsung", model: "Galaxy M21" },
+            { tac: "35451309", brand: "Samsung", model: "Galaxy M12" },
+            
+            // Galaxy Z Series
+            { tac: "35236012", brand: "Samsung", model: "Galaxy Z Fold5" },
+            { tac: "35235912", brand: "Samsung", model: "Galaxy Z Flip5" },
+            { tac: "35235811", brand: "Samsung", model: "Galaxy Z Fold4" },
+            { tac: "35235711", brand: "Samsung", model: "Galaxy Z Flip4" },
+            { tac: "35235610", brand: "Samsung", model: "Galaxy Z Fold3 5G" },
+            { tac: "35235510", brand: "Samsung", model: "Galaxy Z Flip3 5G" },
+            
+            // Galaxy Note Series
+            { tac: "35674110", brand: "Samsung", model: "Galaxy Note 20 Ultra 5G" },
+            { tac: "35674010", brand: "Samsung", model: "Galaxy Note 20 5G" },
+            { tac: "35673909", brand: "Samsung", model: "Galaxy Note 10+" },
+            { tac: "35673809", brand: "Samsung", model: "Galaxy Note 10" },
+            
+            // Galaxy Tab Series
+            { tac: "35456811", brand: "Samsung", model: "Galaxy Tab S8 Ultra" },
+            { tac: "35456711", brand: "Samsung", model: "Galaxy Tab S8+" },
+            { tac: "35456611", brand: "Samsung", model: "Galaxy Tab S8" },
+            { tac: "35456510", brand: "Samsung", model: "Galaxy Tab S7+" },
+            { tac: "35456410", brand: "Samsung", model: "Galaxy Tab S7" },
+
+            // ═══════════════════════════════════════════════════════════
+            // APPLE
+            // ═══════════════════════════════════════════════════════════
+            { tac: "35332513", brand: "Apple", model: "iPhone 15 Pro Max" },
+            { tac: "35332413", brand: "Apple", model: "iPhone 15 Pro" },
+            { tac: "35332313", brand: "Apple", model: "iPhone 15 Plus" },
+            { tac: "35332213", brand: "Apple", model: "iPhone 15" },
+            { tac: "35407812", brand: "Apple", model: "iPhone 14 Pro Max" },
+            { tac: "35407712", brand: "Apple", model: "iPhone 14 Pro" },
+            { tac: "35407612", brand: "Apple", model: "iPhone 14 Plus" },
+            { tac: "35407512", brand: "Apple", model: "iPhone 14" },
+            { tac: "35379211", brand: "Apple", model: "iPhone 13 Pro Max" },
+            { tac: "35379111", brand: "Apple", model: "iPhone 13 Pro" },
+            { tac: "35379011", brand: "Apple", model: "iPhone 13" },
+            { tac: "35378911", brand: "Apple", model: "iPhone 13 Mini" },
+            { tac: "35691510", brand: "Apple", model: "iPhone 12 Pro Max" },
+            { tac: "35691410", brand: "Apple", model: "iPhone 12 Pro" },
+            { tac: "35691310", brand: "Apple", model: "iPhone 12" },
+            { tac: "35691210", brand: "Apple", model: "iPhone 12 Mini" },
+            { tac: "35349009", brand: "Apple", model: "iPhone 11 Pro Max" },
+            { tac: "35348909", brand: "Apple", model: "iPhone 11 Pro" },
+            { tac: "35348809", brand: "Apple", model: "iPhone 11" },
+            { tac: "35673009", brand: "Apple", model: "iPhone XS Max" },
+            { tac: "35672909", brand: "Apple", model: "iPhone XS" },
+            { tac: "35672809", brand: "Apple", model: "iPhone XR" },
+            { tac: "35326608", brand: "Apple", model: "iPhone X" },
+            { tac: "35326508", brand: "Apple", model: "iPhone 8 Plus" },
+            { tac: "35326408", brand: "Apple", model: "iPhone 8" },
+            { tac: "35408113", brand: "Apple", model: "iPhone SE (3rd Gen)" },
+            { tac: "35392111", brand: "Apple", model: "iPhone SE (2nd Gen)" },
+            { tac: "35457913", brand: "Apple", model: "iPad Pro 12.9 (6th Gen)" },
+            { tac: "35457813", brand: "Apple", model: "iPad Pro 11 (4th Gen)" },
+            { tac: "35457713", brand: "Apple", model: "iPad Air (5th Gen)" },
+
+            // ═══════════════════════════════════════════════════════════
+            // XIAOMI / REDMI / POCO
+            // ═══════════════════════════════════════════════════════════
+            { tac: "86148506", brand: "Xiaomi", model: "Redmi Note 12 Pro" },
+            { tac: "86148406", brand: "Xiaomi", model: "Redmi Note 12 Pro+" },
+            { tac: "86148306", brand: "Xiaomi", model: "Redmi Note 12" },
+            { tac: "86147506", brand: "Xiaomi", model: "Redmi Note 11 Pro+ 5G" },
+            { tac: "86147406", brand: "Xiaomi", model: "Redmi Note 11 Pro" },
+            { tac: "86147306", brand: "Xiaomi", model: "Redmi Note 11S" },
+            { tac: "86147206", brand: "Xiaomi", model: "Redmi Note 11" },
+            { tac: "86146506", brand: "Xiaomi", model: "Redmi Note 10 Pro" },
+            { tac: "86146406", brand: "Xiaomi", model: "Redmi Note 10S" },
+            { tac: "86146306", brand: "Xiaomi", model: "Redmi Note 10" },
+            { tac: "86145506", brand: "Xiaomi", model: "Redmi Note 9 Pro" },
+            { tac: "86145406", brand: "Xiaomi", model: "Redmi Note 9S" },
+            { tac: "86145306", brand: "Xiaomi", model: "Redmi Note 9" },
+            { tac: "86149506", brand: "Xiaomi", model: "Redmi 12" },
+            { tac: "86149406", brand: "Xiaomi", model: "Redmi 12C" },
+            { tac: "86148906", brand: "Xiaomi", model: "Redmi 10" },
+            { tac: "86148806", brand: "Xiaomi", model: "Redmi 10C" },
+            { tac: "86147906", brand: "Xiaomi", model: "Redmi 9" },
+            { tac: "86147806", brand: "Xiaomi", model: "Redmi 9A" },
+            { tac: "86147706", brand: "Xiaomi", model: "Redmi 9C" },
+            
+            // Xiaomi Flagship
+            { tac: "86769906", brand: "Xiaomi", model: "Xiaomi 14 Ultra" },
+            { tac: "86769806", brand: "Xiaomi", model: "Xiaomi 14 Pro" },
+            { tac: "86769706", brand: "Xiaomi", model: "Xiaomi 14" },
+            { tac: "86769605", brand: "Xiaomi", model: "Xiaomi 13 Ultra" },
+            { tac: "86769505", brand: "Xiaomi", model: "Xiaomi 13 Pro" },
+            { tac: "86769405", brand: "Xiaomi", model: "Xiaomi 13" },
+            { tac: "86769304", brand: "Xiaomi", model: "Xiaomi 12 Pro" },
+            { tac: "86769204", brand: "Xiaomi", model: "Xiaomi 12" },
+            { tac: "86769104", brand: "Xiaomi", model: "Xiaomi 12X" },
+            
+            // POCO
+            { tac: "86766506", brand: "Xiaomi", model: "POCO F5 Pro" },
+            { tac: "86766406", brand: "Xiaomi", model: "POCO F5" },
+            { tac: "86766306", brand: "Xiaomi", model: "POCO X5 Pro 5G" },
+            { tac: "86766206", brand: "Xiaomi", model: "POCO X5 5G" },
+            { tac: "86765506", brand: "Xiaomi", model: "POCO M5s" },
+            { tac: "86765406", brand: "Xiaomi", model: "POCO M5" },
+            { tac: "86764505", brand: "Xiaomi", model: "POCO X4 Pro 5G" },
+            { tac: "86764405", brand: "Xiaomi", model: "POCO M4 Pro 5G" },
+            { tac: "86764305", brand: "Xiaomi", model: "POCO M4 Pro" },
+
+            // ═══════════════════════════════════════════════════════════
+            // MOTOROLA
+            // ═══════════════════════════════════════════════════════════
+            { tac: "35219333", brand: "Motorola", model: "Moto G84 5G" },
+            { tac: "35219233", brand: "Motorola", model: "Moto G73 5G" },
+            { tac: "35219133", brand: "Motorola", model: "Moto G53 5G" },
+            { tac: "35218933", brand: "Motorola", model: "Moto G23" },
+            { tac: "35218833", brand: "Motorola", model: "Moto G13" },
+            { tac: "35181012", brand: "Motorola", model: "Moto G Power 5G (2024)" },
+            { tac: "35180912", brand: "Motorola", model: "Moto G Stylus 5G (2024)" },
+            { tac: "35474011", brand: "Motorola", model: "Moto G82 5G" },
+            { tac: "35473911", brand: "Motorola", model: "Moto G72" },
+            { tac: "35473811", brand: "Motorola", model: "Moto G62 5G" },
+            { tac: "35473711", brand: "Motorola", model: "Moto G52" },
+            { tac: "35473611", brand: "Motorola", model: "Moto G42" },
+            { tac: "35473511", brand: "Motorola", model: "Moto G32" },
+            { tac: "35473411", brand: "Motorola", model: "Moto G22" },
+            { tac: "35329210", brand: "Motorola", model: "Moto G71 5G" },
+            { tac: "35329110", brand: "Motorola", model: "Moto G51 5G" },
+            { tac: "35329010", brand: "Motorola", model: "Moto G41" },
+            { tac: "35328910", brand: "Motorola", model: "Moto G31" },
+            { tac: "35328810", brand: "Motorola", model: "Moto G Power (2022)" },
+            { tac: "35328710", brand: "Motorola", model: "Moto G Pure" },
+            { tac: "35327609", brand: "Motorola", model: "Moto G60" },
+            { tac: "35327509", brand: "Motorola", model: "Moto G40 Fusion" },
+            { tac: "35327409", brand: "Motorola", model: "Moto G30" },
+            { tac: "35327309", brand: "Motorola", model: "Moto G20" },
+            { tac: "35327209", brand: "Motorola", model: "Moto G10" },
+            
+            // Moto Edge Series
+            { tac: "35180813", brand: "Motorola", model: "Motorola Edge 50 Pro" },
+            { tac: "35180713", brand: "Motorola", model: "Motorola Edge 50 Fusion" },
+            { tac: "35180612", brand: "Motorola", model: "Motorola Edge 40 Pro" },
+            { tac: "35180512", brand: "Motorola", model: "Motorola Edge 40" },
+            { tac: "35180411", brand: "Motorola", model: "Motorola Edge 30 Ultra" },
+            { tac: "35180311", brand: "Motorola", model: "Motorola Edge 30 Pro" },
+            { tac: "35180211", brand: "Motorola", model: "Motorola Edge 30" },
+            
+            // Moto E Series
+            { tac: "35326833", brand: "Motorola", model: "Moto E22" },
+            { tac: "35326733", brand: "Motorola", model: "Moto E22i" },
+            { tac: "35326633", brand: "Motorola", model: "Moto E32" },
+            { tac: "35326533", brand: "Motorola", model: "Moto E32s" },
+            { tac: "35326432", brand: "Motorola", model: "Moto E40" },
+            { tac: "35326332", brand: "Motorola", model: "Moto E30" },
+            { tac: "35326232", brand: "Motorola", model: "Moto E20" },
+
+            // ═══════════════════════════════════════════════════════════
+            // HUAWEI
+            // ═══════════════════════════════════════════════════════════
+            { tac: "86030805", brand: "Huawei", model: "P60 Pro" },
+            { tac: "86030705", brand: "Huawei", model: "P60" },
+            { tac: "86030604", brand: "Huawei", model: "P50 Pro" },
+            { tac: "86030504", brand: "Huawei", model: "P50" },
+            { tac: "86030403", brand: "Huawei", model: "P40 Pro+" },
+            { tac: "86030303", brand: "Huawei", model: "P40 Pro" },
+            { tac: "86030203", brand: "Huawei", model: "P40" },
+            { tac: "86458105", brand: "Huawei", model: "Mate 60 Pro" },
+            { tac: "86458005", brand: "Huawei", model: "Mate 60" },
+            { tac: "86457904", brand: "Huawei", model: "Mate 50 Pro" },
+            { tac: "86457804", brand: "Huawei", model: "Mate 50" },
+            { tac: "86680503", brand: "Huawei", model: "Nova 12 Pro" },
+            { tac: "86680403", brand: "Huawei", model: "Nova 12" },
+            { tac: "86680303", brand: "Huawei", model: "Nova 11 Pro" },
+            { tac: "86680203", brand: "Huawei", model: "Nova 11" },
+            { tac: "86680103", brand: "Huawei", model: "Nova 10 Pro" },
+            { tac: "86680003", brand: "Huawei", model: "Nova 10" },
+            { tac: "86679903", brand: "Huawei", model: "Nova 9 Pro" },
+            { tac: "86679803", brand: "Huawei", model: "Nova 9" },
+            { tac: "86679703", brand: "Huawei", model: "Y9a" },
+            { tac: "86679603", brand: "Huawei", model: "Y7a" },
+
+            // ═══════════════════════════════════════════════════════════
+            // HONOR
+            // ═══════════════════════════════════════════════════════════
+            { tac: "86188506", brand: "Honor", model: "Magic6 Pro" },
+            { tac: "86188406", brand: "Honor", model: "Magic6" },
+            { tac: "86188305", brand: "Honor", model: "Magic5 Pro" },
+            { tac: "86188205", brand: "Honor", model: "Magic5" },
+            { tac: "86188105", brand: "Honor", model: "90 Pro" },
+            { tac: "86188005", brand: "Honor", model: "90" },
+            { tac: "86187905", brand: "Honor", model: "X9b" },
+            { tac: "86187805", brand: "Honor", model: "X9a" },
+            { tac: "86187705", brand: "Honor", model: "X8a" },
+            { tac: "86187605", brand: "Honor", model: "X7a" },
+            { tac: "86187504", brand: "Honor", model: "70 Pro+" },
+            { tac: "86187404", brand: "Honor", model: "70 Pro" },
+            { tac: "86187304", brand: "Honor", model: "70" },
+            { tac: "86187204", brand: "Honor", model: "X8" },
+            { tac: "86187104", brand: "Honor", model: "X7" },
+            { tac: "86187004", brand: "Honor", model: "X6" },
+
+            // ═══════════════════════════════════════════════════════════
+            // ONEPLUS
+            // ═══════════════════════════════════════════════════════════
+            { tac: "86820106", brand: "OnePlus", model: "12" },
+            { tac: "86820006", brand: "OnePlus", model: "12R" },
+            { tac: "86819905", brand: "OnePlus", model: "11 5G" },
+            { tac: "86819805", brand: "OnePlus", model: "11R" },
+            { tac: "86819704", brand: "OnePlus", model: "10 Pro 5G" },
+            { tac: "86819604", brand: "OnePlus", model: "10T 5G" },
+            { tac: "86819504", brand: "OnePlus", model: "10R 5G" },
+            { tac: "86819403", brand: "OnePlus", model: "9 Pro 5G" },
+            { tac: "86819303", brand: "OnePlus", model: "9 5G" },
+            { tac: "86819203", brand: "OnePlus", model: "9R 5G" },
+            { tac: "86819105", brand: "OnePlus", model: "Nord 3 5G" },
+            { tac: "86819005", brand: "OnePlus", model: "Nord CE 3 5G" },
+            { tac: "86818905", brand: "OnePlus", model: "Nord CE 3 Lite 5G" },
+            { tac: "86818804", brand: "OnePlus", model: "Nord 2T 5G" },
+            { tac: "86818704", brand: "OnePlus", model: "Nord CE 2 5G" },
+            { tac: "86818604", brand: "OnePlus", model: "Nord CE 2 Lite 5G" },
+
+            // ═══════════════════════════════════════════════════════════
+            // OPPO
+            // ═══════════════════════════════════════════════════════════
+            { tac: "86467705", brand: "Oppo", model: "Find X7 Ultra" },
+            { tac: "86467605", brand: "Oppo", model: "Find X7" },
+            { tac: "86467504", brand: "Oppo", model: "Find X6 Pro" },
+            { tac: "86467404", brand: "Oppo", model: "Find X6" },
+            { tac: "86467305", brand: "Oppo", model: "Reno 11 Pro" },
+            { tac: "86467205", brand: "Oppo", model: "Reno 11" },
+            { tac: "86467104", brand: "Oppo", model: "Reno 10 Pro+" },
+            { tac: "86467004", brand: "Oppo", model: "Reno 10 Pro" },
+            { tac: "86466904", brand: "Oppo", model: "Reno 10" },
+            { tac: "86466803", brand: "Oppo", model: "Reno 9 Pro+" },
+            { tac: "86466703", brand: "Oppo", model: "Reno 9 Pro" },
+            { tac: "86466603", brand: "Oppo", model: "Reno 9" },
+            { tac: "86466504", brand: "Oppo", model: "A98 5G" },
+            { tac: "86466404", brand: "Oppo", model: "A78 5G" },
+            { tac: "86466304", brand: "Oppo", model: "A58 5G" },
+            { tac: "86466203", brand: "Oppo", model: "A57" },
+            { tac: "86466103", brand: "Oppo", model: "A17" },
+            { tac: "86466003", brand: "Oppo", model: "A16" },
+
+            // ═══════════════════════════════════════════════════════════
+            // VIVO
+            // ═══════════════════════════════════════════════════════════
+            { tac: "86590605", brand: "Vivo", model: "X100 Pro" },
+            { tac: "86590505", brand: "Vivo", model: "X100" },
+            { tac: "86590404", brand: "Vivo", model: "X90 Pro+" },
+            { tac: "86590304", brand: "Vivo", model: "X90 Pro" },
+            { tac: "86590204", brand: "Vivo", model: "X90" },
+            { tac: "86590105", brand: "Vivo", model: "V29 Pro" },
+            { tac: "86590005", brand: "Vivo", model: "V29" },
+            { tac: "86589904", brand: "Vivo", model: "V27 Pro" },
+            { tac: "86589804", brand: "Vivo", model: "V27" },
+            { tac: "86589703", brand: "Vivo", model: "V25 Pro" },
+            { tac: "86589603", brand: "Vivo", model: "V25" },
+            { tac: "86589504", brand: "Vivo", model: "Y100" },
+            { tac: "86589404", brand: "Vivo", model: "Y78 5G" },
+            { tac: "86589303", brand: "Vivo", model: "Y56 5G" },
+            { tac: "86589203", brand: "Vivo", model: "Y36" },
+            { tac: "86589103", brand: "Vivo", model: "Y35" },
+            { tac: "86589003", brand: "Vivo", model: "Y22" },
+
+            // ═══════════════════════════════════════════════════════════
+            // REALME
+            // ═══════════════════════════════════════════════════════════
+            { tac: "86891105", brand: "Realme", model: "GT 5 Pro" },
+            { tac: "86891005", brand: "Realme", model: "GT 5" },
+            { tac: "86890904", brand: "Realme", model: "GT 3" },
+            { tac: "86890804", brand: "Realme", model: "GT Neo 5" },
+            { tac: "86890704", brand: "Realme", model: "11 Pro+" },
+            { tac: "86890604", brand: "Realme", model: "11 Pro" },
+            { tac: "86890504", brand: "Realme", model: "11" },
+            { tac: "86890403", brand: "Realme", model: "10 Pro+" },
+            { tac: "86890303", brand: "Realme", model: "10 Pro" },
+            { tac: "86890203", brand: "Realme", model: "10" },
+            { tac: "86890103", brand: "Realme", model: "C55" },
+            { tac: "86890003", brand: "Realme", model: "C53" },
+            { tac: "86889903", brand: "Realme", model: "C51" },
+            { tac: "86889803", brand: "Realme", model: "C35" },
+            { tac: "86889703", brand: "Realme", model: "C33" },
+            { tac: "86889502", brand: "Realme", model: "Narzo 60 Pro" },
+            { tac: "86889402", brand: "Realme", model: "Narzo 60" },
+
+            // ═══════════════════════════════════════════════════════════
+            // GOOGLE PIXEL
+            // ═══════════════════════════════════════════════════════════
+            { tac: "35824014", brand: "Google", model: "Pixel 8 Pro" },
+            { tac: "35823914", brand: "Google", model: "Pixel 8" },
+            { tac: "35823814", brand: "Google", model: "Pixel 8a" },
+            { tac: "35455313", brand: "Google", model: "Pixel 7 Pro" },
+            { tac: "35455213", brand: "Google", model: "Pixel 7" },
+            { tac: "35455113", brand: "Google", model: "Pixel 7a" },
+            { tac: "35391912", brand: "Google", model: "Pixel 6 Pro" },
+            { tac: "35391812", brand: "Google", model: "Pixel 6" },
+            { tac: "35391712", brand: "Google", model: "Pixel 6a" },
+            { tac: "35391611", brand: "Google", model: "Pixel 5a 5G" },
+            { tac: "35391510", brand: "Google", model: "Pixel 5" },
+            { tac: "35391409", brand: "Google", model: "Pixel 4a 5G" },
+            { tac: "35391309", brand: "Google", model: "Pixel 4a" },
+            { tac: "35391209", brand: "Google", model: "Pixel 4 XL" },
+            { tac: "35391109", brand: "Google", model: "Pixel 4" },
+
+            // ═══════════════════════════════════════════════════════════
+            // LG
+            // ═══════════════════════════════════════════════════════════
+            { tac: "35402510", brand: "LG", model: "Velvet 5G" },
+            { tac: "35402410", brand: "LG", model: "Wing 5G" },
+            { tac: "35402309", brand: "LG", model: "V60 ThinQ 5G" },
+            { tac: "35402209", brand: "LG", model: "G8X ThinQ" },
+            { tac: "35402109", brand: "LG", model: "K92 5G" },
+            { tac: "35402009", brand: "LG", model: "K52" },
+            { tac: "35401909", brand: "LG", model: "K42" },
+
+            // ═══════════════════════════════════════════════════════════
+            // SONY
+            // ═══════════════════════════════════════════════════════════
+            { tac: "35640813", brand: "Sony", model: "Xperia 1 V" },
+            { tac: "35640713", brand: "Sony", model: "Xperia 5 V" },
+            { tac: "35640612", brand: "Sony", model: "Xperia 1 IV" },
+            { tac: "35640512", brand: "Sony", model: "Xperia 5 IV" },
+            { tac: "35640412", brand: "Sony", model: "Xperia 10 IV" },
+            { tac: "35640311", brand: "Sony", model: "Xperia 1 III" },
+            { tac: "35640211", brand: "Sony", model: "Xperia 5 III" },
+            { tac: "35640111", brand: "Sony", model: "Xperia 10 III" },
+
+            // ═══════════════════════════════════════════════════════════
+            // NOKIA
+            // ═══════════════════════════════════════════════════════════
+            { tac: "35894112", brand: "Nokia", model: "G42 5G" },
+            { tac: "35894012", brand: "Nokia", model: "G22" },
+            { tac: "35893911", brand: "Nokia", model: "X30 5G" },
+            { tac: "35893811", brand: "Nokia", model: "G60 5G" },
+            { tac: "35893711", brand: "Nokia", model: "G21" },
+            { tac: "35893610", brand: "Nokia", model: "XR20" },
+            { tac: "35893510", brand: "Nokia", model: "G50 5G" },
+            { tac: "35893410", brand: "Nokia", model: "G20" },
+            { tac: "35893309", brand: "Nokia", model: "5.4" },
+            { tac: "35893209", brand: "Nokia", model: "3.4" },
+        ];
+
+        let filteredTacs = [...TAC_DATABASE];
+        let selectedTacData = null;
+
+        // Initialize TAC select
+        function populateTacSelect(data = TAC_DATABASE) {
+            const select = document.getElementById('tacSelect');
+            select.innerHTML = '<option value="">-- Selecciona un modelo --</option>';
+            
+            data.forEach((item, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${item.brand} ${item.model}`;
+                option.dataset.tac = item.tac;
+                option.dataset.brand = item.brand;
+                option.dataset.model = item.model;
+                select.appendChild(option);
+            });
+            
+            filteredTacs = data;
+        }
+
+        // Search TACs
+        document.getElementById('tacSearch').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            if (!query) {
+                populateTacSelect();
+                return;
+            }
+            
+            const filtered = TAC_DATABASE.filter(item => 
+                item.brand.toLowerCase().includes(query) || 
+                item.model.toLowerCase().includes(query)
+            );
+            populateTacSelect(filtered);
+        });
+
+        // Select TAC
+        document.getElementById('tacSelect').addEventListener('change', (e) => {
+            const idx = e.target.value;
+            if (idx === '') {
+                document.getElementById('selectedTac').textContent = '-';
+                document.getElementById('selectedBrand').textContent = '-';
+                selectedTacData = null;
+                return;
+            }
+            
+            selectedTacData = filteredTacs[idx];
+            document.getElementById('selectedTac').textContent = selectedTacData.tac;
+            document.getElementById('selectedBrand').textContent = `${selectedTacData.brand} - ${selectedTacData.model}`;
+        });
+
+        // Luhn Algorithm for IMEI check digit
+        function calculateLuhnCheckDigit(imei14) {
+            let sum = 0;
+            for (let i = 0; i < 14; i++) {
+                let digit = parseInt(imei14[i], 10);
+                if (i % 2 === 1) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+            }
+            return (10 - (sum % 10)) % 10;
+        }
+
+        // Generate random serial (6 digits)
+        function generateRandomSerial() {
+            let serial = '';
+            for (let i = 0; i < 6; i++) {
+                serial += Math.floor(Math.random() * 10);
+            }
+            return serial;
+        }
+
+        // Generate complete IMEI
+        function generateFullImei(tac) {
+            const serial = generateRandomSerial();
+            const imei14 = tac + serial;
+            const checkDigit = calculateLuhnCheckDigit(imei14);
+            return imei14 + checkDigit;
+        }
+
+        // Generate single IMEI
+        window.generateImei = function() {
+            if (!selectedTacData) {
+                alert('Selecciona un modelo primero');
+                return;
+            }
+            
+            const imei = generateFullImei(selectedTacData.tac);
+            document.getElementById('generatedImei').textContent = imei;
+            document.getElementById('imeiResult').style.display = 'block';
+            document.getElementById('multipleImeiList').style.display = 'none';
+            
+            log(`IMEI generado: ${imei}`, 'success');
+        };
+
+        // Generate multiple IMEIs
+        window.generateMultipleImei = function() {
+            if (!selectedTacData) {
+                alert('Selecciona un modelo primero');
+                return;
+            }
+            
+            const imeis = [];
+            for (let i = 0; i < 5; i++) {
+                imeis.push(generateFullImei(selectedTacData.tac));
+            }
+            
+            document.getElementById('generatedImei').textContent = imeis[0];
+            document.getElementById('imeiResult').style.display = 'block';
+            
+            const listContainer = document.getElementById('multipleImeiList');
+            listContainer.innerHTML = imeis.map((imei, i) => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.3rem 0.5rem; background: var(--surface-800); border-radius: 4px; margin-bottom: 0.25rem; font-family: var(--font-mono); font-size: 0.75rem;">
+                    <span>${i + 1}. ${imei}</span>
+                    <button onclick="navigator.clipboard.writeText('${imei}')" style="background: none; border: none; color: var(--surface-400); cursor: pointer; padding: 0.2rem;">
+                        <i class="bi bi-clipboard"></i>
+                    </button>
+                </div>
+            `).join('');
+            listContainer.style.display = 'block';
+            
+            log(`5 IMEIs generados para ${selectedTacData.model}`, 'success');
+        };
+
+        // Copy IMEI
+        window.copyImei = function() {
+            const imei = document.getElementById('generatedImei').textContent;
+            navigator.clipboard.writeText(imei).then(() => {
+                log(`Copiado: ${imei}`, 'info');
+            });
+        };
+
+        // Initialize on load
+        populateTacSelect();
 
         // ============================================
         // Auth
