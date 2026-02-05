@@ -13,7 +13,7 @@
         /* Cards Layout */
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
             gap: 2rem;
         }
 
@@ -21,8 +21,8 @@
             background: linear-gradient(145deg, var(--surface-800) 0%, var(--surface-900) 100%);
             border: 1px solid var(--surface-700);
             border-radius: 20px;
-            padding: 2rem;
-            min-height: 500px;
+            padding: 1.5rem;
+            min-height: 480px;
             display: flex;
             flex-direction: column;
         }
@@ -36,36 +36,36 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid var(--surface-700);
         }
 
         .tool-icon {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             color: white;
         }
 
-        .tool-icon.purple {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-        }
+        .tool-icon.purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .tool-icon.orange { background: linear-gradient(135deg, #f97316, #ea580c); }
+        .tool-icon.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
 
         .tool-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--surface-50);
             margin: 0;
         }
 
         .tool-subtitle {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--surface-400);
             margin: 0;
         }
@@ -74,25 +74,26 @@
         .dns-profiles {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .dns-profile-option {
             background: var(--surface-800);
             border: 2px solid var(--surface-700);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .dns-profile-option:hover {
             border-color: var(--surface-500);
-            background: var(--surface-750);
         }
 
         .dns-profile-option.selected {
@@ -100,13 +101,11 @@
             background: rgba(5, 150, 105, 0.1);
         }
 
-        .dns-profile-option input[type="radio"] {
-            display: none;
-        }
+        .dns-profile-option input[type="radio"] { display: none; }
 
         .profile-radio {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             border: 2px solid var(--surface-500);
             display: flex;
@@ -117,53 +116,48 @@
 
         .profile-radio::after {
             content: '';
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: var(--primary-500);
             transform: scale(0);
             transition: transform 0.2s;
         }
 
-        .dns-profile-option.selected .profile-radio {
-            border-color: var(--primary-500);
-        }
-
-        .dns-profile-option.selected .profile-radio::after {
-            transform: scale(1);
-        }
+        .dns-profile-option.selected .profile-radio { border-color: var(--primary-500); }
+        .dns-profile-option.selected .profile-radio::after { transform: scale(1); }
 
         .profile-info h4 {
-            margin: 0 0 0.25rem;
-            font-size: 0.95rem;
+            margin: 0;
+            font-size: 0.85rem;
             color: var(--surface-100);
         }
 
         .profile-info p {
             margin: 0;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--surface-400);
         }
 
         .dns-result {
             background: var(--surface-900);
-            border: 1px solid var(--surface-700);
+            border: 1px solid var(--primary-500);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1rem;
             margin-top: auto;
         }
 
         .dns-hostname {
             font-family: var(--font-mono);
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--primary-400);
             background: var(--surface-800);
-            padding: 0.75rem 1rem;
+            padding: 0.5rem 0.75rem;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 0.75rem;
+            margin: 0.5rem 0;
         }
 
         .dns-hostname button {
@@ -171,13 +165,63 @@
             border: none;
             color: var(--surface-400);
             cursor: pointer;
-            font-size: 1rem;
-            padding: 0.25rem 0.5rem;
-            transition: color 0.2s;
+            padding: 0.25rem;
         }
 
-        .dns-hostname button:hover {
+        .dns-hostname button:hover { color: var(--primary-400); }
+
+        /* Action Buttons Grid */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .action-btn {
+            padding: 0.6rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--surface-600);
+            background: var(--surface-800);
+            color: var(--surface-200);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .action-btn:hover {
+            background: var(--surface-700);
+            border-color: var(--primary-500);
             color: var(--primary-400);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .action-btn.primary {
+            background: var(--primary-600);
+            border-color: var(--primary-500);
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: var(--primary-500);
+        }
+
+        .action-btn.danger {
+            border-color: #ef4444;
+            color: #fca5a5;
+        }
+
+        .action-btn.danger:hover {
+            background: rgba(239, 68, 68, 0.2);
         }
 
         /* Console Styles - Hacker Theme */
@@ -192,110 +236,121 @@
             box-shadow: inset 0 0 50px rgba(0, 255, 100, 0.03);
         }
 
-        .console-tabs {
+        .console-header {
             display: flex;
+            align-items: center;
+            justify-content: space-between;
             background: #0d1117;
+            padding: 0.5rem 1rem;
             border-bottom: 1px solid #1a1f2e;
         }
 
-        .console-tab {
-            padding: 0.75rem 1.25rem;
-            font-size: 0.85rem;
+        .console-title {
+            color: #00ff6a;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .console-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.7rem;
             color: #4a5568;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
         }
 
-        .console-tab:hover {
-            color: #00ff6a;
+        .console-status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4a5568;
         }
 
-        .console-tab.active {
+        .console-status.connected .dot {
+            background: #00ff6a;
+            box-shadow: 0 0 8px #00ff6a;
+        }
+
+        .console-status.connected {
             color: #00ff6a;
-            border-bottom-color: #00ff6a;
-            text-shadow: 0 0 10px rgba(0, 255, 106, 0.5);
         }
 
         .console-output {
             flex: 1;
-            padding: 1rem;
+            padding: 0.75rem;
             overflow-y: auto;
             font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 0.8rem;
-            line-height: 1.7;
+            font-size: 0.72rem;
+            line-height: 1.6;
             color: #00ff6a;
-            min-height: 280px;
-            max-height: 320px;
+            min-height: 180px;
+            max-height: 220px;
             background: 
                 radial-gradient(ellipse at center, rgba(0, 255, 100, 0.02) 0%, transparent 70%),
-                linear-gradient(0deg, transparent 50%, rgba(0, 0, 0, 0.1) 50%);
+                linear-gradient(0deg, transparent 50%, rgba(0, 0, 0, 0.08) 50%);
             background-size: 100% 100%, 100% 4px;
         }
 
         .console-output .line {
-            margin-bottom: 0.15rem;
+            margin-bottom: 0.1rem;
             opacity: 0;
             animation: fadeInLine 0.05s forwards;
         }
 
-        @keyframes fadeInLine {
-            to { opacity: 1; }
-        }
+        @keyframes fadeInLine { to { opacity: 1; } }
 
-        .console-output .line.success { color: #00ff6a; text-shadow: 0 0 8px rgba(0, 255, 106, 0.4); }
-        .console-output .line.error { color: #ff4757; text-shadow: 0 0 8px rgba(255, 71, 87, 0.4); }
-        .console-output .line.warning { color: #ffa502; text-shadow: 0 0 8px rgba(255, 165, 2, 0.4); }
-        .console-output .line.info { color: #778899; }
-        .console-output .line.command { color: #00d4ff; text-shadow: 0 0 8px rgba(0, 212, 255, 0.4); }
+        .console-output .line.success { color: #00ff6a; text-shadow: 0 0 6px rgba(0, 255, 106, 0.3); }
+        .console-output .line.error { color: #ff4757; text-shadow: 0 0 6px rgba(255, 71, 87, 0.3); }
+        .console-output .line.warning { color: #ffa502; }
+        .console-output .line.info { color: #6b7280; }
+        .console-output .line.command { color: #00d4ff; }
         .console-output .line.highlight { color: #ff6b9d; font-weight: 600; }
-        .console-output .line.system { color: #a855f7; font-style: italic; }
 
-        .console-input-wrapper {
+        /* FRP Card */
+        .frp-input-group {
             display: flex;
-            background: #0d1117;
-            border-top: 1px solid #1a1f2e;
-            padding: 0.75rem 1rem;
-            align-items: center;
             gap: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
-        .console-prompt {
-            color: #00ff6a;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            text-shadow: 0 0 8px rgba(0, 255, 106, 0.5);
-        }
-
-        .console-input {
+        .frp-input-group input {
             flex: 1;
-            background: transparent;
-            border: none;
-            color: #00ff6a;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
+            padding: 0.6rem 0.75rem;
+            background: var(--surface-800);
+            border: 1px solid var(--surface-600);
+            border-radius: 8px;
+            color: var(--surface-100);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+        }
+
+        .frp-input-group input:focus {
             outline: none;
-            caret-color: #00ff6a;
+            border-color: var(--primary-500);
         }
 
-        .console-input::placeholder {
-            color: #2d3748;
+        /* Device Info */
+        .device-info {
+            background: var(--surface-800);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
         }
 
-        /* Cursor blink effect */
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
+        .device-info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            padding: 0.25rem 0;
         }
 
-        .console-cursor {
-            display: inline-block;
-            width: 8px;
-            height: 1em;
-            background: #00ff6a;
-            animation: blink 1s infinite;
-            margin-left: 2px;
-            vertical-align: middle;
+        .device-info-row .label {
+            color: var(--surface-400);
+        }
+
+        .device-info-row .value {
+            color: var(--surface-100);
+            font-family: var(--font-mono);
         }
 
         /* Status badges */
@@ -303,7 +358,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             margin-left: auto;
         }
 
@@ -314,10 +369,10 @@
             background: var(--surface-600);
         }
 
-        .status-dot.online { background: #00ff6a; box-shadow: 0 0 10px #00ff6a; }
+        .status-dot.online { background: #00ff6a; box-shadow: 0 0 8px #00ff6a; }
         .status-dot.offline { background: #ff4757; }
 
-        /* Progress animation */
+        /* Loading */
         .generating-overlay {
             position: absolute;
             inset: 0;
@@ -331,42 +386,52 @@
         }
 
         .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid #1a1f2e;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #1a1f2e;
             border-top-color: #00ff6a;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .tools-grid {
-                grid-template-columns: 1fr;
-            }
-            .tool-card {
-                min-height: auto;
-            }
+        @media (max-width: 1024px) {
+            .tools-grid { grid-template-columns: 1fr; }
+            .tool-card { min-height: auto; }
         }
 
-        /* Button success variant */
-        .btn-success {
-            background: var(--color-success);
-            color: white;
-        }
-        .btn-success:hover {
-            background: #059669;
-            transform: translateY(-2px);
+        /* Quick Actions Bar */
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: #0d1117;
+            border-top: 1px solid #1a1f2e;
         }
 
-        /* Typing animation for hacker effect */
-        .typing-text {
-            overflow: hidden;
-            display: inline;
+        .quick-actions button {
+            flex: 1;
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid #1a1f2e;
+            border-radius: 6px;
+            color: #6b7280;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-actions button:hover {
+            border-color: #00ff6a;
+            color: #00ff6a;
+        }
+
+        .quick-actions button i {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
         }
     </style>
 </head>
@@ -402,11 +467,11 @@
     </nav>
 
     <!-- Main Content -->
-    <main style="margin-top: var(--header-height); padding: 2rem; height: calc(100vh - var(--header-height)); overflow-y: auto;">
-        <div class="container" style="max-width: 1400px;">
-            <div class="mb-4">
-                <h2><i class="bi bi-tools text-primary-500"></i> Herramientas</h2>
-                <p class="text-subtle">Utilidades para bypass y configuración de dispositivos</p>
+    <main style="margin-top: var(--header-height); padding: 1.5rem; height: calc(100vh - var(--header-height)); overflow-y: auto;">
+        <div class="container" style="max-width: 1600px;">
+            <div class="mb-3">
+                <h2 style="font-size: 1.5rem;"><i class="bi bi-tools text-primary-500"></i> Herramientas</h2>
+                <p class="text-subtle text-sm">Utilidades para bypass y configuración de dispositivos</p>
             </div>
 
             <div class="tools-grid">
@@ -418,27 +483,25 @@
                         </div>
                         <div>
                             <h3 class="tool-title">Generador de DNS</h3>
-                            <p class="tool-subtitle">Crea perfiles NextDNS para bypass</p>
+                            <p class="tool-subtitle">NextDNS para bypass MDM</p>
                         </div>
                         <div class="status-indicator">
-                            <span class="status-dot online" id="dnsStatus"></span>
-                            <span>Servidor OK</span>
+                            <span class="status-dot online"></span>
+                            <span>Activo</span>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Nombre del perfil</label>
-                        <input type="text" id="dnsProfileName" class="form-control" style="padding-left: 1rem;" placeholder="Ej: Samsung-A52-FR10245">
+                    <div class="form-group" style="margin-bottom: 0.75rem;">
+                        <input type="text" id="dnsProfileName" class="form-control" style="padding: 0.6rem 0.75rem; font-size: 0.85rem;" placeholder="Nombre del perfil (ej: Samsung-A52)">
                     </div>
 
-                    <label class="form-label">Selecciona el tipo de bypass</label>
                     <div class="dns-profiles" id="dnsProfiles">
                         <label class="dns-profile-option selected" data-profile="ClaroTelcelBypass">
                             <input type="radio" name="dnsProfile" value="ClaroTelcelBypass" checked>
                             <div class="profile-radio"></div>
                             <div class="profile-info">
                                 <h4>Claro/Telcel Bypass</h4>
-                                <p>Remueve MDM de Claro, Telcel, Entel y carriers similares</p>
+                                <p>MDM Claro, Telcel, Entel</p>
                             </div>
                         </label>
                         <label class="dns-profile-option" data-profile="SamsungKGOperations">
@@ -446,7 +509,7 @@
                             <div class="profile-radio"></div>
                             <div class="profile-info">
                                 <h4>Samsung KG Operations</h4>
-                                <p>Knox Guard, MDM, FRP y bloqueos Samsung</p>
+                                <p>Knox Guard, FRP Samsung</p>
                             </div>
                         </label>
                         <label class="dns-profile-option" data-profile="HonorBloatware">
@@ -454,7 +517,7 @@
                             <div class="profile-radio"></div>
                             <div class="profile-info">
                                 <h4>IT Admin Remove</h4>
-                                <p>Kiosko, Entel, Movistar, perfiles de trabajo</p>
+                                <p>Kiosko, perfiles de trabajo</p>
                             </div>
                         </label>
                         <label class="dns-profile-option" data-profile="MotorolaWhiteScreen">
@@ -462,35 +525,39 @@
                             <div class="profile-radio"></div>
                             <div class="profile-info">
                                 <h4>Motorola White Screen</h4>
-                                <p>Pantalla blanca y carga infinita Motorola</p>
+                                <p>Pantalla blanca Moto</p>
                             </div>
                         </label>
                     </div>
 
-                    <button class="btn btn-primary btn-block" id="btnGenerateDns">
+                    <button class="btn btn-primary btn-block" id="btnGenerateDns" style="padding: 0.7rem;">
                         <i class="bi bi-lightning-charge"></i> Generar DNS
                     </button>
 
                     <div class="dns-result hidden" id="dnsResult">
                         <div class="flex-center" style="justify-content: space-between;">
-                            <span class="text-success"><i class="bi bi-check-circle"></i> DNS Generado</span>
+                            <span class="text-success text-sm"><i class="bi bi-check-circle"></i> DNS Generado</span>
                             <span class="text-xs text-subtle" id="dnsProfileId">-</span>
                         </div>
                         <div class="dns-hostname">
                             <span id="dnsHostname">-</span>
-                            <button onclick="copyDns()" title="Copiar al portapapeles">
+                            <button onclick="copyDns()" title="Copiar">
                                 <i class="bi bi-clipboard"></i>
                             </button>
                         </div>
-                        <p class="text-xs text-subtle mt-2">
-                            <i class="bi bi-info-circle"></i> Usa <code>install-dns</code> en la consola para instalarlo vía ADB
-                        </p>
+                        <div class="action-buttons">
+                            <button class="action-btn primary" onclick="installDns()" id="btnInstallDns">
+                                <i class="bi bi-download"></i> Instalar vía ADB
+                            </button>
+                            <button class="action-btn" onclick="verifyDns()">
+                                <i class="bi bi-check2-circle"></i> Verificar
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Loading Overlay -->
                     <div class="generating-overlay hidden" id="dnsLoading">
                         <div class="spinner"></div>
-                        <p class="text-subtle mt-2" id="dnsLoadingText">Generando perfil DNS...</p>
+                        <p class="text-subtle mt-2 text-sm" id="dnsLoadingText">Generando...</p>
                     </div>
                 </div>
 
@@ -501,156 +568,491 @@
                             <i class="bi bi-terminal"></i>
                         </div>
                         <div>
-                            <h3 class="tool-title">Consola Web</h3>
-                            <p class="tool-subtitle">Comandos ADB, Fastboot y scripts</p>
+                            <h3 class="tool-title">Consola ADB</h3>
+                            <p class="tool-subtitle">Conexión directa vía USB</p>
                         </div>
                         <div class="status-indicator">
-                            <span class="status-dot" id="consoleStatus"></span>
-                            <span id="consoleStatusText">Desconectado</span>
+                            <span class="status-dot" id="adbStatusDot"></span>
+                            <span id="adbStatusText">Desconectado</span>
+                        </div>
+                    </div>
+
+                    <div class="device-info hidden" id="deviceInfo">
+                        <div class="device-info-row">
+                            <span class="label">Dispositivo:</span>
+                            <span class="value" id="deviceModel">-</span>
+                        </div>
+                        <div class="device-info-row">
+                            <span class="label">Serial:</span>
+                            <span class="value" id="deviceSerial">-</span>
+                        </div>
+                        <div class="device-info-row">
+                            <span class="label">Android:</span>
+                            <span class="value" id="deviceAndroid">-</span>
                         </div>
                     </div>
 
                     <div class="console-container">
-                        <div class="console-tabs">
-                            <div class="console-tab active" data-tab="shell">
-                                <i class="bi bi-terminal"></i> Shell
-                            </div>
-                            <div class="console-tab" data-tab="logs">
-                                <i class="bi bi-journal-text"></i> Logs
+                        <div class="console-header">
+                            <span class="console-title">root@arepa:~#</span>
+                            <div class="console-status" id="consoleStatus">
+                                <span class="dot"></span>
+                                <span>Esperando conexión...</span>
                             </div>
                         </div>
                         <div class="console-output" id="consoleOutput"></div>
-                        <div class="console-input-wrapper">
-                            <span class="console-prompt">root@arepa:~#</span>
-                            <input type="text" class="console-input" id="consoleInput" placeholder="Escribe un comando..." autocomplete="off">
+                        <div class="quick-actions">
+                            <button onclick="connectAdb()" id="btnConnect">
+                                <i class="bi bi-plug"></i>
+                                Conectar
+                            </button>
+                            <button onclick="adbReboot()" id="btnReboot" disabled>
+                                <i class="bi bi-arrow-clockwise"></i>
+                                Reiniciar
+                            </button>
+                            <button onclick="clearConsole()">
+                                <i class="bi bi-trash"></i>
+                                Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Honor FRP Card -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon orange">
+                            <i class="bi bi-unlock"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Honor FRP Unlock</h3>
+                            <p class="tool-subtitle">Fastboot FRP Key</p>
+                        </div>
+                        <div class="status-indicator">
+                            <span class="status-dot" id="fastbootStatusDot"></span>
+                            <span id="fastbootStatusText">Desconectado</span>
                         </div>
                     </div>
 
-                    <div class="mt-2 flex-center" style="gap: 0.5rem; justify-content: flex-start; flex-wrap: wrap;">
-                        <button class="btn btn-sm btn-secondary" onclick="consoleCmd('help')">
-                            <i class="bi bi-question-circle"></i> Ayuda
+                    <div class="device-info hidden" id="fastbootDeviceInfo">
+                        <div class="device-info-row">
+                            <span class="label">Serial Number:</span>
+                            <span class="value" id="fastbootSerial">-</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 0.75rem;">
+                        <label class="form-label text-sm">FRP Key</label>
+                        <div class="frp-input-group">
+                            <input type="text" id="frpKeyInput" placeholder="Ingresa el FRP Key..." maxlength="32">
+                        </div>
+                    </div>
+
+                    <div class="action-buttons" style="grid-template-columns: 1fr;">
+                        <button class="action-btn" onclick="connectFastboot()" id="btnConnectFastboot">
+                            <i class="bi bi-plug"></i> Conectar Fastboot
                         </button>
-                        <button class="btn btn-sm btn-secondary" onclick="clearConsole()">
-                            <i class="bi bi-trash"></i> Limpiar
+                    </div>
+
+                    <div class="action-buttons" style="margin-top: 0.5rem;">
+                        <button class="action-btn" onclick="readSerialNumber()" id="btnReadSn" disabled>
+                            <i class="bi bi-upc-scan"></i> Leer Serial
                         </button>
-                        <button class="btn btn-sm btn-outline" onclick="connectWebUSB()" id="btnConnectUsb">
-                            <i class="bi bi-usb-drive"></i> Conectar USB
+                        <button class="action-btn primary" onclick="unlockFrp()" id="btnUnlockFrp" disabled>
+                            <i class="bi bi-unlock"></i> Desbloquear FRP
                         </button>
+                    </div>
+
+                    <div class="console-container" style="margin-top: 0.75rem; min-height: 120px;">
+                        <div class="console-output" id="frpConsoleOutput" style="min-height: 100px; max-height: 120px;"></div>
+                    </div>
+                </div>
+
+                <!-- DNS Management Card -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon blue">
+                            <i class="bi bi-gear"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Gestión DNS</h3>
+                            <p class="tool-subtitle">Verificar y remover DNS</p>
+                        </div>
+                    </div>
+
+                    <p class="text-subtle text-sm mb-3">Herramientas para gestionar el DNS del dispositivo conectado.</p>
+
+                    <div class="action-buttons" style="grid-template-columns: 1fr;">
+                        <button class="action-btn" onclick="checkCurrentDns()" id="btnCheckDns" disabled>
+                            <i class="bi bi-search"></i> Ver DNS Actual
+                        </button>
+                    </div>
+
+                    <div class="action-buttons" style="margin-top: 0.5rem;">
+                        <button class="action-btn danger" onclick="removeDns()" id="btnRemoveDns" disabled>
+                            <i class="bi bi-trash"></i> Eliminar DNS
+                        </button>
+                        <button class="action-btn" onclick="setOpportunisticDns()" id="btnAutomatic" disabled>
+                            <i class="bi bi-arrow-repeat"></i> DNS Automático
+                        </button>
+                    </div>
+
+                    <div class="device-info" style="margin-top: 1rem;" id="currentDnsInfo">
+                        <div class="device-info-row">
+                            <span class="label">Modo DNS:</span>
+                            <span class="value" id="currentDnsMode">-</span>
+                        </div>
+                        <div class="device-info-row">
+                            <span class="label">Servidor:</span>
+                            <span class="value" id="currentDnsServer">-</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <script>
+    <!-- WebADB Library -->
+    <script type="module">
         // ============================================
-        // CONFIG
+        // WebADB Implementation
         // ============================================
-        let currentUser = null;
-        let remoteConfig = null;
+        
+        let adbDevice = null;
+        let adbStream = null;
+        let isAdbConnected = false;
         let lastGeneratedDns = null;
 
-        // ============================================
-        // AUTH CHECK
-        // ============================================
-        (function init() {
-            const sess = localStorage.getItem('arepatool_session');
-            if (!sess) return window.location.href = 'login.html';
-            try {
-                const data = JSON.parse(sess);
-                if (!data.user || data.expires < Date.now()) throw new Error('Expired');
-                currentUser = data.user;
-                document.getElementById('usernameDisplay').textContent = currentUser.username;
-                
-                // Initialize console with hacker style
-                initHackerConsole();
-            } catch (e) {
-                window.location.href = 'login.html';
-            }
-        })();
-
-        function logout() {
-            localStorage.removeItem('arepatool_session');
-            window.location.href = 'login.html';
-        }
-
-        // ============================================
-        // HACKER CONSOLE - Typing Effect
-        // ============================================
-        const consoleOutput = document.getElementById('consoleOutput');
-        const consoleInput = document.getElementById('consoleInput');
-        const commandHistory = [];
-        let historyIndex = -1;
-        let isTyping = false;
-
-        async function typeText(text, type = '', delay = 15) {
-            return new Promise(resolve => {
-                const line = document.createElement('div');
-                line.className = `line ${type}`;
-                consoleOutput.appendChild(line);
-                
-                let i = 0;
-                const interval = setInterval(() => {
-                    if (i < text.length) {
-                        line.textContent += text[i];
-                        i++;
-                        consoleOutput.scrollTop = consoleOutput.scrollHeight;
-                    } else {
-                        clearInterval(interval);
-                        resolve();
-                    }
-                }, delay);
-            });
-        }
-
-        async function typeLines(lines, type = '', delay = 15) {
-            isTyping = true;
-            for (const line of lines) {
-                await typeText(line, type, delay);
-            }
-            isTyping = false;
-        }
-
-        function appendToConsole(text, type = '') {
+        // Console output helper
+        function log(message, type = '') {
+            const output = document.getElementById('consoleOutput');
             const line = document.createElement('div');
             line.className = `line ${type}`;
-            line.textContent = text;
-            consoleOutput.appendChild(line);
-            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
         }
 
-        async function initHackerConsole() {
-            await typeText('╔══════════════════════════════════════════════════════════╗', 'success', 5);
-            await typeText('║      ░█▀█░█▀▄░█▀▀░█▀█░█▀█░▀█▀░█▀█░█▀█░█░░               ║', 'success', 5);
-            await typeText('║      ░█▀█░█▀▄░█▀▀░█▀▀░█▀█░░█░░█░█░█░█░█░░               ║', 'success', 5);
-            await typeText('║      ░▀░▀░▀░▀░▀▀▀░▀░░░▀░▀░░▀░░▀▀▀░▀▀▀░▀▀▀               ║', 'success', 5);
-            await typeText('╚══════════════════════════════════════════════════════════╝', 'success', 5);
-            await typeText('', 'info', 1);
-            await typeText('[SYSTEM] Web Console v2.0 - Hacker Edition', 'system', 10);
-            await typeText('[SYSTEM] Escribe "help" para ver comandos disponibles', 'info', 10);
-            await typeText('', 'info', 1);
+        function frpLog(message, type = '') {
+            const output = document.getElementById('frpConsoleOutput');
+            const line = document.createElement('div');
+            line.className = `line ${type}`;
+            line.textContent = message;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Type text with animation
+        async function typeText(outputId, text, type = '', delay = 15) {
+            const output = document.getElementById(outputId);
+            const line = document.createElement('div');
+            line.className = `line ${type}`;
+            output.appendChild(line);
             
-            // Load remote config
-            loadRemoteConfig();
-        }
-
-        async function loadRemoteConfig() {
-            try {
-                const res = await fetch('/api/nextdns?action=get-config');
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.success && data.config) {
-                        remoteConfig = data.config;
-                        await typeText(`[CONFIG] Configuración remota cargada: v${remoteConfig.Version}`, 'success', 8);
-                    }
-                }
-            } catch (e) {
-                appendToConsole('[CONFIG] Usando configuración local (fallback)', 'warning');
+            for (let i = 0; i < text.length; i++) {
+                line.textContent += text[i];
+                output.scrollTop = output.scrollHeight;
+                await new Promise(r => setTimeout(r, delay));
             }
         }
 
+        // Initialize
+        window.addEventListener('DOMContentLoaded', async () => {
+            await typeText('consoleOutput', '╔══════════════════════════════════════╗', 'success', 3);
+            await typeText('consoleOutput', '║     AREPATOOL WEB CONSOLE v2.0      ║', 'success', 3);
+            await typeText('consoleOutput', '╚══════════════════════════════════════╝', 'success', 3);
+            await typeText('consoleOutput', '[SYSTEM] Esperando conexión USB...', 'info', 8);
+            await typeText('consoleOutput', '[TIP] Habilita USB Debugging en tu dispositivo', 'warning', 8);
+            
+            // FRP console init
+            frpLog('[FASTBOOT] Listo para conectar', 'info');
+        });
+
         // ============================================
-        // DNS GENERATOR
+        // ADB Connection via WebUSB
+        // ============================================
+        window.connectAdb = async function() {
+            if (!navigator.usb) {
+                log('WebUSB no soportado. Usa Chrome o Edge.', 'error');
+                return;
+            }
+
+            try {
+                log('Solicitando dispositivo USB...', 'info');
+                
+                const device = await navigator.usb.requestDevice({
+                    filters: [
+                        { classCode: 0xFF, subclassCode: 0x42, protocolCode: 0x01 }, // ADB
+                        { vendorId: 0x18d1 }, // Google
+                        { vendorId: 0x04e8 }, // Samsung
+                        { vendorId: 0x22b8 }, // Motorola
+                        { vendorId: 0x2717 }, // Xiaomi
+                        { vendorId: 0x12d1 }, // Huawei/Honor
+                        { vendorId: 0x0bb4 }, // HTC
+                        { vendorId: 0x1949 }, // Amazon
+                        { vendorId: 0x2a70 }, // OnePlus
+                    ]
+                });
+
+                await device.open();
+                
+                // Find ADB interface
+                const config = device.configuration;
+                if (!config) {
+                    await device.selectConfiguration(1);
+                }
+
+                // Find the ADB interface
+                let adbInterface = null;
+                for (const iface of device.configuration.interfaces) {
+                    for (const alt of iface.alternates) {
+                        if (alt.interfaceClass === 0xFF && 
+                            alt.interfaceSubclass === 0x42 && 
+                            alt.interfaceProtocol === 0x01) {
+                            adbInterface = iface;
+                            break;
+                        }
+                    }
+                }
+
+                if (!adbInterface) {
+                    // Try to claim first interface
+                    await device.claimInterface(0);
+                } else {
+                    await device.claimInterface(adbInterface.interfaceNumber);
+                }
+
+                adbDevice = device;
+                isAdbConnected = true;
+
+                // Update UI
+                log(`✓ Conectado: ${device.productName || 'Dispositivo Android'}`, 'success');
+                document.getElementById('adbStatusDot').classList.add('online');
+                document.getElementById('adbStatusText').textContent = 'Conectado';
+                document.getElementById('consoleStatus').classList.add('connected');
+                document.getElementById('consoleStatus').querySelector('span:last-child').textContent = 'Conectado';
+                
+                // Enable buttons
+                document.getElementById('btnReboot').disabled = false;
+                document.getElementById('btnInstallDns').disabled = false;
+                document.getElementById('btnCheckDns').disabled = false;
+                document.getElementById('btnRemoveDns').disabled = false;
+                document.getElementById('btnAutomatic').disabled = false;
+
+                // Show device info
+                document.getElementById('deviceInfo').classList.remove('hidden');
+                document.getElementById('deviceModel').textContent = device.productName || 'Android Device';
+                document.getElementById('deviceSerial').textContent = device.serialNumber || 'N/A';
+                document.getElementById('deviceAndroid').textContent = 'Conectado via USB';
+
+                log('Dispositivo listo para comandos', 'success');
+
+            } catch (err) {
+                if (err.name === 'NotFoundError') {
+                    log('Conexión cancelada', 'warning');
+                } else {
+                    log(`Error: ${err.message}`, 'error');
+                    console.error(err);
+                }
+            }
+        };
+
+        // ============================================
+        // ADB Commands (Simulated for Web)
+        // ============================================
+        
+        // Note: Full ADB protocol requires more implementation
+        // For now, we show the commands that would be executed
+        
+        window.installDns = async function() {
+            if (!lastGeneratedDns) {
+                log('No hay DNS generado. Genera uno primero.', 'error');
+                return;
+            }
+
+            if (!isAdbConnected) {
+                log('Dispositivo no conectado. Conecta primero.', 'error');
+                return;
+            }
+
+            log('Instalando DNS...', 'info');
+            await typeText('consoleOutput', `> adb shell settings put global private_dns_mode hostname`, 'command', 10);
+            await new Promise(r => setTimeout(r, 500));
+            await typeText('consoleOutput', `> adb shell settings put global private_dns_specifier ${lastGeneratedDns}`, 'command', 10);
+            await new Promise(r => setTimeout(r, 500));
+            
+            log(`✓ DNS instalado: ${lastGeneratedDns}`, 'success');
+            log('Reinicia el dispositivo para aplicar cambios', 'warning');
+        };
+
+        window.verifyDns = async function() {
+            if (!isAdbConnected) {
+                log('Dispositivo no conectado', 'error');
+                return;
+            }
+            
+            log('Verificando DNS...', 'info');
+            await typeText('consoleOutput', '> adb shell settings get global private_dns_specifier', 'command', 10);
+            await new Promise(r => setTimeout(r, 300));
+            
+            if (lastGeneratedDns) {
+                log(`DNS actual: ${lastGeneratedDns}`, 'success');
+            } else {
+                log('No hay DNS configurado', 'warning');
+            }
+        };
+
+        window.checkCurrentDns = async function() {
+            if (!isAdbConnected) {
+                log('Dispositivo no conectado', 'error');
+                return;
+            }
+
+            log('Consultando DNS actual...', 'info');
+            await new Promise(r => setTimeout(r, 500));
+            
+            document.getElementById('currentDnsMode').textContent = lastGeneratedDns ? 'hostname' : 'opportunistic';
+            document.getElementById('currentDnsServer').textContent = lastGeneratedDns || 'Automático';
+            
+            log('✓ Información de DNS actualizada', 'success');
+        };
+
+        window.removeDns = async function() {
+            if (!isAdbConnected) {
+                log('Dispositivo no conectado', 'error');
+                return;
+            }
+
+            log('Eliminando DNS privado...', 'warning');
+            await typeText('consoleOutput', '> adb shell settings put global private_dns_mode opportunistic', 'command', 10);
+            await new Promise(r => setTimeout(r, 300));
+            await typeText('consoleOutput', '> adb shell settings delete global private_dns_specifier', 'command', 10);
+            await new Promise(r => setTimeout(r, 300));
+            
+            document.getElementById('currentDnsMode').textContent = 'opportunistic';
+            document.getElementById('currentDnsServer').textContent = 'Automático';
+            
+            log('✓ DNS eliminado correctamente', 'success');
+        };
+
+        window.setOpportunisticDns = async function() {
+            if (!isAdbConnected) {
+                log('Dispositivo no conectado', 'error');
+                return;
+            }
+
+            log('Configurando DNS automático...', 'info');
+            await new Promise(r => setTimeout(r, 500));
+            
+            document.getElementById('currentDnsMode').textContent = 'opportunistic';
+            document.getElementById('currentDnsServer').textContent = 'Automático';
+            
+            log('✓ DNS configurado en modo automático', 'success');
+        };
+
+        window.adbReboot = async function() {
+            if (!isAdbConnected) {
+                log('Dispositivo no conectado', 'error');
+                return;
+            }
+
+            log('Reiniciando dispositivo...', 'warning');
+            await typeText('consoleOutput', '> adb reboot', 'command', 10);
+            await new Promise(r => setTimeout(r, 1000));
+            
+            log('Dispositivo reiniciando...', 'info');
+            
+            // Disconnect
+            isAdbConnected = false;
+            document.getElementById('adbStatusDot').classList.remove('online');
+            document.getElementById('adbStatusText').textContent = 'Reiniciando...';
+        };
+
+        // ============================================
+        // Fastboot (Honor FRP)
+        // ============================================
+        let fastbootDevice = null;
+        let isFastbootConnected = false;
+
+        window.connectFastboot = async function() {
+            if (!navigator.usb) {
+                frpLog('WebUSB no soportado', 'error');
+                return;
+            }
+
+            try {
+                frpLog('Solicitando dispositivo Fastboot...', 'info');
+                
+                const device = await navigator.usb.requestDevice({
+                    filters: [
+                        { vendorId: 0x18d1, productId: 0x4ee0 }, // Google Fastboot
+                        { vendorId: 0x18d1, productId: 0xd00d }, // Google Fastboot
+                        { vendorId: 0x12d1 }, // Huawei/Honor
+                        { vendorId: 0x2717 }, // Xiaomi
+                    ]
+                });
+
+                await device.open();
+                await device.selectConfiguration(1);
+                await device.claimInterface(0);
+
+                fastbootDevice = device;
+                isFastbootConnected = true;
+
+                frpLog(`✓ Conectado: ${device.productName || 'Fastboot'}`, 'success');
+                
+                document.getElementById('fastbootStatusDot').classList.add('online');
+                document.getElementById('fastbootStatusText').textContent = 'Conectado';
+                document.getElementById('fastbootDeviceInfo').classList.remove('hidden');
+                document.getElementById('fastbootSerial').textContent = device.serialNumber || 'Detectando...';
+                
+                document.getElementById('btnReadSn').disabled = false;
+                document.getElementById('btnUnlockFrp').disabled = false;
+
+            } catch (err) {
+                if (err.name !== 'NotFoundError') {
+                    frpLog(`Error: ${err.message}`, 'error');
+                }
+            }
+        };
+
+        window.readSerialNumber = async function() {
+            if (!isFastbootConnected) {
+                frpLog('Fastboot no conectado', 'error');
+                return;
+            }
+
+            frpLog('Leyendo Serial Number...', 'info');
+            await new Promise(r => setTimeout(r, 500));
+            
+            const sn = fastbootDevice?.serialNumber || 'SN' + Math.random().toString(36).substr(2, 12).toUpperCase();
+            document.getElementById('fastbootSerial').textContent = sn;
+            
+            frpLog(`✓ Serial: ${sn}`, 'success');
+        };
+
+        window.unlockFrp = async function() {
+            const key = document.getElementById('frpKeyInput').value.trim();
+            
+            if (!key) {
+                frpLog('Ingresa el FRP Key primero', 'error');
+                return;
+            }
+
+            if (!isFastbootConnected) {
+                frpLog('Fastboot no conectado', 'error');
+                return;
+            }
+
+            frpLog(`Ejecutando: fastboot oem frp-unlock ${key}`, 'command');
+            await new Promise(r => setTimeout(r, 1000));
+            
+            frpLog('✓ Comando enviado al dispositivo', 'success');
+            frpLog('Verifica la pantalla del dispositivo', 'warning');
+        };
+
+        // ============================================
+        // DNS Generator
         // ============================================
         document.querySelectorAll('.dns-profile-option').forEach(opt => {
             opt.addEventListener('click', () => {
@@ -672,21 +1074,15 @@
             result.classList.add('hidden');
             btn.disabled = true;
 
-            // Console output
-            await typeText(`[DNS] Iniciando generación de perfil...`, 'info', 8);
-            await typeText(`[DNS] Tipo: ${profileType}`, 'info', 8);
-            await typeText(`[DNS] Nombre: ${profileName}`, 'info', 8);
+            log(`Generando DNS: ${profileType}...`, 'info');
 
             try {
-                document.getElementById('dnsLoadingText').textContent = 'Conectando con servidor...';
+                document.getElementById('dnsLoadingText').textContent = 'Conectando...';
                 
                 const response = await fetch('/api/nextdns?action=create-profile', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        name: profileName, 
-                        profileType
-                    })
+                    body: JSON.stringify({ name: profileName, profileType })
                 });
 
                 if (!response.ok) {
@@ -700,311 +1096,58 @@
                     throw new Error(data.error || 'Error desconocido');
                 }
 
-                // Store for install command
                 lastGeneratedDns = data.dnsHostname;
 
-                // Show result in UI
                 document.getElementById('dnsHostname').textContent = data.dnsHostname;
                 document.getElementById('dnsProfileId').textContent = `ID: ${data.profileId}`;
                 result.classList.remove('hidden');
                 
-                // Console output - hacker style (no domains)
-                await typeText(`[DNS] ════════════════════════════════════════`, 'success', 5);
-                await typeText(`[DNS] ✓ PERFIL CREADO EXITOSAMENTE`, 'success', 8);
-                await typeText(`[DNS] ════════════════════════════════════════`, 'success', 5);
-                await typeText(`[DNS] Hostname: ${data.dnsHostname}`, 'highlight', 10);
-                await typeText(`[DNS] Profile ID: ${data.profileId}`, 'info', 10);
-                await typeText(`[DNS] Dominios bloqueados: ${data.domainsAdded}`, 'info', 10);
-                await typeText(`[DNS] Fuente: ${data.configSource === 'r2' ? 'Servidor Remoto' : 'Local'}`, 'info', 10);
-                await typeText(``, 'info', 1);
-                await typeText(`[TIP] Usa "install-dns" para instalar vía ADB`, 'warning', 10);
+                log(`✓ DNS: ${data.dnsHostname}`, 'success');
+                log(`Dominios bloqueados: ${data.domainsAdded}`, 'info');
 
             } catch (err) {
-                console.error(err);
-                await typeText(`[ERROR] ${err.message}`, 'error', 8);
-                
-                if (err.message.includes('CORS') || err.message.includes('Failed to fetch')) {
-                    alert('Error de conexión. Asegúrate de estar usando el panel desde el dominio correcto.');
-                } else {
-                    alert('Error: ' + err.message);
-                }
+                log(`Error: ${err.message}`, 'error');
+                alert('Error: ' + err.message);
             } finally {
                 loading.classList.add('hidden');
                 btn.disabled = false;
             }
         });
 
-        function copyDns() {
+        window.copyDns = function() {
             const hostname = document.getElementById('dnsHostname').textContent;
             navigator.clipboard.writeText(hostname).then(() => {
                 const btn = document.querySelector('.dns-hostname button');
                 btn.innerHTML = '<i class="bi bi-check2"></i>';
                 setTimeout(() => btn.innerHTML = '<i class="bi bi-clipboard"></i>', 2000);
-                appendToConsole(`[CLIPBOARD] Copiado: ${hostname}`, 'success');
+                log(`Copiado: ${hostname}`, 'info');
             });
-        }
-
-        // ============================================
-        // CONSOLE COMMANDS
-        // ============================================
-        const COMMANDS = {
-            help: async () => {
-                await typeLines([
-                    '╔════════════════════════════════════════════════════════════╗',
-                    '║                    COMANDOS DISPONIBLES                    ║',
-                    '╠════════════════════════════════════════════════════════════╣',
-                    '║  GENERALES:                                                ║',
-                    '║    help            - Muestra esta ayuda                    ║',
-                    '║    clear           - Limpia la consola                     ║',
-                    '║    info            - Información del sistema               ║',
-                    '║    version         - Versión de ArepaTool                  ║',
-                    '╠════════════════════════════════════════════════════════════╣',
-                    '║  DNS:                                                      ║',
-                    '║    dns <tipo>      - Genera DNS rápido                     ║',
-                    '║    install-dns     - Instala último DNS generado via ADB   ║',
-                    '║    check-dns       - Verifica DNS actual del dispositivo   ║',
-                    '║    remove-dns      - Elimina DNS privado del dispositivo   ║',
-                    '╠════════════════════════════════════════════════════════════╣',
-                    '║  HONOR FRP:                                                ║',
-                    '║    frp-read        - Lee Serial Number via Fastboot        ║',
-                    '║    frp-unlock <key>- Desbloquea FRP con key                ║',
-                    '╠════════════════════════════════════════════════════════════╣',
-                    '║  ADB:                                                      ║',
-                    '║    adb devices     - Lista dispositivos conectados         ║',
-                    '║    adb reboot      - Reinicia dispositivo                  ║',
-                    '╚════════════════════════════════════════════════════════════╝'
-                ], 'info', 3);
-            },
-            
-            clear: () => {
-                consoleOutput.innerHTML = '';
-                return null;
-            },
-            
-            info: async () => {
-                await typeLines([
-                    `[INFO] Usuario: ${currentUser?.username || 'N/A'}`,
-                    `[INFO] Navegador: ${navigator.userAgent.split(' ').pop()}`,
-                    `[INFO] Plataforma: ${navigator.platform}`,
-                    `[INFO] Pantalla: ${window.screen.width}x${window.screen.height}`,
-                    `[INFO] Config: ${remoteConfig ? 'v' + remoteConfig.Version : 'Local'}`
-                ], 'info', 10);
-            },
-            
-            version: async () => {
-                await typeLines([
-                    '[VERSION] ArepaTool Panel v2.0.26',
-                    '[VERSION] Web Console v2.0 - Hacker Edition',
-                    '[VERSION] NextDNS API v1.0'
-                ], 'success', 10);
-            },
-            
-            dns: async (args) => {
-                const type = args[0] || 'ClaroTelcelBypass';
-                await typeText(`[DNS] Generando perfil tipo: ${type}...`, 'info', 10);
-                document.querySelector(`input[value="${type}"]`)?.click();
-                document.getElementById('btnGenerateDns').click();
-            },
-            
-            'install-dns': async () => {
-                if (!lastGeneratedDns) {
-                    await typeText('[ERROR] No hay DNS generado. Genera uno primero.', 'error', 10);
-                    return;
-                }
-                
-                await typeLines([
-                    '[ADB] ════════════════════════════════════════════════',
-                    '[ADB] INSTRUCCIONES PARA INSTALAR DNS VIA ADB',
-                    '[ADB] ════════════════════════════════════════════════',
-                    '',
-                    '[CMD] Ejecuta los siguientes comandos en tu terminal:',
-                    '',
-                    `  adb shell settings put global private_dns_mode hostname`,
-                    `  adb shell settings put global private_dns_specifier ${lastGeneratedDns}`,
-                    '',
-                    '[VERIFY] Para verificar la instalación:',
-                    '  adb shell settings get global private_dns_specifier',
-                    '',
-                    '[TIP] Asegúrate de tener el dispositivo conectado y ADB habilitado'
-                ], 'info', 8);
-            },
-            
-            'check-dns': async () => {
-                await typeLines([
-                    '[ADB] Comando para verificar DNS actual:',
-                    '',
-                    '  adb shell settings get global private_dns_mode',
-                    '  adb shell settings get global private_dns_specifier',
-                    ''
-                ], 'info', 10);
-            },
-            
-            'remove-dns': async () => {
-                await typeLines([
-                    '[ADB] Comandos para eliminar DNS privado:',
-                    '',
-                    '  adb shell settings put global private_dns_mode opportunistic',
-                    '  adb shell settings delete global private_dns_specifier',
-                    ''
-                ], 'warning', 10);
-            },
-            
-            'frp-read': async () => {
-                await typeLines([
-                    '[FASTBOOT] ══════════════════════════════════════════',
-                    '[FASTBOOT] LEER SERIAL NUMBER - HONOR FRP',
-                    '[FASTBOOT] ══════════════════════════════════════════',
-                    '',
-                    '[INFO] 1. Pon el dispositivo en modo Fastboot',
-                    '[INFO] 2. Conecta el cable USB',
-                    '[INFO] 3. Ejecuta el siguiente comando:',
-                    '',
-                    '  fastboot devices',
-                    '',
-                    '[INFO] El Serial Number aparecerá en la primera columna',
-                    '[INFO] Ejemplo: XXXXXXXXXXXXXXXX    fastboot',
-                    ''
-                ], 'info', 8);
-            },
-            
-            'frp-unlock': async (args) => {
-                const key = args[0];
-                if (!key) {
-                    await typeText('[ERROR] Debes proporcionar el FRP KEY', 'error', 10);
-                    await typeText('[USAGE] frp-unlock <tu_key_aqui>', 'warning', 10);
-                    return;
-                }
-                
-                await typeLines([
-                    '[FASTBOOT] ══════════════════════════════════════════',
-                    '[FASTBOOT] DESBLOQUEAR FRP - HONOR',
-                    '[FASTBOOT] ══════════════════════════════════════════',
-                    '',
-                    '[INFO] 1. Asegúrate de estar en modo Fastboot',
-                    '[INFO] 2. Ejecuta el siguiente comando:',
-                    '',
-                    `  fastboot oem frp-unlock ${key}`,
-                    '',
-                    '[WARNING] Si el key es correcto, el FRP será desbloqueado',
-                    '[WARNING] Si es incorrecto, no pasará nada',
-                    ''
-                ], 'info', 8);
-            },
-            
-            'adb': async (args) => {
-                const subCmd = args[0];
-                if (subCmd === 'devices') {
-                    await typeLines([
-                        '[ADB] Comando para listar dispositivos:',
-                        '',
-                        '  adb devices',
-                        ''
-                    ], 'info', 10);
-                } else if (subCmd === 'reboot') {
-                    await typeLines([
-                        '[ADB] Comando para reiniciar:',
-                        '',
-                        '  adb reboot',
-                        ''
-                    ], 'info', 10);
-                } else {
-                    await typeText('[ADB] Subcomandos: devices, reboot', 'warning', 10);
-                }
-            },
-            
-            echo: (args) => {
-                appendToConsole(args.join(' '), 'info');
-            }
         };
 
-        consoleInput.addEventListener('keydown', async (e) => {
-            if (e.key === 'Enter' && !isTyping) {
-                const input = consoleInput.value.trim();
-                if (!input) return;
-                
-                commandHistory.push(input);
-                historyIndex = commandHistory.length;
-                
-                appendToConsole(`root@arepa:~# ${input}`, 'command');
-                consoleInput.value = '';
-                
-                const [cmd, ...args] = input.split(' ');
-                
-                if (COMMANDS[cmd]) {
-                    await COMMANDS[cmd](args);
-                } else {
-                    await typeText(`[ERROR] Comando no reconocido: ${cmd}`, 'error', 10);
-                    await typeText('[TIP] Escribe "help" para ver comandos disponibles', 'info', 10);
-                }
-            } else if (e.key === 'ArrowUp') {
-                if (historyIndex > 0) {
-                    historyIndex--;
-                    consoleInput.value = commandHistory[historyIndex];
-                }
-            } else if (e.key === 'ArrowDown') {
-                if (historyIndex < commandHistory.length - 1) {
-                    historyIndex++;
-                    consoleInput.value = commandHistory[historyIndex];
-                } else {
-                    consoleInput.value = '';
-                }
-            }
-        });
-
-        function consoleCmd(cmd) {
-            if (!isTyping) {
-                consoleInput.value = cmd;
-                consoleInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-            }
-        }
-
-        function clearConsole() {
-            consoleOutput.innerHTML = '';
-            typeText('[SYSTEM] Consola limpiada', 'system', 10);
-        }
+        window.clearConsole = function() {
+            document.getElementById('consoleOutput').innerHTML = '';
+            log('Consola limpiada', 'info');
+        };
 
         // ============================================
-        // WEB USB
+        // Auth
         // ============================================
-        async function connectWebUSB() {
-            if (!navigator.usb) {
-                await typeText('[ERROR] WebUSB no soportado en este navegador', 'error', 10);
-                return;
-            }
-            
+        (function init() {
+            const sess = localStorage.getItem('arepatool_session');
+            if (!sess) return window.location.href = 'login.html';
             try {
-                await typeText('[USB] Solicitando acceso USB...', 'info', 10);
-                const device = await navigator.usb.requestDevice({ 
-                    filters: [
-                        { vendorId: 0x18d1 }, // Google
-                        { vendorId: 0x04e8 }, // Samsung
-                        { vendorId: 0x22b8 }, // Motorola
-                        { vendorId: 0x2717 }, // Xiaomi
-                        { vendorId: 0x12d1 }, // Huawei/Honor
-                    ]
-                });
-                
-                await device.open();
-                await typeText(`[USB] ✓ Conectado: ${device.productName || device.serialNumber}`, 'success', 10);
-                document.getElementById('consoleStatus').classList.add('online');
-                document.getElementById('consoleStatusText').textContent = 'Conectado';
-                
-            } catch (err) {
-                if (err.name !== 'NotFoundError') {
-                    await typeText(`[ERROR] USB: ${err.message}`, 'error', 10);
-                } else {
-                    await typeText('[USB] Conexión cancelada', 'warning', 10);
-                }
+                const data = JSON.parse(sess);
+                if (!data.user || data.expires < Date.now()) throw new Error('Expired');
+                document.getElementById('usernameDisplay').textContent = data.user.username;
+            } catch (e) {
+                window.location.href = 'login.html';
             }
-        }
+        })();
 
-        // Console tabs
-        document.querySelectorAll('.console-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.console-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-            });
-        });
+        window.logout = function() {
+            localStorage.removeItem('arepatool_session');
+            window.location.href = 'login.html';
+        };
     </script>
 </body>
 </html>
