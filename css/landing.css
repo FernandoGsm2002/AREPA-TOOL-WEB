@@ -255,3 +255,196 @@
     .hero-image-container { margin-top: 3rem; transform: none; }
     .hero-img { transform: none; }
 }
+
+/* ==========================================================================
+   CONSOLE / TERMINAL THEME (TUI)
+   Overrides for "Markdown in Terminal" look
+   ========================================================================== */
+
+.console-theme {
+    background-color: #1e1e1e !important;
+    color: #d4d4d4 !important;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+    line-height: 1.6 !important;
+    padding: 2rem !important;
+    border: 1px solid #333;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Terminal Header Bar Simulation */
+.console-theme::before {
+    content: "root@arepatool-server:~/docs# cat instructions.md";
+    display: block;
+    font-family: 'Consolas', monospace;
+    font-size: 0.85rem;
+    color: #6a9955;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed #444;
+    opacity: 0.8;
+}
+
+/* Global resets within console theme to kill the "Card" look */
+.console-theme * {
+    font-family: inherit !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    border-color: transparent !important;
+}
+
+/* Hide Icons to reduce visual noise */
+.console-theme i, 
+.console-theme svg,
+.console-theme .w-10, 
+.console-theme .w-11, 
+.console-theme .w-12,
+.console-theme img {
+    display: none !important;
+}
+
+/* Typography Overrides - Markdown Style */
+.console-theme h5, 
+.console-theme h6,
+.console-theme .step-header {
+    color: #569cd6 !important; /* VS Code Blue */
+    font-weight: bold !important;
+    font-size: 1.1rem !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+    display: block !important;
+    text-transform: none !important;
+    border: none !important;
+}
+
+.console-theme h5::before, 
+.console-theme .step-header::before {
+    content: "## ";
+    color: #569cd6;
+    opacity: 0.7;
+}
+
+.console-theme h6::before {
+    content: "### ";
+    color: #569cd6;
+    opacity: 0.7;
+}
+
+/* Text Colors Mapping */
+.console-theme strong, 
+.console-theme b, 
+.console-theme .font-bold {
+    color: #ce9178 !important; /* VS Code String/Orange color for emphasis */
+    font-weight: normal !important;
+}
+
+.console-theme strong::before,
+.console-theme strong::after {
+    content: "**";
+    color: #608b4e; /* Dim Green */
+    opacity: 0.5;
+}
+
+.console-theme .text-primary-400,
+.console-theme .text-primary-500,
+.console-theme .text-blue-400,
+.console-theme .text-blue-500 {
+    color: #9cdcfe !important; /* Light Blue */
+}
+
+.console-theme .text-green-400,
+.console-theme .text-green-500 {
+    color: #b5cea8 !important; /* Light Green */
+}
+
+.console-theme .text-orange-400,
+.console-theme .text-orange-500 {
+    color: #ce9178 !important; /* Orange */
+}
+
+.console-theme .text-red-400,
+.console-theme .text-red-500 {
+    color: #f44747 !important; /* Red */
+}
+
+/* Badges / Code snippets */
+.console-theme .badge,
+.console-theme code {
+    background-color: #333 !important;
+    color: #d7ba7d !important; /* Yellowish */
+    padding: 0 4px !important;
+    border: 1px solid #444 !important;
+    font-size: 0.9em !important;
+}
+
+.console-theme .badge::before,
+.console-theme .badge::after,
+.console-theme code::before,
+.console-theme code::after {
+    content: "`";
+    color: #888;
+}
+
+/* Buttons -> Link style */
+.console-theme .btn {
+    display: inline-block !important;
+    width: auto !important;
+    padding: 0 !important;
+    margin-top: 0.5rem !important;
+    color: #4ec9b0 !important;
+    text-decoration: underline !important;
+    border: none !important;
+    background: none !important;
+}
+
+.console-theme .btn::before {
+    content: "[LINK] ";
+    text-decoration: none;
+    color: #888;
+}
+
+/* Cards as Blockquotes */
+.console-theme .card,
+.console-theme .p-4,
+.console-theme .p-5,
+.console-theme .p-6,
+.console-theme .rounded-xl,
+.console-theme .rounded-2xl {
+    padding: 0 !important;
+    margin-bottom: 1rem !important;
+    border-left: 3px solid #444 !important;
+    padding-left: 1rem !important;
+    display: block !important; /* Kill Flex/Grid */
+}
+
+/* Kill Grid/Flex layout completely to stack text */
+.console-theme .grid,
+.console-theme .grid-2,
+.console-theme .flex,
+.console-theme .flex-center,
+.console-theme .items-center {
+    display: block !important;
+    width: 100% !important;
+}
+
+/* List items simulation */
+.console-theme .mb-8, 
+.console-theme .space-y-4 > div,
+.console-theme .space-y-3 > div {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Add bullet points to 'cards' that were steps */
+.console-theme .space-y-4 > div,
+.console-theme .space-y-3 > div {
+    position: relative;
+}
+
+/* Specific fix for numbered steps if we can identify them */
+.console-theme .space-y-4 > div::before,
+.console-theme .space-y-3 > div::before {
+    content: "> ";
+    color: #6a9955;
+    margin-right: 0.5rem;
+}

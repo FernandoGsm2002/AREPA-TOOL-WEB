@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramientas - ArepaTool Panel</title>
+    <link rel="icon" type="image/x-icon" href="pngs/logo.ico">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/skeleton-theme.css">
+    <style>
+        /* Cards Layout */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+        }
+
+        .tool-card {
+            background: linear-gradient(145deg, var(--surface-800) 0%, var(--surface-900) 100%);
+            border: 1px solid var(--surface-700);
+            border-radius: 20px;
+            padding: 2rem;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tool-card:hover {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 30px rgba(5, 150, 105, 0.15);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--surface-700);
+        }
+
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .tool-icon.purple {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        }
+
+        .tool-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--surface-50);
+            margin: 0;
+        }
+
+        .tool-subtitle {
+            font-size: 0.8rem;
+            color: var(--surface-400);
+            margin: 0;
+        }
+
+        /* DNS Generator */
+        .dns-profiles {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dns-profile-option {
+            background: var(--surface-800);
+            border: 2px solid var(--surface-700);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dns-profile-option:hover {
+            border-color: var(--surface-500);
+            background: var(--surface-750);
+        }
+
+        .dns-profile-option.selected {
+            border-color: var(--primary-500);
+            background: rgba(5, 150, 105, 0.1);
+        }
+
+        .dns-profile-option input[type="radio"] {
+            display: none;
+        }
+
+        .profile-radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--surface-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .profile-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary-500);
+            transform: scale(0);
+            transition: transform 0.2s;
+        }
+
+        .dns-profile-option.selected .profile-radio {
+            border-color: var(--primary-500);
+        }
+
+        .dns-profile-option.selected .profile-radio::after {
+            transform: scale(1);
+        }
+
+        .profile-info h4 {
+            margin: 0 0 0.25rem;
+            font-size: 0.95rem;
+            color: var(--surface-100);
+        }
+
+        .profile-info p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: var(--surface-400);
+        }
+
+        .dns-result {
+            background: var(--surface-900);
+            border: 1px solid var(--surface-700);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: auto;
+        }
+
+        .dns-hostname {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            color: var(--primary-400);
+            background: var(--surface-800);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.75rem;
+        }
+
+        .dns-hostname button {
+            background: transparent;
+            border: none;
+            color: var(--surface-400);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.25rem 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .dns-hostname button:hover {
+            color: var(--primary-400);
+        }
+
+        /* Console */
+        .console-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0d1117;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--surface-700);
+        }
+
+        .console-tabs {
+            display: flex;
+            background: #161b22;
+            border-bottom: 1px solid var(--surface-700);
+        }
+
+        .console-tab {
+            padding: 0.75rem 1.25rem;
+            font-size: 0.85rem;
+            color: var(--surface-400);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .console-tab:hover {
+            color: var(--surface-200);
+        }
+
+        .console-tab.active {
+            color: var(--primary-400);
+            border-bottom-color: var(--primary-500);
+        }
+
+        .console-output {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #c9d1d9;
+            min-height: 250px;
+            max-height: 300px;
+        }
+
+        .console-output .line {
+            margin-bottom: 0.25rem;
+        }
+
+        .console-output .line.success { color: #58a6ff; }
+        .console-output .line.error { color: #f85149; }
+        .console-output .line.warning { color: #d29922; }
+        .console-output .line.info { color: #8b949e; }
+        .console-output .line.command { color: #a5d6ff; }
+
+        .console-input-wrapper {
+            display: flex;
+            background: #161b22;
+            border-top: 1px solid var(--surface-700);
+            padding: 0.75rem 1rem;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .console-prompt {
+            color: var(--primary-400);
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        .console-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #c9d1d9;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .console-input::placeholder {
+            color: #484f58;
+        }
+
+        /* Status badges */
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--surface-600);
+        }
+
+        .status-dot.online { background: #3fb950; box-shadow: 0 0 8px #3fb950; }
+        .status-dot.offline { background: #f85149; }
+
+        /* Progress animation */
+        .generating-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--surface-700);
+            border-top-color: var(--primary-500);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            .tool-card {
+                min-height: auto;
+            }
+        }
+
+        /* Button success variant */
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body style="overflow: hidden;">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container navbar-content" style="max-width: 100%; padding: 0 1.5rem;">
+            <a href="index.html" class="brand">
+                <img src="pngs/logo.ico" alt="ArepaTool">
+                <span>Panel<span class="text-primary-500">V2</span></span>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="files.html" class="nav-link">
+                    <i class="bi bi-folder"></i> Archivos
+                </a>
+                <a href="tools.html" class="nav-link active">
+                    <i class="bi bi-tools"></i> Herramientas
+                </a>
+            </div>
+            
+            <div class="flex-center" style="gap: 1.5rem;">
+                <div class="text-sm text-subtle hidden-mobile">
+                    <i class="bi bi-person-circle text-primary-500 me-2"></i>
+                    <span id="usernameDisplay">Usuario</span>
+                </div>
+                <button onclick="logout()" class="btn btn-outline btn-sm" style="border-color: var(--surface-600); color: var(--surface-300);">
+                    <i class="bi bi-box-arrow-right"></i> Salir
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main style="margin-top: var(--header-height); padding: 2rem; height: calc(100vh - var(--header-height)); overflow-y: auto;">
+        <div class="container" style="max-width: 1400px;">
+            <div class="mb-4">
+                <h2><i class="bi bi-tools text-primary-500"></i> Herramientas</h2>
+                <p class="text-subtle">Utilidades para bypass y configuración de dispositivos</p>
+            </div>
+
+            <div class="tools-grid">
+                <!-- DNS Generator Card -->
+                <div class="tool-card" id="dnsCard" style="position: relative;">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="bi bi-shield-lock"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Generador de DNS</h3>
+                            <p class="tool-subtitle">Crea perfiles NextDNS para bypass</p>
+                        </div>
+                        <div class="status-indicator">
+                            <span class="status-dot online" id="dnsStatus"></span>
+                            <span>Servidor OK</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Nombre del perfil</label>
+                        <input type="text" id="dnsProfileName" class="form-control" style="padding-left: 1rem;" placeholder="Ej: Samsung-A52-FR10245">
+                    </div>
+
+                    <label class="form-label">Selecciona el tipo de bypass</label>
+                    <div class="dns-profiles" id="dnsProfiles">
+                        <label class="dns-profile-option selected" data-profile="ClaroTelcelBypass">
+                            <input type="radio" name="dnsProfile" value="ClaroTelcelBypass" checked>
+                            <div class="profile-radio"></div>
+                            <div class="profile-info">
+                                <h4>Claro/Telcel Bypass</h4>
+                                <p>Remueve MDM de Claro, Telcel, Entel y carriers similares</p>
+                            </div>
+                        </label>
+                        <label class="dns-profile-option" data-profile="SamsungKGOperations">
+                            <input type="radio" name="dnsProfile" value="SamsungKGOperations">
+                            <div class="profile-radio"></div>
+                            <div class="profile-info">
+                                <h4>Samsung KG Operations</h4>
+                                <p>Knox Guard, MDM, FRP y bloqueos Samsung</p>
+                            </div>
+                        </label>
+                        <label class="dns-profile-option" data-profile="HonorBloatware">
+                            <input type="radio" name="dnsProfile" value="HonorBloatware">
+                            <div class="profile-radio"></div>
+                            <div class="profile-info">
+                                <h4>IT Admin Remove</h4>
+                                <p>Kiosko, Entel, Movistar, perfiles de trabajo</p>
+                            </div>
+                        </label>
+                        <label class="dns-profile-option" data-profile="MotorolaWhiteScreen">
+                            <input type="radio" name="dnsProfile" value="MotorolaWhiteScreen">
+                            <div class="profile-radio"></div>
+                            <div class="profile-info">
+                                <h4>Motorola White Screen</h4>
+                                <p>Pantalla blanca y carga infinita Motorola</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <button class="btn btn-primary btn-block" id="btnGenerateDns">
+                        <i class="bi bi-lightning-charge"></i> Generar DNS
+                    </button>
+
+                    <div class="dns-result hidden" id="dnsResult">
+                        <div class="flex-center" style="justify-content: space-between;">
+                            <span class="text-success"><i class="bi bi-check-circle"></i> DNS Generado</span>
+                            <span class="text-xs text-subtle" id="dnsProfileId">-</span>
+                        </div>
+                        <div class="dns-hostname">
+                            <span id="dnsHostname">-</span>
+                            <button onclick="copyDns()" title="Copiar al portapapeles">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-subtle mt-2">
+                            <i class="bi bi-info-circle"></i> Configurar en: Ajustes → Red → DNS Privado → Nombre del proveedor
+                        </p>
+                    </div>
+
+                    <!-- Loading Overlay -->
+                    <div class="generating-overlay hidden" id="dnsLoading">
+                        <div class="spinner"></div>
+                        <p class="text-subtle mt-2" id="dnsLoadingText">Generando perfil DNS...</p>
+                    </div>
+                </div>
+
+                <!-- Console Card -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon purple">
+                            <i class="bi bi-terminal"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Consola Web</h3>
+                            <p class="tool-subtitle">Ejecuta comandos y scripts</p>
+                        </div>
+                        <div class="status-indicator">
+                            <span class="status-dot" id="consoleStatus"></span>
+                            <span id="consoleStatusText">Desconectado</span>
+                        </div>
+                    </div>
+
+                    <div class="console-container">
+                        <div class="console-tabs">
+                            <div class="console-tab active" data-tab="shell">
+                                <i class="bi bi-terminal"></i> Shell
+                            </div>
+                            <div class="console-tab" data-tab="logs">
+                                <i class="bi bi-journal-text"></i> Logs
+                            </div>
+                        </div>
+                        <div class="console-output" id="consoleOutput">
+                            <div class="line info">███ ArepaTool Web Console v1.0</div>
+                            <div class="line info">███ Escribe 'help' para ver comandos disponibles</div>
+                            <div class="line"></div>
+                        </div>
+                        <div class="console-input-wrapper">
+                            <span class="console-prompt">$</span>
+                            <input type="text" class="console-input" id="consoleInput" placeholder="Escribe un comando..." autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="mt-2 flex-center" style="gap: 0.5rem; justify-content: flex-start;">
+                        <button class="btn btn-sm btn-secondary" onclick="consoleCmd('help')">
+                            <i class="bi bi-question-circle"></i> Ayuda
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="clearConsole()">
+                            <i class="bi bi-trash"></i> Limpiar
+                        </button>
+                        <button class="btn btn-sm btn-outline" onclick="connectWebUSB()" id="btnConnectUsb">
+                            <i class="bi bi-usb-drive"></i> Conectar USB
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ============================================
+        // CONFIG - Dominios se obtienen del backend (R2)
+        // ============================================
+        let currentUser = null;
+        let remoteConfig = null;
+
+        // ============================================
+        // AUTH CHECK
+        // ============================================
+        (function init() {
+            const sess = localStorage.getItem('arepatool_session');
+            if (!sess) return window.location.href = 'login.html';
+            try {
+                const data = JSON.parse(sess);
+                if (!data.user || data.expires < Date.now()) throw new Error('Expired');
+                currentUser = data.user;
+                document.getElementById('usernameDisplay').textContent = currentUser.username;
+                
+                // Preload remote config
+                loadRemoteConfig();
+            } catch (e) {
+                window.location.href = 'login.html';
+            }
+        })();
+
+        // Preload remote config from R2
+        async function loadRemoteConfig() {
+            try {
+                const res = await fetch('/api/nextdns?action=get-config');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && data.config) {
+                        remoteConfig = data.config;
+                        console.log('✓ Remote config loaded:', remoteConfig.Version);
+                        appendToConsole(`✓ Config remota cargada: v${remoteConfig.Version}`, 'success');
+                    }
+                }
+            } catch (e) {
+                console.log('Remote config not available, using fallback');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('arepatool_session');
+            window.location.href = 'login.html';
+        }
+
+        // ============================================
+        // DNS GENERATOR
+        // ============================================
+        document.querySelectorAll('.dns-profile-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                document.querySelectorAll('.dns-profile-option').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                opt.querySelector('input').checked = true;
+            });
+        });
+
+        document.getElementById('btnGenerateDns').addEventListener('click', async () => {
+            const profileType = document.querySelector('input[name="dnsProfile"]:checked').value;
+            const profileName = document.getElementById('dnsProfileName').value.trim() || `ArepaTool-${Date.now()}`;
+            
+            const loading = document.getElementById('dnsLoading');
+            const result = document.getElementById('dnsResult');
+            const btn = document.getElementById('btnGenerateDns');
+            
+            loading.classList.remove('hidden');
+            result.classList.add('hidden');
+            btn.disabled = true;
+
+            try {
+                document.getElementById('dnsLoadingText').textContent = 'Conectando con servidor...';
+                
+                // Use API proxy - backend obtains domains from R2
+                const response = await fetch('/api/nextdns?action=create-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        name: profileName, 
+                        profileType
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Error del servidor');
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Error desconocido');
+                }
+
+                // Show result
+                document.getElementById('dnsHostname').textContent = data.dnsHostname;
+                document.getElementById('dnsProfileId').textContent = `ID: ${data.profileId}`;
+                
+                result.classList.remove('hidden');
+                
+                appendToConsole(`✓ DNS generado: ${data.dnsHostname}`, 'success');
+                appendToConsole(`  Perfil: ${profileType} | Dominios: ${data.domainsAdded}`, 'info');
+
+            } catch (err) {
+                console.error(err);
+                appendToConsole(`✗ Error generando DNS: ${err.message}`, 'error');
+                
+                // Show alert with more details
+                if (err.message.includes('CORS') || err.message.includes('Failed to fetch')) {
+                    alert('Error de conexión. Asegúrate de estar usando el panel desde el dominio correcto.');
+                } else {
+                    alert('Error: ' + err.message);
+                }
+            } finally {
+                loading.classList.add('hidden');
+                btn.disabled = false;
+            }
+        });
+
+        function copyDns() {
+            const hostname = document.getElementById('dnsHostname').textContent;
+            navigator.clipboard.writeText(hostname).then(() => {
+                const btn = document.querySelector('.dns-hostname button');
+                btn.innerHTML = '<i class="bi bi-check2"></i>';
+                setTimeout(() => btn.innerHTML = '<i class="bi bi-clipboard"></i>', 2000);
+                appendToConsole(`Copiado: ${hostname}`, 'info');
+            });
+        }
+
+        // ============================================
+        // CONSOLE
+        // ============================================
+        const consoleOutput = document.getElementById('consoleOutput');
+        const consoleInput = document.getElementById('consoleInput');
+        const commandHistory = [];
+        let historyIndex = -1;
+
+        const COMMANDS = {
+            help: () => {
+                return [
+                    '═══════════════════════════════════════════',
+                    '  Comandos disponibles:',
+                    '═══════════════════════════════════════════',
+                    '  help          - Muestra esta ayuda',
+                    '  clear         - Limpia la consola',
+                    '  dns <tipo>    - Genera DNS rápido',
+                    '  info          - Info del sistema',
+                    '  date          - Fecha y hora actual',
+                    '  echo <texto>  - Imprime texto',
+                    '  version       - Versión de ArepaTool',
+                    '═══════════════════════════════════════════'
+                ];
+            },
+            clear: () => {
+                consoleOutput.innerHTML = '';
+                return null;
+            },
+            info: () => {
+                return [
+                    `Usuario: ${currentUser?.username || 'N/A'}`,
+                    `Navegador: ${navigator.userAgent.split(' ').pop()}`,
+                    `Plataforma: ${navigator.platform}`,
+                    `Pantalla: ${window.screen.width}x${window.screen.height}`
+                ];
+            },
+            date: () => {
+                return [new Date().toLocaleString('es-ES', { dateStyle: 'full', timeStyle: 'long' })];
+            },
+            version: () => {
+                return ['ArepaTool Panel v2.0.26', 'Web Console v1.0'];
+            },
+            echo: (args) => {
+                return [args.join(' ')];
+            },
+            dns: async (args) => {
+                const type = args[0] || 'ClaroTelcelBypass';
+                appendToConsole(`Generando DNS tipo: ${type}...`, 'info');
+                document.querySelector(`input[value="${type}"]`)?.click();
+                document.getElementById('btnGenerateDns').click();
+                return null;
+            }
+        };
+
+        consoleInput.addEventListener('keydown', async (e) => {
+            if (e.key === 'Enter') {
+                const input = consoleInput.value.trim();
+                if (!input) return;
+                
+                commandHistory.push(input);
+                historyIndex = commandHistory.length;
+                
+                appendToConsole(`$ ${input}`, 'command');
+                consoleInput.value = '';
+                
+                const [cmd, ...args] = input.split(' ');
+                
+                if (COMMANDS[cmd]) {
+                    const result = await COMMANDS[cmd](args);
+                    if (result) {
+                        result.forEach(line => appendToConsole(line));
+                    }
+                } else {
+                    appendToConsole(`Comando no reconocido: ${cmd}`, 'error');
+                    appendToConsole('Escribe "help" para ver comandos disponibles', 'info');
+                }
+            } else if (e.key === 'ArrowUp') {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    consoleInput.value = commandHistory[historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    consoleInput.value = commandHistory[historyIndex];
+                } else {
+                    consoleInput.value = '';
+                }
+            }
+        });
+
+        function appendToConsole(text, type = '') {
+            const line = document.createElement('div');
+            line.className = `line ${type}`;
+            line.textContent = text;
+            consoleOutput.appendChild(line);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        function consoleCmd(cmd) {
+            consoleInput.value = cmd;
+            consoleInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        }
+
+        function clearConsole() {
+            consoleOutput.innerHTML = '';
+            appendToConsole('Consola limpiada', 'info');
+        }
+
+        // ============================================
+        // WEB USB (For future ADB over USB)
+        // ============================================
+        async function connectWebUSB() {
+            if (!navigator.usb) {
+                appendToConsole('WebUSB no soportado en este navegador', 'error');
+                return;
+            }
+            
+            try {
+                appendToConsole('Solicitando acceso USB...', 'info');
+                const device = await navigator.usb.requestDevice({ 
+                    filters: [
+                        { vendorId: 0x18d1 }, // Google
+                        { vendorId: 0x04e8 }, // Samsung
+                        { vendorId: 0x22b8 }, // Motorola
+                        { vendorId: 0x2717 }, // Xiaomi
+                    ]
+                });
+                
+                await device.open();
+                appendToConsole(`✓ Conectado: ${device.productName || device.serialNumber}`, 'success');
+                document.getElementById('consoleStatus').classList.add('online');
+                document.getElementById('consoleStatusText').textContent = 'Conectado';
+                
+            } catch (err) {
+                if (err.name !== 'NotFoundError') {
+                    appendToConsole(`Error USB: ${err.message}`, 'error');
+                } else {
+                    appendToConsole('Conexión cancelada', 'warning');
+                }
+            }
+        }
+
+        // Console tabs
+        document.querySelectorAll('.console-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.console-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

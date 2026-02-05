@@ -1,0 +1,14 @@
+2026/01/30-22:28:45.639 5d3c Reusing MANIFEST C:\Users\Fernando\Desktop\ArepaToolV2\AREPA-TOOL-PANEL\DHRU-WHATSAPP-BRIDGE\whatsapp-service\whatsapp-session\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/01/30-22:28:45.640 5d3c Recovering log #7
+2026/01/30-22:28:45.656 5d3c Reusing old log C:\Users\Fernando\Desktop\ArepaToolV2\AREPA-TOOL-PANEL\DHRU-WHATSAPP-BRIDGE\whatsapp-service\whatsapp-session\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000007.log 
+2026/01/30-22:28:45.657 5d3c Delete type=2 #5
+2026/01/30-22:28:45.657 5d3c Delete type=2 #8
+2026/01/30-23:00:42.280 5d3c Level-0 table #12: started
+2026/01/30-23:00:42.310 5d3c Level-0 table #12: 1161523 bytes OK
+2026/01/30-23:00:42.313 5d3c Delete type=0 #7
+2026/01/30-23:02:08.388 5874 Compacting 1@1 + 1@2 files
+2026/01/30-23:02:08.562 5874 Generated table #13@1: 32400 keys, 1270283 bytes
+2026/01/30-23:02:08.562 5874 Compacted 1@1 + 1@2 files => 1270283 bytes
+2026/01/30-23:02:08.726 5874 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/01/30-23:02:08.728 5874 Delete type=2 #9
+2026/01/30-23:02:08.728 5874 Delete type=2 #12
