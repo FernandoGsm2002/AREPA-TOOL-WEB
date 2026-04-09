@@ -3,7 +3,7 @@
 .env.local
 .env.production
 
-# Node modules (si usas npm en el futuro)
+# Node modules
 node_modules/
 
 # Logs
@@ -21,3 +21,20 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# ==========================================
+# WhatsApp Bot - Sesión y caché de Puppeteer
+# Estos archivos son generados en runtime y
+# pueden estar bloqueados por el proceso activo
+# ==========================================
+DHRU-WHATSAPP-BRIDGE/whatsapp-service/whatsapp-session/
+DHRU-WHATSAPP-BRIDGE/whatsapp-service/.wwebjs_cache/
+DHRU-WHATSAPP-BRIDGE/whatsapp-service/.wwebjs_auth/
+
+# Base de datos de pedidos (runtime)
+DHRU-WHATSAPP-BRIDGE/orders_db.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo

@@ -1525,7 +1525,9 @@ function displayResellers(resellers) {
             <td>${r.name}</td>
             <td>${r.email || '-'}</td>
             <td><span class="badge bg-success fs-6">$${parseFloat(r.balance).toFixed(2)}</span></td>
-            <td>$${parseFloat(r.service_price).toFixed(2)}</td>
+            <td><small class="text-muted">3m</small> $${parseFloat(r.service_price_3m || 3.99).toFixed(2)}</td>
+            <td><small class="text-muted">6m</small> $${parseFloat(r.service_price_6m || 5.99).toFixed(2)}</td>
+            <td><small class="text-muted">12m</small> $${parseFloat(r.service_price || 7.99).toFixed(2)}</td>
             <td>${r.total_orders}</td>
             <td>
                 <span class="badge ${r.status === 'active' ? 'bg-success' : 'bg-danger'}">
@@ -1573,7 +1575,9 @@ function showAddResellerModal() {
     document.getElementById('reseller-name').value = '';
     document.getElementById('reseller-email').value = '';
     document.getElementById('reseller-balance').value = '0';
-    document.getElementById('reseller-price').value = '14.99';
+    document.getElementById('reseller-price-3m').value = '3.99';
+    document.getElementById('reseller-price-6m').value = '5.99';
+    document.getElementById('reseller-price').value = '7.99';
     document.getElementById('reseller-status').value = 'active';
     document.getElementById('reseller-api-key-section').classList.add('d-none');
     document.getElementById('resellerModalTitle').innerHTML = '<i class="bi bi-person-plus"></i> Add New Reseller';
@@ -1589,7 +1593,9 @@ async function saveReseller() {
         const name = document.getElementById('reseller-name').value.trim();
         const email = document.getElementById('reseller-email').value.trim();
         const balance = parseFloat(document.getElementById('reseller-balance').value) || 0;
-        const servicePrice = parseFloat(document.getElementById('reseller-price').value) || 14.99;
+        const servicePrice3m = parseFloat(document.getElementById('reseller-price-3m').value) || 3.99;
+        const servicePrice6m = parseFloat(document.getElementById('reseller-price-6m').value) || 5.99;
+        const servicePrice   = parseFloat(document.getElementById('reseller-price').value)    || 7.99;
         const status = document.getElementById('reseller-status').value;
         
         if (!username || !name) {
@@ -1597,11 +1603,20 @@ async function saveReseller() {
             return;
         }
         
+        const resellerData = {
+            name, email, balance,
+            service_price: servicePrice,
+            service_price_3m: servicePrice3m,
+            service_price_6m: servicePrice6m,
+            status,
+            updated_at: new Date().toISOString()
+        };
+        
         if (editId) {
             // Update existing
             const { error } = await supabaseClient
                 .from('resellers')
-                .update({ name, email, balance, service_price: servicePrice, status, updated_at: new Date().toISOString() })
+                .update(resellerData)
                 .eq('id', editId);
             
             if (error) throw error;
@@ -1610,15 +1625,7 @@ async function saveReseller() {
             // Create new with generated API key
             const { data, error } = await supabaseClient
                 .from('resellers')
-                .insert({
-                    username,
-                    name,
-                    email,
-                    balance,
-                    service_price: servicePrice,
-                    status,
-                    api_key: generateApiKey()
-                })
+                .insert({ username, ...resellerData, api_key: generateApiKey() })
                 .select()
                 .single();
             
@@ -1653,7 +1660,9 @@ async function editReseller(resellerId) {
     document.getElementById('reseller-name').value = reseller.name;
     document.getElementById('reseller-email').value = reseller.email || '';
     document.getElementById('reseller-balance').value = reseller.balance;
-    document.getElementById('reseller-price').value = reseller.service_price;
+    document.getElementById('reseller-price-3m').value = reseller.service_price_3m || 3.99;
+    document.getElementById('reseller-price-6m').value = reseller.service_price_6m || 5.99;
+    document.getElementById('reseller-price').value = reseller.service_price || 7.99;
     document.getElementById('reseller-status').value = reseller.status;
     document.getElementById('reseller-api-key-section').classList.add('d-none');
     document.getElementById('resellerModalTitle').innerHTML = '<i class="bi bi-pencil"></i> Edit Reseller';
@@ -1671,7 +1680,9 @@ API URL: https://api.arepatool.com
 Username: ${reseller.username}
 API Key: ${reseller.api_key}
 Balance: $${parseFloat(reseller.balance).toFixed(2)}
-Price/License: $${parseFloat(reseller.service_price).toFixed(2)}
+📅 Price 3 Months:  $${parseFloat(reseller.service_price_3m || 3.99).toFixed(2)}
+📅 Price 6 Months:  $${parseFloat(reseller.service_price_6m || 5.99).toFixed(2)}
+📅 Price 12 Months: $${parseFloat(reseller.service_price || 7.99).toFixed(2)}
     `.trim();
     
     if (navigator.clipboard) {

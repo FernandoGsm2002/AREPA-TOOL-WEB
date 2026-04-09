@@ -7,6 +7,12 @@ Comandos para responder en Telegram:
 - REJECT / RECHAZAR -> Marca pedido como RECHAZADO
 """
 
+import sys
+import io
+# Forzar UTF-8 en stdout/stderr (necesario en Windows Server con CP1252)
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
 import json
@@ -38,7 +44,7 @@ TELEGRAM_ENABLED = os.getenv('TELEGRAM_ENABLED', 'false').lower() == 'true'
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
 
-MESSAGE_TEMPLATE = os.getenv('MESSAGE_TEMPLATE', "🚨 *NUEVO PEDIDO RECIBIDO*\n--------------------------------\n📦 *Servicio:* {service}\n📱 *IMEI:* `{imei}`\n📧 *Cliente:* {email}\n🆔 *Ref:* `{order_id}`\n--------------------------------\n✅ *Estado:* Aceptado y En Proceso\n\n_Responde DONE para completar o REJECT para rechazar_")
+MESSAGE_TEMPLATE = os.getenv('MESSAGE_TEMPLATE', "🚨 *NUEVO PEDIDO RECIBIDO*\n--------------------------------\n📦 *Servicio:* {service}\n📱 *IMEI:* `{imei}`\n--------------------------------\n✅ *Estado:* En Proceso Haganlo!\n\n_Responde DONE para completar_\nRef: {order_id}")
 
 # ==================== GESTIÓN DE BASE DE DATOS ====================
 
@@ -331,17 +337,21 @@ def telegram_listener():
 
 # ==================== FUNCIONES DE MENSAJERÍA ====================
 
-def send_whatsapp_msg(message):
+def send_whatsapp_msg(message, group_name=None):
     """Envía mensaje a WhatsApp a través del servicio Node.js"""
     if not WHATSAPP_ENABLED:
         return False
     
     try:
         url = f"{WHATSAPP_SERVICE_URL}/send"
-        response = requests.post(url, json={'message': message}, timeout=10)
+        payload = {'message': message}
+        if group_name:
+            payload['groupName'] = group_name
+        response = requests.post(url, json=payload, timeout=10)
         
         if response.status_code == 200:
-            print("   📱 WhatsApp: Mensaje enviado!")
+            target = f" -> grupo '{group_name}'" if group_name else ""
+            print(f"   📱 WhatsApp: Mensaje enviado!{target}")
             return True
         else:
             print(f"   ⚠️ WhatsApp: Error {response.status_code}")
@@ -454,17 +464,20 @@ class DHRUHandler(BaseHTTPRequestHandler):
                     
                     if order_id and action:
                         if action == 'complete':
-                            code_message = f"Completado por {user} ✅"
+                            code_message = webhook_data.get('code', '')
+                            if not code_message:
+                                code_message = "Servicio Completado Con Exito ✅"
+                                
                             update_order_status(order_id, 4, code_message)
                             # Hacer callback a DHRU
                             dhru_callback(order_id, 4, code_message)
-                            print(f"   ✅ Pedido {order_id} marcado como COMPLETADO")
+                            print(f"   ✅ Pedido {order_id} marcado como COMPLETADO (Cod: {code_message})")
                         elif action == 'reject':
-                            code_message = f"Rechazado por {user} 🚫"
+                            reason = webhook_data.get('reason', '')
+                            code_message = reason if reason else 'Rechazado por Admin 🚫'
                             update_order_status(order_id, 3, code_message)
-                            # Hacer callback a DHRU
                             dhru_callback(order_id, 3, code_message)
-                            print(f"   🚫 Pedido {order_id} marcado como RECHAZADO")
+                            print(f"   🚫 Pedido {order_id} RECHAZADO — {code_message}")
                         
                         return self._send_response({'success': True})
                     
@@ -491,69 +504,433 @@ class DHRUHandler(BaseHTTPRequestHandler):
         self.handle_action(action, params)
 
     def handle_action(self, action, params):
+        # Log para debug de acciones
+        print(f"📨 Action recibida: {action}")
+        
         # --- INFO CUENTA ---
         if action == 'accountinfo':
             return self._send_response({'SUCCESS': [{'AccoutInfo': {'credit': 999999.00, 'mail': 'bot', 'currency': 'USD'}}]})
         
-        # --- LISTA SERVICIOS ---
+        # --- LISTA SERVICIOS (Server Services - similar a ArepaTool) ---
         elif action == 'imeiservicelist':
+            group = 'LeoPe-Gsm (Server Service)'
+            
+            ServiceList = {
+                group: {
+                    'GROUPNAME': group,
+                    'GROUPTYPE': 'SERVER',
+                    'SERVICES': {
+                        201: {
+                            'SERVICEID': 201,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'FRP — MOTOROLA (MTK / SPD)',
+                            'CREDIT': 0.00,
+                            'INFO': 'FRP removal for Motorola MTK/SPD devices',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [{
+                                'type': 'serviceimei',
+                                'fieldname': 'IP',
+                                'fieldtype': 'text',
+                                'description': 'TeamViewer ID',
+                                'fieldoptions': '',
+                                'required': 1
+                            }]
+                        },
+                        202: {
+                            'SERVICEID': 202,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'Xiaomi FRP + Reset',
+                            'CREDIT': 0.00,
+                            'INFO': 'FRP + Factory Reset for Xiaomi devices',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [{
+                                'type': 'serviceimei',
+                                'fieldname': 'IP',
+                                'fieldtype': 'text',
+                                'description': 'TeamViewer ID',
+                                'fieldoptions': '',
+                                'required': 1
+                            }]
+                        },
+                        203: {
+                            'SERVICEID': 203,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'Repair IMEI Motorola G15 / G05 / E15',
+                            'CREDIT': 0.00,
+                            'INFO': 'IMEI repair for Motorola G15/G05/E15',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [
+                                {'type': 'serviceimei', 'fieldname': 'IP', 'fieldtype': 'text', 'description': 'TeamViewer ID', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'MODEL', 'fieldtype': 'text', 'description': 'Model', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'SN', 'fieldtype': 'text', 'description': 'Serial Number', 'fieldoptions': '', 'required': 1}
+                            ]
+                        },
+                        204: {
+                            'SERVICEID': 204,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'Repair IMEI G23 / G13 / E13',
+                            'CREDIT': 0.00,
+                            'INFO': 'IMEI repair for Motorola G23/G13/E13',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [
+                                {'type': 'serviceimei', 'fieldname': 'IP', 'fieldtype': 'text', 'description': 'TeamViewer ID', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'MODEL', 'fieldtype': 'text', 'description': 'Model', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'SN', 'fieldtype': 'text', 'description': 'Serial Number', 'fieldoptions': '', 'required': 1}
+                            ]
+                        },
+                        205: {
+                            'SERVICEID': 205,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'Repair IMEI Motorola MTK/SPD',
+                            'CREDIT': 0.00,
+                            'INFO': 'IMEI repair for Motorola MTK/SPD chipset',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [
+                                {'type': 'serviceimei', 'fieldname': 'IP', 'fieldtype': 'text', 'description': 'TeamViewer ID', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'MODEL', 'fieldtype': 'text', 'description': 'Model', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'SN', 'fieldtype': 'text', 'description': 'Serial Number', 'fieldoptions': '', 'required': 1}
+                            ]
+                        },
+                        206: {
+                            'SERVICEID': 206,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'Chimera Tool Basic 12 Months Activation',
+                            'CREDIT': 0.00,
+                            'INFO': 'Chimera Tool Basic license activation',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [
+                                {'type': 'serviceimei', 'fieldname': 'Username', 'fieldtype': 'text', 'description': 'Chimera Username', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'Password', 'fieldtype': 'text', 'description': 'Chimera Password', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'Ultraviewer', 'fieldtype': 'text', 'description': 'Ultraviewer iD / Pass', 'fieldoptions': '', 'required': 1}
+                            ]
+                        },
+                        207: {
+                            'SERVICEID': 207,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'Chimera Tool Premium 12 Months Activation',
+                            'CREDIT': 0.00,
+                            'INFO': 'Chimera Tool Premium license activation',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [
+                                {'type': 'serviceimei', 'fieldname': 'Username', 'fieldtype': 'text', 'description': 'Chimera Username', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'Password', 'fieldtype': 'text', 'description': 'Chimera Password', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'Ultraviewer', 'fieldtype': 'text', 'description': 'Ultraviewer iD / Pass', 'fieldoptions': '', 'required': 1}
+                            ]
+                        },
+                        208: {
+                            'SERVICEID': 208,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'Chimera Tool Professional 12 Months Activation',
+                            'CREDIT': 0.00,
+                            'INFO': 'Chimera Tool Professional license activation',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [
+                                {'type': 'serviceimei', 'fieldname': 'Username', 'fieldtype': 'text', 'description': 'Chimera Username', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'Password', 'fieldtype': 'text', 'description': 'Chimera Password', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'Ultraviewer', 'fieldtype': 'text', 'description': 'Ultraviewer iD / Pass', 'fieldoptions': '', 'required': 1}
+                            ]
+                        },
+                        209: {
+                            'SERVICEID': 209,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'FRP — MOTOROLA (Qualcomm) (All Models Support) - Remote Service ⚡️',
+                            'CREDIT': 0.00,
+                            'INFO': 'FRP removal for Motorola Qualcomm devices (All Models)',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [{
+                                'type': 'serviceimei',
+                                'fieldname': 'IP',
+                                'fieldtype': 'text',
+                                'description': 'TeamViewer ID',
+                                'fieldoptions': '',
+                                'required': 1
+                            }]
+                        },
+                        210: {
+                            'SERVICEID': 210,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'Octoplus Credits New User🐙',
+                            'CREDIT': 0.00,
+                            'INFO': 'Octoplus credits para nuevo usuario',
+                            'TIME': '1-24 Hours',
+                            'QNT': 1,
+                            'Requires.Custom': [
+                                {'type': 'serviceimei', 'fieldname': 'TARGETLOGIN', 'fieldtype': 'text', 'description': 'Login nuevo', 'fieldoptions': '', 'required': 1},
+                                {'type': 'serviceimei', 'fieldname': 'TARGETPASSWORD', 'fieldtype': 'text', 'description': 'Password nuevo', 'fieldoptions': '', 'required': 1}
+                            ]
+                        },
+                        211: {
+                            'SERVICEID': 211,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'Octoplus credits Exist User🐙',
+                            'CREDIT': 0.00,
+                            'INFO': 'Octoplus credits para usuario existente',
+                            'TIME': '1-24 Hours',
+                            'QNT': 1,
+                            'Requires.Custom': [
+                                {'type': 'serviceimei', 'fieldname': 'TARGETUSER', 'fieldtype': 'text', 'description': 'Usuario existente', 'fieldoptions': '', 'required': 1}
+                            ]
+                        }
+                    }
+                },
+                'LeoPe-Gsm (IMEI Service)': {
+                    'GROUPNAME': 'LeoPe-Gsm (IMEI Service)',
+                    'GROUPTYPE': 'IMEI',
+                    'SERVICES': {
+                        301: {
+                            'SERVICEID': 301,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'No Registro Tigo 🇨🇴',
+                            'CREDIT': 0.00,
+                            'INFO': 'No Registro Tigo Colombia',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0
+                        },
+                        302: {
+                            'SERVICEID': 302,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'SISTEMA CLARO 🔴',
+                            'CREDIT': 0.00,
+                            'INFO': 'Sistema Claro Colombia',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0
+                        },
+                        303: {
+                            'SERVICEID': 303,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'Imei no se encuentra en lista blanca 🇵🇪',
+                            'CREDIT': 0.00,
+                            'INFO': 'IMEI no registrado en lista blanca Peru',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0
+                        },
+                        304: {
+                            'SERVICEID': 304,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'Preventivo solo IMEI 🇵🇪',
+                            'CREDIT': 0.00,
+                            'INFO': 'Preventivo solo IMEI Peru (IMEI + Numero)',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [{
+                                'type': 'serviceimei',
+                                'fieldname': 'Numero',
+                                'fieldtype': 'text',
+                                'description': 'Numero de telefono',
+                                'fieldoptions': '',
+                                'required': 1
+                            }]
+                        },
+                        305: {
+                            'SERVICEID': 305,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'Preventivo Bitel 🇵🇪',
+                            'CREDIT': 0.00,
+                            'INFO': 'Preventivo Bitel Peru (IMEI + Numero)',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [{
+                                'type': 'serviceimei',
+                                'fieldname': 'Numero',
+                                'fieldtype': 'text',
+                                'description': 'Numero de telefono',
+                                'fieldoptions': '',
+                                'required': 1
+                            }]
+                        },
+                        306: {
+                            'SERVICEID': 306,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'No Registro Claro Colombia 🇨🇴',
+                            'CREDIT': 0.00,
+                            'INFO': 'No Registro Claro Colombia',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0
+                        },
+                        307: {
+                            'SERVICEID': 307,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'No Registro Movistar Colombia 🇨🇴',
+                            'CREDIT': 0.00,
+                            'INFO': 'No Registro Movistar Colombia',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0
+                        },
+                        308: {
+                            'SERVICEID': 308,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'Xiaomi Colombia - Xiaomi Account Clean 🇨🇴',
+                            'CREDIT': 0.00,
+                            'INFO': 'Limpieza de cuenta Xiaomi Colombia',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [{
+                                'type': 'serviceimei',
+                                'fieldname': 'Lockcode',
+                                'fieldtype': 'text',
+                                'description': 'Lockcode del dispositivo',
+                                'fieldoptions': '',
+                                'required': 1
+                            }]
+                        },
+                        309: {
+                            'SERVICEID': 309,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'Xiaomi Peru - Mi Account Clean 🇵🇪',
+                            'CREDIT': 0.00,
+                            'INFO': 'Limpieza de cuenta Xiaomi Peru (IMEI + Lockcode)',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [{
+                                'type': 'serviceimei',
+                                'fieldname': 'Lockcode',
+                                'fieldtype': 'text',
+                                'description': 'Lockcode del dispositivo',
+                                'fieldoptions': '',
+                                'required': 1
+                            }]
+                        },
+                        310: {
+                            'SERVICEID': 310,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'Entel Recuperado 🔵',
+                            'CREDIT': 0.00,
+                            'INFO': 'Entel Recuperado (IMEI + Numero)',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [{
+                                'type': 'serviceimei',
+                                'fieldname': 'Numero',
+                                'fieldtype': 'text',
+                                'description': 'Numero de telefono',
+                                'fieldoptions': '',
+                                'required': 1
+                            }]
+                        },
+                        401: {
+                            'SERVICEID': 401,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'FRP V5 (S Series & Z Fold & Flip) ✅',
+                            'CREDIT': 0.00,
+                            'INFO': 'FRP V5 (S Series & Z Fold & Flip)',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0
+                        },
+                        402: {
+                            'SERVICEID': 402,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'FRP V5 (A Series & M, F Series High) ✅',
+                            'CREDIT': 0.00,
+                            'INFO': 'FRP V5 (A Series & M, F Series High)',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0
+                        },
+                        403: {
+                            'SERVICEID': 403,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'FRP V5 (A Series & M, F Series Low) ✅️',
+                            'CREDIT': 0.00,
+                            'INFO': 'FRP V5 (A Series & M, F Series Low)',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0
+                        },
+                        404: {
+                            'SERVICEID': 404,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': '⚠️Samsung FRP V5 Premium Verify And Refund⚠️',
+                            'CREDIT': 0.00,
+                            'INFO': 'Samsung FRP V5 Premium - Verify and refund if not applicable',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0
+                        }
+                    }
+                }
+            }
+            
             return self._send_response({
                 'SUCCESS': [{
-                    'MESSAGE': 'Service List',
+                    'MESSAGE': 'IMEI Service List',
+                    'LIST': ServiceList
+                }]
+            })
+
+        # --- LISTA SERVICIOS REMOTOS (REMOTE SERVICES) ---
+        # Esta es la ACTION que DHRU usa para poblar el dropdown en Remote Services
+        elif action == 'remoteservicelist':
+            print("📋 [DHRU] Solicitando remoteservicelist")
+            return self._send_response({
+                'SUCCESS': [{
+                    'MESSAGE': 'Remote Service List',
                     'LIST': {
-                        'WhatsApp Bridge': {
-                            'GROUPNAME': 'Unlock Services',
-                            'GROUPTYPE': 'IMEI',
+                        'Remote Services LeoPe': {
+                            'GROUPNAME': 'Remote Services LeoPe',
+                            'GROUPTYPE': 'REMOTE',
                             'SERVICES': {
-                                1: {'SERVICEID': 1, 'SERVICENAME': 'CLARO COLOMBIA 🇨🇴', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [{'type': 'serviceimei', 'fieldname': 'Notes', 'fieldtype': 'text', 'required': 0}]},
-                                2: {'SERVICEID': 2, 'SERVICENAME': 'MOVISTAR COLOMBIA 🇨🇴', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [{'type': 'serviceimei', 'fieldname': 'Notes', 'fieldtype': 'text', 'required': 0}]},
-                                3: {'SERVICEID': 3, 'SERVICENAME': 'TIGO COLOMBIA 🇨🇴', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [{'type': 'serviceimei', 'fieldname': 'Notes', 'fieldtype': 'text', 'required': 0}]},
-                                4: {'SERVICEID': 4, 'SERVICENAME': 'SISTEMA CLARO PERU 🇵🇪', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [{'type': 'serviceimei', 'fieldname': 'Notes', 'fieldtype': 'text', 'required': 0}]},
-                                5: {'SERVICEID': 5, 'SERVICENAME': 'NO REGISTRO BITEL 💛 PERU 🇵🇪', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [{'type': 'serviceimei', 'fieldname': 'Numero Bitel', 'fieldtype': 'text', 'required': 1}]},
-                                6: {'SERVICEID': 6, 'SERVICENAME': 'NO REGISTRO SOLO IMEI 🟢 PERU 🇵🇪', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [{'type': 'serviceimei', 'fieldname': 'Notes', 'fieldtype': 'text', 'required': 0}]},
-                                7: {'SERVICEID': 7, 'SERVICENAME': 'LISTA BLANCA PERU 🇵🇪', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [{'type': 'serviceimei', 'fieldname': 'Notes', 'fieldtype': 'text', 'required': 0}]}
-                            }
-                        },
-                        'Remote Services': {
-                            'GROUPNAME': 'Servicios Remotos ⚡',
-                            'GROUPTYPE': 'IMEI',
-                            'SERVICES': {
-                                101: {'SERVICEID': 101, 'SERVICENAME': 'Repair IMEI Motorola MTK/SPD ⚡', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [
-                                    {'type': 'serviceimei', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1}
-                                ]},
-                                102: {'SERVICEID': 102, 'SERVICENAME': 'Xiaomi FRP + Reset ⚡', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [
-                                    {'type': 'serviceimei', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1}
-                                ]},
-                                103: {'SERVICEID': 103, 'SERVICENAME': 'Repair IMEI G23/G13/E13 ⚡', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [
-                                    {'type': 'serviceimei', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1}
-                                ]},
-                                104: {'SERVICEID': 104, 'SERVICENAME': 'MTK / SPD IMEI - UNLOCK ⚡', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [
-                                    {'type': 'serviceimei', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1}
-                                ]},
-                                105: {'SERVICEID': 105, 'SERVICENAME': 'Chimera Tool Credits 🔑', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [
-                                    {'type': 'serviceimei', 'fieldname': 'Username', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'Password', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'Ultraviewer: ID / Pass', 'fieldtype': 'text', 'required': 1}
-                                ]},
-                                106: {'SERVICEID': 106, 'SERVICENAME': 'Chimera Basic 12M (100 conn) ✅', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [
-                                    {'type': 'serviceimei', 'fieldname': 'USERNAME/SN', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'Password', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'Ultraviewer: ID / Pass', 'fieldtype': 'text', 'required': 1}
-                                ]},
-                                107: {'SERVICEID': 107, 'SERVICENAME': 'Chimera Premium 12M (5000 conn) ✅', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [
-                                    {'type': 'serviceimei', 'fieldname': 'USERNAME/SN', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'Password', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'Ultraviewer: ID / Pass', 'fieldtype': 'text', 'required': 1}
-                                ]},
-                                108: {'SERVICEID': 108, 'SERVICENAME': 'Chimera Professional 12M (1500 conn) ✅', 'CREDIT': 0.00, 'QNT': 0, 'Requires.Custom': [
-                                    {'type': 'serviceimei', 'fieldname': 'USERNAME/SN', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'Password', 'fieldtype': 'text', 'required': 1},
-                                    {'type': 'serviceimei', 'fieldname': 'Ultraviewer: ID / Pass', 'fieldtype': 'text', 'required': 1}
-                                ]}
+                                201: {
+                                    'SERVICEID': 201, 
+                                    'SERVICETYPE': 'REMOTE',
+                                    'SERVICENAME': 'FRP — MOTOROLA (MTK / SPD) (Check supported models) - Remote Service ⚡️', 
+                                    'CREDIT': 0.00, 
+                                    'QNT': 0, 
+                                    'Requires.Custom': [
+                                        {'type': 'serviceremote', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1}
+                                    ]
+                                },
+                                202: {
+                                    'SERVICEID': 202, 
+                                    'SERVICETYPE': 'REMOTE',
+                                    'SERVICENAME': 'Xiaomi FRP + Reset - Remote Service ⚡', 
+                                    'CREDIT': 0.00, 
+                                    'QNT': 0, 
+                                    'Requires.Custom': [
+                                        {'type': 'serviceremote', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1}
+                                    ]
+                                },
+                                203: {
+                                    'SERVICEID': 203, 
+                                    'SERVICETYPE': 'REMOTE',
+                                    'SERVICENAME': 'Repair IMEI Motorola  G15 / G05 / E15  - Remote Service ⚡️', 
+                                    'CREDIT': 0.00, 
+                                    'QNT': 0, 
+                                    'Requires.Custom': [
+                                        {'type': 'serviceremote', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceremote', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceremote', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1}
+                                    ]
+                                },
+                                204: {
+                                    'SERVICEID': 204, 
+                                    'SERVICETYPE': 'REMOTE',
+                                    'SERVICENAME': 'Repair IMEI G23 / G13 / E13  - Remote Service ⚡', 
+                                    'CREDIT': 0.00, 
+                                    'QNT': 0, 
+                                    'Requires.Custom': [
+                                        {'type': 'serviceremote', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceremote', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceremote', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1}
+                                    ]
+                                },
+                                205: {
+                                    'SERVICEID': 205, 
+                                    'SERVICETYPE': 'REMOTE',
+                                    'SERVICENAME': 'Repair IMEI Motorola MTK/SPD - Remote Services ⚡', 
+                                    'CREDIT': 0.00, 
+                                    'QNT': 0, 
+                                    'Requires.Custom': [
+                                        {'type': 'serviceremote', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceremote', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceremote', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1}
+                                    ]
+                                }
                             }
                         }
                     }
@@ -566,23 +943,21 @@ class DHRUHandler(BaseHTTPRequestHandler):
                 'SUCCESS': [{
                     'MESSAGE': 'Server Service List',
                     'LIST': {
-                        'Remote Services': {
-                            'GROUPNAME': 'Servicios Remotos',
+                        'Remote Services LeoPe': {
+                            'GROUPNAME': 'Remote Services LeoPe',
                             'GROUPTYPE': 'SERVER',
                             'SERVICES': {
-                                101: {
-                                    'SERVICEID': 101, 
-                                    'SERVICENAME': 'Repair IMEI Motorola MTK/SPD - Remote Services ⚡', 
+                                201: {
+                                    'SERVICEID': 201, 
+                                    'SERVICENAME': 'FRP — MOTOROLA (MTK / SPD) (Check supported models) - Remote Service ⚡️', 
                                     'CREDIT': 0.00, 
                                     'QNT': 0, 
                                     'Requires.Custom': [
-                                        {'type': 'serviceserver', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1},
                                         {'type': 'serviceserver', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1}
                                     ]
                                 },
-                                102: {
-                                    'SERVICEID': 102, 
+                                202: {
+                                    'SERVICEID': 202, 
                                     'SERVICENAME': 'Xiaomi FRP + Reset - Remote Service ⚡', 
                                     'CREDIT': 0.00, 
                                     'QNT': 0, 
@@ -590,68 +965,37 @@ class DHRUHandler(BaseHTTPRequestHandler):
                                         {'type': 'serviceserver', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1}
                                     ]
                                 },
-                                103: {
-                                    'SERVICEID': 103, 
-                                    'SERVICENAME': 'Repair IMEI G23 / G13 / E13 - Remote Service ⚡', 
+                                203: {
+                                    'SERVICEID': 203, 
+                                    'SERVICENAME': 'Repair IMEI Motorola  G15 / G05 / E15  - Remote Service ⚡️', 
                                     'CREDIT': 0.00, 
                                     'QNT': 0, 
                                     'Requires.Custom': [
                                         {'type': 'serviceserver', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1}
+                                        {'type': 'serviceserver', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceserver', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1}
                                     ]
                                 },
-                                104: {
-                                    'SERVICEID': 104, 
-                                    'SERVICENAME': 'MTK / SPD IMEI - UNLOCK ⚡', 
+                                204: {
+                                    'SERVICEID': 204, 
+                                    'SERVICENAME': 'Repair IMEI G23 / G13 / E13  - Remote Service ⚡', 
                                     'CREDIT': 0.00, 
                                     'QNT': 0, 
                                     'Requires.Custom': [
-                                        {'type': 'serviceserver', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1}
+                                        {'type': 'serviceserver', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceserver', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceserver', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1}
                                     ]
                                 },
-                                105: {
-                                    'SERVICEID': 105, 
-                                    'SERVICENAME': 'Chimera Tool Credits 🔑', 
+                                205: {
+                                    'SERVICEID': 205, 
+                                    'SERVICENAME': 'Repair IMEI Motorola MTK/SPD - Remote Services ⚡', 
                                     'CREDIT': 0.00, 
                                     'QNT': 0, 
                                     'Requires.Custom': [
-                                        {'type': 'serviceserver', 'fieldname': 'Username', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'Password', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'Ultraviewer: ID / Pass', 'fieldtype': 'text', 'required': 1}
-                                    ]
-                                },
-                                106: {
-                                    'SERVICEID': 106, 
-                                    'SERVICENAME': 'Chimera Tool Basic 12 Months (100 connections) ✅', 
-                                    'CREDIT': 0.00, 
-                                    'QNT': 0, 
-                                    'Requires.Custom': [
-                                        {'type': 'serviceserver', 'fieldname': 'USERNAME/SN', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'Password', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'Ultraviewer: ID / Pass', 'fieldtype': 'text', 'required': 1}
-                                    ]
-                                },
-                                107: {
-                                    'SERVICEID': 107, 
-                                    'SERVICENAME': 'Chimera Tool Premium 12 Months (5000 connections) ✅', 
-                                    'CREDIT': 0.00, 
-                                    'QNT': 0, 
-                                    'Requires.Custom': [
-                                        {'type': 'serviceserver', 'fieldname': 'USERNAME/SN', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'Password', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'Ultraviewer: ID / Pass', 'fieldtype': 'text', 'required': 1}
-                                    ]
-                                },
-                                108: {
-                                    'SERVICEID': 108, 
-                                    'SERVICENAME': 'Chimera Tool Professional 12 Months (1500 connections) ✅', 
-                                    'CREDIT': 0.00, 
-                                    'QNT': 0, 
-                                    'Requires.Custom': [
-                                        {'type': 'serviceserver', 'fieldname': 'USERNAME/SN', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'Password', 'fieldtype': 'text', 'required': 1},
-                                        {'type': 'serviceserver', 'fieldname': 'Ultraviewer: ID / Pass', 'fieldtype': 'text', 'required': 1}
+                                        {'type': 'serviceserver', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceserver', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1},
+                                        {'type': 'serviceserver', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1}
                                     ]
                                 }
                             }
@@ -670,13 +1014,20 @@ class DHRUHandler(BaseHTTPRequestHandler):
                 # A veces viene en el XML parameters
                 service_id = params.get('ID', '0')
             
+            # Extraer QNT (Cantidad)
+            qnt = params.get('qnt', params.get('QNT', '1'))
+            
             # Decodificar TODOS los campos personalizados
             custom_fields = decode_customfield(params.get('CUSTOMFIELD'))
+            if not isinstance(custom_fields, dict):
+                custom_fields = {}
+                
+            # Solo agregar QNT para los servicios de Octoplus (210 y 211)
+            if str(service_id) in ['210', '211'] and qnt and str(qnt) not in ['0', '']:
+                custom_fields['QNT (Cantidad)'] = str(qnt)
             
             # Extraer email si existe
-            email = ''
-            if isinstance(custom_fields, dict):
-                email = custom_fields.get('Mail') or custom_fields.get('email') or custom_fields.get('Email') or ''
+            email = custom_fields.get('Mail') or custom_fields.get('email') or custom_fields.get('Email') or ''
             
             # Capturar info del DHRU origen para callback
             dhru_username = params.get('username', '')
@@ -686,7 +1037,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
             order_id = int(time.time())
             
             print(f"\n📥 [NUEVO PEDIDO] ID: {order_id}")
-            print(f"   📱 IMEI: {imei}")
+            print(f"   📱 IMEI/QNT: {imei} / {qnt}")
             print(f"   🔧 Service: {service_id}")
             print(f"   👤 DHRU User: {dhru_username}")
             print(f"   📋 Custom Fields: {custom_fields}")
@@ -711,9 +1062,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
 
         # --- CONSULTAR ESTADO ---
         elif action in ['getimeiorder', 'getserverorder']:
-            print(f"\n📊 [DHRU POLLING] Recibida consulta de estado")
-            print(f"   📋 Params recibidos: {params}")
-            
+            # Logs silenciados para evitar spam en consola
             response_list = []
             
             # Buscar IDs solicitados
@@ -729,8 +1078,6 @@ class DHRUHandler(BaseHTTPRequestHandler):
             if not requested_ids and params.get('REFERENCEID'):
                 requested_ids = [params.get('REFERENCEID')]
             
-            print(f"   🔍 IDs solicitados: {requested_ids}")
-            
             # ESTRATEGIA:
             # 1. Si DHRU pide IDs específicos, respondemos esos.
             # 2. Si DHRU no pide nada (polling general), le damos TODOS los que han cambiado estado (Success/Reject).
@@ -738,15 +1085,12 @@ class DHRUHandler(BaseHTTPRequestHandler):
             if requested_ids:
                 for ref_id in requested_ids:
                     status, code = get_order_status(ref_id)
-                    print(f"   📦 Pedido {ref_id}: status={status}, code={code}")
                     item = {'REFERENCEID': ref_id, 'STATUS': status, 'CODE': code}
                     # Algunos DHRU viejos esperan 'ID' en lugar de 'REFERENCEID'
                     item['ID'] = ref_id 
                     response_list.append(item)
             else:
                 # Devolver todos los pedidos COMPLETADOS o RECHAZADOS recientes
-                # (Para asegurar que DHRU se entere)
-                print("   🔄 Sin IDs específicos - devolviendo TODOS los finalizados")
                 with db_lock:
                     for oid, data in orders_memory.items():
                         # Si está finalizado (4 o 3), lo enviamos para que DHRU actualice
@@ -758,9 +1102,6 @@ class DHRUHandler(BaseHTTPRequestHandler):
                                 'CODE': data.get('code', 'Procesado')
                             }
                             response_list.append(item)
-                            print(f"   📦 Enviando: {oid} -> status {data['status']}")
-            
-            print(f"   ✅ Respuesta final: {response_list}")
             
             if not response_list:
                 # Si no hay nada que reportar, enviamos éxito vacío o un dummy pendiente si se requiere
@@ -772,57 +1113,110 @@ class DHRUHandler(BaseHTTPRequestHandler):
             return self._send_response({'ERROR': [{'MESSAGE': 'Invalid Action'}]})
 
     def notify_telegram(self, imei, service_id, email, order_id, custom_fields=None):
-        services_names = {
-            '1': '🇨🇴 CLARO COLOMBIA',
-            '2': '🇨🇴 MOVISTAR COLOMBIA',
-            '3': '🇨🇴 TIGO COLOMBIA',
-            '4': '🇵🇪 SISTEMA CLARO PERU',
-            '5': '🇵🇪 NO REGISTRO BITEL 💛',
-            '6': '🇵🇪 NO REGISTRO SOLO IMEI 🟢',
-            '7': '🇵🇪 LISTA BLANCA PERU',
-            # Remote/Server Services
-            '101': '⚡ Repair IMEI Motorola MTK/SPD',
-            '102': '⚡ Xiaomi FRP + Reset',
-            '103': '⚡ Repair IMEI G23/G13/E13',
-            '104': '⚡ MTK / SPD IMEI - UNLOCK',
-            '105': '🔑 Chimera Tool Credits',
-            '106': '✅ Chimera Basic 12M (100)',
-            '107': '✅ Chimera Premium 12M (5000)',
-            '108': '✅ Chimera Professional 12M (1500)'
+        # IMEI Services (IDs 300+)
+        imei_services_names = {
+            '301': '🇨🇴 No Registro Tigo',
+            '302': '🔴 SISTEMA CLARO',
+            '303': '🇵🇪 Imei no se encuentra en lista blanca',
+            '304': '🇵🇪 Preventivo entel Peru',
+            '305': '🇵🇪 Preventivo Bitel',
+            '306': '🇨🇴 No Registro Claro Colombia',
+            '307': '🇨🇴 No Registro Movistar Colombia',
+            '308': '🇨🇴 Xiaomi Colombia - Xiaomi Account Clean',
+            '309': '🇵🇪 Xiaomi Peru - Mi Account Clean',
+            '310': 'Entel Recuperado 🔵',
+            '401': 'FRP V5 (S Series & Z Fold & Flip) ✅',
+            '402': 'FRP V5 (A Series & M, F Series High) ✅',
+            '403': 'FRP V5 (A Series & M, F Series Low) ✅️',
+            '404': '⚠️Samsung FRP V5 Premium Verify And Refund⚠️',
         }
-        s_name = services_names.get(str(service_id), f"ID {service_id}")
         
-        # Construir mensaje base
-        msg = MESSAGE_TEMPLATE.replace('{service}', s_name)\
-                              .replace('{imei}', str(imei))\
-                              .replace('{email}', str(email))\
-                              .replace('{price}', "N/A")\
-                              .replace('{order_id}', str(order_id))
+        # Mapeo de service ID -> grupo de WhatsApp
+        imei_group_routing = {
+            '301': 'Tigo Nuevo',
+            '302': 'NUEVO SISTEMA CLARO',
+            '303': 'Procesos LeoPe-Gsm',
+            '304': 'Registro Preventivo Entel 🔵',
+            '305': 'PREVENTIVO BITEL AQUI',
+            '306': 'Kurama Claro Procesos 🔴',
+            '307': 'Leo Registro Claro & MOVISTAR Colombia',
+            '308': 'Xiaomi Colombia Procesos 🇨🇴',
+            '309': 'XIAOMI HOY ACA',
+            '310': 'SISTEMA ENTEL RECUPERADO ✅',
+            '401': 'Sam FRP V5 BUG✅',
+            '402': 'Sam FRP V5 BUG✅',
+            '403': 'Sam FRP V5 BUG✅',
+            '404': 'Sam FRP V5 BUG✅',
+        }
         
-        # Agregar campos personalizados adicionales si existen
-        if custom_fields and isinstance(custom_fields, dict):
-            extra_info = ""
-            # Lista de campos que ya mostramos por defecto (para no duplicar)
-            skip_fields = ['Mail', 'mail', 'email', 'Email', 'raw']
+        # Server Services
+        server_services_names = {
+            '201': '⚡ FRP — MOTOROLA (MTK / SPD)',
+            '202': '⚡ Xiaomi FRP + Reset',
+            '203': '⚡ Repair IMEI Motorola G15 / G05 / E15',
+            '204': '⚡ Repair IMEI G23 / G13 / E13',
+            '205': '⚡ Repair IMEI Motorola MTK/SPD',
+            '206': '🔧 Chimera Tool Basic 12 Months',
+            '207': '🔧 Chimera Tool Premium 12 Months',
+            '208': '🔧 Chimera Tool Professional 12 Months',
+            '209': '⚡ FRP — MOTOROLA (Qualcomm) All Models',
+            '210': 'Octoplus Credits New User🐙',
+            '211': 'Octoplus credits Exist User🐙',
+        }
+        
+        # Mapeo de service ID -> grupo de WhatsApp (solo los que NO van al grupo por defecto)
+        server_group_routing = {
+            '209': 'Moto Qcom Orders 🟢',
+            '210': 'Octoplus Creditos 🐙',
+            '211': 'Octoplus Creditos 🐙',
+        }
+        
+        sid = str(service_id)
+        is_imei_service = sid in imei_services_names
+        
+        # ========== CONSTRUIR MENSAJE ==========
+        if is_imei_service:
+            s_name = imei_services_names.get(sid, f"IMEI Service #{service_id}")
+            msg = f"{s_name}\nIMEI: {imei}"
             
-            for field_name, field_value in custom_fields.items():
-                if field_name not in skip_fields and field_value:
-                    # Formatear nombre del campo (primera letra mayúscula)
-                    display_name = field_name.replace('_', ' ').title()
-                    extra_info += f"\n📝 *{display_name}:* `{field_value}`"
+            # El 303 omite todos los campos extras (incluyendo QNT)
+            if sid != '303':
+                if custom_fields and isinstance(custom_fields, dict):
+                    skip_fields = ['Mail', 'mail', 'email', 'Email', 'raw']
+                    for field_name, field_value in custom_fields.items():
+                        if field_name not in skip_fields and field_value:
+                            msg += f"\n{field_name}: {field_value}"
+        else:
+            # Server Service: mensaje compacto
+            s_name = server_services_names.get(sid, f"Servicio #{service_id}")
+            msg = f"{s_name}"
             
-            if extra_info:
-                # Agregar antes del estado
-                msg = msg.replace("--------------------------------\n✅", f"{extra_info}\n--------------------------------\n✅")
+            # Agregar campos personalizados
+            if custom_fields and isinstance(custom_fields, dict):
+                skip_fields = ['Mail', 'mail', 'email', 'Email', 'raw']
+                for field_name, field_value in custom_fields.items():
+                    if field_name not in skip_fields and field_value:
+                        display_name = field_name.replace('_', ' ').title()
+                        msg += f"\n{display_name}: {field_value}"
+        
+        # El Ref siempre es necesario para que el bot pueda detectar qué pedido se responde
+        msg += f"\nRef: {order_id}"
         
         # ========== ENVIAR NOTIFICACIÓN ==========
         notification_sent = False
         
         # 1. Intentar WhatsApp primero (prioridad)
         if WHATSAPP_ENABLED:
-            # Para WhatsApp, formateamos sin Markdown (texto plano más legible)
             whatsapp_msg = msg.replace('*', '').replace('`', '').replace('_', '')
-            notification_sent = send_whatsapp_msg(whatsapp_msg)
+            
+            if is_imei_service:
+                # IMEI Services -> grupo según routing
+                target_group = imei_group_routing.get(sid, 'Procesos LeoPe-Gsm')
+                notification_sent = send_whatsapp_msg(whatsapp_msg, group_name=target_group)
+            else:
+                # Server Services -> grupo por defecto o routing específico
+                target_group = server_group_routing.get(sid)
+                notification_sent = send_whatsapp_msg(whatsapp_msg, group_name=target_group)
         
         # 2. Si WhatsApp falló o está desactivado, intentar Telegram
         if not notification_sent and TELEGRAM_ENABLED:
@@ -846,7 +1240,8 @@ class DHRUHandler(BaseHTTPRequestHandler):
                 print(f"Error enviando a Telegram: {e}")
         
         if notification_sent:
-            print(f"✅ Notificado: {imei}")
+            target = "grupo Tigo Nuevo" if is_imei_service else "grupo general"
+            print(f"✅ Notificado ({target}): {imei}")
         else:
             print(f"⚠️ No se pudo notificar: {imei} (verifica WhatsApp/Telegram)")
 

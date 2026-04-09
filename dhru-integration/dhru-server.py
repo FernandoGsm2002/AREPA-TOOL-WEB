@@ -18,8 +18,10 @@ PORT = 8080
 SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co'
 SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzQ2NjU2NywiZXhwIjoyMDc5MDQyNTY3fQ.8EGhQmddj46oO-qkBOrAiohGx3d0aFOXK10YSv4-qNM'
 
-# Precio por defecto del servicio
-DEFAULT_SERVICE_PRICE = 14.99
+# Precios por defecto por plan
+DEFAULT_SERVICE_PRICE    = 7.99   # 12 meses
+DEFAULT_SERVICE_PRICE_3M = 3.99   # 3 meses
+DEFAULT_SERVICE_PRICE_6M = 5.99   # 6 meses
 
 
 def parse_multipart(content_type, body):
@@ -297,9 +299,20 @@ class DHRUHandler(BaseHTTPRequestHandler):
         
         # IMEISERVICELIST
         if action == 'imeiservicelist':
-            service_price = float(reseller.get('service_price', DEFAULT_SERVICE_PRICE))
+            price_12m = float(reseller.get('service_price',    DEFAULT_SERVICE_PRICE))
+            price_3m  = float(reseller.get('service_price_3m', DEFAULT_SERVICE_PRICE_3M))
+            price_6m  = float(reseller.get('service_price_6m', DEFAULT_SERVICE_PRICE_6M))
             
             group = 'ArepaToolV2 (Server Service)'
+            
+            custom_field = [{
+                'type': 'serviceimei',
+                'fieldname': 'Mail',
+                'fieldtype': 'text',
+                'description': 'Customer email',
+                'fieldoptions': '',
+                'required': 1
+            }]
             
             ServiceList = {
                 group: {
@@ -309,19 +322,32 @@ class DHRUHandler(BaseHTTPRequestHandler):
                         1: {
                             'SERVICEID': 1,
                             'SERVICETYPE': 'SERVER',
-                            'SERVICENAME': 'ArepaToolV2 - Active User (12 month licence)',
-                            'CREDIT': service_price,
+                            'SERVICENAME': 'ArepaToolV2 - Activate User (3 month licence)',
+                            'CREDIT': price_3m,
+                            'INFO': 'Activate license for 3 months.',
+                            'TIME': 'Instant',
+                            'QNT': 0,
+                            'Requires.Custom': custom_field
+                        },
+                        2: {
+                            'SERVICEID': 2,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'ArepaToolV2 - Activate User (6 month licence)',
+                            'CREDIT': price_6m,
+                            'INFO': 'Activate license for 6 months.',
+                            'TIME': 'Instant',
+                            'QNT': 0,
+                            'Requires.Custom': custom_field
+                        },
+                        3: {
+                            'SERVICEID': 3,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'ArepaToolV2 - Activate User (12 month licence)',
+                            'CREDIT': price_12m,
                             'INFO': 'Activate license for 12 months.',
                             'TIME': 'Instant',
                             'QNT': 0,
-                            'Requires.Custom': [{
-                                'type': 'serviceimei',
-                                'fieldname': 'Mail',
-                                'fieldtype': 'text',
-                                'description': 'Customer email',
-                                'fieldoptions': '',
-                                'required': 1
-                            }]
+                            'Requires.Custom': custom_field
                         }
                     }
                 }
@@ -337,6 +363,18 @@ class DHRUHandler(BaseHTTPRequestHandler):
         # PLACEIMEIORDER / PLACESERVERORDER
         if action in ['placeimeiorder', 'placeserverorder']:
             print(f"[DHRU] Processing order for {reseller['name']}")
+            
+            # Determinar plan según serviceid
+            service_id = str(params.get('serviceid', params.get('SERVICEID', '3')))
+            PLAN_MAP = {
+                '1': {'days': 90,  'price_field': 'service_price_3m', 'default': DEFAULT_SERVICE_PRICE_3M, 'label': '3 Months'},
+                '2': {'days': 180, 'price_field': 'service_price_6m', 'default': DEFAULT_SERVICE_PRICE_6M, 'label': '6 Months'},
+                '3': {'days': 365, 'price_field': 'service_price',    'default': DEFAULT_SERVICE_PRICE,    'label': '12 Months'},
+            }
+            plan = PLAN_MAP.get(service_id, PLAN_MAP['3'])
+            service_price = float(reseller.get(plan['price_field'], plan['default']))
+            
+            print(f"[DHRU] Plan: {plan['label']} | Price: ${service_price}")
             
             # Obtener email
             email = ''
@@ -364,23 +402,21 @@ class DHRUHandler(BaseHTTPRequestHandler):
             
             if not user:
                 return self.send_json_response({
-                    'ERROR': [{'MESSAGE': f'Email {email} no encontrado.Primero debes registrarse en: https://www.arepatool.com/register.html'}]
+                    'ERROR': [{'MESSAGE': f'Email {email} no encontrado. Primero debes registrarte en: https://www.arepatool.com/register.html'}]
                 })
             
             # Verificar saldo
-            service_price = float(reseller.get('service_price', DEFAULT_SERVICE_PRICE))
             current_balance = float(reseller['balance'])
-            
             if current_balance < service_price:
                 return self.send_json_response({
-                    'ERROR': [{'MESSAGE': f'Insufficient balance. Required: ${service_price}, Available: ${current_balance}'}]
+                    'ERROR': [{'MESSAGE': f'Insufficient balance. Required: ${service_price}, Available: ${current_balance:.2f}'}]
                 })
             
             import time
             from datetime import datetime, timedelta
             
             now = datetime.now()
-            expiry = now + timedelta(days=365)
+            expiry = now + timedelta(days=plan['days'])
             order_id = f"AREPA_{int(time.time())}"
             
             # Descontar saldo
@@ -388,7 +424,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
                 reseller['id'],
                 service_price,
                 order_id,
-                f"License activation for {email}"
+                f"License {plan['label']} activation for {email}"
             )
             
             if not success:
@@ -404,11 +440,11 @@ class DHRUHandler(BaseHTTPRequestHandler):
                 'activated_at': now.isoformat()
             })
             
-            print(f"[DHRU] ✅ Order complete! User: {user['username']} | New balance: ${new_balance}")
+            print(f"[DHRU] ✅ Order complete! User: {user['username']} | Plan: {plan['label']} | New balance: ${new_balance}")
             
             return self.send_json_response({
                 'SUCCESS': [{
-                    'MESSAGE': f"License activated! User: {user['username']} - Valid until: {expiry.strftime('%m/%d/%Y')}. New balance: ${new_balance:.2f}",
+                    'MESSAGE': f"License activated! User: {user['username']} ({plan['label']}) - Valid until: {expiry.strftime('%m/%d/%Y')}. New balance: ${new_balance:.2f}",
                     'REFERENCEID': order_id
                 }]
             })

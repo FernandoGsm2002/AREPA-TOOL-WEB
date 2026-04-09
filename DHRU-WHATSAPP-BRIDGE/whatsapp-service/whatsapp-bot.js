@@ -19,8 +19,58 @@ const PYTHON_SERVER = 'http://localhost:8095';  // Servidor DHRU Python
 
 // ID del grupo de WhatsApp (se obtiene automáticamente al enviar primer mensaje)
 let TARGET_GROUP_ID = '';  // Se configura después de escanear QR
-let TARGET_GROUP_NAME = 'DHRU Pedidos';  // Nombre del grupo a buscar
+let TARGET_GROUP_NAME = 'Procesos LeoPe-Gsm';  // Nombre del grupo a buscar
 let currentQR = '';  // Almacena el QR actual para mostrarlo en web
+
+// ==================== GRUPOS PERMITIDOS (whitelist) ====================
+// Solo se leen/procesan mensajes de ESTOS grupos. Ignoramos todo lo demás.
+const ALLOWED_GROUPS = [
+    'Procesos LeoPe-Gsm',
+    'Moto Qcom Orders 🟢',
+    'PREVENTIVO BITEL AQUI',
+    'Leo Registro Claro & MOVISTAR Colombia',
+    'Tigo Nuevo',
+    'NUEVO SISTEMA CLARO',
+    'Preventivo VIA IMEI Nuevo ✅',
+    'Xiaomi Colombia Procesos 🇨🇴',
+    'ENTEL POR LOTES 🔵',
+    'Kurama Claro Procesos 🔴',
+    'XIAOMI HOY ACA',
+    'Octoplus Creditos 🐙',
+    'SISTEMA ENTEL RECUPERADO ✅',
+    'Sam FRP V5 BUG✅',   // ← Servicios 401, 402, 403
+];
+
+// Código de éxito especial para servicios Samsung FRP V5 (401, 402, 403)
+const SAM_FRP_SUCCESS_CODE = 'Device Register Successfully On Level 5 (VIP Series), Reboot Your Device And Enjoy, Submit Your Next Order';
+// Código para servicio de Verificar y Reembolsar (404)
+const SAM_FRP_REFUND_CODE  = 'Refunded.';
+
+/**
+ * Verifica si un nombre de grupo está en la whitelist (coincidencia parcial).
+ */
+function isAllowedGroup(groupName) {
+    if (!groupName) return false;
+    const lower = groupName.toLowerCase();
+    return ALLOWED_GROUPS.some(allowed => lower.includes(allowed.toLowerCase()));
+}
+
+// ==================== HELPER: OBTENER GRUPOS SIN CANALES ROTOS ====================
+async function getSafeGroups() {
+    const raw = await client.getChats();
+    const groups = [];
+    for (const chat of raw) {
+        try {
+            // Saltar canales de broadcast (causan crash si channelMetadata falta)
+            if (chat.id && chat.id.server === 'newsletter') continue;
+            if (!chat.isGroup) continue;
+            groups.push(chat);
+        } catch (e) {
+            // Ignorar chats rotos silenciosamente
+        }
+    }
+    return groups;
+}
 
 // ==================== CLIENTE WHATSAPP ====================
 console.log('🔄 Iniciando cliente de WhatsApp...');
@@ -59,7 +109,7 @@ client.on('qr', (qr) => {
 
 // Autenticación exitosa
 client.on('authenticated', () => {
-    console.log('✅ Autenticación exitosa!');
+    console.log('✅ Autenticado correctamente');
 });
 
 // Cliente listo
@@ -67,9 +117,8 @@ client.on('ready', async () => {
     console.log('🚀 WhatsApp Bot LISTO!');
     console.log(`📞 Conectado como: ${client.info.pushname}`);
     
-    // Buscar el grupo objetivo
-    const chats = await client.getChats();
-    const groups = chats.filter(chat => chat.isGroup);
+    // Buscar el grupo objetivo (usando helper seguro que evita canales rotos)
+    const groups = await getSafeGroups();
     
     console.log(`\n📋 Grupos disponibles (${groups.length}):`);
     groups.forEach((g, i) => {
@@ -95,63 +144,197 @@ client.on('ready', async () => {
     }
 });
 
-// Recibir mensajes
-client.on('message', async (msg) => {
-    // Solo procesar mensajes de grupos
-    const chat = await msg.getChat();
-    if (!chat.isGroup) return;
-    
-    // Solo procesar del grupo objetivo
-    if (chat.id._serialized !== TARGET_GROUP_ID) return;
+// Recibir mensajes (message_create captura también los mensajes propios)
+client.on('message_create', async (msg) => {
+    // Solo procesar mensajes de grupos (con guard para canales/newsletters)
+    let chat;
+    try {
+        chat = await msg.getChat();
+    } catch (e) {
+        return; // ignorar canales de broadcast rotos
+    }
+    if (!chat || !chat.isGroup) return;
+
+    // ── FILTRO WHITELIST ──────────────────────────────────────────
+    // Ignorar silenciosamente grupos que no son operativos
+    if (!isAllowedGroup(chat.name)) return;
+    // ─────────────────────────────────────────────────────────────
     
     const text = msg.body.toUpperCase().trim();
-    const contact = await msg.getContact();
-    const senderName = contact.pushname || contact.number;
     
-    console.log(`\n📩 Mensaje en grupo: "${msg.body}" de ${senderName}`);
+    // getContact() falla en mensajes propios (fromMe) porque author viene undefined
+    let senderName = 'Admin (tú)';
+    if (!msg.fromMe) {
+        try {
+            const contact = await msg.getContact();
+            senderName = contact.pushname || contact.number || 'Desconocido';
+        } catch (e) {
+            senderName = 'Desconocido';
+        }
+    }
     
-    // Verificar si es respuesta a un mensaje
+    console.log(`\n📩 Mensaje en grupo "${chat.name}": "${msg.body}" de ${senderName}`);
+    
+    const rawText = msg.body.trim();
+    const upperRaw = rawText.toUpperCase();
+
+    // ===== MAPEO DE KEYWORDS DE RECHAZO =====
+    const rejectKeywords = {
+        'por base':         { wa: '🚫 Rechazado — Base dañada',          dhru: 'Rechazado base dañada' },
+        'no conecta':       { wa: '🚫 Rechazado — IP no encontrada',      dhru: 'Rechazado IP no encontrada' },
+        'por no soportado': { wa: '🚫 Rechazado — Modelo no soportado',  dhru: 'Rechazado modelo no soportado' },
+    };
+
+    // ===== FUNCIÓN HELPER PARA PROCESAR COMANDO =====
+    async function processCommand(orderId, isDone, isReject, reasonText, codeText = null) {
+        const action = isDone ? 'complete' : 'reject';
+
+        let waReply  = '🚫 Rechazado por Admin';
+        let dhruCode = 'Rechazado por Admin 🚫';
+
+        if (isReject && reasonText) {
+            const rawReason = reasonText.trim().toLowerCase();
+            const mapped = rejectKeywords[rawReason];
+            if (mapped) {
+                waReply  = mapped.wa;
+                dhruCode = mapped.dhru + ' 🚫';
+            } else {
+                waReply  = `🚫 Rechazado — ${reasonText.trim()}`;
+                dhruCode = `Rechazado — ${reasonText.trim()} 🚫`;
+            }
+        } else if (isDone && codeText) {
+            dhruCode = codeText;
+        }
+
+        console.log(`   ✅ Order ID: ${orderId}, Acción: ${action}, Código: ${dhruCode}`);
+
+        try {
+            const payload = { order_id: orderId, action, source: 'whatsapp', user: senderName };
+            if (action === 'reject') payload.reason = dhruCode;
+            if (action === 'complete' && codeText) payload.code = codeText;
+
+            const response = await fetch(`${PYTHON_SERVER}/webhook`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                const replyMsg = action === 'complete' ? '✅ Servicio Completado Con Exito' : waReply;
+                await msg.reply(replyMsg);
+            } else {
+                await msg.reply('❌ Error al procesar. Intenta de nuevo.');
+            }
+        } catch (error) {
+            console.log(`   ❌ Error notificando a Python: ${error.message}`);
+            await msg.reply('⚠️ Error de conexión con el servidor.');
+        }
+    }
+
+    // Detectar si el mensaje viene del grupo Samsung FRP V5 (servicios 401/402/403)
+    const isSamFRPGroup = chat.name.toLowerCase().includes('sam frp v5');
+
+    // =================================================================
+    // MODO 1: Comando directo sin reply → "DONE 1740670456"
+    //         o "REJECT 1740670456 motivo"
+    // Formato: <COMANDO> <REF_ID> [motivo opcional]
+    // =================================================================
+    const directMatch = rawText.match(/^(DONE|LISTO|OK|REJECT|RECHAZAR)\s+(\d{10,})(?:\s+(.+))?$/i);
+    if (directMatch) {
+        const cmd      = directMatch[1].toUpperCase();
+        const orderId  = directMatch[2];
+        const extra    = directMatch[3] || '';
+        const isDone   = ['DONE', 'LISTO', 'OK'].includes(cmd);
+        const isReject = ['REJECT', 'RECHAZAR'].includes(cmd);
+        console.log(`   🎯 Comando directo detectado: ${cmd} → Ref ${orderId}`);
+        
+        const reasonText = isReject ? extra : '';
+        // Para Sam FRP V5: siempre usar el código especial en DONE
+        const codeText   = isDone ? (isSamFRPGroup ? SAM_FRP_SUCCESS_CODE : extra) : null;
+
+        await processCommand(orderId, isDone, isReject, reasonText, codeText);
+        return;
+    }
+
+    // =================================================================
+    // MODO 2: Reply a mensaje del bot (comportamiento original)
+    //         El Ref ID se extrae del mensaje citado
+    // =================================================================
     if (msg.hasQuotedMsg) {
-        const quotedMsg = await msg.getQuotedMessage();
-        const originalText = quotedMsg.body;
-        
+        let originalText = null;
+
+        // PASO 1: leer del _data sincrónico (rápido, no falla con puppeteer)
+        try {
+            if (msg._data && msg._data.quotedMsg && msg._data.quotedMsg.body) {
+                originalText = msg._data.quotedMsg.body;
+            }
+        } catch (e) { /* ignorar */ }
+
+        // PASO 2: fallback async vía puppeteer si el paso 1 falló
+        if (!originalText) {
+            try {
+                const quotedMsg = await msg.getQuotedMessage();
+                if (quotedMsg && quotedMsg.body) originalText = quotedMsg.body;
+            } catch (e) {
+                console.log(`   ⚠️ No se pudo leer el mensaje citado: ${e.message}`);
+            }
+        }
+
+        if (!originalText) {
+            console.log('   ⚠️ Sin texto citado recuperable — usa: DONE <ref_id>');
+            return;
+        }
+
         console.log(`   ↳ Es respuesta a: "${originalText.substring(0, 50)}..."`);
-        
-        if (['DONE', 'LISTO', 'OK', 'REJECT', 'RECHAZAR'].includes(text)) {
-            // Extraer order ID del mensaje original (buscar Ref: XXXXXXXXXX)
+
+        const isReject = upperRaw === 'REJECT' || upperRaw === 'RECHAZAR'
+            || upperRaw.startsWith('REJECT ') || upperRaw.startsWith('RECHAZAR ');
+
+        // Verificamos si es un servicio de Octoplus (según el msg citado)
+        const isOctoplus = originalText.toLowerCase().includes('octoplus') || originalText.includes('🐙');
+        let isDone = false;
+
+        if (isOctoplus) {
+            // Para Octoplus, cualquier respuesta q no sea REJECT es COMPLETADO
+            isDone = !isReject;
+        } else {
+            // Para los demás, exige el comando explícito
+            isDone = ['DONE', 'LISTO', 'OK'].some(w => upperRaw === w || upperRaw.startsWith(w + ' '));
+        }
+
+        if (isDone || isReject) {
             const match = originalText.match(/Ref:\s*(\d{10,})/);
-            
             if (match) {
                 const orderId = match[1];
-                const action = ['DONE', 'LISTO', 'OK'].includes(text) ? 'complete' : 'reject';
-                
-                console.log(`   ✅ Order ID: ${orderId}, Acción: ${action}`);
-                
-                // Notificar al servidor Python
-                try {
-                    const response = await fetch(`${PYTHON_SERVER}/webhook`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            order_id: orderId,
-                            action: action,
-                            source: 'whatsapp',
-                            user: senderName
-                        })
-                    });
+                let reason = '';
+                let successCode = null;
+
+                if (isReject) {
+                    const spaceIdx = rawText.indexOf(' ');
+                    if (spaceIdx !== -1) reason = rawText.substring(spaceIdx + 1).trim();
+                } else {
+                    // Limpiamos los comandos DONE/LISTO si los puso
+                    let cleanText = rawText.replace(/^(DONE|LISTO|OK)\s*/i, '').trim();
                     
-                    if (response.ok) {
-                        const emoji = action === 'complete' ? '✅' : '🚫';
-                        await msg.reply(`${emoji} Pedido ${orderId} ${action === 'complete' ? 'COMPLETADO' : 'RECHAZADO'}`);
+                    if (isSamFRPGroup) {
+                        // Para Sam FRP V5: detectar si es el servicio de Reembolso (404)
+                        const isRefundService = originalText.includes('Refund');
+                        cleanText = isRefundService ? SAM_FRP_REFUND_CODE : SAM_FRP_SUCCESS_CODE;
+                    } else if (isOctoplus) {
+                        // Para Octoplus, agregamos "success✅" si no lo tiene
+                        if (!cleanText.toLowerCase().endsWith('success✅')) {
+                            cleanText = cleanText ? `${cleanText} success✅` : 'Servicio Completado Con Exito success✅';
+                        }
                     } else {
-                        await msg.reply('❌ Error al procesar. Intenta de nuevo.');
+                        // Para los demás servicios, si está vacío enviamos un Default
+                        if (!cleanText) cleanText = 'Servicio Completado Con Exito ✅';
                     }
-                } catch (error) {
-                    console.log(`   ❌ Error notificando a Python: ${error.message}`);
-                    await msg.reply('⚠️ Error de conexión con el servidor.');
+                    successCode = cleanText;
                 }
+
+                await processCommand(orderId, isDone, isReject, reason, successCode);
             } else {
-                console.log('   ⚠️ No se encontró Order ID en el mensaje original');
+                console.log('   ⚠️ No se encontró Order ID — usa: DONE <ref_id>');
             }
         }
     }
@@ -171,13 +354,28 @@ app.use(express.json());
 // Endpoint para enviar mensajes
 app.post('/send', async (req, res) => {
     try {
-        const { message, groupId } = req.body;
+        const { message, groupId, groupName } = req.body;
         
         if (!message) {
             return res.status(400).json({ error: 'Message required' });
         }
         
-        const targetId = groupId || TARGET_GROUP_ID;
+        let targetId = groupId || TARGET_GROUP_ID;
+        
+        // Si se envía groupName, buscar el grupo por nombre
+        if (groupName && !groupId) {
+            const groups = await getSafeGroups();
+            const found = groups.find(c => 
+                c.name.toLowerCase().includes(groupName.toLowerCase())
+            );
+            
+            if (found) {
+                targetId = found.id._serialized;
+                console.log(`   🔍 Grupo encontrado: "${found.name}" para "${groupName}"`);
+            } else {
+                console.log(`   ⚠️ Grupo "${groupName}" no encontrado, usando grupo por defecto`);
+            }
+        }
         
         if (!targetId) {
             return res.status(400).json({ error: 'No group configured' });
@@ -213,8 +411,8 @@ app.post('/set-group', async (req, res) => {
     }
     
     if (groupName) {
-        const chats = await client.getChats();
-        const group = chats.find(c => c.isGroup && c.name.toLowerCase().includes(groupName.toLowerCase()));
+        const groups = await getSafeGroups();
+        const group = groups.find(c => c.name.toLowerCase().includes(groupName.toLowerCase()));
         
         if (group) {
             TARGET_GROUP_ID = group.id._serialized;
@@ -230,12 +428,11 @@ app.post('/set-group', async (req, res) => {
 // Listar grupos
 app.get('/groups', async (req, res) => {
     try {
-        const chats = await client.getChats();
-        const groups = chats.filter(c => c.isGroup).map(g => ({
+        const groups = await getSafeGroups();
+        res.json(groups.map(g => ({
             id: g.id._serialized,
             name: g.name
-        }));
-        res.json(groups);
+        })));
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
