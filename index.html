@@ -343,6 +343,14 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Redirigir si Supabase manda el token de recovery aquí en vez de a reset-password.html
+        (function() {
+            const hash = window.location.hash;
+            if (hash.includes('type=recovery') && hash.includes('access_token=')) {
+                window.location.replace('reset-password.html' + hash);
+            }
+        })();
+
         AOS.init({ duration: 800, once: true });
 
         // Matrix Rain
