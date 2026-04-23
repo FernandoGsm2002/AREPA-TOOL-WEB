@@ -22,23 +22,50 @@ let TARGET_GROUP_ID = '';  // Se configura después de escanear QR
 let TARGET_GROUP_NAME = 'Procesos LeoPe-Gsm';  // Nombre del grupo a buscar
 let currentQR = '';  // Almacena el QR actual para mostrarlo en web
 
+// ==================== ADMINS AUTORIZADOS PARA GESTIÓN DE CRÉDITOS ====================
+// Números de teléfono autorizados para usar ADDCREDIT / DEDUCTCREDIT / BALANCE
+// Formato: código de país + número, sin +, separados por coma. Ej: "573001234567,573007654321"
+const ADMIN_PHONES = (process.env.ADMIN_PHONES || '').split(',').map(p => p.trim().replace('+', '')).filter(Boolean);
+
+function isSenderAdmin(msg) {
+    // Si el mensaje es tuyo propio (el dueño del WhatsApp conectado), siempre es admin
+    if (msg.fromMe) return true;
+    // Para otros números, verificar la whitelist
+    if (ADMIN_PHONES.length === 0) return false;
+    const raw = (msg.author || msg.from || '').replace('@c.us', '').replace('+', '');
+    // Multi-device WhatsApp usa formato "51932504098:12" — quitamos el sufijo del dispositivo
+    const senderNumber = raw.split(':')[0];
+    return ADMIN_PHONES.includes(senderNumber);
+}
+
 // ==================== GRUPOS PERMITIDOS (whitelist) ====================
 // Solo se leen/procesan mensajes de ESTOS grupos. Ignoramos todo lo demás.
 const ALLOWED_GROUPS = [
-    'Procesos LeoPe-Gsm',
-    'Moto Qcom Orders 🟢',
-    'PREVENTIVO BITEL AQUI',
-    'Leo Registro Claro & MOVISTAR Colombia',
-    'Tigo Nuevo',
-    'NUEVO SISTEMA CLARO',
-    'Preventivo VIA IMEI Nuevo ✅',
-    'Xiaomi Colombia Procesos 🇨🇴',
-    'ENTEL POR LOTES 🔵',
+    // Server Services
+    'Procesos LeoPe-Gsm',           // 201-208 (default)
+    'Moto Qcom Orders 🟢',          // 209
+    'Octoplus Creditos 🐙',         // 210, 211
+    'Vivo',                         // 405
+    // IMEI Services Colombia
+    'Tigo Milo Colombia 🔵',         // 301
+    'Sistema Claro Chamo ✅',        // 302
+    'Claro Procesos MILO ⚡️',       // 306
+    'Leo Registro Claro & MOVISTAR Colombia', // 307
+    'Xiaomi Colombia Procesos 🇨🇴', // 308
     'Kurama Claro Procesos 🔴',
-    'XIAOMI HOY ACA',
-    'Octoplus Creditos 🐙',
-    'SISTEMA ENTEL RECUPERADO ✅',
-    'Sam FRP V5 BUG✅',   // ← Servicios 401, 402, 403
+    // IMEI Services Peru
+    'JUSTIFICADO NUEVO 3 DIAS ✅✅✅', // 303
+    'Registro Preventivo Entel 🔵',  // 304
+    'PREVENTIVO BITEL AQUI',         // 305
+    'XIAOMI HOY ACA',                // 309
+    'Entel Recuperado 💙',           // 310
+    'ENTEL FORTE SOLO ENTEL✅',      // 311
+    'ENTEL POR LOTES 🔵',
+    'Preventivo VIA IMEI Nuevo ✅',
+    // Samsung FRP
+    'Sam FRP V5 BUG✅',              // 401, 402, 403, 404
+    // Honor
+    'Honor Uzbekistan 🇺🇿',         // 312
 ];
 
 // Código de éxito especial para servicios Samsung FRP V5 (401, 402, 403)
@@ -180,27 +207,27 @@ client.on('message_create', async (msg) => {
 
     // ===== MAPEO DE KEYWORDS DE RECHAZO =====
     const rejectKeywords = {
-        'por base':         { wa: '🚫 Rechazado — Base dañada',          dhru: 'Rechazado base dañada' },
-        'no conecta':       { wa: '🚫 Rechazado — IP no encontrada',      dhru: 'Rechazado IP no encontrada' },
-        'por no soportado': { wa: '🚫 Rechazado — Modelo no soportado',  dhru: 'Rechazado modelo no soportado' },
+        'por base':         { wa: 'Rechazado — Base dañada',          dhru: 'Rechazado base dañada' },
+        'no conecta':       { wa: 'Rechazado — IP no encontrada',      dhru: 'Rechazado IP no encontrada' },
+        'por no soportado': { wa: 'Rechazado — Modelo no soportado',  dhru: 'Rechazado modelo no soportado' },
     };
 
     // ===== FUNCIÓN HELPER PARA PROCESAR COMANDO =====
     async function processCommand(orderId, isDone, isReject, reasonText, codeText = null) {
         const action = isDone ? 'complete' : 'reject';
 
-        let waReply  = '🚫 Rechazado por Admin';
-        let dhruCode = 'Rechazado por Admin 🚫';
+        let waReply  = 'Rechazado por Admin';
+        let dhruCode = 'Rechazado por Admin';
 
         if (isReject && reasonText) {
             const rawReason = reasonText.trim().toLowerCase();
             const mapped = rejectKeywords[rawReason];
             if (mapped) {
                 waReply  = mapped.wa;
-                dhruCode = mapped.dhru + ' 🚫';
+                dhruCode = mapped.dhru ;
             } else {
-                waReply  = `🚫 Rechazado — ${reasonText.trim()}`;
-                dhruCode = `Rechazado — ${reasonText.trim()} 🚫`;
+                waReply  = `Rechazado — ${reasonText.trim()}`;
+                dhruCode = `Rechazado — ${reasonText.trim()}`;
             }
         } else if (isDone && codeText) {
             dhruCode = codeText;
@@ -233,6 +260,84 @@ client.on('message_create', async (msg) => {
 
     // Detectar si el mensaje viene del grupo Samsung FRP V5 (servicios 401/402/403)
     const isSamFRPGroup = chat.name.toLowerCase().includes('sam frp v5');
+
+    // =================================================================
+    // CRÉDITOS: ADDCREDIT / DEDUCTCREDIT / BALANCE  (solo admins)
+    // Formato: ADDCREDIT <usuario> <cantidad>
+    //          DEDUCTCREDIT <usuario> <cantidad>
+    //          BALANCE <usuario>
+    // =================================================================
+    const creditMatch = rawText.match(/^(ADDCREDIT|DEDUCTCREDIT)\s+(\S+)\s+([\d.]+)$/i);
+    if (creditMatch) {
+        if (!isSenderAdmin(msg)) {
+            await msg.reply('⛔ No tienes permiso para gestionar créditos.');
+            return;
+        }
+        const cmd      = creditMatch[1].toUpperCase();
+        const reseller = creditMatch[2];
+        const amount   = parseFloat(creditMatch[3]);
+        const action   = cmd === 'ADDCREDIT' ? 'add' : 'deduct';
+        const sign     = action === 'add' ? '+' : '-';
+
+        console.log(`\n💰 [CREDIT] ${action} -> ${reseller}: ${sign}${amount} por ${senderName}`);
+
+        try {
+            const response = await fetch(`${PYTHON_SERVER}/credit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action, reseller, amount })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                const verb = action === 'add' ? 'agregados a' : 'deducidos de';
+                await msg.reply(`✅ ${sign}${amount} créditos ${verb} *${reseller}* correctamente.`);
+            } else {
+                await msg.reply(`❌ Error: ${data.error || 'No se pudo procesar'}`);
+            }
+        } catch (error) {
+            console.log(`   ❌ Error en créditos: ${error.message}`);
+            await msg.reply(`⚠️ Error de conexión: ${error.message}`);
+        }
+        return;
+    }
+
+    const balanceMatch = rawText.match(/^BALANCE\s+(\S+)$/i);
+    if (balanceMatch) {
+        if (!isSenderAdmin(msg)) {
+            await msg.reply('⛔ No tienes permiso para consultar balance');
+            return;
+        }
+        const reseller = balanceMatch[1];
+        console.log(`\n💰 [BALANCE] Consultando: ${reseller} por ${senderName}`);
+
+        try {
+            const response = await fetch(`${PYTHON_SERVER}/credit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'balance', reseller, amount: 0 })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                const info = data.data;
+                let replyText = `💰 *Balance de ${reseller}*\n`;
+                if (info && typeof info === 'object') {
+                    Object.entries(info).forEach(([k, v]) => {
+                        replyText += `  ${k}: ${v}\n`;
+                    });
+                } else {
+                    replyText += String(info || data.raw || 'Sin datos');
+                }
+                await msg.reply(replyText);
+            } else {
+                await msg.reply(`❌ Error: ${data.error || 'No se pudo consultar'}`);
+            }
+        } catch (error) {
+            await msg.reply(`⚠️ Error de conexión: ${error.message}`);
+        }
+        return;
+    }
 
     // =================================================================
     // MODO 1: Comando directo sin reply → "DONE 1740670456"

@@ -32,6 +32,16 @@ load_dotenv()
 PORT = int(os.getenv('PORT', 8095))
 API_KEY = os.getenv('API_KEY', '')
 DHRU_CALLBACK_URL = os.getenv('DHRU_CALLBACK_URL', '')  # URL del panel DHRU para callback
+DHRU_ADMIN_USERNAME = os.getenv('DHRU_ADMIN_USERNAME', '')  # mantenido por compatibilidad
+DHRU_ADMIN_APIKEY   = os.getenv('DHRU_ADMIN_APIKEY', '')    # mantenido por compatibilidad
+# Ruta interna del panel DHRU (la parte larga en la URL del admin)
+DHRU_ADMIN_PATH     = os.getenv('DHRU_ADMIN_PATH', '')
+# Credenciales de .htaccess (Basic Auth del servidor)
+DHRU_HTTP_AUTH_USER = os.getenv('DHRU_HTTP_AUTH_USER', '')
+DHRU_HTTP_AUTH_PASS = os.getenv('DHRU_HTTP_AUTH_PASS', '')
+# Credenciales del formulario de login del panel DHRU
+DHRU_LOGIN_USER     = os.getenv('DHRU_LOGIN_USER', '')
+DHRU_LOGIN_PASS     = os.getenv('DHRU_LOGIN_PASS', '')
 DB_FILE = 'orders_db.json'
 
 # ========== CONFIGURACIÓN DE MENSAJERÍA ==========
@@ -140,6 +150,163 @@ def dhru_callback(order_id, status, code):
     except Exception as e:
         print(f"   ❌ Error de conexión: {e}")
         return False
+
+def dhru_panel_session():
+    """Crea una sesión autenticada con el panel DHRU (Basic Auth + login form)."""
+    auth = (DHRU_HTTP_AUTH_USER, DHRU_HTTP_AUTH_PASS) if DHRU_HTTP_AUTH_USER else None
+    base = f"{DHRU_CALLBACK_URL}/{DHRU_ADMIN_PATH}"
+    session = requests.Session()
+
+    if DHRU_LOGIN_USER and DHRU_LOGIN_PASS:
+        login_page_url = f"{base}/main.php"
+        login_get = session.get(login_page_url, auth=auth, timeout=15)
+        login_form = {'username': DHRU_LOGIN_USER, 'password': DHRU_LOGIN_PASS, 'submit': 'Login'}
+        token_m = re.search(r'<input[^>]+name=["\']token["\'][^>]*value=["\']([a-f0-9]+)["\']', login_get.text, re.I)
+        if token_m:
+            login_form['token'] = token_m.group(1)
+        session.post(login_page_url, data=login_form, auth=auth, timeout=15)
+        print("   🔓 Login al panel enviado")
+
+    return session, auth, base
+
+
+def dhru_find_user_id(session, auth, base, search_term):
+    """
+    Busca un usuario en el panel DHRU por username o email.
+    Devuelve el ID numérico como string, o None si no se encuentra.
+    """
+    # Si ya es un número, usarlo directamente
+    if str(search_term).isdigit():
+        return str(search_term)
+
+    print(f"   🔍 Buscando usuario: {search_term}")
+    try:
+        # Intentar con la página de búsqueda de usuarios
+        search_url = f"{base}/main2.php?page=viewuser&search={requests.utils.quote(str(search_term))}"
+        resp = session.get(search_url, auth=auth, timeout=15)
+
+        # Buscar patrón: link a edituser con id=N junto al username/email
+        # DHRU genera links tipo: main2.php?page=edituser&id=8
+        # Buscamos el ID cerca del término de búsqueda
+        pattern = rf'page=edituser[^"]*?id=(\d+)[^"]*"[^>]*>.*?{re.escape(str(search_term))}|{re.escape(str(search_term))}.*?page=edituser[^"]*?id=(\d+)'
+        match = re.search(pattern, resp.text, re.IGNORECASE | re.DOTALL)
+        if match:
+            uid = match.group(1) or match.group(2)
+            print(f"   ✅ Usuario encontrado: ID={uid}")
+            return uid
+
+        # Fallback: buscar todos los links de edituser y el término en el HTML
+        # Extraer tabla de usuarios: cada fila tiene id y username/email
+        rows = re.findall(r'id=(\d+)["\s][^>]*>.*?</tr>', resp.text, re.IGNORECASE | re.DOTALL)
+        for row_id_match in re.finditer(r'page=edituser[^"]*?[&?]id=(\d+)', resp.text, re.IGNORECASE):
+            uid = row_id_match.group(1)
+            # Ver si el término aparece cerca de este ID en el HTML
+            pos = row_id_match.start()
+            context = resp.text[max(0, pos-50):pos+300]
+            if search_term.lower() in context.lower():
+                print(f"   ✅ Usuario encontrado (fallback): ID={uid}")
+                return uid
+
+        print(f"   ⚠️ Usuario '{search_term}' no encontrado en el panel")
+        print(f"   📄 HTML (primeros 500): {resp.text[:500]}")
+        return None
+    except Exception as e:
+        print(f"   ❌ Error buscando usuario: {e}")
+        return None
+
+
+def dhru_manage_credits(action, reseller, amount):
+    """
+    Gestiona créditos usando el panel interno de DHRU.
+    action  : 'add' | 'deduct'
+    reseller: username, email o ID numérico del usuario
+    amount  : créditos a agregar/quitar (float)
+    """
+    if not DHRU_CALLBACK_URL:
+        return {'success': False, 'error': 'DHRU_CALLBACK_URL no configurado'}
+    if not DHRU_ADMIN_PATH:
+        return {'success': False, 'error': 'DHRU_ADMIN_PATH no configurado en .env'}
+
+    sign = '+' if action == 'add' else '-'
+    print(f"\n💰 [DHRU PANEL CREDIT] {action} -> user={reseller}: {sign}{amount}")
+
+    try:
+        # ── PASO 1: Sesión autenticada ──────────────────────────────────
+        session, auth, base = dhru_panel_session()
+
+        # ── PASO 2: Resolver username/email a ID numérico ───────────────
+        user_id = dhru_find_user_id(session, auth, base, reseller)
+        if not user_id:
+            return {'success': False, 'error': f'Usuario "{reseller}" no encontrado en el panel'}
+
+        # ── PASO 3: GET para obtener el CSRF token ──────────────────────
+        get_url = f"{base}/main2.php?page=edituser.accountfinancial&ptype=add"
+        get_resp = session.get(get_url, auth=auth, timeout=15)
+        print(f"   🔑 GET token page: {get_resp.status_code}")
+
+        if get_resp.status_code not in (200, 302):
+            return {'success': False, 'error': f'No se pudo acceder al panel: HTTP {get_resp.status_code}'}
+
+        token_match = re.search(
+            r'<input[^>]+name=["\']token["\'][^>]*value=["\']([a-f0-9]+)["\']',
+            get_resp.text, re.IGNORECASE
+        )
+        if not token_match:
+            token_match = re.search(r'["\']token["\']\s*[,:]\s*["\']([a-f0-9]{20,})["\']', get_resp.text)
+
+        if not token_match:
+            print(f"   ⚠️ HTML (primeros 300): {get_resp.text[:300]}")
+            return {'success': False, 'error': 'No se encontró token CSRF — posiblemente login fallido'}
+
+        csrf_token = token_match.group(1)
+        print(f"   ✅ Token: {csrf_token[:10]}... | user_id={user_id}")
+
+        # ── PASO 4: POST para agregar/quitar créditos ───────────────────
+        credit_type = 'addcredit' if action == 'add' else 'deductcredit'
+        post_url = f"{base}/includes/main.save.php?page=edituser.accountfinancial.save&ids={user_id}"
+
+        form_data = [
+            ('token',          csrf_token),
+            ('id[]',           'id'),
+            ('id[]',           str(user_id)),
+            ('type',           credit_type),
+            ('overdrive',      ''),
+            ('maxcredit',      '0.000'),
+            ('creditleft',     f"{float(amount):.2f}"),
+            ('paid',           'on'),
+            ('duedays',        '1'),
+            ('duedate',        ''),
+            ('paymentgateway', ''),
+            ('transactionid',  ''),
+            ('fees',           ''),
+            ('creditvalidity', ''),
+            ('admin_notea',    'Via WhatsApp'),
+            ('user_note',      ''),
+            ('sendmailca',     'on'),
+            ('rebatecredit',   ''),
+        ]
+
+        post_resp = session.post(post_url, data=form_data, auth=auth, timeout=15)
+        print(f"   📥 POST créditos: {post_resp.status_code} | {post_resp.text[:200]}")
+
+        if post_resp.status_code == 200:
+            txt = post_resp.text.strip()
+            if 'alert-success' in txt or '"success"' in txt:
+                verb = 'agregados' if action == 'add' else 'deducidos'
+                return {'success': True, 'message': f'{amount} créditos {verb} a {reseller} (ID:{user_id})'}
+            if 'alert-danger' in txt:
+                err_match = re.search(r'alert-danger[^>]*>(.*?)</div>', txt, re.DOTALL | re.IGNORECASE)
+                err_text = re.sub(r'<[^>]+>', '', err_match.group(1)).strip() if err_match else 'Error en el panel'
+                return {'success': False, 'error': err_text[:150]}
+            # Sin indicador claro → asumir éxito
+            verb = 'agregados' if action == 'add' else 'deducidos'
+            return {'success': True, 'message': f'{amount} créditos {verb} a {reseller} (ID:{user_id})'}
+        else:
+            return {'success': False, 'error': f'HTTP {post_resp.status_code}'}
+
+    except Exception as e:
+        print(f"   ❌ Error: {e}")
+        return {'success': False, 'error': str(e)}
 
 # ==================== PARSING UTILS ====================
 # (Funciones reutilizadas para entender DHRU)
@@ -261,15 +428,15 @@ def telegram_listener():
                                 
                             elif text in ['REJECT', 'RECHAZAR']:
                                 new_status = 3 # Rejected
-                                code_message = "Pedido rechazado por admin 🚫"
+                                code_message = "Pedido rechazado por admin"
                                 update_order_status(order_id, 3, code_message)
                                 
                                 # Hacer callback a DHRU
                                 callback_ok = dhru_callback(order_id, 3, code_message)
                                 if callback_ok:
-                                    response_text = f"🚫 Pedido {order_id} RECHAZADO y sincronizado con DHRU."
+                                    response_text = f"Pedido {order_id} RECHAZADO y sincronizado con DHRU."
                                 else:
-                                    response_text = f"🚫 Pedido {order_id} marcado como RECHAZADO (callback pendiente)."
+                                    response_text = f"Pedido {order_id} marcado como RECHAZADO (callback pendiente)."
                             
                             # Confirmar en Telegram
                             send_telegram_msg(user_chat_id, response_text)
@@ -452,6 +619,29 @@ class DHRUHandler(BaseHTTPRequestHandler):
             # Parseo más robusto de parámetros
             content_type = self.headers.get('Content-Type', '')
             
+            # ========== WEBHOOK DE CRÉDITOS ==========
+            if self.path == '/credit' and 'application/json' in content_type:
+                try:
+                    credit_data = json.loads(body.decode('utf-8'))
+                    action  = credit_data.get('action', '')   # 'add' o 'deduct'
+                    reseller = credit_data.get('reseller', '')
+                    amount  = credit_data.get('amount', 0)
+
+                    print(f"\n💰 [CREDIT WEBHOOK] action={action} reseller={reseller} amount={amount}")
+
+                    if not action or not reseller:
+                        return self._send_response({'error': 'Missing action or reseller'})
+                    if action not in ('add', 'deduct', 'balance'):
+                        return self._send_response({'error': 'action must be add, deduct or balance'})
+                    if action in ('add', 'deduct') and not amount:
+                        return self._send_response({'error': 'Missing amount'})
+
+                    result = dhru_manage_credits(action, reseller, float(amount) if amount else 0)
+                    return self._send_response(result)
+                except Exception as e:
+                    print(f"   ❌ Error en /credit: {e}")
+                    return self._send_response({'error': str(e)})
+
             # ========== WEBHOOK DE WHATSAPP ==========
             if self.path == '/webhook' and 'application/json' in content_type:
                 try:
@@ -474,10 +664,10 @@ class DHRUHandler(BaseHTTPRequestHandler):
                             print(f"   ✅ Pedido {order_id} marcado como COMPLETADO (Cod: {code_message})")
                         elif action == 'reject':
                             reason = webhook_data.get('reason', '')
-                            code_message = reason if reason else 'Rechazado por Admin 🚫'
+                            code_message = reason if reason else 'Rechazado por Admin'
                             update_order_status(order_id, 3, code_message)
                             dhru_callback(order_id, 3, code_message)
-                            print(f"   🚫 Pedido {order_id} RECHAZADO — {code_message}")
+                            print(f"    Pedido {order_id} RECHAZADO — {code_message}")
                         
                         return self._send_response({'success': True})
                     
@@ -679,6 +869,18 @@ class DHRUHandler(BaseHTTPRequestHandler):
                             'Requires.Custom': [
                                 {'type': 'serviceimei', 'fieldname': 'TARGETUSER', 'fieldtype': 'text', 'description': 'Usuario existente', 'fieldoptions': '', 'required': 1}
                             ]
+                        },
+                        405: {
+                            'SERVICEID': 405,
+                            'SERVICETYPE': 'SERVER',
+                            'SERVICENAME': 'Vivo FRP + RESET Qcom / MTK ✅',
+                            'CREDIT': 0.00,
+                            'INFO': 'Vivo FRP + Reset Qualcomm / MediaTek',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [
+                                {'type': 'serviceimei', 'fieldname': 'ULTRA VIEWER ID + PASS', 'fieldtype': 'text', 'description': 'Ultra Viewer ID y contraseña', 'fieldoptions': '', 'required': 1}
+                            ]
                         }
                     }
                 },
@@ -718,17 +920,27 @@ class DHRUHandler(BaseHTTPRequestHandler):
                             'SERVICETYPE': 'IMEI',
                             'SERVICENAME': 'Preventivo solo IMEI 🇵🇪',
                             'CREDIT': 0.00,
-                            'INFO': 'Preventivo solo IMEI Peru (IMEI + Numero)',
+                            'INFO': 'Preventivo solo IMEI Peru (IMEI + Numero + Email)',
                             'TIME': '1-24 Hours',
                             'QNT': 0,
-                            'Requires.Custom': [{
-                                'type': 'serviceimei',
-                                'fieldname': 'Numero',
-                                'fieldtype': 'text',
-                                'description': 'Numero de telefono',
-                                'fieldoptions': '',
-                                'required': 1
-                            }]
+                            'Requires.Custom': [
+                                {
+                                    'type': 'serviceimei',
+                                    'fieldname': 'Numero Entel, Si No Tiene No Escribir Nada',
+                                    'fieldtype': 'text',
+                                    'description': 'Numero de telefono Entel',
+                                    'fieldoptions': '',
+                                    'required': 0
+                                },
+                                {
+                                    'type': 'serviceimei',
+                                    'fieldname': 'Email',
+                                    'fieldtype': 'text',
+                                    'description': 'Correo electronico del cliente',
+                                    'fieldoptions': '',
+                                    'required': 0
+                                }
+                            ]
                         },
                         305: {
                             'SERVICEID': 305,
@@ -802,7 +1014,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
                         310: {
                             'SERVICEID': 310,
                             'SERVICETYPE': 'IMEI',
-                            'SERVICENAME': 'Entel Recuperado 🔵',
+                            'SERVICENAME': 'Entel Recuperado 💙',
                             'CREDIT': 0.00,
                             'INFO': 'Entel Recuperado (IMEI + Numero)',
                             'TIME': '1-24 Hours',
@@ -815,6 +1027,32 @@ class DHRUHandler(BaseHTTPRequestHandler):
                                 'fieldoptions': '',
                                 'required': 1
                             }]
+                        },
+                        311: {
+                            'SERVICEID': 311,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'Entel Forte 🔵',
+                            'CREDIT': 0.00,
+                            'INFO': 'Entel Forte Peru',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0,
+                            'Requires.Custom': [{
+                                'type': 'serviceimei',
+                                'fieldname': 'Numero',
+                                'fieldtype': 'text',
+                                'description': 'Numero de telefono',
+                                'fieldoptions': '',
+                                'required': 1
+                            }]
+                        },
+                        312: {
+                            'SERVICEID': 312,
+                            'SERVICETYPE': 'IMEI',
+                            'SERVICENAME': 'HONOR FRP Service',
+                            'CREDIT': 0.00,
+                            'INFO': 'Honor FRP Removal Service',
+                            'TIME': '1-24 Hours',
+                            'QNT': 0
                         },
                         401: {
                             'SERVICEID': 401,
@@ -863,10 +1101,10 @@ class DHRUHandler(BaseHTTPRequestHandler):
                 }]
             })
 
-        # --- LISTA SERVICIOS REMOTOS (REMOTE SERVICES) ---
-        # Esta es la ACTION que DHRU usa para poblar el dropdown en Remote Services
+        #LISTA SERVICIOS REMOTOS (REMOTE SERVICES)
+        #ACTION DHRU DROPDOWN
         elif action == 'remoteservicelist':
-            print("📋 [DHRU] Solicitando remoteservicelist")
+            print(" [DHRU] Solicitando remoteservicelist")
             return self._send_response({
                 'SUCCESS': [{
                     'MESSAGE': 'Remote Service List',
@@ -929,6 +1167,16 @@ class DHRUHandler(BaseHTTPRequestHandler):
                                         {'type': 'serviceremote', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1},
                                         {'type': 'serviceremote', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1},
                                         {'type': 'serviceremote', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1}
+                                    ]
+                                },
+                                405: {
+                                    'SERVICEID': 405,
+                                    'SERVICETYPE': 'REMOTE',
+                                    'SERVICENAME': 'Vivo FRP + RESET Qcom / MTK ✅',
+                                    'CREDIT': 0.00,
+                                    'QNT': 0,
+                                    'Requires.Custom': [
+                                        {'type': 'serviceremote', 'fieldname': 'ULTRA VIEWER ID + PASS', 'fieldtype': 'text', 'required': 1}
                                     ]
                                 }
                             }
@@ -996,6 +1244,15 @@ class DHRUHandler(BaseHTTPRequestHandler):
                                         {'type': 'serviceserver', 'fieldname': 'IP', 'fieldtype': 'text', 'required': 1},
                                         {'type': 'serviceserver', 'fieldname': 'MODEL', 'fieldtype': 'text', 'required': 1},
                                         {'type': 'serviceserver', 'fieldname': 'SN', 'fieldtype': 'text', 'required': 1}
+                                    ]
+                                },
+                                405: {
+                                    'SERVICEID': 405,
+                                    'SERVICENAME': 'Vivo FRP + RESET Qcom / MTK ✅',
+                                    'CREDIT': 0.00,
+                                    'QNT': 0,
+                                    'Requires.Custom': [
+                                        {'type': 'serviceserver', 'fieldname': 'ULTRA VIEWER ID + PASS', 'fieldtype': 'text', 'required': 1}
                                     ]
                                 }
                             }
@@ -1124,7 +1381,9 @@ class DHRUHandler(BaseHTTPRequestHandler):
             '307': '🇨🇴 No Registro Movistar Colombia',
             '308': '🇨🇴 Xiaomi Colombia - Xiaomi Account Clean',
             '309': '🇵🇪 Xiaomi Peru - Mi Account Clean',
-            '310': 'Entel Recuperado 🔵',
+            '310': 'Entel Recuperado 💙',
+            '311': 'Entel Forte 🔵',
+            '312': 'HONOR FRP Service',
             '401': 'FRP V5 (S Series & Z Fold & Flip) ✅',
             '402': 'FRP V5 (A Series & M, F Series High) ✅',
             '403': 'FRP V5 (A Series & M, F Series Low) ✅️',
@@ -1133,16 +1392,18 @@ class DHRUHandler(BaseHTTPRequestHandler):
         
         # Mapeo de service ID -> grupo de WhatsApp
         imei_group_routing = {
-            '301': 'Tigo Nuevo',
-            '302': 'NUEVO SISTEMA CLARO',
-            '303': 'Procesos LeoPe-Gsm',
+            '301': 'Tigo Milo Colombia 🔵',
+            '302': 'Sistema Claro Chamo ✅',
+            '303': 'JUSTIFICADO NUEVO 3 DIAS ✅✅✅',
             '304': 'Registro Preventivo Entel 🔵',
             '305': 'PREVENTIVO BITEL AQUI',
-            '306': 'Kurama Claro Procesos 🔴',
+            '306': 'Claro Procesos MILO ⚡️',
             '307': 'Leo Registro Claro & MOVISTAR Colombia',
             '308': 'Xiaomi Colombia Procesos 🇨🇴',
             '309': 'XIAOMI HOY ACA',
-            '310': 'SISTEMA ENTEL RECUPERADO ✅',
+            '310': 'Entel Recuperado 💙',
+            '311': 'ENTEL FORTE SOLO ENTEL✅',
+            '312': 'Honor Uzbekistan 🇺🇿',
             '401': 'Sam FRP V5 BUG✅',
             '402': 'Sam FRP V5 BUG✅',
             '403': 'Sam FRP V5 BUG✅',
@@ -1162,6 +1423,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
             '209': '⚡ FRP — MOTOROLA (Qualcomm) All Models',
             '210': 'Octoplus Credits New User🐙',
             '211': 'Octoplus credits Exist User🐙',
+            '405': '📱 Vivo FRP + RESET Qcom / MTK ✅',
         }
         
         # Mapeo de service ID -> grupo de WhatsApp (solo los que NO van al grupo por defecto)
@@ -1169,6 +1431,7 @@ class DHRUHandler(BaseHTTPRequestHandler):
             '209': 'Moto Qcom Orders 🟢',
             '210': 'Octoplus Creditos 🐙',
             '211': 'Octoplus Creditos 🐙',
+            '405': 'Vivo',
         }
         
         sid = str(service_id)
@@ -1179,10 +1442,14 @@ class DHRUHandler(BaseHTTPRequestHandler):
             s_name = imei_services_names.get(sid, f"IMEI Service #{service_id}")
             msg = f"{s_name}\nIMEI: {imei}"
             
-            # El 303 omite todos los campos extras (incluyendo QNT)
+            # El 303 omite todos los campos extras
             if sid != '303':
                 if custom_fields and isinstance(custom_fields, dict):
-                    skip_fields = ['Mail', 'mail', 'email', 'Email', 'raw']
+                    # Para el 304 (Preventivo Entel) el Email también se incluye
+                    if sid == '304':
+                        skip_fields = ['Mail', 'mail', 'raw']
+                    else:
+                        skip_fields = ['Mail', 'mail', 'email', 'Email', 'raw']
                     for field_name, field_value in custom_fields.items():
                         if field_name not in skip_fields and field_value:
                             msg += f"\n{field_name}: {field_value}"
