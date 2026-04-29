@@ -98,22 +98,26 @@
             showStatus('Verificando disponibilidad...', 'info');
 
             try {
-                // Check Username
-                const c1 = await fetch(`${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=id`, {
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                // Check Username via RPC
+                const c1 = await fetch(`${SUPABASE_URL}/rest/v1/rpc/check_username_available`, {
+                    method: 'POST',
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_username: username })
                 });
-                const d1 = await c1.json();
-                if(d1.length > 0) {
+                const usernameAvailable = await c1.json();
+                if(!usernameAvailable) {
                     btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
                     return showStatus('El usuario ya existe', 'error');
                 }
 
-                // Check Email (DB)
-                const c2 = await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id`, {
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                // Check Email via RPC
+                const c2 = await fetch(`${SUPABASE_URL}/rest/v1/rpc/check_email_available`, {
+                    method: 'POST',
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_email: email })
                 });
-                const d2 = await c2.json();
-                if(d2.length > 0) {
+                const emailAvailable = await c2.json();
+                if(!emailAvailable) {
                     btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
                     return showStatus('El email ya está registrado', 'error');
                 }

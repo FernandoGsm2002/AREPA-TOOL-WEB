@@ -100,31 +100,38 @@
             showStatus('Conectando...', 'info');
             
             try {
-                // 1. Check user status
-                const userRes = await fetch(`${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=*`, {
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                // 1. Check user status via RPC (no expone toda la tabla)
+                const rpcRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_user_for_login`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ p_username: username })
                 });
-                const users = await userRes.json();
-                
-                if (!users || users.length === 0) {
+                const rows = await rpcRes.json();
+
+                if (!rows || rows.length === 0) {
                     btn.disabled = false;
                     btn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión';
                     return showStatus('Usuario no encontrado', 'error');
                 }
-                
-                const user = users[0];
-                if (user.status !== 'active' && user.status !== 'admin') { // Assuming 'active' is the standard
-                     // Actually logic in original was 'pending' check. 
-                     if(user.status === 'pending') {
-                         btn.disabled = false;
-                         btn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión';
-                         return showStatus('Cuenta pendiente de activación', 'warning');
-                     }
-                     if(user.status === 'suspended') {
-                         btn.disabled = false;
-                         btn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión';
-                         return showStatus('Cuenta suspendida', 'error');
-                     }
+
+                const user = rows[0];
+                if (user.status === 'pending') {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión';
+                    return showStatus('Cuenta pendiente de activación', 'warning');
+                }
+                if (user.status === 'suspended') {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión';
+                    return showStatus('Cuenta suspendida', 'error');
+                }
+                if (user.status !== 'active' && user.status !== 'admin') {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión';
+                    return showStatus('Cuenta no autorizada', 'error');
                 }
 
                 // 2. Auth
