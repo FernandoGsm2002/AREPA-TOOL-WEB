@@ -161,11 +161,17 @@ export default async function handler(req, res) {
       .eq('email', email)
       .maybeSingle();
 
-    if (error || !user) {
+    if (error) {
+      console.error('[DHRU] Supabase query error:', error.message, error.code);
       return res.status(200).json({
-        ERROR: [{
-          MESSAGE: 'Email not found. User must register first.'
-        }]
+        ERROR: [{ MESSAGE: `Database error: ${error.message}` }]
+      });
+    }
+
+    if (!user) {
+      console.log('[DHRU] Email not found in public.users:', email);
+      return res.status(200).json({
+        ERROR: [{ MESSAGE: 'Email not found. User must register first.' }]
       });
     }
 
@@ -179,7 +185,7 @@ export default async function handler(req, res) {
 
     const orderId = `AREPA_${Date.now()}`;
 
-    await supabase
+    const { error: updateError } = await supabase
       .from('users')
       .update({
         status: 'active',
@@ -188,6 +194,13 @@ export default async function handler(req, res) {
         dhru_order_id: orderId
       })
       .eq('id', user.id);
+
+    if (updateError) {
+      console.error('[DHRU] Error updating user:', updateError.message);
+      return res.status(200).json({
+        ERROR: [{ MESSAGE: `Failed to activate license: ${updateError.message}` }]
+      });
+    }
 
     return res.status(200).json({
       SUCCESS: [{

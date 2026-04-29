@@ -203,48 +203,29 @@ function filterUsers(status) {
 // User Actions
 async function approveUser(userId) {
     if (!confirm('Approve this user?')) return;
-    
+
     try {
-        const now = new Date().toISOString();
-        const oneYearLater = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
-        
-        const { error } = await supabaseClient
-            .from('users')
-            .update({ 
-                status: 'active',
-                activated_at: now,
-                subscription_end: oneYearLater
-            })
-            .eq('id', userId);
-        
-        if (error) throw error;
-        
+        await adminFetch('approve-user', { userId });
         await logAudit(userId, 'approve_user', 'User approved and activated');
         await loadUsers();
         showSuccess('User approved successfully');
     } catch (error) {
         console.error('Error approving user:', error);
-        showError('Failed to approve user');
+        showError('Failed to approve user: ' + error.message);
     }
 }
 
 async function suspendUser(userId) {
     if (!confirm('Suspend this user?')) return;
-    
+
     try {
-        const { error } = await supabaseClient
-            .from('users')
-            .update({ status: 'suspended' })
-            .eq('id', userId);
-        
-        if (error) throw error;
-        
+        await adminFetch('suspend-user', { userId });
         await logAudit(userId, 'suspend_user', 'User suspended');
         await loadUsers();
         showSuccess('User suspended successfully');
     } catch (error) {
         console.error('Error suspending user:', error);
-        showError('Failed to suspend user');
+        showError('Failed to suspend user: ' + error.message);
     }
 }
 
@@ -255,7 +236,7 @@ function editUser(userId) {
     currentUserId = userId;
     document.getElementById('modal-username').value = user.username;
     document.getElementById('modal-status').value = user.status;
-    document.getElementById('modal-subscription-end').value = user.subscription_end.split('T')[0];
+    document.getElementById('modal-subscription-end').value = user.subscription_end ? user.subscription_end.split('T')[0] : '';
     
     const modal = new bootstrap.Modal(document.getElementById('userActionModal'));
     modal.show();
@@ -265,25 +246,16 @@ async function saveUserChanges() {
     try {
         const status = document.getElementById('modal-status').value;
         const subscriptionEnd = document.getElementById('modal-subscription-end').value;
-        
-        const { error } = await supabaseClient
-            .from('users')
-            .update({ 
-                status,
-                subscription_end: new Date(subscriptionEnd).toISOString()
-            })
-            .eq('id', currentUserId);
-        
-        if (error) throw error;
-        
+
+        await adminFetch('update-user', { userId: currentUserId, status, subscriptionEnd });
         await logAudit(currentUserId, 'update_user', `Status: ${status}, Subscription updated`);
-        
+
         bootstrap.Modal.getInstance(document.getElementById('userActionModal')).hide();
         await loadUsers();
         showSuccess('User updated successfully');
     } catch (error) {
         console.error('Error updating user:', error);
-        showError('Failed to update user');
+        showError('Failed to update user: ' + error.message);
     }
 }
 
@@ -1438,51 +1410,104 @@ const CLOUDFLARE_ACCOUNT_ID = '8fc120a4cc06bc9a39d9555a416fa166';
 // LOGIN SYSTEM
 // =====================================================
 
-const ADMIN_CREDENTIALS = {
-    username: 'arepatool',
-    password: 'nadiemeama123'
-};
+async function adminFetch(action, body) {
+    const session = JSON.parse(sessionStorage.getItem('adminSession') || '{}');
+    const res = await fetch(`/api/admin-actions?action=${action}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token || ''}`
+        },
+        body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    return data;
+}
 
 function checkLogin() {
-    const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+    const session = sessionStorage.getItem('adminSession');
     const loginOverlay = document.getElementById('login-overlay');
-    
-    if (isLoggedIn === 'true') {
-        if (loginOverlay) {
-            loginOverlay.remove(); // Remove from DOM completely
-        }
-        return true;
+
+    if (session) {
+        try {
+            const data = JSON.parse(session);
+            if (data.access_token && data.expires > Date.now()) {
+                if (loginOverlay) loginOverlay.remove();
+                return true;
+            }
+        } catch (e) {}
+        sessionStorage.removeItem('adminSession');
     }
     return false;
 }
 
-function doLogin() {
-    const username = document.getElementById('login-username').value.trim();
+async function doLogin() {
+    const username = document.getElementById('login-username').value.trim().toLowerCase();
     const password = document.getElementById('login-password').value;
     const errorDiv = document.getElementById('login-error');
     const loginOverlay = document.getElementById('login-overlay');
-    
-    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-        sessionStorage.setItem('adminLoggedIn', 'true');
-        
-        // Remove overlay completely from DOM
-        if (loginOverlay) {
-            loginOverlay.remove();
+    const btn = document.getElementById('login-btn');
+
+    if (!username || !password) {
+        errorDiv.textContent = 'Completa los campos';
+        errorDiv.classList.remove('d-none');
+        return;
+    }
+
+    if (btn) { btn.disabled = true; btn.textContent = 'Verificando...'; }
+    errorDiv.classList.add('d-none');
+
+    try {
+        // 1. Fetch user profile by username to get email
+        const profileRes = await fetch(
+            `${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=email,status`,
+            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+        );
+        const profiles = await profileRes.json();
+
+        if (!profiles || profiles.length === 0) {
+            throw new Error('Usuario no encontrado');
         }
-        
-        errorDiv.classList.add('d-none');
-        console.log('Admin logged in successfully');
-        // Initialize panel after successful login
+
+        const profile = profiles[0];
+        if (profile.status !== 'admin') {
+            throw new Error('Acceso denegado');
+        }
+
+        // 2. Authenticate with Supabase Auth
+        const authRes = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+            method: 'POST',
+            headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: profile.email, password })
+        });
+        const authData = await authRes.json();
+
+        if (!authRes.ok) {
+            throw new Error('Contraseña incorrecta');
+        }
+
+        // 3. Store session
+        sessionStorage.setItem('adminSession', JSON.stringify({
+            access_token: authData.access_token,
+            username,
+            expires: Date.now() + (authData.expires_in * 1000)
+        }));
+
+        if (loginOverlay) loginOverlay.remove();
         initializePanel();
-    } else {
+
+    } catch (err) {
+        errorDiv.textContent = err.message || 'Error de autenticación';
         errorDiv.classList.remove('d-none');
         document.getElementById('login-password').value = '';
+        if (btn) { btn.disabled = false; btn.textContent = 'Ingresar'; }
     }
 }
 
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
-        sessionStorage.removeItem('adminLoggedIn');
+        sessionStorage.removeItem('adminSession');
         window.location.reload();
     }
 }
