@@ -1133,9 +1133,13 @@
             try {
                 document.getElementById('dnsLoadingText').textContent = 'Conectando...';
                 
+                const _sess = JSON.parse(localStorage.getItem('arepatool_session') || '{}');
                 const response = await fetch('/api/nextdns?action=create-profile', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${_sess.access_token || ''}`
+                    },
                     body: JSON.stringify({ name: profileName, profileType })
                 });
 

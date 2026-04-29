@@ -2,22 +2,20 @@
 // Deploy on Vercel
 
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { createClient } from '@supabase/supabase-js';
 
-// R2 Configuration (same as C# app)
+// R2 Configuration — credentials must be set as environment variables
 const R2_CONFIG = {
-    endpoint: 'https://8fc120a4cc06bc9a39d9555a416fa166.r2.cloudflarestorage.com',
-    accessKeyId: 'ca1f0062efaa08d8af4e8f0be7fee5e3',
-    secretAccessKey: 'b420796aee7bdd0e79117023f3bb638dc037fb70a00935f6836119f8059df57b',
+    endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    accessKeyId: process.env.R2_ACCESS_KEY_ID,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
     region: 'auto',
-    bucketDnsConfig: 'arepatool-dnsconfig',
+    bucketDnsConfig: process.env.R2_DNS_BUCKET || 'arepatool-dnsconfig',
     dnsConfigFile: 'config/nextdns-profiles.json'
 };
 
-// NextDNS API Keys (rotation)
-const NEXTDNS_API_KEYS = [
-    'f3ff5d05f3ac58b3520fce543911b60780717ce1',
-    '753857c8f7a93e2172f20b41c55e0b311760058b'
-];
+// NextDNS API Keys — set as environment variables (comma-separated)
+const NEXTDNS_API_KEYS = (process.env.NEXTDNS_API_KEYS || '').split(',').filter(Boolean);
 
 let currentApiKeyIndex = 0;
 let cachedConfig = null;
@@ -25,12 +23,12 @@ let cacheTime = 0;
 const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
 
 function getNextApiKey() {
+    if (NEXTDNS_API_KEYS.length === 0) return null;
     const key = NEXTDNS_API_KEYS[currentApiKeyIndex];
     currentApiKeyIndex = (currentApiKeyIndex + 1) % NEXTDNS_API_KEYS.length;
     return key;
 }
 
-// Get R2 client
 function getR2Client() {
     return new S3Client({
         region: R2_CONFIG.region,
@@ -42,9 +40,7 @@ function getR2Client() {
     });
 }
 
-// Fetch DNS config from R2
 async function fetchDnsConfigFromR2() {
-    // Check cache
     if (cachedConfig && Date.now() - cacheTime < CACHE_DURATION) {
         return cachedConfig;
     }
@@ -60,7 +56,6 @@ async function fetchDnsConfigFromR2() {
         const bodyString = await response.Body.transformToString();
         const config = JSON.parse(bodyString);
 
-        // Update cache
         cachedConfig = config;
         cacheTime = Date.now();
 
@@ -71,15 +66,13 @@ async function fetchDnsConfigFromR2() {
     }
 }
 
-// Get domains for a profile type
 async function getDomainsForProfile(profileType) {
     const config = await fetchDnsConfigFromR2();
-    
+
     if (config?.Profiles?.[profileType]?.Domains) {
         return config.Profiles[profileType].Domains;
     }
 
-    // Fallback domains (hardcoded)
     const FALLBACK_DOMAINS = {
         ClaroTelcelBypass: [
             'poemcl.com', 'ppmxfa.com', 'f2ppch.cl', 'www.inhab.claro.com.gt',
@@ -113,11 +106,40 @@ async function getDomainsForProfile(profileType) {
     return FALLBACK_DOMAINS[profileType] || [];
 }
 
+// Validate the Supabase session token from the Authorization header
+async function validateSession(req) {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return null;
+    }
+
+    const token = authHeader.slice(7);
+
+    const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    );
+
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error || !data?.user) return null;
+
+    // Verify the user has an active subscription in public.users
+    const { data: profile, error: profileError } = await supabase
+        .from('users')
+        .select('status')
+        .eq('email', data.user.email)
+        .maybeSingle();
+
+    if (profileError || !profile) return null;
+    if (profile.status !== 'active' && profile.status !== 'admin') return null;
+
+    return data.user;
+}
+
 export default async function handler(req, res) {
-    // CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || 'https://arepatool.com');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
@@ -125,7 +147,12 @@ export default async function handler(req, res) {
 
     const { action } = req.query;
 
-    // Get remote DNS config
+    // All actions require a valid authenticated session
+    const user = await validateSession(req);
+    if (!user) {
+        return res.status(401).json({ error: 'Unauthorized. Valid session required.' });
+    }
+
     if (action === 'get-config') {
         try {
             const config = await fetchDnsConfigFromR2();
@@ -139,21 +166,21 @@ export default async function handler(req, res) {
         }
     }
 
-    // Create DNS profile
     if (req.method === 'POST' && action === 'create-profile') {
         try {
             const { name, profileType } = req.body;
-            
+
             if (!name || !profileType) {
                 return res.status(400).json({ error: 'Missing name or profileType' });
             }
 
             const apiKey = getNextApiKey();
+            if (!apiKey) {
+                return res.status(500).json({ error: 'NextDNS API not configured' });
+            }
 
-            // 1. Get domains from R2 config (or fallback)
             const domains = await getDomainsForProfile(profileType);
 
-            // 2. Create profile in NextDNS
             const createRes = await fetch('https://api.nextdns.io/profiles', {
                 method: 'POST',
                 headers: {
@@ -176,7 +203,6 @@ export default async function handler(req, res) {
                 return res.status(500).json({ error: 'No profile ID returned from NextDNS' });
             }
 
-            // 3. Add domains to denylist
             let domainsAdded = 0;
             for (const domain of domains) {
                 try {

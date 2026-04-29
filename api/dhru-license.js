@@ -37,7 +37,13 @@ export default async function handler(req, res) {
 
   // ================= API KEY =================
   const API_SECRET = process.env.DHRU_API_SECRET;
-  if (API_SECRET && apiKey && apiKey !== API_SECRET) {
+  if (!API_SECRET) {
+    console.error('DHRU_API_SECRET env var not set — refusing all requests');
+    return res.status(200).json({
+      ERROR: [{ MESSAGE: 'Service not configured' }]
+    });
+  }
+  if (!apiKey || apiKey !== API_SECRET) {
     return res.status(200).json({
       ERROR: [{ MESSAGE: 'Authentication Failed' }]
     });

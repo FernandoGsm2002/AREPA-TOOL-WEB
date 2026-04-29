@@ -1,5 +1,6 @@
 import { S3Client, PutObjectCommand, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { createClient } from '@supabase/supabase-js';
 
 // R2 Configuration - Using environment variables for security
 const R2_CONFIG = {
@@ -22,14 +23,42 @@ const s3Client = new S3Client({
     forcePathStyle: true, // Required for R2
 });
 
+async function validateSession(req) {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
+    const token = authHeader.slice(7);
+
+    const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    );
+
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error || !data?.user) return null;
+
+    const { data: profile } = await supabase
+        .from('users')
+        .select('status')
+        .eq('email', data.user.email)
+        .maybeSingle();
+
+    if (!profile || (profile.status !== 'active' && profile.status !== 'admin')) return null;
+    return data.user;
+}
+
 export default async function handler(req, res) {
     // CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || 'https://arepatool.com');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
+    }
+
+    const user = await validateSession(req);
+    if (!user) {
+        return res.status(401).json({ error: 'Unauthorized. Valid session required.' });
     }
 
     const { action } = req.query;

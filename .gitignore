@@ -1,40 +1,74 @@
-# Environment variables
+# ==========================================
+# Environment variables — NEVER commit these
+# ==========================================
 .env
 .env.local
 .env.production
+.env.development
 
+# ==========================================
 # Node modules
+# ==========================================
 node_modules/
 
+# ==========================================
 # Logs
+# ==========================================
 *.log
 npm-debug.log*
 
+# ==========================================
 # OS files
+# ==========================================
 .DS_Store
 Thumbs.db
 
+# ==========================================
 # IDE
+# ==========================================
 .vscode/
 .idea/
 
+# ==========================================
 # Temporary files
+# ==========================================
 *.tmp
 *.temp
+*.rar
+*.zip
 
 # ==========================================
-# WhatsApp Bot - Sesión y caché de Puppeteer
-# Estos archivos son generados en runtime y
-# pueden estar bloqueados por el proceso activo
+# Backend / Infraestructura — NO pertenece al repo web
+# Estos corren en tu servidor/Docker, no en Vercel
+# ==========================================
+DHRU-WHATSAPP-BRIDGE/
+bypass-server/
+dhru-integration/
+docker-mac/
+supabase-functions/
+
+# ==========================================
+# Email templates (no son páginas web)
+# ==========================================
+EMAIL-TEMPLATE-*.html
+TEMPLATE-SUPABASE-*.html
+
+# ==========================================
+# Archivos temporales de desarrollo
+# ==========================================
+ohidera_card_temp.html
+
+# ==========================================
+# WhatsApp Bot — sesión, caché y datos runtime
 # ==========================================
 DHRU-WHATSAPP-BRIDGE/whatsapp-service/whatsapp-session/
 DHRU-WHATSAPP-BRIDGE/whatsapp-service/.wwebjs_cache/
 DHRU-WHATSAPP-BRIDGE/whatsapp-service/.wwebjs_auth/
-
-# Base de datos de pedidos (runtime)
 DHRU-WHATSAPP-BRIDGE/orders_db.json
 
+# ==========================================
 # Python cache
+# ==========================================
 __pycache__/
 *.pyc
 *.pyo
