@@ -109,16 +109,10 @@ function showSection(section) {
 // Load Users
 async function loadUsers() {
     try {
-        const { data, error } = await supabaseClient
-            .from('users')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        
-        allUsers = data;
-        displayUsers(data);
-        updateUserCounts(data);
+        const data = await adminFetch('list-users', {});
+        allUsers = data.users;
+        displayUsers(data.users);
+        updateUserCounts(data.users);
     } catch (error) {
         console.error('Error loading users:', error);
         showError('Failed to load users');
@@ -420,14 +414,15 @@ async function logAudit(userId, action, details) {
 // Statistics
 async function updateStatistics() {
     try {
-        const { data: users } = await supabaseClient.from('users').select('status');
+        const result = await adminFetch('list-users', {});
+        const users = result.users || [];
         const { data: sessions } = await supabaseClient.from('sessions').select('id');
-        
-        document.getElementById('stat-total-users').textContent = users?.length || 0;
-        document.getElementById('stat-active-users').textContent = 
-            users?.filter(u => u.status === 'active').length || 0;
-        document.getElementById('stat-pending-users').textContent = 
-            users?.filter(u => u.status === 'pending').length || 0;
+
+        document.getElementById('stat-total-users').textContent = users.length;
+        document.getElementById('stat-active-users').textContent =
+            users.filter(u => u.status === 'active').length;
+        document.getElementById('stat-pending-users').textContent =
+            users.filter(u => u.status === 'pending').length;
         document.getElementById('stat-active-sessions').textContent = sessions?.length || 0;
     } catch (error) {
         console.error('Error updating statistics:', error);
@@ -1459,11 +1454,12 @@ async function doLogin() {
     errorDiv.classList.add('d-none');
 
     try {
-        // 1. Fetch user profile by username to get email
-        const profileRes = await fetch(
-            `${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=email,status`,
-            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
-        );
+        // 1. Fetch user profile via RPC (tabla restringida, solo devuelve email+status)
+        const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_user_for_login`, {
+            method: 'POST',
+            headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ p_username: username })
+        });
         const profiles = await profileRes.json();
 
         if (!profiles || profiles.length === 0) {
