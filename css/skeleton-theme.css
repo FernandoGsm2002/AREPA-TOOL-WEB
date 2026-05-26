@@ -6,31 +6,31 @@
 /* 1. TOKENS & VARIABLES
    ========================================================================== */
 :root {
-    /* Brand Colors - Preserving Original Green */
-    --primary-50:  #ecfdf5;
-    --primary-100: #d1fae5;
-    --primary-200: #a7f3d0;
-    --primary-300: #6ee7b7;
-    --primary-400: #34d399;
-    --primary-500: #059669; /* core */
-    --primary-600: #047857;
-    --primary-700: #065f46;
-    --primary-800: #064e3b;
-    --primary-900: #022c22;
-    --primary-glow: rgba(5, 150, 105, 0.4);
+    /* Brand Colors - Premium Gold/Amber Theme */
+    --primary-50:  #fffdf5;
+    --primary-100: #fef9e0;
+    --primary-200: #fdf0b3;
+    --primary-300: #fce480;
+    --primary-400: #fad34d;
+    --primary-500: #f2a900; /* core gold/amber */
+    --primary-600: #c78a00;
+    --primary-700: #9c6c00;
+    --primary-800: #704e00;
+    --primary-900: #453000;
+    --primary-glow: rgba(242, 169, 0, 0.35);
 
-    /* Surface Colors (Slate/Dark Blue Grey) */
-    --surface-50:  #f8fafc;
-    --surface-100: #f1f5f9;
-    --surface-200: #e2e8f0;
-    --surface-300: #cbd5e1;
-    --surface-400: #94a3b8;
-    --surface-500: #64748b;
-    --surface-600: #475569;
-    --surface-700: #334155;
-    --surface-800: #1e293b;
-    --surface-900: #0f172a;
-    --surface-950: #020617;
+    /* Surface Colors (Neutral Charcoal & Sleek Dark Grays) */
+    --surface-50:  #f5f5f7;
+    --surface-100: #e8e8ed;
+    --surface-200: #d2d2d7;
+    --surface-300: #86868b;
+    --surface-400: #6e6e73;
+    --surface-500: #515154;
+    --surface-600: #3a3a3c;
+    --surface-700: #2c2c2e; /* Card borders / Outline buttons */
+    --surface-800: #18181b; /* Card backgrounds / Sidebar backgrounds for contrast */
+    --surface-900: #0f0f11; /* Section backgrounds / Inner panel backgrounds */
+    --surface-950: #08080a; /* Main body / Deepest dark background */
 
     /* Semantic */
     --color-success: #10b981;
@@ -44,10 +44,10 @@
     --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
 
     /* Glassmorphism */
-    --glass-bg: rgba(15, 23, 42, 0.75);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(15, 15, 17, 0.8);
+    --glass-border: rgba(242, 169, 0, 0.15);
     --glass-blur: 16px;
-    --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
     /* Spacing & Layout */
     --radius-sm: 4px;
@@ -83,10 +83,9 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     min-height: 100vh;
-    /* Subtle mesh gradient background */
-    background-image: 
-        radial-gradient(at 0% 0%, rgba(5, 150, 105, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
+    background-image:
+        radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.045) 1px, transparent 0);
+    background-size: 32px 32px;
     background-attachment: fixed;
 }
 
@@ -120,7 +119,7 @@ h4 { font-size: 1.5rem; }
 h5 { font-size: 1.25rem; }
 
 .text-gradient {
-    background: linear-gradient(135deg, var(--primary-400), var(--color-info));
+    background: linear-gradient(135deg, var(--primary-300), var(--primary-500));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -155,13 +154,14 @@ h5 { font-size: 1.25rem; }
 
 .btn-primary {
     background: var(--primary-500);
-    color: white;
-    box-shadow: 0 0 20px rgba(5, 150, 105, 0.3);
+    color: #000000;
+    box-shadow: 0 0 20px rgba(242, 169, 0, 0.25);
 }
 
 .btn-primary:hover {
     background: var(--primary-400);
-    box-shadow: 0 0 30px rgba(5, 150, 105, 0.5);
+    color: #000000;
+    box-shadow: 0 0 30px rgba(242, 169, 0, 0.45);
     transform: translateY(-2px);
 }
 
@@ -185,7 +185,7 @@ h5 { font-size: 1.25rem; }
 
 .btn-outline:hover {
     background: var(--primary-500);
-    color: white;
+    color: #000000;
     transform: translateY(-2px);
 }
 
@@ -211,11 +211,11 @@ h5 { font-size: 1.25rem; }
 }
 
 .glass-panel {
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(15, 15, 17, 0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .card:hover {
@@ -289,7 +289,7 @@ h5 { font-size: 1.25rem; }
 .form-control:focus {
     outline: none;
     border-color: var(--primary-500);
-    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
+    box-shadow: 0 0 0 3px rgba(242, 169, 0, 0.2);
     background: var(--surface-950);
 }
 
@@ -343,7 +343,7 @@ h5 { font-size: 1.25rem; }
     letter-spacing: 0.05em;
 }
 
-.badge-primary { background: rgba(5, 150, 105, 0.2); color: var(--primary-300); border: 1px solid rgba(5, 150, 105, 0.3); }
+.badge-primary { background: rgba(242, 169, 0, 0.15); color: var(--primary-300); border: 1px solid rgba(242, 169, 0, 0.25); }
 .badge-secondary { background: rgba(100, 116, 139, 0.2); color: var(--surface-300); border: 1px solid rgba(100, 116, 139, 0.3); }
 .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--color-warning); border: 1px solid rgba(245, 158, 11, 0.3); }
 
@@ -367,39 +367,63 @@ h5 { font-size: 1.25rem; }
 /* --- Navbar --- */
 .navbar {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: var(--header-height);
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 3rem);
+    max-width: 1350px;
+    height: 100px;
     z-index: 1000;
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
+    background: rgba(14, 14, 18, 0.97);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 999px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.55);
     transition: all 0.3s;
 }
 
-.navbar-content {
+.navbar-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 100%;
+    padding: 0 1.5rem;
+    gap: 1rem;
 }
 
 .brand {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    font-family: var(--font-heading);
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.brand img {
+    height: 90px;
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-text {
+    font-family: var(--font-body);
     font-weight: 800;
-    font-size: 1.5rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--surface-50);
 }
 
-.brand img { height: 40px; width: auto; }
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
 
 .nav-menu {
     display: flex;
-    gap: 2rem;
+    gap: 1.75rem;
     align-items: center;
 }
 
@@ -424,11 +448,13 @@ h5 { font-size: 1.25rem; }
 .nav-link:hover::after { width: 100%; }
 
 /* --- Mobile Menu --- */
-.mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; }
+.mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--surface-50); }
 
-@media (max-width: 768px) {
-    .nav-menu { display: none; } /* Add toggle logic if needed, simplify for now */
+@media (max-width: 860px) {
+    .nav-menu { display: none; }
+    .nav-actions { display: none; }
     .mobile-toggle { display: block; }
+    .navbar { width: calc(100% - 2rem); top: 12px; }
 }
 
 /* --- App Layout (Files/Dashboard) --- */
@@ -471,7 +497,7 @@ h5 { font-size: 1.25rem; }
 }
 
 .sidebar-item:hover, .sidebar-item.active {
-    background: rgba(5, 150, 105, 0.1);
+    background: rgba(242, 169, 0, 0.1);
     color: var(--primary-400);
 }
 
@@ -528,12 +554,12 @@ h5 { font-size: 1.25rem; }
 .auth-card {
     width: 100%;
     max-width: 440px;
-    background: rgba(15, 23, 42, 0.8);
+    background: rgba(15, 15, 17, 0.85);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 24px;
     padding: 3rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
 /* 9. MODALS

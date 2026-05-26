@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArepaTool V2 - Professional Unlock & MDM Tool</title>
+    <title>ArepaTool v2.0.7 - Professional Unlock & MDM Tool</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="ArepaTool V2 is the ultimate professional unlocking software for Android and iOS. Features include MDM bypass, Samsung FRP unlock, banking app fixes, and iCloud bypass." />
+    <meta name="description" content="ArepaTool v2.0.7 is the ultimate professional unlocking software for Android and iOS. Features include MDM bypass, Samsung FRP unlock, banking app fixes, and iCloud bypass." />
     <meta name="keywords" content="arepatool, unlock, desbloqueo, mdm bypass, frp samsung, unlocker, removal tool, bypass a12, ios bypass, reparar celular, gsm tools" />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="ArepaTool Team" />
@@ -14,13 +14,13 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.arepatool.com/" />
-    <meta property="og:title" content="ArepaTool V2 - Professional Unlock & MDM Tool" />
+    <meta property="og:title" content="ArepaTool v2.0.7 - Professional Unlock & MDM Tool" />
     <meta property="og:description" content="The best tool for MDM Bypass, FRP Unlock, and Android/iOS repairs." />
     <meta property="og:image" content="pngs/arepalanding.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="ArepaTool V2" />
+    <meta property="twitter:title" content="ArepaTool v2.0.7" />
     <meta property="twitter:description" content="Professional MDM Bypass and Unlocking Tool for Android & iOS." />
     <meta property="twitter:image" content="pngs/arepalanding.png" />
     
@@ -66,29 +66,37 @@
     </style>
 </head>
 <body>
-    <canvas id="matrixCanvas"></canvas>
+    <!-- Background -->
+    <div class="bg-canvas">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
 
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="container navbar-content">
+        <div class="navbar-container">
             <a href="/" class="brand">
-                <img src="pngs/logo.ico" alt="ArepaTool">
-                <span>ArepaTool<span style="color:var(--primary-500)">V2</span></span>
+                <img src="pngs/arepalanding.png" alt="ArepaTool">
             </a>
-            
+
             <div class="nav-menu">
+                <a href="#" class="nav-link active">Inicio</a>
                 <a href="#features" class="nav-link">Características</a>
-                <a href="#tutorials" class="nav-link">Tutoriales</a>
                 <a href="#pricing" class="nav-link">Precios</a>
                 <a href="instructions.html" class="nav-link">Manuales</a>
+                <a href="#resellers" class="nav-link">Distribuidores</a>
+            </div>
+
+            <div class="nav-actions">
                 <a href="login.html" class="btn btn-secondary btn-sm">
                     <i class="bi bi-box-arrow-in-right"></i> Login
                 </a>
                 <a href="register.html" class="btn btn-primary btn-sm">
-                    <i class="bi bi-person-plus"></i> Regístrate
+                    <i class="bi bi-person-plus"></i> Registro
                 </a>
             </div>
-            
+
             <div class="mobile-toggle">
                 <i class="bi bi-list"></i>
             </div>
@@ -98,23 +106,79 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <div class="grid grid-2" style="align-items: center;">
+            <div class="hero-grid">
                 <div class="hero-content" data-aos="fade-right">
-                    <h1>Unlock Your <br><span class="text-gradient">Potential</span></h1>
-                    <p class="hero-subtitle">
-                         Herramienta profesional enfocada para técnicos, con funciones como MDM Bypass, FRP Unlock, y mas funciones avanzadas para Android e iOS.
-                    </p>
-                    <div class="flex-center" style="justify-content: flex-start; gap: 1rem; flex-wrap: wrap;">
-                        <a href="https://mega.nz/file/TaZgRKjD#j8KPJ4Y7yThsaiLpoIqRJnZlcUDJ9vjlhflKVHiQ4tE" target="_blank" class="btn btn-primary btn-lg">
-                            <i class="bi bi-windows"></i> Descargar Tool
+                    <p class="hero-eyebrow">Nueva Release Nuevos Metodos MDM!</p>
+                    <h1>ArepaTool v2.0.7<br><span>The Best For You</span></h1>
+                    <div class="hero-divider"></div>
+                    <div class="hero-actions">
+                        <a href="#pricing" class="btn-hero-explore">
+                            EXPLORAR LICENCIA <i class="bi bi-arrow-right"></i>
                         </a>
-                        <a href="https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.416/dotnet-sdk-8.0.416-win-x64.exe" target="_blank" class="btn btn-outline btn-lg">
-                            <i class="bi bi-hdd-network"></i> Drivers
+                        <a href="https://mega.nz/file/uDxmkAJK#DlVdn60_c1wstsKjzOUqQoyLRw3qUPCdzDmVT-wEmFo" target="_blank" class="btn btn-primary btn-lg">
+                            <i class="bi bi-windows"></i> Descargar Tool
                         </a>
                     </div>
                 </div>
                 <div class="hero-image-container" data-aos="fade-left" data-aos-delay="200">
-                    <img src="pngs/landingdisplay.png" alt="ArepaTool UI" class="hero-img">
+                    <div class="hero-display">
+                        <img src="pngs/landingdisplay.png" alt="ArepaTool UI" class="hero-display-img">
+                        <div class="hero-display-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Changelog / MDM Locks -->
+    <section class="changelog-section">
+        <div class="container">
+            <div class="changelog-wrap" data-aos="fade-up">
+                <div class="changelog-topbar">
+                    <div class="changelog-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span class="changelog-filepath">arepatool@v2.0.7 ~ CHANGELOG.md</span>
+                    <span class="changelog-tag">LATEST</span>
+                </div>
+                <div class="changelog-body">
+
+<span class="cl-h1"># MDM LOCKS — ArepaTool v2.0.7</span>
+<span class="cl-comment">## Nuevas Funciones y Mejoras — 2026</span>
+<span class="cl-blank"> </span>
+<span class="cl-h2">### ArepaHotspot</span>
+<span class="cl-plus">Solución para dispositivos que piden WiFi obligatorio al hacer el Setup</span>
+<span class="cl-blank"> </span>
+<span class="cl-h2">### DNS — Mejoras</span>
+<span class="cl-plus">Borrar DNS creadas</span>
+<span class="cl-plus">Historial de DNS Generadas</span>
+<span class="cl-plus">Agregar Dominios a una DNS existente</span>
+<span class="cl-plus">DNS Oppo agregada</span>
+<span class="cl-plus">Oppo Guard APK agregado</span>
+<span class="cl-blank"> </span>
+<span class="cl-h2">### MDM No DNS</span>
+<span class="cl-plus">Para dispositivos donde el método DNS no funciona</span>
+<span class="cl-plus">Nuevos parches 2026</span>
+<span class="cl-plus">MDM Motorola Cricket &amp; General — No DNS / No VPN</span>
+<span class="cl-blank"> </span>
+<span class="cl-h2">### ArepaGuard / ArepaAdmin</span>
+<span class="cl-plus">ArepaGuard bloquea actualizaciones del sistema</span>
+<span class="cl-plus">Nueva interfaz UI mejorada</span>
+<span class="cl-blank"> </span>
+<span class="cl-h2">### Módulo Apple</span>
+<span class="cl-plus">Más versiones iOS añadidas</span>
+<span class="cl-plus">Registros Automáticos</span>
+<span class="cl-plus">Hidden iCloud agregado</span>
+<span class="cl-blank"> </span>
+<span class="cl-h2">### Ext4 Explorer</span>
+<span class="cl-plus">Eliminar archivos y carpetas</span>
+<span class="cl-plus">Editar textos / HXD</span>
+<span class="cl-plus">Cambiar permisos CHMOD</span>
+<span class="cl-plus">Similar a EMMC File Manager</span>
+<span class="cl-blank"> </span>
+<span class="cl-h2">### Módulo MTK</span>
+<span class="cl-pending">Escrito al 70% — en desarrollo activo</span>
+
                 </div>
             </div>
         </div>
@@ -267,9 +331,7 @@
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Resellers -->
+    </section>    <!-- Resellers -->
     <section id="resellers" class="container py-5" style="padding-bottom: 100px;">
         <h2 class="text-center mb-4" data-aos="fade-up">Distribuidores Oficiales</h2>
         <div class="reseller-grid">
@@ -285,20 +347,8 @@
                     <a href="https://t.me/ctrone21" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-telegram"></i></a>
                 </div>
             </div>
-            <!-- Seller 2 -->
+             <!-- Seller 2 -->
              <div class="reseller-card text-center" data-aos="fade-up" data-aos-delay="200">
-                <i class="bi bi-patch-check-fill verified-badge" title="Distribuidor Verificado"></i>
-                <img src="pngs/gsmxpert.jpg" alt="GSM Xpert" class="reseller-logo">
-                <h4>GSM Xpert</h4>
-                <p class="text-xs text-subtle mt-1"><i class="bi bi-globe-americas"></i> Worldwide</p>
-                <p class="text-xs text-primary-400 mt-1" style="font-weight:600">Payments: USDT - BINANCE</p>
-                <div class="flex-center mt-2" style="gap: 1rem;">
-                    <a href="https://www.xpert-gsm.com" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-globe"></i></a>
-                    <a href="https://chat.whatsapp.com/BoQIuhYLMhgJCsaLPiSB7t" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-whatsapp"></i></a>
-                </div>
-            </div>
-             <!-- Seller 3 -->
-             <div class="reseller-card text-center" data-aos="fade-up" data-aos-delay="300">
                 <i class="bi bi-patch-check-fill verified-badge" title="Distribuidor Verificado"></i>
                 <img src="pngs/smartbeunlock.png" alt="SmartBeUnlock" class="reseller-logo">
                 <h4>SmartBeUnlock</h4>
@@ -309,8 +359,8 @@
                      <a href="https://wa.me/573226859899" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-whatsapp"></i></a>
                 </div>
             </div>
-            <!-- Seller 4 -->
-             <div class="reseller-card text-center" data-aos="fade-up" data-aos-delay="400">
+            <!-- Seller 3 -->
+             <div class="reseller-card text-center" data-aos="fade-up" data-aos-delay="300">
                 <i class="bi bi-patch-check-fill verified-badge" title="Distribuidor Verificado"></i>
                 <img src="pngs/ohideraunlocker.jpg" alt="Ohidera" class="reseller-logo">
                 <h4>Ohidera Unlocker</h4>
@@ -318,11 +368,11 @@
                 <p class="text-xs text-primary-400 mt-1" style="font-weight:600">Payments: USDT - BINANCE</p>
                 <div class="flex-center mt-2" style="gap: 1rem;">
                     <a href="https://ohideraunlocker.com" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-globe"></i></a>
-                     <a href="https://wa.me/+8801660122234" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-whatsapp"></i></a>
+                      <a href="https://wa.me/+8801660122234" target="_blank" class="btn btn-outline btn-icon-only"><i class="bi bi-whatsapp"></i></a>
                 </div>
             </div>
-            <!-- Seller 5 -->
-            <div class="reseller-card text-center" data-aos="fade-up" data-aos-delay="500">
+            <!-- Seller 4 -->
+            <div class="reseller-card text-center" data-aos="fade-up" data-aos-delay="400">
                 <i class="bi bi-patch-check-fill verified-badge" title="Distribuidor Verificado"></i>
                 <img src="pngs/javierbarongsm.png" alt="JavierBaronGSM" class="reseller-logo">
                 <h4>JavierBaronGSM</h4>
@@ -339,7 +389,7 @@
     <!-- Footer -->
     <footer class="text-center py-5" style="border-top: 1px solid var(--surface-800); margin-top: 4rem; padding: 2rem;">
         <div class="container">
-            <p class="text-subtle">&copy; 2026 ArepaToolV2- Desarrollado con ❤️ .</p>
+            <p class="text-subtle">&copy; 2026 ArepaTool v2.0.7 - Desarrollado con ❤️ .</p>
             <div class="mt-2" style="display: flex; justify-content: center; gap: 2rem;">
                 <a href="#" class="text-sm">Términos</a>
                 <a href="#" class="text-sm">Privacidad</a>
@@ -364,38 +414,6 @@
         })();
 
         AOS.init({ duration: 800, once: true });
-
-        // Matrix Rain
-        const canvas = document.getElementById('matrixCanvas');
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const nums = '0123456789';
-        const alphabet = katakana + latin + nums;
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-        for (let i = 0; i < columns; i++) drops[i] = 1;
-
-        function draw() {
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#059669'; // Primary Green
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
-        setInterval(draw, 33);
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
         // Video Player Logic
         function playVideo(card, videoId) {
