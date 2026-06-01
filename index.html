@@ -244,11 +244,28 @@
                 </a>
             </div>
 
-            <div class="mobile-toggle">
-                <i class="bi bi-list"></i>
-            </div>
+            <button class="mobile-toggle" id="mobileToggleBtn" onclick="toggleMobileMenu()" aria-label="Menú">
+                <i class="bi bi-list" id="mobileToggleIcon"></i>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Nav Panel -->
+    <div class="mobile-nav" id="mobileNav">
+        <a href="#" class="nav-link" onclick="closeMobileMenu()">Inicio</a>
+        <a href="#features" class="nav-link" onclick="closeMobileMenu()">Características</a>
+        <a href="#pricing" class="nav-link" onclick="closeMobileMenu()">Precios</a>
+        <a href="instructions.html" class="nav-link">Manuales</a>
+        <a href="#resellers" class="nav-link" onclick="closeMobileMenu()">Distribuidores</a>
+        <div class="mobile-nav-actions">
+            <button onclick="closeMobileMenu(); openWaModal()" class="btn" style="background: linear-gradient(135deg, #25D366, #128C7E); color:#fff; border:none;">
+                <i class="bi bi-whatsapp"></i> Grupo WhatsApp
+            </button>
+            <a href="register.html" class="btn btn-primary">
+                <i class="bi bi-person-plus"></i> Registro
+            </a>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -702,8 +719,42 @@
         spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
         document.head.appendChild(spinStyle);
 
-        // Close modal on ESC
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeWaModal(); });
+        // === Mobile Menu ===
+        function toggleMobileMenu() {
+            const nav = document.getElementById('mobileNav');
+            const icon = document.getElementById('mobileToggleIcon');
+            const isOpen = nav.classList.contains('open');
+            if (isOpen) {
+                closeMobileMenu();
+            } else {
+                nav.classList.add('open');
+                icon.className = 'bi bi-x-lg';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeMobileMenu() {
+            const nav = document.getElementById('mobileNav');
+            const icon = document.getElementById('mobileToggleIcon');
+            nav.classList.remove('open');
+            icon.className = 'bi bi-list';
+            document.body.style.overflow = '';
+        }
+
+        // Close mobile menu on scroll
+        window.addEventListener('scroll', () => {
+            if (document.getElementById('mobileNav').classList.contains('open')) {
+                closeMobileMenu();
+            }
+        }, { passive: true });
+
+        // Close modal or mobile menu on ESC
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                closeWaModal();
+                closeMobileMenu();
+            }
+        });
     </script>
 </body>
 </html>
