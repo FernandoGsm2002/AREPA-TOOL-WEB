@@ -9,6 +9,11 @@ const WHATSAPP_GROUP_LINK = process.env.WHATSAPP_GROUP_LINK || 'https://chat.wha
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function verifyTurnstile(token, ip) {
+    if (!TURNSTILE_SECRET) {
+        console.error('[Turnstile] TURNSTILE_SECRET_KEY no está configurada en las variables de entorno de Vercel.');
+        return false;
+    }
+
     const formData = new URLSearchParams();
     formData.append('secret', TURNSTILE_SECRET);
     formData.append('response', token);
@@ -21,6 +26,7 @@ async function verifyTurnstile(token, ip) {
     });
 
     const data = await response.json();
+    console.log('[Turnstile] siteverify response:', JSON.stringify(data));
     return data.success === true;
 }
 
