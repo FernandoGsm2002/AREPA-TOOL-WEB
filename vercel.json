@@ -20,10 +20,7 @@
       "source": "/auth/files",
       "destination": "/files.html"
     },
-    {
-      "source": "/auth/tools",
-      "destination": "/tools.html"
-    }
+    { "source": "/auth/tools", "destination": "/tools.html" }
   ],
   "headers": [
     {
