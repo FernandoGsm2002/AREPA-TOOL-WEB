@@ -24,7 +24,7 @@
     --surface-100: #e8e8ed;
     --surface-200: #d2d2d7;
     --surface-300: #86868b;
-    --surface-400: #6e6e73;
+    --surface-400: #909099;
     --surface-500: #515154;
     --surface-600: #3a3a3c;
     --surface-700: #2c2c2e; /* Card borders / Outline buttons */
@@ -148,8 +148,7 @@ h5 { font-size: 1.25rem; }
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid transparent;
     font-family: var(--font-body);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.02em;
 }
 
 .btn-primary {
@@ -211,11 +210,11 @@ h5 { font-size: 1.25rem; }
 }
 
 .glass-panel {
-    background: rgba(15, 15, 17, 0.6);
+    background: rgba(28, 28, 34, 0.78);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 }
 
 .card:hover {
@@ -372,7 +371,7 @@ h5 { font-size: 1.25rem; }
     transform: translateX(-50%);
     width: calc(100% - 3rem);
     max-width: 1350px;
-    height: 100px;
+    height: 72px;
     z-index: 1000;
     background: rgba(14, 14, 18, 0.97);
     backdrop-filter: blur(24px);
@@ -400,9 +399,14 @@ h5 { font-size: 1.25rem; }
 }
 
 .brand img {
-    height: 90px;
-    width: auto;
+    max-width: 160px;
+    width: 100%;
+    height: auto;
     object-fit: contain;
+    display: block;
+    padding: 4px 0;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 .brand-text {
@@ -504,8 +508,8 @@ h5 { font-size: 1.25rem; }
     .nav-menu { display: none; }
     .nav-actions { display: none; }
     .mobile-toggle { display: flex; align-items: center; }
-    .navbar { width: calc(100% - 2rem); top: 12px; height: 72px; }
-    .brand img { height: 60px; }
+    .navbar { width: calc(100% - 2rem); top: 10px; height: 60px; }
+    .brand img { max-width: 120px; padding: 2px 0; }
 }
 
 /* --- App Layout (Files/Dashboard) --- */

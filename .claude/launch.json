@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "arepatool-landing",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", ".", "-p", "4000", "--no-clipboard"],
+      "port": 4000
+    }
+  ]
+}

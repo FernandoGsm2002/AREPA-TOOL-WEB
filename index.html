@@ -42,175 +42,6 @@
     <link rel="stylesheet" href="css/landing.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
-    <style>
-        .tutorial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
-            overflow: hidden;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--surface-700);
-            background: var(--surface-900);
-        }
-        
-        .video-container iframe {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            border: none;
-        }
-
-        /* === WhatsApp Modal === */
-        #wa-modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: rgba(0,0,0,0.72);
-            backdrop-filter: blur(6px);
-            align-items: center;
-            justify-content: center;
-        }
-        #wa-modal-overlay.active {
-            display: flex;
-        }
-        #wa-modal {
-            background: linear-gradient(145deg, #0d1117 0%, #161b22 100%);
-            border: 1px solid rgba(37, 211, 102, 0.25);
-            border-radius: 20px;
-            padding: 2.5rem 2rem;
-            max-width: 440px;
-            width: 92%;
-            box-shadow: 0 0 60px rgba(37,211,102,0.12), 0 24px 48px rgba(0,0,0,0.6);
-            position: relative;
-            animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
-        }
-        @keyframes modalIn {
-            from { opacity:0; transform: scale(0.85) translateY(20px); }
-            to   { opacity:1; transform: scale(1) translateY(0); }
-        }
-        #wa-modal .wa-modal-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            font-size: 2rem;
-            color: #fff;
-            margin: 0 auto 1.25rem;
-            box-shadow: 0 0 24px rgba(37,211,102,0.4);
-        }
-        #wa-modal h3 {
-            text-align: center;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.4rem;
-        }
-        #wa-modal p.wa-subtitle {
-            text-align: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.85rem;
-            margin-bottom: 1.5rem;
-        }
-        #wa-modal .wa-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            color: rgba(255,255,255,0.4);
-            font-size: 1.3rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        #wa-modal .wa-close:hover { color: #fff; }
-        #wa-email-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            box-sizing: border-box;
-            margin-bottom: 1rem;
-        }
-        #wa-email-input:focus {
-            border-color: #25D366;
-            box-shadow: 0 0 0 3px rgba(37,211,102,0.15);
-        }
-        #wa-email-input::placeholder { color: rgba(255,255,255,0.3); }
-        #wa-submit-btn {
-            width: 100%;
-            padding: 0.8rem;
-            border-radius: 10px;
-            border: none;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.2s, transform 0.15s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        #wa-submit-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
-        #wa-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        #wa-msg {
-            margin-top: 1rem;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            font-size: 0.88rem;
-            text-align: center;
-            display: none;
-        }
-        #wa-msg.success {
-            background: rgba(37,211,102,0.12);
-            border: 1px solid rgba(37,211,102,0.3);
-            color: #25D366;
-        }
-        #wa-msg.error {
-            background: rgba(255,60,60,0.1);
-            border: 1px solid rgba(255,60,60,0.25);
-            color: #ff6b6b;
-        }
-        #wa-group-link {
-            display: none;
-            margin-top: 1rem;
-            padding: 0.9rem 1rem;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(37,211,102,0.15), rgba(18,140,126,0.15));
-            border: 1px solid rgba(37,211,102,0.35);
-            text-align: center;
-        }
-        #wa-group-link a {
-            color: #25D366;
-            font-weight: 700;
-            font-size: 1rem;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        #wa-group-link a:hover { text-decoration: underline; }
-        .cf-turnstile { display: flex; justify-content: center; margin-bottom: 0.5rem; }
-    </style>
 </head>
 <body>
     <!-- Background -->
@@ -272,15 +103,15 @@
         <div class="container">
             <div class="hero-grid">
                 <div class="hero-content" data-aos="fade-right">
-                    <p class="hero-eyebrow">Nueva Release Nuevos Metodos MDM!</p>
-                    <h1>ArepaTool v2.0.7<br><span>The Best For You</span></h1>
+                    <p class="hero-eyebrow">Comprame Ahora!</p>
+                    <h1>ArepaToolV2<br><span>MDM EDITION 🫓  </span></h1>
                     <div class="hero-divider"></div>
                     <div class="hero-actions">
                         <a href="#pricing" class="btn-hero-explore">
                             EXPLORAR LICENCIA <i class="bi bi-arrow-right"></i>
                         </a>
                         <a href="https://mega.nz/file/eHZV2RKI#eZZNBIE4jAga2CJJnNtU6586nYxt0Z55a4VTjbiBJBI" target="_blank" class="btn btn-primary btn-lg">
-                            <i class="bi bi-windows"></i> Descargar Tool
+                            <i class="bi bi-windows"></i> Descarga Ahora!
                         </a>
                     </div>
                 </div>
@@ -302,22 +133,26 @@
                     <div class="changelog-dots">
                         <span></span><span></span><span></span>
                     </div>
-                    <span class="changelog-filepath">arepatool@v2.0.7 ~ CHANGELOG.md</span>
-                    <span class="changelog-tag">LATEST</span>
+                    <span class="changelog-filepath">arepatool@v2.0.8 ~ CHANGELOG.md</span>
+                    <span class="changelog-tag">Lasted</span>
                 </div>
                 <div class="changelog-body">
 
-<span class="cl-h1"># MDM LOCKS — ArepaTool v2.0.7</span>
+<span class="cl-h1"># MDM LOCKS — ArepaTool v2.0.8</span>
 <span class="cl-comment">## Nuevas Funciones y Mejoras — 2026</span>
 <span class="cl-blank"> </span>
 <span class="cl-h2">### ArepaHotspot</span>
-<span class="cl-plus">Solución para dispositivos que piden WiFi obligatorio al hacer el Setup</span>
+<span class="cl-plus">Solución para dispositivos que piden WiFi obligatorio al iniciar la configuracion</span>
+<span class="cl-plus">Agregado PlayProtect block, Para KG Samsung Setup</span>
 <span class="cl-blank"> </span>
 <span class="cl-h2">### DNS — Mejoras</span>
 <span class="cl-plus">Borrar DNS creadas</span>
 <span class="cl-plus">Historial de DNS Generadas</span>
 <span class="cl-plus">Agregar Dominios a una DNS existente</span>
-<span class="cl-plus">DNS Oppo agregada</span>
+<span class="cl-plus">DNS Oppo Guard agregada agregada</span>
+<span class="cl-plus">DNS Security Plugin agregada</span>
+<span class="cl-plus">DNS Payjoy Locks agregada</span>
+<span class="cl-plus">DNS Play Protect Agregada</span>
 <span class="cl-plus">Oppo Guard APK agregado</span>
 <span class="cl-blank"> </span>
 <span class="cl-h2">### MDM No DNS</span>
@@ -340,9 +175,11 @@
 <span class="cl-plus">Cambiar permisos CHMOD</span>
 <span class="cl-plus">Similar a EMMC File Manager</span>
 <span class="cl-blank"> </span>
-<span class="cl-h2">### Módulo MTK</span>
-<span class="cl-pending">Escrito al 70% — en desarrollo activo</span>
-
+<span class="cl-h2">### Correccion de errores</span>
+<span class="cl-plus">Errores en el DNS de claro para Oppo Corregido.</span>
+<span class="cl-plus">Relocks en KG Samsung Corregido.</span>
+<span class="cl-plus">Problemas en Inicio de Sesion Corregido</span>
+<span class="cl-blank"> </span>
                 </div>
             </div>
         </div>
@@ -352,86 +189,184 @@
     <section id="features" class="features-section">
         <div class="container">
             <h2 class="text-center mb-4" data-aos="fade-up">Características <span class="text-gradient">Premium</span></h2>
-            
-            <div class="grid grid-3"> <!-- Changed to grid-3 for 6 items layout (3 per row) -->
-                <!-- Card 1: MDM -->
-                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="flex-center w-full justify-center" style="height: 120px;">
-                        <img src="pngs/MDM.png" alt="MDM" class="feature-img-xl"> <!-- Updated Class for larger size -->
+
+            <div class="feat-grid">
+
+                <!-- HERO: MDM Bypass DNS -->
+                <div class="feat-card feat-card--hero" data-aos="fade-up" data-aos-delay="50">
+                    <div class="feat-topbar">
+                        <div class="feat-dots">
+                            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+                        </div>
+                        <span class="feat-filename">ArepaWifi.sh</span>
+                        <span class="feat-badge feat-badge--active">ACTIVE</span>
                     </div>
-                    <h3>MDM Bypass (DNS)</h3>
-                    <ul class="feature-list"> <!-- Cleaned up list class -->
-                        <li><i class="bi bi-check-circle"></i> Creacion de DNS ilimitada</li>
-                        <li><i class="bi bi-check-circle"></i> Generacion manual y instalacion automatica</li>
-                        <li><i class="bi bi-check-circle"></i> White Screen Motorola</li>
-                        <li><i class="bi bi-check-circle"></i> IT Admin (Movistar, Entel, Claro, etc)</li>
-                        <li><i class="bi bi-check-circle"></i> Claro & Telcel PIN</li>
-                        <li><i class="bi bi-check-circle"></i> Samsung KG & DNS anclada</li>
-                    </ul>
+                    <div class="feat-body feat-body--hero">
+                        <div class="feat-img-wrap">
+                            <img src="pngs/arepamdm.png" alt="MDM Bypass DNS" class="feat-img feat-img--hero">
+                        </div>
+                        <div class="feat-info">
+                            <h3 class="feat-title">AREPA <span class="feat-accent">HOTSPOT</span></h3>
+                            <ul class="feat-list">
+                                <li>Solucion para Dispositivos que piden WIFI en la configuracion inicial.</li>
+                                <li>Funciona en Motorola, Xiaomi, Honor, Huawei, Vivo, Oppo, y mas!</li>
+                                <li>Sporta ultimas veriones de Android</li>
+                                <li>Es Necesario que tu laptop o Pc pueda compartir internet por WiFi</li>
+                                
+
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Card 2: Samsung/Magisk -->
-                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="flex-center w-full justify-center" style="height: 120px;">
-                        <img src="pngs/magisk.png" alt="Root" class="feature-img-lg">
+                <!-- DNS Generadora -->
+                <div class="feat-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="feat-topbar">
+                        <div class="feat-dots">
+                            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+                        </div>
+                        <span class="feat-filename">dns-generator.sh</span>
+                        <span class="feat-badge feat-badge--active">ACTIVE</span>
                     </div>
-                    <h3>Samsung Root & Odin</h3>
-                    <ul class="feature-list">
-                        <li><i class="bi bi-check-circle"></i> Samsung Root Maker (Beta)</li>
-                        <li><i class="bi bi-check-circle"></i> Odin Flash Protocol</li>
-                        <li><i class="bi bi-check-circle"></i> Acceso a Boot Root Creados</li>
-                    </ul>
+                    <div class="feat-body">
+                        <div class="feat-img-wrap">
+                            <img src="pngs/arepadnsgeneradora.png" alt="DNS Generadora" class="feat-img">
+                        </div>
+                        <div class="feat-info">
+                            <h3 class="feat-title">DNS <span class="feat-accent">Creator</span></h3>
+                            <ul class="feat-list">
+                                <li>Borrar DNS creadas</li>
+                                <li>Historial de DNS Generadas</li>
+                                <li>Agregar Dominios a DNS existente</li>
+                                <li>Genera DNSs Ilimitadas</li>
+                                <li>Soportado : Payjoy - Play Protect - IT ADMIN - Kiosko - Claro - WhiteScreen MOTO - Oppo Color Lock - Security Plugin & Mas</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Card 3: Fix Apps -->
-                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="flex-center w-full justify-center" style="height: 120px;">
-                        <img src="pngs/FIXYAPE.png" alt="Fix Apps" class="feature-img-lg">
+                <!-- Fix Apps Bancarias -->
+                <div class="feat-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="feat-topbar">
+                        <div class="feat-dots">
+                            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+                        </div>
+                        <span class="feat-filename">fix-banking.sh</span>
+                        <span class="feat-badge feat-badge--active">ACTIVE</span>
                     </div>
-                    <h3>Fix Apps Bancarias</h3>
-                    <ul class="feature-list">
-                        <li><i class="bi bi-check-circle"></i> Bancos de todo Latam Soportados</li>
-                        <li><i class="bi bi-check-circle"></i> Ocultar Root Avanzado</li>
-                        <li><i class="bi bi-check-circle"></i> Magisk 27+ / Delta / Alpha</li>
-                    </ul>
+                    <div class="feat-body">
+                        <div class="feat-img-wrap">
+                            <img src="pngs/arepafixbanks.png" alt="Fix Apps Bancarias" class="feat-img">
+                        </div>
+                        <div class="feat-info">
+                            <h3 class="feat-title">Fix Apps <span class="feat-accent">Bancarias</span></h3>
+                            <ul class="feat-list">
+                                <li>Bancos de todo Latam Soportados</li>
+                                <li>Hide ROOT Avanzado</li>
+                                <li> Soporta Magisk / Delta / Alpha</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Card 4: iOS -->
-                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="400">
-                    <div class="flex-center w-full justify-center" style="height: 120px;">
-                        <img src="pngs/ios26hello.png" alt="iOS" class="feature-img-lg">
+                <!-- iOS Bypass A12+ -->
+                <div class="feat-card" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="feat-topbar">
+                        <div class="feat-dots">
+                            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+                        </div>
+                        <span class="feat-filename">ios-bypass.sh</span>
+                        <span class="feat-badge feat-badge--active">ACTIVE</span>
                     </div>
-                    <h3>iOS Bypass A12+</h3>
-                    <ul class="feature-list">
-                        <li><i class="bi bi-check-circle"></i> Soporte iOS 18.7.1 - 26.1</li>
-                        <li><i class="bi bi-check-circle"></i> Hello Screen Support</li>
-                        <li><i class="bi bi-check-circle"></i> Ipads & Iphones Support</li>
-                    </ul>
+                    <div class="feat-body">
+                        <div class="feat-img-wrap">
+                            <img src="pngs/arepaa12+.png" alt="iOS Bypass A12+" class="feat-img">
+                        </div>
+                        <div class="feat-info">
+                            <h3 class="feat-title">iOS Bypass <span class="feat-accent">A12+</span></h3>
+                            <ul class="feat-list">
+                                <li>Soporte iOS 16.7.1 — 26.1</li>
+                                <li>Bypass para iPhone 8 hasta iPhone 17 Pro Max</li>
+                                <li>Hidden Icloud Support</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Card 5: Motorola -->
-                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="500">
-                    <div class="flex-center w-full justify-center" style="height: 120px;">
-                        <img src="pngs/cricket.png" alt="ArepaTool" class="feature-img-lg">
+                <!-- Motorola Cricket MDM -->
+                <div class="feat-card" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="feat-topbar">
+                        <div class="feat-dots">
+                            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+                        </div>
+                        <span class="feat-filename">motorola-mdm.sh</span>
+                        <span class="feat-badge feat-badge--active">NEW</span>
                     </div>
-                    <h3>Motorola Cricket MDM</h3>
-                    <ul class="feature-list">
-                        <li><i class="bi bi-check-circle"></i> Support Moto 5G Phones</li>
-                        <li><i class="bi bi-check-circle"></i> Security december 2025 (Beta)</li>
-                    </ul>
+                    <div class="feat-body">
+                        <div class="feat-img-wrap">
+                            <img src="pngs/arepamotorola.png" alt="Motorola Cricket MDM" class="feat-img">
+                        </div>
+                        <div class="feat-info">
+                            <h3 class="feat-title">Motorola <span class="feat-accent">ALL MDM</span></h3>
+                            <ul class="feat-list">
+                                <li>Support Moto 5G Phones Cricket</li>
+                                <li>Support AT&T Devices</li>
+                                <li>Support New Securities 2026</li>
+                                <li>No DNS / No VPN Method</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Card 6: Samsung FRP -->
-                <div class="card glass-panel feature-card-hover text-center" style="height: 100%; display: flex; flex-direction: column;" data-aos="zoom-in" data-aos-delay="600">
-                    <div class="flex-center w-full justify-center" style="height: 120px;">
-                         <img src="pngs/samsungfrp.png" alt="ArepaTool" class="feature-img-lg">
+                <!-- Remove MDM / No DNS -->
+                <div class="feat-card" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="feat-topbar">
+                        <div class="feat-dots">
+                            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+                        </div>
+                        <span class="feat-filename">remove-mdm.sh</span>
+                        <span class="feat-badge feat-badge--beta">BETA</span>
                     </div>
-                    <h3>Samsung Enable ADB</h3>
-                    <ul class="feature-list">
-                        <li><i class="bi bi-check-circle"></i> Some Devices Support</li>
-                        <li><i class="bi bi-check-circle"></i> Setup Mode & Wifi connect</li>
-                    </ul>
+                    <div class="feat-body">
+                        <div class="feat-img-wrap">
+                            <img src="pngs/areparemovemdm.png" alt="Remove MDM" class="feat-img">
+                        </div>
+                        <div class="feat-info">
+                            <h3 class="feat-title">MDM <span class="feat-accent">No DNS</span></h3>
+                            <ul class="feat-list">
+                                <li>Nuevos Metodos 2026 No DNS NO VPN </li>
+                                <li>Nuevos parches 2026</li>
+                                <li>Claro No Soportado</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Ext4 Explorer -->
+                <div class="feat-card" data-aos="zoom-in" data-aos-delay="600">
+                    <div class="feat-topbar">
+                        <div class="feat-dots">
+                            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+                        </div>
+                        <span class="feat-filename">ext4-explorer.sh</span>
+                        <span class="feat-badge feat-badge--new">NEW</span>
+                    </div>
+                    <div class="feat-body">
+                        <div class="feat-img-wrap">
+                            <img src="pngs/arepaext4.png" alt="Ext4 Explorer" class="feat-img">
+                        </div>
+                        <div class="feat-info">
+                            <h3 class="feat-title">Ext4 <span class="feat-accent">Explorer</span></h3>
+                            <ul class="feat-list">
+                                <li>Eliminar archivos y carpetas</li>
+                                <li>Editar textos / HXD</li>
+                                <li>Cambiar permisos CHMOD</li>
+                                <li>Similar a EMMC File Manager</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -551,10 +486,10 @@
     </section>
 
     <!-- Footer -->
-    <footer class="text-center py-5" style="border-top: 1px solid var(--surface-800); margin-top: 4rem; padding: 2rem;">
+    <footer class="site-footer">
         <div class="container">
-            <p class="text-subtle">&copy; 2026 ArepaTool v2.0.7 - Desarrollado con ❤️ .</p>
-            <div class="mt-2" style="display: flex; justify-content: center; gap: 2rem;">
+            <p class="text-subtle">&copy; 2026 ArepaTool v2.0.8 - Desarrollado con ❤️</p>
+            <div class="footer-links">
                 <a href="#" class="text-sm">Términos</a>
                 <a href="#" class="text-sm">Privacidad</a>
             </div>
@@ -607,154 +542,6 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        // Redirigir si Supabase manda el token de recovery aquí en vez de a reset-password.html
-        (function() {
-            const hash = window.location.hash;
-            if (hash.includes('type=recovery') && hash.includes('access_token=')) {
-                window.location.replace('reset-password.html' + hash);
-            }
-        })();
-
-        AOS.init({ duration: 800, once: true });
-
-        // Video Player Logic
-        function playVideo(card, videoId) {
-            const container = card.querySelector('.video-container');
-            container.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-        }
-
-        // === WhatsApp Group Modal ===
-        function openWaModal() {
-            const overlay = document.getElementById('wa-modal-overlay');
-            overlay.classList.add('active');
-            resetWaModal();
-            document.getElementById('wa-email-input').focus();
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeWaModal() {
-            document.getElementById('wa-modal-overlay').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function handleOverlayClick(e) {
-            if (e.target === document.getElementById('wa-modal-overlay')) closeWaModal();
-        }
-
-        function resetWaModal() {
-            document.getElementById('wa-email-input').value = '';
-            showWaMsg('', '');
-            document.getElementById('wa-group-link').style.display = 'none';
-            document.getElementById('wa-submit-btn').disabled = false;
-            // Reset Turnstile widget
-            if (window.turnstile) {
-                window.turnstile.reset(document.getElementById('wa-turnstile'));
-            }
-        }
-
-        function showWaMsg(text, type) {
-            const el = document.getElementById('wa-msg');
-            if (!text) { el.style.display = 'none'; return; }
-            el.textContent = text;
-            el.className = type; // 'success' | 'error'
-            el.style.display = 'block';
-        }
-
-        async function submitWaCheck() {
-            const email = document.getElementById('wa-email-input').value.trim();
-            const btn   = document.getElementById('wa-submit-btn');
-
-            if (!email) {
-                showWaMsg('Por favor ingresa tu correo electrónico.', 'error');
-                return;
-            }
-
-            // Get Turnstile token
-            let turnstileToken = null;
-            if (window.turnstile) {
-                turnstileToken = window.turnstile.getResponse(document.getElementById('wa-turnstile'));
-            }
-            if (!turnstileToken) {
-                showWaMsg('Completa la verificación de seguridad primero.', 'error');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = '<span style="display:inline-block;animation:spin 0.8s linear infinite;border:2px solid #fff;border-top-color:transparent;border-radius:50%;width:16px;height:16px;"></span> Verificando...';
-            showWaMsg('', '');
-
-            try {
-                const res = await fetch('/api/whatsapp-group', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, turnstileToken })
-                });
-                const data = await res.json();
-
-                if (res.ok && data.link) {
-                    showWaMsg('', '');
-                    document.getElementById('wa-link-anchor').href = data.link;
-                    document.getElementById('wa-group-link').style.display = 'block';
-                    btn.style.display = 'none';
-                    document.getElementById('wa-email-input').style.display = 'none';
-                    document.querySelector('.cf-turnstile').style.display = 'none';
-                    document.querySelector('.wa-subtitle').textContent = '¡Tu correo tiene acceso! Únete al grupo oficial.';
-                } else {
-                    showWaMsg(data.error || 'No se pudo verificar. Intenta de nuevo.', 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="bi bi-shield-check"></i> Verificar Acceso';
-                    if (window.turnstile) window.turnstile.reset(document.getElementById('wa-turnstile'));
-                }
-            } catch (err) {
-                showWaMsg('Error de conexión. Intenta más tarde.', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="bi bi-shield-check"></i> Verificar Acceso';
-                if (window.turnstile) window.turnstile.reset(document.getElementById('wa-turnstile'));
-            }
-        }
-
-        // Spin animation for loader
-        const spinStyle = document.createElement('style');
-        spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
-        document.head.appendChild(spinStyle);
-
-        // === Mobile Menu ===
-        function toggleMobileMenu() {
-            const nav = document.getElementById('mobileNav');
-            const icon = document.getElementById('mobileToggleIcon');
-            const isOpen = nav.classList.contains('open');
-            if (isOpen) {
-                closeMobileMenu();
-            } else {
-                nav.classList.add('open');
-                icon.className = 'bi bi-x-lg';
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function closeMobileMenu() {
-            const nav = document.getElementById('mobileNav');
-            const icon = document.getElementById('mobileToggleIcon');
-            nav.classList.remove('open');
-            icon.className = 'bi bi-list';
-            document.body.style.overflow = '';
-        }
-
-        // Close mobile menu on scroll
-        window.addEventListener('scroll', () => {
-            if (document.getElementById('mobileNav').classList.contains('open')) {
-                closeMobileMenu();
-            }
-        }, { passive: true });
-
-        // Close modal or mobile menu on ESC
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') {
-                closeWaModal();
-                closeMobileMenu();
-            }
-        });
-    </script>
+    <script src="js/landing.js" defer></script>
 </body>
 </html>

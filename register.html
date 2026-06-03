@@ -178,10 +178,7 @@
                 btn.classList.remove('btn-primary');
                 btn.classList.add('btn-success');
                 
-                setTimeout(() => {
-                    document.getElementById('registerForm').reset();
-                    // Optional: redirect to login
-                }, 3000);
+                setTimeout(() => window.location.href = 'index.html', 3000);
 
             } catch(e) {
                 console.error(e);

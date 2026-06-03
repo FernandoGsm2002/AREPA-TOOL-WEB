@@ -304,19 +304,19 @@
         /* --- AUTH --- */
         (function init() {
             const sess = localStorage.getItem('arepatool_session');
-            if(!sess) return window.location.href = 'login.html';
+            if(!sess) return window.location.href = 'index.html';
             try {
                 const data = JSON.parse(sess);
                 if(!data.user || data.expires < Date.now()) throw new Error('Expired');
                 currentUser = data.user;
                 document.getElementById('usernameDisplay').textContent = currentUser.username;
                 loadFiles();
-            } catch(e) { window.location.href = 'login.html'; }
+            } catch(e) { window.location.href = 'index.html'; }
         })();
 
         function logout() {
             localStorage.removeItem('arepatool_session');
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         }
 
         /* --- DATA --- */
