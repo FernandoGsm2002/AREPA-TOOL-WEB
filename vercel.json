@@ -5,7 +5,7 @@
   "outputDirectory": ".",
   "rewrites": [
     {
-      "source": "/hide",
+      "source": "/panel-a7f3k9x2",
       "destination": "/hide.html"
     },
     {

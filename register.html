@@ -78,9 +78,6 @@
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://lumhpjfndlqhexnjmvtu.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0NjY1NjcsImV4cCI6MjA3OTA0MjU2N30.oXVYUjnSpDDQphLZJzglGaDSQTjuGzYgD-LMC5FwDHw';
-        
         function showStatus(msg, type='info') {
             const el = document.getElementById('statusMessage');
             el.textContent = msg;
@@ -91,98 +88,48 @@
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value.trim().toLowerCase();
-            const email = document.getElementById('email').value.trim().toLowerCase();
+            const email    = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
-            const terms = document.getElementById('terms').checked;
-            const btn = document.getElementById('btnSubmit');
+            const terms    = document.getElementById('terms').checked;
+            const btn      = document.getElementById('btnSubmit');
 
-            if(username.length < 3) return showStatus('Usuario muy corto', 'error');
-            if(!email.includes('@')) return showStatus('Email inválido', 'error');
-            if(password.length < 6) return showStatus('Contraseña muy corta', 'error');
-            if(!terms) return showStatus('Debes aceptar los términos', 'error');
+            if (username.length < 3) return showStatus('Usuario muy corto', 'error');
+            if (!email.includes('@'))  return showStatus('Email inválido', 'error');
+            if (password.length < 6)  return showStatus('Contraseña muy corta', 'error');
+            if (!terms)               return showStatus('Debes aceptar los términos', 'error');
 
-            // Verificar Turnstile
             const turnstileToken = window.turnstile?.getResponse(document.getElementById('register-turnstile'));
             if (!turnstileToken) return showStatus('Completa la verificación de seguridad.', 'error');
 
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner-border"></span> Procesando...';
-            showStatus('Verificando disponibilidad...', 'info');
+            showStatus('Creando cuenta...', 'info');
 
             try {
-                // Check Username via RPC
-                const c1 = await fetch(`${SUPABASE_URL}/rest/v1/rpc/check_username_available`, {
+                const res  = await fetch('/api/register', {
                     method: 'POST',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ p_username: username })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password, turnstileToken })
                 });
-                const usernameAvailable = await c1.json();
-                if(!usernameAvailable) {
-                    btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
-                    return showStatus('El usuario ya existe', 'error');
-                }
+                const data = await res.json();
 
-                // Check Email via RPC
-                const c2 = await fetch(`${SUPABASE_URL}/rest/v1/rpc/check_email_available`, {
-                    method: 'POST',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ p_email: email })
-                });
-                const emailAvailable = await c2.json();
-                if(!emailAvailable) {
-                    btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
-                    return showStatus('El email ya está registrado', 'error');
-                }
-
-                showStatus('Creando credenciales...', 'info');
-
-                // Sign Up
-                const authRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
-                    method: 'POST',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const authData = await authRes.json();
-                
-                if(!authRes.ok) {
-                    let msg = authData.message || 'Error en registro';
-                    if(msg.includes('already registered')) msg = 'El email ya está en uso';
-                    btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
-                    return showStatus(msg, 'error');
-                }
-
-                // Save Profile
-                const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        email: email,
-                        status: 'pending',
-                        created_at: new Date().toISOString()
-                    })
-                });
-
-                if(!profileRes.ok) {
-                    btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
-                    return showStatus('Error guardando perfil. Contacta soporte.', 'error');
+                if (!res.ok) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
+                    if (window.turnstile) window.turnstile.reset(document.getElementById('register-turnstile'));
+                    return showStatus(data.error || 'Error en registro', 'error');
                 }
 
                 showStatus('✓ Cuenta Creada. Contacta a tu distribuidor para activar.', 'success');
                 btn.innerHTML = '<i class="bi bi-check-circle"></i> ¡Listo!';
                 btn.classList.remove('btn-primary');
                 btn.classList.add('btn-success');
-                
                 setTimeout(() => window.location.href = 'index.html', 3000);
 
-            } catch(e) {
+            } catch (e) {
                 console.error(e);
-                btn.disabled = false; btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
                 showStatus('Error de red', 'error');
             }
         });

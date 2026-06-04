@@ -137,5 +137,98 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true });
     }
 
+    // ── List resellers ────────────────────────────────────────
+    if (action === 'list-resellers') {
+        const { data, error } = await supabase
+            .from('resellers')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) return res.status(500).json({ error: error.message });
+        return res.status(200).json({ resellers: data });
+    }
+
+    // ── Create reseller ───────────────────────────────────────
+    if (action === 'create-reseller') {
+        const { name, username, email, servicePrice, servicePrice3m, servicePrice6m } = req.body;
+        if (!name || !username || !email) return res.status(400).json({ error: 'Missing required fields' });
+
+        const crypto = await import('crypto');
+        const apiKey = crypto.randomBytes(32).toString('hex');
+
+        const { data, error } = await supabase
+            .from('resellers')
+            .insert({
+                name,
+                username: username.toLowerCase(),
+                email,
+                api_key: apiKey,
+                balance: 0,
+                status: 'active',
+                service_price: servicePrice || 10,
+                service_price_3m: servicePrice3m || 3.99,
+                service_price_6m: servicePrice6m || 5.99,
+                total_orders: 0
+            })
+            .select()
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        return res.status(201).json({ reseller: data });
+    }
+
+    // ── Update reseller ───────────────────────────────────────
+    if (action === 'update-reseller') {
+        const { resellerId, updates } = req.body;
+        if (!resellerId || !updates) return res.status(400).json({ error: 'Missing resellerId or updates' });
+
+        const allowed = ['name', 'email', 'status', 'service_price', 'service_price_3m', 'service_price_6m', 'telegram_chat_id'];
+        const sanitized = Object.fromEntries(
+            Object.entries(updates).filter(([k]) => allowed.includes(k))
+        );
+
+        const { error } = await supabase
+            .from('resellers')
+            .update({ ...sanitized, updated_at: new Date().toISOString() })
+            .eq('id', resellerId);
+
+        if (error) return res.status(500).json({ error: error.message });
+        return res.status(200).json({ success: true });
+    }
+
+    // ── Delete reseller ───────────────────────────────────────
+    if (action === 'delete-reseller') {
+        const { resellerId } = req.body;
+        if (!resellerId) return res.status(400).json({ error: 'Missing resellerId' });
+
+        const { error } = await supabase.from('resellers').delete().eq('id', resellerId);
+        if (error) return res.status(500).json({ error: error.message });
+        return res.status(200).json({ success: true });
+    }
+
+    // ── Add balance to reseller ───────────────────────────────
+    if (action === 'add-reseller-balance') {
+        const { resellerId, amount } = req.body;
+        if (!resellerId || amount === undefined) return res.status(400).json({ error: 'Missing resellerId or amount' });
+
+        const { data: current, error: fetchErr } = await supabase
+            .from('resellers')
+            .select('balance')
+            .eq('id', resellerId)
+            .single();
+
+        if (fetchErr) return res.status(500).json({ error: fetchErr.message });
+
+        const newBalance = parseFloat(current.balance || 0) + parseFloat(amount);
+
+        const { error } = await supabase
+            .from('resellers')
+            .update({ balance: newBalance, updated_at: new Date().toISOString() })
+            .eq('id', resellerId);
+
+        if (error) return res.status(500).json({ error: error.message });
+        return res.status(200).json({ success: true, newBalance });
+    }
+
     return res.status(400).json({ error: `Unknown action: ${action}` });
 }

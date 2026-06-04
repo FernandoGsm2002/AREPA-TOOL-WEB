@@ -1483,12 +1483,17 @@ async function doLogin() {
             throw new Error('Contraseña incorrecta');
         }
 
-        // 3. Store session
+        // 3. Store session + activar supabaseClient con JWT del admin
         sessionStorage.setItem('adminSession', JSON.stringify({
             access_token: authData.access_token,
             username,
             expires: Date.now() + (authData.expires_in * 1000)
         }));
+
+        await supabaseClient.auth.setSession({
+            access_token: authData.access_token,
+            refresh_token: authData.refresh_token
+        });
 
         if (loginOverlay) loginOverlay.remove();
         initializePanel();
@@ -1516,16 +1521,10 @@ let allResellers = [];
 
 async function loadResellers() {
     try {
-        const { data, error } = await supabaseClient
-            .from('resellers')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        
-        allResellers = data;
-        displayResellers(data);
-        updateResellerStats(data);
+        const data = await adminFetch('list-resellers', {});
+        allResellers = data.resellers || [];
+        displayResellers(allResellers);
+        updateResellerStats(allResellers);
     } catch (error) {
         console.error('Error loading resellers:', error);
         showError('Failed to load resellers');
@@ -1634,28 +1633,23 @@ async function saveReseller() {
         };
         
         if (editId) {
-            // Update existing
-            const { error } = await supabaseClient
-                .from('resellers')
-                .update(resellerData)
-                .eq('id', editId);
-            
-            if (error) throw error;
+            await adminFetch('update-reseller', {
+                resellerId: editId,
+                updates: {
+                    name, email, status,
+                    service_price: servicePrice,
+                    service_price_3m: servicePrice3m,
+                    service_price_6m: servicePrice6m
+                }
+            });
             showSuccess('Reseller updated successfully');
         } else {
-            // Create new with generated API key
-            const { data, error } = await supabaseClient
-                .from('resellers')
-                .insert({ username, ...resellerData, api_key: generateApiKey() })
-                .select()
-                .single();
-            
-            if (error) throw error;
-            
-            // Show the API key
-            document.getElementById('reseller-api-key-display').textContent = data.api_key;
+            const result = await adminFetch('create-reseller', {
+                name, username, email,
+                servicePrice, servicePrice3m, servicePrice6m
+            });
+            document.getElementById('reseller-api-key-display').textContent = result.reseller.api_key;
             document.getElementById('reseller-api-key-section').classList.remove('d-none');
-            
             showSuccess('Reseller created! Copy the API Key below.');
         }
         
@@ -1745,31 +1739,12 @@ async function addBalance() {
         
         const reseller = allResellers.find(r => r.id === resellerId);
         if (!reseller) return;
-        
-        const newBalance = parseFloat(reseller.balance) + amount;
-        
-        // Update balance
-        const { error: updateError } = await supabaseClient
-            .from('resellers')
-            .update({ balance: newBalance, updated_at: new Date().toISOString() })
-            .eq('id', resellerId);
-        
-        if (updateError) throw updateError;
-        
-        // Log transaction
-        await supabaseClient
-            .from('reseller_transactions')
-            .insert({
-                reseller_id: resellerId,
-                type: 'credit',
-                amount: amount,
-                balance_after: newBalance,
-                description: description
-            });
-        
+
+        const result = await adminFetch('add-reseller-balance', { resellerId, amount });
+
         bootstrap.Modal.getInstance(document.getElementById('addBalanceModal')).hide();
         await loadResellers();
-        showSuccess(`$${amount.toFixed(2)} added to ${reseller.name}. New balance: $${newBalance.toFixed(2)}`);
+        showSuccess(`$${amount.toFixed(2)} added to ${reseller.name}. New balance: $${result.newBalance.toFixed(2)}`);
     } catch (error) {
         console.error('Error adding balance:', error);
         showError('Failed to add balance: ' + error.message);
@@ -1783,13 +1758,7 @@ async function deleteReseller(resellerId) {
     if (!confirm(`Delete reseller "${reseller.name}"? This cannot be undone.`)) return;
     
     try {
-        const { error } = await supabaseClient
-            .from('resellers')
-            .delete()
-            .eq('id', resellerId);
-        
-        if (error) throw error;
-        
+        await adminFetch('delete-reseller', { resellerId });
         await loadResellers();
         showSuccess('Reseller deleted');
     } catch (error) {
