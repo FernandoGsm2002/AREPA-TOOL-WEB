@@ -115,16 +115,20 @@ async function validateSession(req) {
 
     const token = authHeader.slice(7);
 
-    const supabase = createClient(
+    const anonClient = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     );
+    const adminClient = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY
+    );
 
-    const { data, error } = await supabase.auth.getUser(token);
+    const { data, error } = await anonClient.auth.getUser(token);
     if (error || !data?.user) return null;
 
-    // Verify the user has an active subscription in public.users
-    const { data: profile, error: profileError } = await supabase
+    // Verify the user has an active subscription (service_role bypasses RLS)
+    const { data: profile, error: profileError } = await adminClient
         .from('users')
         .select('status')
         .eq('email', data.user.email)

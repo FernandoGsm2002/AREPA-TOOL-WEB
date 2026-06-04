@@ -14,15 +14,19 @@ async function validateSession(req) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
   const token = authHeader.slice(7);
 
-  const supabase = createClient(
+  const anonClient = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
+  const adminClient = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  );
 
-  const { data, error } = await supabase.auth.getUser(token);
+  const { data, error } = await anonClient.auth.getUser(token);
   if (error || !data?.user) return null;
 
-  const { data: profile } = await supabase
+  const { data: profile } = await adminClient
     .from('users')
     .select('status')
     .eq('email', data.user.email)
