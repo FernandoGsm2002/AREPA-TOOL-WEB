@@ -5,6 +5,10 @@
   "outputDirectory": ".",
   "rewrites": [
     {
+      "source": "/supabase/(.*)",
+      "destination": "https://lumhpjfndlqhexnjmvtu.supabase.co/$1"
+    },
+    {
       "source": "/panel-a7f3k9x2",
       "destination": "/hide.html"
     },
