@@ -66,7 +66,7 @@
 /* --- Hero Section --- */
 .hero {
     position: relative;
-    padding: 130px 0 90px;
+    padding: 172px 0 90px; /* navbar(104px) + banner(~36px) + 32px gap */
     overflow: hidden;
 }
 
@@ -409,7 +409,7 @@
 
 /* --- Responsive --- */
 @media (max-width: 992px) {
-    .hero { text-align: center; padding: 140px 0 70px; }
+    .hero { text-align: center; padding: 178px 0 70px; } /* extra for banner on mobile */
     .hero h1 { font-size: 3rem; }
     .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
     .hero-eyebrow { text-align: center; }
