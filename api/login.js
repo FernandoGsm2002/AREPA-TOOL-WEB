@@ -8,10 +8,21 @@ export default async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'Method not allowed' });
 
+    // Reject oversized bodies (prevents payload stuffing)
+    const bodyStr = JSON.stringify(req.body || {});
+    if (bodyStr.length > 4_096) return res.status(413).json({ success: false, error: 'Payload too large', category: 'network' });
+
     const { username, password, machineId, machineName } = req.body || {};
 
     if (!username || !password || !machineId) {
         return res.status(400).json({ success: false, error: 'Datos incompletos.', category: 'network' });
+    }
+
+    // Basic format guards — prevents obviously malformed input reaching the DB
+    if (typeof username !== 'string' || username.length > 100 ||
+        typeof password !== 'string' || password.length > 256 ||
+        typeof machineId !== 'string' || machineId.length > 128) {
+        return res.status(400).json({ success: false, error: 'Datos inválidos.', category: 'network' });
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

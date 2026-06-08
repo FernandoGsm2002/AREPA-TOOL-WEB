@@ -12,6 +12,17 @@ export default async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
+    // Reject oversized bodies
+    const bodyStr = JSON.stringify(req.body || {});
+    if (bodyStr.length > 32_768) return res.status(413).json({ error: 'Payload too large' });
+
+    // Whitelist allowed actions — unknown actions never reach the edge function
+    const ALLOWED_ACTIONS = ['create_profile', 'add_denylist', 'delete_profile', 'add_domain'];
+    const { action } = req.body || {};
+    if (!action || !ALLOWED_ACTIONS.includes(action)) {
+        return res.status(400).json({ error: 'Invalid action' });
+    }
+
     try {
         const response = await fetch(EDGE_URL, {
             method: 'POST',
