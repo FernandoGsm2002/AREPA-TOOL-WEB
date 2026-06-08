@@ -1,5 +1,5 @@
 // Supabase Configuration
-const SUPABASE_URL = 'https://arepatool.com/supabase';
+const SUPABASE_URL = window.location.origin + '/supabase';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1bWhwamZuZGxxaGV4bmptdnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0NjY1NjcsImV4cCI6MjA3OTA0MjU2N30.oXVYUjnSpDDQphLZJzglGaDSQTjuGzYgD-LMC5FwDHw';
 
 // Verificar que Supabase esté cargado
