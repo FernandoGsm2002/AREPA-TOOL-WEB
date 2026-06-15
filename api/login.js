@@ -31,6 +31,21 @@ export default async function handler(req, res) {
     const db = createClient(supabaseUrl, serviceKey);
 
     try {
+        // 0. Check if device is banned
+        const { data: banned } = await db
+            .from('banned_devices')
+            .select('id')
+            .eq('device_id', machineId)
+            .maybeSingle();
+
+        if (banned) {
+            return res.status(200).json({
+                success: false,
+                error: 'Este dispositivo ha sido bloqueado.\nContacta al administrador.',
+                category: 'license'
+            });
+        }
+
         // 1. Find user by username, fallback to email
         const usernameClean = username.toLowerCase().trim();
         let user = null;
