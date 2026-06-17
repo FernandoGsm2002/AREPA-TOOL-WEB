@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArepaTool A12+ — iOS Bypass Support</title>
+    <meta name="description" content="ArepaTool A12+ iOS Bypass — Supported devices, tools and registration info." />
+    <link rel="icon" type="image/x-icon" href="pngs/logo.ico">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Use the same design system as the main site -->
+    <link rel="stylesheet" href="css/skeleton-theme.css">
+
+    <style>
+        /* ─────────────────────────────────────────────
+           A12+ Page-Specific Styles
+           (skeleton-theme.css already handles navbar, tokens, reset)
+        ───────────────────────────────────────────── */
+
+        /* Background orbs (same as landing) */
+        .bg-canvas { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(100px); will-change: transform; }
+        .orb-1 { width: 700px; height: 700px; background: radial-gradient(circle, rgba(242,169,0,.16) 0%, transparent 70%); top: -200px; left: -180px; animation: orbDrift1 22s ease-in-out infinite; }
+        .orb-2 { width: 550px; height: 550px; background: radial-gradient(circle, rgba(242,169,0,.10) 0%, transparent 70%); bottom: -150px; right: -120px; animation: orbDrift2 28s ease-in-out infinite; }
+        .orb-3 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(59,130,246,.06) 0%, transparent 70%); top: 40%; left: 45%; animation: orbDrift3 35s ease-in-out infinite; }
+        @keyframes orbDrift1 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(110px,160px)} 66%{transform:translate(-50px,90px)} }
+        @keyframes orbDrift2 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-120px,-80px)} 66%{transform:translate(70px,-140px)} }
+        @keyframes orbDrift3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-100px,-70px)} }
+
+        /* A12+ badge inside the navbar */
+        .a12-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: linear-gradient(135deg, var(--primary-500), #ff9500);
+            color: #000;
+            font-family: var(--font-heading);
+            font-size: 0.7rem; font-weight: 800;
+            padding: 4px 11px;
+            border-radius: var(--radius-full);
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* Tab pills inside the nav */
+        .a12-tabs {
+            display: flex; gap: 4px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: var(--radius-full);
+            padding: 4px;
+        }
+        .a12-tab {
+            padding: 7px 16px;
+            border-radius: var(--radius-full);
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,.55);
+            font-family: var(--font-body);
+            font-size: 0.82rem; font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all .2s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .a12-tab:hover { color: #fff; background: rgba(255,255,255,.06); }
+        .a12-tab.active {
+            background: linear-gradient(135deg, var(--primary-500), #ff9500);
+            color: #000; font-weight: 700;
+        }
+        .a12-tab.active i { color: #000; }
+
+        /* ── Page layout ── */
+        .page-body { padding-top: 104px; } /* navbar(72px) + gap + a bit */
+
+        /* ── Hero Banner ── */
+        .a12-hero {
+            padding: 56px 24px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .a12-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(242,169,0,.09) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .a12-hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 0.75rem; font-weight: 700;
+            letter-spacing: .1em; text-transform: uppercase;
+            color: var(--primary-400);
+            background: rgba(242,169,0,.08);
+            border: 1px solid rgba(242,169,0,.25);
+            padding: 5px 16px; border-radius: var(--radius-full);
+            margin-bottom: 20px;
+        }
+        .a12-hero h1 {
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            font-weight: 900; color: #fff; margin-bottom: 14px;
+            line-height: 1.1;
+        }
+        .a12-hero h1 span {
+            background: linear-gradient(135deg, var(--primary-300), var(--primary-500));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .a12-hero p { color: rgba(255,255,255,.5); font-size: 1rem; max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+        /* ── Tab Switcher (below hero) ── */
+        .tab-switcher {
+            display: flex; justify-content: center;
+            padding: 0 24px 40px;
+        }
+        .tab-switcher-inner {
+            display: inline-flex; gap: 6px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: var(--radius-xl);
+            padding: 6px;
+        }
+        .ts-btn {
+            padding: 10px 22px;
+            border-radius: 12px;
+            border: none; background: transparent;
+            color: rgba(255,255,255,.5);
+            font-family: var(--font-body);
+            font-size: .9rem; font-weight: 500;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+            transition: all .2s;
+        }
+        .ts-btn:hover { color: #fff; background: rgba(255,255,255,.06); }
+        .ts-btn.active {
+            background: linear-gradient(135deg, var(--primary-500), #ff9500);
+            color: #000; font-weight: 700;
+            box-shadow: 0 4px 16px rgba(242,169,0,.3);
+        }
+        .ts-btn.active i { color: #000; }
+
+        /* ── Tab Content ── */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+        /* ── Stats Row ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px; margin-bottom: 28px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(242,169,0,.15);
+            border-radius: 16px; padding: 22px 18px;
+            text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-500), transparent);
+        }
+        .stat-num {
+            font-family: var(--font-heading);
+            font-size: 2.4rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-300), var(--primary-500));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            line-height: 1;
+        }
+        .stat-lbl { color: rgba(255,255,255,.4); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; margin-top: 6px; }
+
+        /* ── Filter Bar ── */
+        .filter-bar {
+            display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
+            background: rgba(255,255,255,.025);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 16px; padding: 18px 20px;
+            margin-bottom: 20px;
+        }
+        .f-group { flex: 1; min-width: 190px; }
+        .f-label {
+            display: block; color: rgba(255,255,255,.4);
+            font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 7px;
+        }
+        .f-select, .f-input {
+            width: 100%; padding: 10px 14px;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 10px; color: #fff;
+            font-family: var(--font-body); font-size: .9rem;
+            outline: none; transition: border-color .2s;
+            appearance: none;
+        }
+        .f-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23f2a900' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px;
+        }
+        .f-select option { background: #0f0f11; }
+        .f-select:focus, .f-input:focus { border-color: rgba(242,169,0,.5); box-shadow: 0 0 0 3px rgba(242,169,0,.08); }
+        .search-wrap { position: relative; }
+        .search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: rgba(242,169,0,.5); font-size: .85rem; pointer-events: none; }
+        .f-input { padding-left: 34px; }
+        .refresh-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary-500), #ff9500);
+            border: none; border-radius: 10px;
+            color: #000; font-weight: 700; font-size: .88rem;
+            cursor: pointer; transition: opacity .2s, transform .15s;
+            display: flex; align-items: center; gap: 7px; white-space: nowrap;
+        }
+        .refresh-btn:hover { opacity: .85; transform: scale(.98); }
+        .refresh-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+        /* ── Device Table ── */
+        .table-wrap {
+            background: rgba(255,255,255,.02);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 16px; overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .device-table { width: 100%; border-collapse: collapse; }
+        .device-table thead th {
+            background: rgba(242,169,0,.07);
+            padding: 14px 20px;
+            text-align: left; font-size: .72rem; font-weight: 700;
+            color: rgba(242,169,0,.8); text-transform: uppercase; letter-spacing: .08em;
+        }
+        .device-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.04); transition: background .15s; }
+        .device-table tbody tr:last-child { border-bottom: none; }
+        .device-table tbody tr:hover { background: rgba(242,169,0,.04); }
+        .device-table td { padding: 14px 20px; vertical-align: top; }
+        .d-name { font-weight: 600; color: #fff; font-size: .93rem; }
+        .d-model { color: rgba(255,255,255,.3); font-size: .75rem; font-family: var(--font-mono); margin-top: 3px; }
+        .version-badges { display: flex; flex-wrap: wrap; gap: 7px; }
+        .vbadge {
+            display: inline-flex; flex-direction: column; align-items: center;
+            padding: 5px 11px;
+            background: rgba(242,169,0,.07);
+            border: 1px solid rgba(242,169,0,.18);
+            border-radius: 9px; cursor: pointer;
+            min-width: 58px; transition: all .15s;
+        }
+        .vbadge:hover { background: rgba(242,169,0,.17); border-color: rgba(242,169,0,.45); transform: translateY(-1px); }
+        .vbadge .build { font-weight: 700; font-size: .76rem; color: var(--primary-400); font-family: var(--font-mono); margin-bottom: 1px; }
+        .vbadge .ios   { font-size: .66rem; color: rgba(255,255,255,.4); }
+        .count-pill {
+            display: inline-block;
+            background: rgba(242,169,0,.12); color: var(--primary-400);
+            padding: 4px 12px; border-radius: 20px;
+            font-weight: 700; font-size: .8rem; text-align: center;
+        }
+
+        /* ── Pagination ── */
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 7px; flex-wrap: wrap; padding: 8px 0 36px; }
+        .pg-btn {
+            padding: 8px 13px;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.09);
+            border-radius: 8px; color: rgba(255,255,255,.65);
+            font-size: .86rem; cursor: pointer; transition: all .15s;
+        }
+        .pg-btn:hover:not(:disabled) { background: rgba(242,169,0,.1); border-color: rgba(242,169,0,.3); color: #fff; }
+        .pg-btn.active { background: linear-gradient(135deg, var(--primary-500), #ff9500); border-color: transparent; color: #000; font-weight: 700; }
+        .pg-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+        /* ── States ── */
+        .state-center { text-align: center; padding: 60px 20px; }
+        .spinner {
+            width: 42px; height: 42px;
+            border: 3px solid rgba(255,255,255,.07);
+            border-top-color: var(--primary-500);
+            border-radius: 50%; animation: spin .85s linear infinite;
+            margin: 0 auto 14px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .state-center p { color: rgba(255,255,255,.35); font-size: .88rem; }
+        .table-footer-note { text-align: center; color: rgba(255,255,255,.18); font-size: .74rem; padding-bottom: 32px; }
+
+        /* ─────────────────────────────────────────────
+           LINK TOOLS TAB
+        ───────────────────────────────────────────── */
+        .tools-section-title {
+            text-align: center; padding: 8px 0 32px;
+        }
+        .tools-section-title h2 { font-size: 1.5rem; color: #fff; margin-bottom: 6px; }
+        .tools-section-title p { color: rgba(255,255,255,.4); font-size: .88rem; }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 18px; padding-bottom: 48px;
+        }
+        .tool-card {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 18px; padding: 24px 22px;
+            transition: all .2s; text-decoration: none;
+            display: flex; flex-direction: column; gap: 12px;
+            position: relative; overflow: hidden;
+        }
+        .tool-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(242,169,0,.2), transparent);
+            opacity: 0; transition: opacity .2s;
+        }
+        .tool-card:hover { border-color: rgba(242,169,0,.3); background: rgba(242,169,0,.04); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.3); }
+        .tool-card:hover::before { opacity: 1; }
+        .tool-card.featured { border-color: rgba(242,169,0,.3); background: rgba(242,169,0,.04); }
+        .tool-card.featured::before { opacity: 1; }
+        .tc-icon {
+            width: 46px; height: 46px;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; color: rgba(255,255,255,.6);
+            flex-shrink: 0;
+        }
+        .tool-card.featured .tc-icon { background: rgba(242,169,0,.12); border-color: rgba(242,169,0,.3); color: var(--primary-500); }
+        .tc-title { font-weight: 700; font-size: .95rem; color: #fff; }
+        .tc-desc { font-size: .83rem; color: rgba(255,255,255,.45); line-height: 1.55; flex: 1; }
+        .tc-tag {
+            display: inline-block; font-size: .68rem; font-weight: 700;
+            padding: 3px 10px; border-radius: 20px;
+            background: rgba(255,255,255,.07); color: rgba(255,255,255,.5);
+            text-transform: uppercase; letter-spacing: .05em; width: fit-content;
+        }
+        .tc-tag.gold  { background: rgba(242,169,0,.12); color: var(--primary-400); }
+        .tc-tag.green { background: rgba(16,185,129,.12); color: #10b981; }
+        .tc-tag.blue  { background: rgba(59,130,246,.12); color: #60a5fa; }
+
+        /* ─────────────────────────────────────────────
+           REGISTER TAB
+        ───────────────────────────────────────────── */
+        .register-wrap { max-width: 680px; margin: 0 auto; padding: 40px 0 60px; }
+
+        .reg-hero {
+            background: linear-gradient(145deg, rgba(242,169,0,.07) 0%, rgba(15,15,17,0) 70%);
+            border: 1px solid rgba(242,169,0,.18);
+            border-radius: 20px; padding: 40px 36px;
+            text-align: center; margin-bottom: 24px;
+        }
+        .reg-hero .big-icon {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, rgba(242,169,0,.15), rgba(242,169,0,.05));
+            border: 1px solid rgba(242,169,0,.3);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: var(--primary-500);
+            margin: 0 auto 20px;
+        }
+        .reg-hero h2 { font-size: 1.8rem; color: #fff; margin-bottom: 12px; }
+        .reg-hero p { color: rgba(255,255,255,.5); line-height: 1.7; font-size: .93rem; }
+
+        .steps { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+        .step {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: rgba(255,255,255,.025);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 14px; padding: 18px 20px;
+        }
+        .step-n {
+            width: 32px; height: 32px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary-500), #ff9500);
+            color: #000; font-weight: 800; font-size: .88rem;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .step-body strong { color: #fff; font-size: .92rem; display: block; margin-bottom: 3px; }
+        .step-body span { color: rgba(255,255,255,.45); font-size: .83rem; line-height: 1.5; }
+
+        .btn-cta {
+            display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-500), #ff9500);
+            color: #000; font-weight: 800; font-size: .95rem;
+            font-family: var(--font-heading); letter-spacing: .04em;
+            border: none; border-radius: 14px;
+            cursor: pointer; text-decoration: none;
+            transition: opacity .2s, transform .15s;
+            box-shadow: 0 4px 24px rgba(242,169,0,.25);
+        }
+        .btn-cta:hover { opacity: .88; transform: translateY(-1px); }
+        .divider-or { text-align: center; color: rgba(255,255,255,.2); font-size: .82rem; margin: 14px 0; }
+        .btn-ghost {
+            display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+            padding: 14px;
+            background: rgba(255,255,255,.04);
+            color: rgba(255,255,255,.6); font-weight: 600; font-size: .9rem;
+            border: 1px solid rgba(255,255,255,.08); border-radius: 14px;
+            cursor: pointer; text-decoration: none; transition: all .2s;
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,.08); color: #fff; }
+
+        /* ── Footer ── */
+        .a12-footer {
+            text-align: center; padding: 24px;
+            border-top: 1px solid rgba(255,255,255,.05);
+            color: rgba(255,255,255,.2); font-size: .78rem;
+        }
+        .a12-footer a { color: var(--primary-400); text-decoration: none; }
+        .a12-footer a:hover { color: var(--primary-300); }
+
+        /* ─────────────────────────────────────────────
+           MOBILE — Navbar A12 tabs collapse below 860px
+        ───────────────────────────────────────────── */
+        @media (max-width: 860px) {
+            /* skeleton-theme already hides .nav-menu and .nav-actions, shows .mobile-toggle */
+            .a12-tabs  { display: none; }
+            .tab-switcher { display: flex; } /* shown on mobile via the static tab switcher */
+        }
+        @media (min-width: 861px) {
+            /* On desktop the tab switcher below the hero is redundant—hide it */
+            .tab-switcher { display: none; }
+        }
+
+        @media (max-width: 860px) {
+            .page-body { padding-top: 80px; }
+            .a12-hero { padding: 40px 16px 32px; }
+            .a12-hero h1 { font-size: 1.85rem; }
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .stats-row .stat-card:last-child { grid-column: 1 / -1; }
+            .filter-bar { flex-direction: column; }
+            .f-group { min-width: 0; width: 100%; }
+            .refresh-btn { width: 100%; justify-content: center; }
+            .device-table thead { display: none; }
+            .device-table, .device-table tbody, .device-table tr, .device-table td { display: block; }
+            .device-table tr { border-bottom: 1px solid rgba(255,255,255,.06); padding: 14px 16px; }
+            .device-table td { padding: 4px 0; border: none; }
+            .device-table td:last-child { margin-top: 8px; }
+            .tools-grid { grid-template-columns: 1fr; }
+            .reg-hero { padding: 28px 18px; }
+            .register-wrap { padding: 24px 0 48px; }
+            .tab-switcher-inner { flex-direction: column; width: 100%; }
+            .ts-btn { justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            .a12-hero h1 { font-size: 1.55rem; }
+            .stats-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-canvas">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
+
+<!-- ══ NAVBAR (same pill shape from skeleton-theme.css) ══ -->
+<nav class="navbar">
+    <div class="navbar-container">
+
+        <!-- Brand — same logo as main site -->
+        <a href="/" class="brand">
+            <img src="pngs/arepalanding.png" alt="ArepaTool">
+        </a>
+
+        <span class="a12-pill">
+            <i class="bi bi-cpu-fill"></i> A12+
+        </span>
+
+        <!-- Tabs (hidden on mobile via CSS, desktop only) -->
+        <div class="a12-tabs" id="desktopTabs">
+            <button class="a12-tab active" onclick="switchTab('devices', this)">
+                <i class="bi bi-phone-fill"></i> Supported Devices
+            </button>
+            <button class="a12-tab" onclick="switchTab('tools', this)">
+                <i class="bi bi-link-45deg"></i> Link Tools
+            </button>
+            <button class="a12-tab" onclick="switchTab('register', this)">
+                <i class="bi bi-person-plus-fill"></i> Register?
+            </button>
+        </div>
+
+        <!-- Right actions -->
+        <div class="nav-actions">
+            <a href="/" class="btn btn-secondary btn-sm">
+                <i class="bi bi-house-fill"></i> Main Site
+            </a>
+        </div>
+
+        <!-- Mobile toggle -->
+        <button class="mobile-toggle" id="mobileToggleBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+            <i class="bi bi-list" id="mobileToggleIcon"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Nav Panel -->
+<div class="mobile-nav" id="mobileNav">
+    <button class="a12-tab" style="width:100%;justify-content:flex-start;border-radius:12px;" onclick="switchTab('devices',null); closeMobileMenu()">
+        <i class="bi bi-phone-fill"></i> Supported Devices
+    </button>
+    <button class="a12-tab" style="width:100%;justify-content:flex-start;border-radius:12px;" onclick="switchTab('tools',null); closeMobileMenu()">
+        <i class="bi bi-link-45deg"></i> Link Tools
+    </button>
+    <button class="a12-tab" style="width:100%;justify-content:flex-start;border-radius:12px;" onclick="switchTab('register',null); closeMobileMenu()">
+        <i class="bi bi-person-plus-fill"></i> You Need Register?
+    </button>
+    <div class="mobile-nav-actions">
+        <a href="/" class="btn btn-secondary">
+            <i class="bi bi-house-fill"></i> Back to Main Site
+        </a>
+    </div>
+</div>
+
+<!-- ══ PAGE BODY ══ -->
+<div class="page-body">
+
+    <!-- Hero -->
+    <div class="a12-hero">
+        <div class="a12-hero-eyebrow">
+            <i class="bi bi-shield-lock-fill"></i> iOS Bypass Module
+        </div>
+        <h1>Bypass <span>A12+ iCloud</span><br>On Any iOS</h1>
+        <p>114 confirmed devices · iOS 14.0 through 26.2 · Updated daily from verified bypass logs</p>
+    </div>
+
+    <!-- Mobile Tab Switcher (visible only on mobile, desktop uses navbar tabs) -->
+    <div class="tab-switcher">
+        <div class="tab-switcher-inner" id="mobileTabs">
+            <button class="ts-btn active" onclick="switchTabMobile('devices', this)">
+                <i class="bi bi-phone-fill"></i> Supported Devices
+            </button>
+            <button class="ts-btn" onclick="switchTabMobile('tools', this)">
+                <i class="bi bi-link-45deg"></i> Link Tools
+            </button>
+            <button class="ts-btn" onclick="switchTabMobile('register', this)">
+                <i class="bi bi-person-plus-fill"></i> You Need Register?
+            </button>
+        </div>
+    </div>
+
+    <!-- ══ TAB: SUPPORTED DEVICES ══ -->
+    <div class="tab-content active" id="tab-devices">
+        <div class="container">
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-num" id="totalDevices">—</div>
+                    <div class="stat-lbl">Supported Devices</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="totalBuilds">—</div>
+                    <div class="stat-lbl">Total Builds</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="showingCount">—</div>
+                    <div class="stat-lbl">Showing</div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <div class="f-group">
+                    <label class="f-label">Device Model</label>
+                    <select class="f-select" id="deviceFilter">
+                        <option value="">All Devices</option>
+                    </select>
+                </div>
+                <div class="f-group">
+                    <label class="f-label">iOS / Build</label>
+                    <select class="f-select" id="buildFilter">
+                        <option value="">All Builds</option>
+                    </select>
+                </div>
+                <div class="f-group">
+                    <label class="f-label">Search</label>
+                    <div class="search-wrap">
+                        <i class="bi bi-search"></i>
+                        <input class="f-input" type="text" id="searchInput" placeholder="iPhone 16, XR, iPad Air…">
+                    </div>
+                </div>
+                <div>
+                    <label class="f-label" style="visibility:hidden;">.</label>
+                    <button class="refresh-btn" id="refreshBtn" onclick="loadDevices(true)">
+                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table class="device-table">
+                    <thead>
+                        <tr>
+                            <th style="width:230px;">Device</th>
+                            <th>Supported iOS Builds</th>
+                            <th style="width:90px;text-align:center;">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        <tr>
+                            <td colspan="3">
+                                <div class="state-center">
+                                    <div class="spinner"></div>
+                                    <p>Loading device list…</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination" id="pagination"></div>
+
+            <p class="table-footer-note">
+                Last updated: <span id="lastUpdated">—</span> &nbsp;·&nbsp; iOS 14.0 → 26.2 &nbsp;·&nbsp;
+                Data from <a href="https://rust-a12.info/ios_supported.php" target="_blank" rel="noopener" style="color:rgba(242,169,0,.5);">rust-a12.info</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- ══ TAB: LINK TOOLS ══ -->
+    <div class="tab-content" id="tab-tools">
+        <div class="container">
+            <div class="tools-section-title">
+                <h2>iOS Bypass <span class="text-gradient">Tools</span></h2>
+                <p>Community-verified tools for iOS unlock and bypass — A12 and newer chips</p>
+            </div>
+            <div class="tools-grid">
+
+                <a href="register.html" class="tool-card featured">
+                    <div class="tc-icon"><i class="bi bi-star-fill"></i></div>
+                    <div class="tc-title">ArepaTool A12+</div>
+                    <div class="tc-desc">Native iOS bypass module. Supports iCloud bypass, MDM removal and Hidden iCloud for A12+ on iOS 16–26. Licensed access required.</div>
+                    <span class="tc-tag gold">Official</span>
+                </a>
+
+                <a href="https://palera.in" target="_blank" rel="noopener" class="tool-card">
+                    <div class="tc-icon"><i class="bi bi-phone"></i></div>
+                    <div class="tc-title">Palera1n</div>
+                    <div class="tc-desc">Semi-tethered jailbreak for A8–A17 on iOS 15–17. Open source and actively maintained by the community.</div>
+                    <span class="tc-tag green">Open Source</span>
+                </a>
+
+                <a href="https://trollstore.app" target="_blank" rel="noopener" class="tool-card">
+                    <div class="tc-icon"><i class="bi bi-shop-window"></i></div>
+                    <div class="tc-title">TrollStore</div>
+                    <div class="tc-desc">Permanent IPA installer using AMFI exploits. No jailbreak needed. Supports iOS 14–17.x on A12–A17 chips.</div>
+                    <span class="tc-tag blue">No Jailbreak</span>
+                </a>
+
+                <a href="https://checkra.in" target="_blank" rel="noopener" class="tool-card">
+                    <div class="tc-icon"><i class="bi bi-cpu"></i></div>
+                    <div class="tc-title">checkra1n</div>
+                    <div class="tc-desc">Bootrom-level exploit for A5–A11. The foundation of many modern iOS bypass techniques including MDM bypass chains.</div>
+                    <span class="tc-tag">Hardware Exploit</span>
+                </a>
+
+                <a href="https://unc0ver.dev" target="_blank" rel="noopener" class="tool-card">
+                    <div class="tc-icon"><i class="bi bi-unlock"></i></div>
+                    <div class="tc-title">unc0ver</div>
+                    <div class="tc-desc">Stable kernel-based jailbreak supporting iOS 11–14.8 on A12+ devices. Widely used for MDM bypass preparation.</div>
+                    <span class="tc-tag">Legacy</span>
+                </a>
+
+                <a href="https://altstore.io" target="_blank" rel="noopener" class="tool-card">
+                    <div class="tc-icon"><i class="bi bi-download"></i></div>
+                    <div class="tc-title">AltStore</div>
+                    <div class="tc-desc">Sideload any IPA using your own Apple ID. Works on all iOS versions without jailbreak or special exploits.</div>
+                    <span class="tc-tag green">No Jailbreak</span>
+                </a>
+
+                <a href="https://sideloadly.io" target="_blank" rel="noopener" class="tool-card">
+                    <div class="tc-icon"><i class="bi bi-arrow-bar-down"></i></div>
+                    <div class="tc-title">Sideloadly</div>
+                    <div class="tc-desc">Windows & Mac IPA sideloader with advanced options like app patching, tweak injection and multi-account support.</div>
+                    <span class="tc-tag blue">IPA Sideload</span>
+                </a>
+
+                <a href="https://3utools.com" target="_blank" rel="noopener" class="tool-card">
+                    <div class="tc-icon"><i class="bi bi-tools"></i></div>
+                    <div class="tc-title">3uTools</div>
+                    <div class="tc-desc">All-in-one iOS management toolkit for Windows. Flash, backup, sideload, manage files and apps on any iPhone or iPad.</div>
+                    <span class="tc-tag">Management</span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ TAB: YOU NEED REGISTER? ══ -->
+    <div class="tab-content" id="tab-register">
+        <div class="container">
+            <div class="register-wrap">
+
+                <div class="reg-hero">
+                    <div class="big-icon"><i class="bi bi-shield-lock-fill"></i></div>
+                    <h2>How to Get Access</h2>
+                    <p>ArepaTool A12+ is a licensed module. You need an active account activated by one of our official resellers. Here's how it works:</p>
+                </div>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-n">1</div>
+                        <div class="step-body">
+                            <strong>Create a free account</strong>
+                            <span>Register with your email at arepatool.com — it only takes 30 seconds.</span>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-n">2</div>
+                        <div class="step-body">
+                            <strong>Check your device is supported</strong>
+                            <span>Go to "Supported Devices" above and confirm your iPhone or iPad is on the list before purchasing.</span>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-n">3</div>
+                        <div class="step-body">
+                            <strong>Contact a verified reseller</strong>
+                            <span>Purchase an activation license from a reseller listed on the main arepatool.com page.</span>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-n">4</div>
+                        <div class="step-body">
+                            <strong>Download & activate</strong>
+                            <span>Download ArepaToolV2, log in and the A12+ module activates automatically with your license.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="register.html" class="btn-cta">
+                    <i class="bi bi-person-plus-fill"></i> Create Free Account
+                </a>
+                <div class="divider-or">Already have an account?</div>
+                <a href="/" class="btn-ghost">
+                    <i class="bi bi-house-fill"></i> Go to Main Site
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+</div><!-- /page-body -->
+
+<div class="a12-footer">
+    &copy; 2026 <a href="/">ArepaTool</a> &mdash; A12+ iOS Bypass Module
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   TAB SWITCHING
+═══════════════════════════════════════════ */
+let activeTab = 'devices';
+
+function switchTab(id, btn) {
+    activeTab = id;
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+
+    // Sync desktop tab buttons
+    document.querySelectorAll('.a12-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    // Sync mobile tab switcher
+    document.querySelectorAll('.ts-btn').forEach(b => b.classList.remove('active'));
+    const mobileIdx = ['devices','tools','register'].indexOf(id);
+    const mobileBtns = document.querySelectorAll('.ts-btn');
+    if (mobileBtns[mobileIdx]) mobileBtns[mobileIdx].classList.add('active');
+}
+
+function switchTabMobile(id, btn) {
+    activeTab = id;
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+
+    // Sync mobile buttons
+    document.querySelectorAll('.ts-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    // Sync desktop tab buttons
+    const idx = ['devices','tools','register'].indexOf(id);
+    const dBtns = document.querySelectorAll('.a12-tab');
+    dBtns.forEach(b => b.classList.remove('active'));
+    if (dBtns[idx]) dBtns[idx].classList.add('active');
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE NAVBAR (uses skeleton-theme pattern)
+═══════════════════════════════════════════ */
+function toggleMobileMenu() {
+    const nav  = document.getElementById('mobileNav');
+    const icon = document.getElementById('mobileToggleIcon');
+    const open = nav.classList.toggle('open');
+    icon.className = open ? 'bi bi-x-lg' : 'bi bi-list';
+}
+function closeMobileMenu() {
+    document.getElementById('mobileNav').classList.remove('open');
+    document.getElementById('mobileToggleIcon').className = 'bi bi-list';
+}
+
+/* ═══════════════════════════════════════════
+   DEVICE DATA — with localhost fallback
+═══════════════════════════════════════════ */
+let allDevices = [], allBuilds = [], filteredDevices = [];
+let currentPage = 1;
+const PER_PAGE = 25;
+
+async function fetchData(force) {
+    const url = 'data/a12-devices.json' + (force ? '?_=' + Date.now() : '');
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+}
+
+async function loadDevices(force = false) {
+    const btn = document.getElementById('refreshBtn');
+    btn.disabled = true;
+    document.getElementById('tbody').innerHTML = `
+        <tr><td colspan="3">
+            <div class="state-center"><div class="spinner"></div><p>Loading…</p></div>
+        </td></tr>`;
+
+    try {
+        const data = await fetchData(force);
+        if (data.error) throw new Error(data.error);
+
+        allDevices = data.devices  || [];
+        allBuilds  = data.allBuilds || [];
+
+        document.getElementById('totalDevices').textContent = data.totalDevices ?? allDevices.length;
+        document.getElementById('totalBuilds').textContent  = data.totalBuilds  ?? allBuilds.length;
+        document.getElementById('lastUpdated').textContent  = data.lastUpdated  ?? '—';
+
+        populateSelects();
+        currentPage = 1;
+        applyFilters();
+    } catch (e) {
+        document.getElementById('tbody').innerHTML = `
+            <tr><td colspan="3">
+                <div class="state-center">
+                    <p style="color:#ef4444;font-size:1rem;margin-bottom:8px;">
+                        <i class="bi bi-exclamation-circle"></i> ${esc(e.message)}
+                    </p>
+                    <p>Check your connection and try refreshing.</p>
+                </div>
+            </td></tr>`;
+    } finally { btn.disabled = false; }
+}
+
+function populateSelects() {
+    const ds = document.getElementById('deviceFilter');
+    ds.innerHTML = '<option value="">All Devices</option>';
+    allDevices.forEach(d => {
+        const o = document.createElement('option');
+        o.value = d.productType;
+        o.textContent = d.description + ' (' + d.productType + ')';
+        ds.appendChild(o);
+    });
+
+    const bs = document.getElementById('buildFilter');
+    bs.innerHTML = '<option value="">All Builds</option>';
+    allBuilds.forEach(item => {
+        const build = item.build || item;
+        const ios   = item.ios   || '';
+        const o = document.createElement('option');
+        o.value = build;
+        o.textContent = ios ? build + '  —  iOS ' + ios : build;
+        bs.appendChild(o);
+    });
+}
+
+function applyFilters(resetPage = true) {
+    const dv = document.getElementById('deviceFilter').value;
+    const bv = document.getElementById('buildFilter').value;
+    const q  = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    filteredDevices = allDevices.filter(d => {
+        if (dv && d.productType !== dv) return false;
+        if (bv && !d.versions.some(v => (v.build || v) === bv)) return false;
+        if (q  && !d.description.toLowerCase().includes(q) && !d.productType.toLowerCase().includes(q)) return false;
+        return true;
+    });
+
+    if (resetPage) currentPage = 1;
+    document.getElementById('showingCount').textContent = filteredDevices.length;
+    renderTable(bv);
+    renderPagination();
+}
+
+function renderTable(bv) {
+    const tbody = document.getElementById('tbody');
+    if (!filteredDevices.length) {
+        tbody.innerHTML = `<tr><td colspan="3"><div class="state-center"><p>No devices match your filters.</p></div></td></tr>`;
+        return;
+    }
+
+    const start = (currentPage - 1) * PER_PAGE;
+    const slice = filteredDevices.slice(start, start + PER_PAGE);
+
+    tbody.innerHTML = slice.map(device => {
+        let vers = bv ? device.versions.filter(v => (v.build || v) === bv) : device.versions;
+        vers = [...vers].sort((a, b) => ((b.build || b) + '').localeCompare((a.build || a) + ''));
+
+        const badges = vers.map(v => {
+            const build = esc(v.build || v || '');
+            const ios   = v.ios ? esc(v.ios) : null;
+            const iosHtml = ios
+                ? `<span class="ios">iOS ${ios}</span>`
+                : `<span class="ios" style="color:rgba(255,255,255,.2);">—</span>`;
+            return `<span class="vbadge" onclick="filterByBuild('${(v.build||v||'').replace(/'/g,"\\'")}')">\
+<span class="build">${build}</span>${iosHtml}</span>`;
+        }).join('');
+
+        return `<tr>
+            <td>
+                <div class="d-name">${esc(device.description)}</div>
+                <div class="d-model">${esc(device.productType)}</div>
+            </td>
+            <td><div class="version-badges">${badges}</div></td>
+            <td style="text-align:center;"><span class="count-pill">${vers.length}</span></td>
+        </tr>`;
+    }).join('');
+}
+
+function filterByBuild(b) {
+    document.getElementById('buildFilter').value = b;
+    applyFilters(true);
+}
+
+function renderPagination() {
+    const total = Math.ceil(filteredDevices.length / PER_PAGE);
+    const el = document.getElementById('pagination');
+    if (total <= 1) { el.innerHTML = ''; return; }
+
+    let h = `<button class="pg-btn" ${currentPage===1?'disabled':''} onclick="goPage(${currentPage-1})"><i class="bi bi-chevron-left"></i></button>`;
+    for (let i = 1; i <= total; i++) {
+        if (i === 1 || i === total || (i >= currentPage - 2 && i <= currentPage + 2)) {
+            h += `<button class="pg-btn ${currentPage===i?'active':''}" onclick="goPage(${i})">${i}</button>`;
+        } else if (i === currentPage - 3 || i === currentPage + 3) {
+            h += `<span style="color:rgba(255,255,255,.25);padding:0 2px">…</span>`;
+        }
+    }
+    h += `<button class="pg-btn" ${currentPage===total?'disabled':''} onclick="goPage(${currentPage+1})"><i class="bi bi-chevron-right"></i></button>`;
+    el.innerHTML = h;
+}
+
+function goPage(p) {
+    currentPage = p;
+    renderTable(document.getElementById('buildFilter').value);
+    renderPagination();
+    document.querySelector('.filter-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── Wire filters ── */
+document.getElementById('deviceFilter').addEventListener('change', () => applyFilters());
+document.getElementById('buildFilter').addEventListener('change',  () => applyFilters());
+document.getElementById('searchInput').addEventListener('input',   () => applyFilters());
+
+/* ── Boot ── */
+loadDevices();
+</script>
+</body>
+</html>

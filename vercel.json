@@ -20,7 +20,9 @@
       "source": "/auth/files",
       "destination": "/files.html"
     },
-    { "source": "/auth/tools", "destination": "/tools.html" }
+    { "source": "/auth/tools", "destination": "/tools.html" },
+    { "source": "/a12plus", "destination": "/a12plus.html" },
+    { "source": "/a12plus/(.*)", "destination": "/a12plus.html" }
   ],
   "headers": [
     {
