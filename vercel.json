@@ -3,12 +3,15 @@
   "name": "arepa-tool-admin",
   "buildCommand": "echo 'No build needed'",
   "outputDirectory": ".",
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/(.*)",
+      "source": "/",
       "has": [{ "type": "host", "value": "bypass.arepatool.com" }],
-      "destination": "/a12plus.html"
-    },
+      "destination": "/a12plus.html",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
     {
       "source": "/supabase/(.*)",
       "destination": "https://lumhpjfndlqhexnjmvtu.supabase.co/$1"
