@@ -5,6 +5,11 @@
   "outputDirectory": ".",
   "rewrites": [
     {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "bypass.arepatool.com" }],
+      "destination": "/a12plus.html"
+    },
+    {
       "source": "/supabase/(.*)",
       "destination": "https://lumhpjfndlqhexnjmvtu.supabase.co/$1"
     },

@@ -622,67 +622,26 @@
         <div class="container">
             <div class="tools-section-title">
                 <h2>iOS Bypass <span class="text-gradient">Tools</span></h2>
-                <p>Community-verified tools for iOS unlock and bypass — A12 and newer chips</p>
+                <p>Official ArepaTool bypass executables — direct download from secure storage</p>
             </div>
-            <div class="tools-grid">
 
-                <a href="register.html" class="tool-card featured">
-                    <div class="tc-icon"><i class="bi bi-star-fill"></i></div>
-                    <div class="tc-title">ArepaTool A12+</div>
-                    <div class="tc-desc">Native iOS bypass module. Supports iCloud bypass, MDM removal and Hidden iCloud for A12+ on iOS 16–26. Licensed access required.</div>
-                    <span class="tc-tag gold">Official</span>
-                </a>
-
-                <a href="https://palera.in" target="_blank" rel="noopener" class="tool-card">
-                    <div class="tc-icon"><i class="bi bi-phone"></i></div>
-                    <div class="tc-title">Palera1n</div>
-                    <div class="tc-desc">Semi-tethered jailbreak for A8–A17 on iOS 15–17. Open source and actively maintained by the community.</div>
-                    <span class="tc-tag green">Open Source</span>
-                </a>
-
-                <a href="https://trollstore.app" target="_blank" rel="noopener" class="tool-card">
-                    <div class="tc-icon"><i class="bi bi-shop-window"></i></div>
-                    <div class="tc-title">TrollStore</div>
-                    <div class="tc-desc">Permanent IPA installer using AMFI exploits. No jailbreak needed. Supports iOS 14–17.x on A12–A17 chips.</div>
-                    <span class="tc-tag blue">No Jailbreak</span>
-                </a>
-
-                <a href="https://checkra.in" target="_blank" rel="noopener" class="tool-card">
-                    <div class="tc-icon"><i class="bi bi-cpu"></i></div>
-                    <div class="tc-title">checkra1n</div>
-                    <div class="tc-desc">Bootrom-level exploit for A5–A11. The foundation of many modern iOS bypass techniques including MDM bypass chains.</div>
-                    <span class="tc-tag">Hardware Exploit</span>
-                </a>
-
-                <a href="https://unc0ver.dev" target="_blank" rel="noopener" class="tool-card">
-                    <div class="tc-icon"><i class="bi bi-unlock"></i></div>
-                    <div class="tc-title">unc0ver</div>
-                    <div class="tc-desc">Stable kernel-based jailbreak supporting iOS 11–14.8 on A12+ devices. Widely used for MDM bypass preparation.</div>
-                    <span class="tc-tag">Legacy</span>
-                </a>
-
-                <a href="https://altstore.io" target="_blank" rel="noopener" class="tool-card">
-                    <div class="tc-icon"><i class="bi bi-download"></i></div>
-                    <div class="tc-title">AltStore</div>
-                    <div class="tc-desc">Sideload any IPA using your own Apple ID. Works on all iOS versions without jailbreak or special exploits.</div>
-                    <span class="tc-tag green">No Jailbreak</span>
-                </a>
-
-                <a href="https://sideloadly.io" target="_blank" rel="noopener" class="tool-card">
-                    <div class="tc-icon"><i class="bi bi-arrow-bar-down"></i></div>
-                    <div class="tc-title">Sideloadly</div>
-                    <div class="tc-desc">Windows & Mac IPA sideloader with advanced options like app patching, tweak injection and multi-account support.</div>
-                    <span class="tc-tag blue">IPA Sideload</span>
-                </a>
-
-                <a href="https://3utools.com" target="_blank" rel="noopener" class="tool-card">
-                    <div class="tc-icon"><i class="bi bi-tools"></i></div>
-                    <div class="tc-title">3uTools</div>
-                    <div class="tc-desc">All-in-one iOS management toolkit for Windows. Flash, backup, sideload, manage files and apps on any iPhone or iPad.</div>
-                    <span class="tc-tag">Management</span>
-                </a>
-
+            <!-- Loading state -->
+            <div id="tools-loading" style="text-align:center;padding:60px 0;color:rgba(255,255,255,.4);">
+                <i class="bi bi-arrow-repeat" style="font-size:1.8rem;animation:spin 1s linear infinite;display:block;margin-bottom:12px;"></i>
+                Loading tools...
             </div>
+
+            <!-- Error state -->
+            <div id="tools-error" style="display:none;text-align:center;padding:60px 0;">
+                <i class="bi bi-exclamation-triangle" style="font-size:1.8rem;color:rgba(242,169,0,.6);display:block;margin-bottom:12px;"></i>
+                <p style="color:rgba(255,255,255,.5);">Could not load download links. Try refreshing.</p>
+                <button onclick="loadTools()" style="margin-top:12px;padding:8px 20px;background:rgba(242,169,0,.15);border:1px solid rgba(242,169,0,.3);border-radius:8px;color:#f2a900;cursor:pointer;font-size:.88rem;">
+                    <i class="bi bi-arrow-clockwise"></i> Retry
+                </button>
+            </div>
+
+            <!-- Tools grid — populated by JS -->
+            <div class="tools-grid" id="tools-grid" style="display:none;"></div>
         </div>
     </div>
 
@@ -962,6 +921,40 @@ document.getElementById('searchInput').addEventListener('input',   () => applyFi
 
 /* ── Boot ── */
 loadDevices();
+loadTools();
+
+/* ── Bypass Tools (R2) ── */
+async function loadTools() {
+    const grid    = document.getElementById('tools-grid');
+    const loading = document.getElementById('tools-loading');
+    const error   = document.getElementById('tools-error');
+
+    try {
+        const res  = await fetch('/api/bypass-tools');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const { tools } = await res.json();
+
+        grid.innerHTML = tools.map(t => `
+            <a href="${t.downloadUrl}" download class="tool-card featured" title="Download ${t.title}">
+                <div class="tc-icon"><i class="bi ${t.icon}"></i></div>
+                <div class="tc-title">${t.title}</div>
+                <div class="tc-desc">${t.description}</div>
+                <span class="tc-tag ${t.tagClass}">${t.tag}</span>
+                <div style="margin-top:10px;font-size:.75rem;color:rgba(242,169,0,.7);display:flex;align-items:center;gap:5px;">
+                    <i class="bi bi-download"></i> Download
+                </div>
+            </a>
+        `).join('');
+
+        loading.style.display = 'none';
+        error.style.display   = 'none';
+        grid.style.display    = '';
+    } catch (e) {
+        loading.style.display = 'none';
+        error.style.display   = '';
+        console.error('bypass-tools:', e);
+    }
+}
 </script>
 </body>
 </html>
