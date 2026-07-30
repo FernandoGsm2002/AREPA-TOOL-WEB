@@ -65,10 +65,10 @@ export default function Downloads() {
           </a>
         </Button>
 
-        <div className="border-border/60 bg-muted/40 mt-4 inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 font-mono text-sm">
+        <div className="border-primary/30 bg-primary/8 shadow-primary/15 mt-4 inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 font-mono text-sm shadow-lg transition-transform duration-300 hover:scale-[1.02]">
           <KeyRound className="text-primary size-4" />
           <span className="text-muted-foreground">contraseña del rar:</span>
-          <strong className="tracking-wide">arepatool20261</strong>
+          <strong className="bg-primary/15 text-primary animate-pulse rounded px-1.5 py-0.5 tracking-wide">arepatool2026</strong>
         </div>
       </section>
 
