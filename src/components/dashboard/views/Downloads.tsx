@@ -59,7 +59,7 @@ export default function Downloads() {
         </div>
 
         <Button asChild className="mt-4">
-          <a href="https://www.mediafire.com/file/fgng1boch3nszxb/ArepaToolV2_Setup_v2.1.0.rar/file" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.mediafire.com/file/3e8ohgtkuwg7ohp/ArepaToolV2_Setup_v2.1.0release.rar/file" target="_blank" rel="noopener noreferrer">
             <WindowsIcon className="size-4" />
             Descargar instalador
           </a>
@@ -67,7 +67,7 @@ export default function Downloads() {
 
         <div className="border-border/60 bg-muted/40 mt-4 inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 font-mono text-sm">
           <KeyRound className="text-primary size-4" />
-          <span className="text-muted-foreground">pass rar:</span>
+          <span className="text-muted-foreground">contraseña del rar:</span>
           <strong className="tracking-wide">arepatool20261</strong>
         </div>
       </section>
