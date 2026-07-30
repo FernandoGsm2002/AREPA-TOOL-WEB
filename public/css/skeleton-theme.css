@@ -396,15 +396,27 @@ h5 { font-size: 1.25rem; }
     align-items: center;
     flex-shrink: 0;
     text-decoration: none;
+    width: 168px;
+    height: 58px;
+    overflow: hidden;
+    padding: 0 0.45rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.065), rgba(255,255,255,0.01));
+    transition: border-color .25s ease, transform .25s ease;
+}
+
+.brand:hover {
+    border-color: rgba(242, 169, 0, 0.5);
+    transform: translateY(-1px);
 }
 
 .brand img {
-    max-width: 160px;
     width: 100%;
-    height: auto;
+    height: 134px;
     object-fit: contain;
     display: block;
-    padding: 4px 0;
+    margin: -38px 0;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
 }
@@ -509,7 +521,8 @@ h5 { font-size: 1.25rem; }
     .nav-actions { display: none; }
     .mobile-toggle { display: flex; align-items: center; }
     .navbar { width: calc(100% - 2rem); top: 10px; height: 60px; }
-    .brand img { max-width: 120px; padding: 2px 0; }
+    .brand { width: 142px; height: 48px; }
+    .brand img { height: 112px; margin: -32px 0; }
 }
 
 /* --- App Layout (Files/Dashboard) --- */
@@ -615,6 +628,29 @@ h5 { font-size: 1.25rem; }
     border-radius: 24px;
     padding: 3rem;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+}
+
+.auth-brand {
+    display: flex;
+    width: 178px;
+    height: 78px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 0 auto 1.5rem;
+    padding: 0 0.55rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.015));
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
+}
+
+.auth-brand img {
+    width: 100%;
+    height: 154px;
+    max-width: none;
+    margin: -44px 0;
+    object-fit: contain;
 }
 
 /* 9. MODALS

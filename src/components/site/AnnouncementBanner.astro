@@ -1,0 +1,32 @@
+---
+import { Wrench, X } from "lucide-react";
+---
+
+<div
+  id="announcement-banner"
+  class="border-primary/20 from-primary/10 via-card to-card flex flex-wrap items-center justify-center gap-2.5 border-y bg-linear-to-r px-5 py-2.5 text-center text-[0.82rem] text-foreground/80"
+>
+  <span class="bg-primary inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[0.7rem] font-bold tracking-wide text-primary-foreground uppercase">
+    <Wrench className="size-3" />
+    Reparado
+  </span>
+  <span>
+    <strong class="text-primary">v2.1.0</strong> — Nuevo <strong class="text-foreground">soporte para Motorolas con procesador MTK 2026</strong>.
+    Se reparó el <strong class="text-foreground">inicio de sesión</strong> y problemas con la <strong class="text-foreground">autenticación</strong>.
+    Actualiza tu herramienta para evitar inconvenientes.
+  </span>
+  <button
+    id="announcement-close"
+    class="text-muted-foreground hover:text-foreground ml-1 rounded-md p-1 leading-none transition-colors hover:bg-white/8"
+    title="Cerrar"
+    aria-label="Cerrar"
+  >
+    <X className="size-4" />
+  </button>
+</div>
+
+<script>
+  document.getElementById("announcement-close")?.addEventListener("click", () => {
+    document.getElementById("announcement-banner")?.remove();
+  });
+</script>

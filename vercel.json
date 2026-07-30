@@ -1,9 +1,24 @@
 {
   "version": 2,
   "name": "arepa-tool-admin",
-  "buildCommand": "echo 'No build needed'",
-  "outputDirectory": ".",
+  "buildCommand": "astro build",
+  "outputDirectory": "dist",
   "redirects": [
+    {
+      "source": "/register.html",
+      "destination": "/register",
+      "permanent": true
+    },
+    {
+      "source": "/forgot-password.html",
+      "destination": "/recover",
+      "permanent": true
+    },
+    {
+      "source": "/reset-password.html",
+      "destination": "/recover",
+      "permanent": true
+    },
     {
       "source": "/",
       "has": [{ "type": "host", "value": "bypass.arepatool.com" }],
@@ -19,10 +34,6 @@
     {
       "source": "/panel-a7f3k9x2",
       "destination": "/hide.html"
-    },
-    {
-      "source": "/reset-password",
-      "destination": "/reset-password.html"
     },
     {
       "source": "/auth/files",

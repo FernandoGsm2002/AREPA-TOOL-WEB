@@ -1,0 +1,37 @@
+---
+import { changelog } from "@/lib/site-data";
+
+const lineClass: Record<string, string> = {
+  h1: "text-primary font-bold",
+  comment: "text-muted-foreground italic",
+  h2: "text-foreground font-semibold mt-2",
+  plus: "text-emerald-400 before:content-['+_'] before:text-emerald-500/70 pl-3",
+  pending: "text-amber-400 before:content-['•_'] before:text-amber-500/70 pl-3",
+  blank: "block h-3",
+};
+---
+
+<section class="mx-auto max-w-7xl px-4 py-18 sm:px-6">
+  <div class="border-border/60 bg-card overflow-hidden rounded-2xl border shadow-xl shadow-black/10">
+    <div class="border-border/60 bg-muted/40 flex items-center gap-2 border-b px-4 py-2.5">
+      <div class="flex gap-1.5">
+        <span class="size-3 rounded-full bg-red-500/70"></span>
+        <span class="size-3 rounded-full bg-amber-500/70"></span>
+        <span class="size-3 rounded-full bg-emerald-500/70"></span>
+      </div>
+      <span class="text-muted-foreground ml-2 font-mono text-xs">arepatool@v2.1.0 ~ CHANGELOG.md</span>
+      <span class="text-primary-foreground bg-primary ml-auto rounded px-2 py-0.5 text-[0.65rem] font-bold tracking-wide uppercase">
+        Latest
+      </span>
+    </div>
+    <pre class="max-h-[28rem] overflow-y-auto p-6 font-mono text-[0.82rem] leading-relaxed whitespace-pre-wrap">{
+      changelog.map((line) =>
+        line.type === "blank" ? (
+          <span class={lineClass.blank} />
+        ) : (
+          <span class={`block ${lineClass[line.type]}`}>{line.text}</span>
+        ),
+      )
+    }</pre>
+  </div>
+</section>

@@ -71,7 +71,7 @@ async function submitWaCheck() {
     showWaMsg('', '');
 
     try {
-        const res = await fetch('/api/whatsapp-group', {
+        const res = await fetch('https://api2.arepatool.com/api/whatsapp-group', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, turnstileToken })

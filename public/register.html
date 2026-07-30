@@ -19,8 +19,8 @@
     <div class="auth-wrapper">
         <div class="auth-card animate-fade-in">
             <div class="text-center mb-4">
-                <a href="index.html">
-                    <img src="pngs/arepalanding.png" alt="ArepaTool" style="width: 220px; height: auto; margin: 0 auto 1.5rem;">
+                <a href="index.html" class="auth-brand">
+                    <img src="pngs/arepalanding.png" alt="ArepaTool">
                 </a>
                 <h3>Crear Cuenta</h3>
                 <p class="text-subtle">Únete a la comunidad de ArepaTool</p>
@@ -78,6 +78,8 @@
     </div>
 
     <script>
+        const API_BASE = 'https://api2.arepatool.com';
+
         function showStatus(msg, type='info') {
             const el = document.getElementById('statusMessage');
             el.textContent = msg;
@@ -106,14 +108,14 @@
             showStatus('Creando cuenta...', 'info');
 
             try {
-                const res  = await fetch('/api/register', {
+                const res  = await fetch(`${API_BASE}/api/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, email, password, turnstileToken })
                 });
                 const data = await res.json();
 
-                if (!res.ok) {
+                if (!data.success) {
                     btn.disabled = false;
                     btn.innerHTML = '<i class="bi bi-person-plus"></i> Crear Cuenta';
                     if (window.turnstile) window.turnstile.reset(document.getElementById('register-turnstile'));

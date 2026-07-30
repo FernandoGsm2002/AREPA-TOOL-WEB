@@ -1,0 +1,53 @@
+---
+import { ArrowRight, KeyRound } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { WindowsIcon } from "@/components/icons/BrandIcons";
+---
+
+<section class="relative isolate overflow-hidden">
+  <div class="via-background to-background pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-primary/14"></div>
+  <div class="pointer-events-none absolute -top-32 -right-32 -z-10 size-112 rounded-full bg-primary/20 blur-3xl"></div>
+  <div class="pointer-events-none absolute top-1/2 -left-52 -z-10 size-96 rounded-full bg-sky-500/10 blur-3xl"></div>
+
+  <div class="relative mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 md:grid-cols-2 md:items-center md:py-30">
+    <div>
+      <p class="text-primary text-sm font-semibold tracking-wide uppercase">Compra tu licencia hoy</p>
+      <h1 class="font-display mt-2 text-5xl leading-[1.05] font-black tracking-tight sm:text-6xl">
+        ArepaToolV2
+        <span class="text-primary block">MDM Edition 🫓</span>
+      </h1>
+
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href="#pricing" class={buttonVariants({ size: "lg", className: "shadow-xl shadow-primary/20" })}>
+          Explorar Licencia
+          <ArrowRight className="size-4" />
+        </a>
+        <a
+          href="https://www.mediafire.com/file/fgng1boch3nszxb/ArepaToolV2_Setup_v2.1.0.rar/file"
+          target="_blank"
+          rel="noopener noreferrer"
+          class={buttonVariants({ size: "lg", variant: "secondary" })}
+        >
+          <WindowsIcon className="size-4" />
+          Descarga Ahora
+        </a>
+      </div>
+
+      <div class="border-border/60 bg-card/70 mt-4 inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 font-mono text-sm text-muted-foreground">
+        <KeyRound className="text-primary size-4" />
+        <span>pass rar:</span>
+        <strong class="text-foreground tracking-wide">arepatool20261</strong>
+      </div>
+
+    </div>
+
+    <div class="relative">
+      <div class="from-primary/35 absolute -inset-6 rounded-[2rem] bg-linear-to-tr to-transparent blur-2xl"></div>
+      <img
+        src="/pngs/landingdisplay.png"
+        alt="ArepaTool UI"
+        class="border-white/12 relative w-full rounded-2xl border shadow-2xl shadow-black/40"
+      />
+    </div>
+  </div>
+</section>

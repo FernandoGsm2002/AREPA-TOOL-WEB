@@ -1,0 +1,51 @@
+---
+import { CheckCircle2, Store } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+
+const perks = [
+  "Licencia valida por 12 meses",
+  "Generacion ilimitada de DNS",
+  "Actualizaciones constantes",
+  "Cambio de PC cada 3 horas",
+  "Grupo Oficial de soporte y dudas",
+];
+---
+
+<section id="pricing" class="mx-auto max-w-7xl px-4 py-18 sm:px-6">
+  <h2 class="font-display text-center text-3xl font-bold tracking-[-0.04em] sm:text-5xl">Precios</h2>
+
+  <div class="border-primary/45 from-card to-primary/7 relative mx-auto mt-10 max-w-xl overflow-hidden rounded-3xl border-2 bg-linear-to-br p-8 shadow-2xl shadow-primary/10 sm:p-10">
+    <div class="bg-primary/15 pointer-events-none absolute -top-24 -right-20 size-48 rounded-full blur-3xl"></div>
+    <span class="bg-primary text-primary-foreground absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-bold tracking-wide uppercase">
+      Más Popular
+    </span>
+
+    <div class="relative flex flex-wrap items-center justify-center gap-6 text-center">
+      <div class="h-20 w-32 overflow-hidden rounded-xl border border-white/8 bg-white/[0.03]">
+        <img src="/pngs/arepalanding.png" alt="Licencia" class="-my-9 h-38 w-full object-contain" />
+      </div>
+      <div>
+        <h3 class="font-display text-xl font-bold">Licencia Activation</h3>
+        <p class="text-primary mt-1 text-xl font-bold">Consultar Precio</p>
+      </div>
+    </div>
+
+    <div class="border-border/60 my-6 border-t"></div>
+
+    <ul class="relative grid gap-3 sm:grid-cols-2">
+      {
+        perks.map((perk) => (
+          <li class="flex items-start gap-2 text-sm">
+            <CheckCircle2 className="text-primary mt-0.5 size-4 shrink-0" />
+            <span>{perk}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a href="#resellers" class={buttonVariants({ size: "lg", className: "relative mt-7 w-full shadow-xl shadow-primary/20" })}>
+      <Store className="size-4" />
+      Activar Ahora
+    </a>
+  </div>
+</section>

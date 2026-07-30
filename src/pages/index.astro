@@ -1,0 +1,29 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Navbar from "@/components/site/Navbar.astro";
+import AnnouncementBanner from "@/components/site/AnnouncementBanner.astro";
+import Hero from "@/components/site/Hero.astro";
+import Changelog from "@/components/site/Changelog.astro";
+import Features from "@/components/site/Features.astro";
+import Tutorials from "@/components/site/Tutorials.astro";
+import Pricing from "@/components/site/Pricing.astro";
+import Resellers from "@/components/site/Resellers.astro";
+import Footer from "@/components/site/Footer.astro";
+import WhatsAppModal from "@/components/site/WhatsAppModal";
+---
+
+<Layout
+  title="ArepaTool v2.1.0 - Professional Unlock & MDM Tool"
+  description="ArepaTool v2.1.0 is the ultimate professional unlocking software for Android and iOS. Features include MDM bypass, Samsung FRP unlock, banking app fixes, and iCloud bypass."
+>
+  <Navbar />
+  <AnnouncementBanner />
+  <Hero />
+  <Changelog />
+  <Features />
+  <Tutorials />
+  <Pricing />
+  <Resellers />
+  <Footer />
+  <WhatsAppModal client:load />
+</Layout>

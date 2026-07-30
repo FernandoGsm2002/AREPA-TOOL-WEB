@@ -1,0 +1,62 @@
+---
+import { Badge } from "@/components/ui/badge";
+import { features, type FeatureBadge } from "@/lib/site-data";
+
+const badgeClass: Record<FeatureBadge, string> = {
+  ACTIVE: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+  NEW: "bg-primary/15 text-primary border-primary/30",
+  BETA: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+};
+---
+
+<section id="features" class="mx-auto max-w-7xl px-4 py-18 sm:px-6">
+  <h2 class="font-display text-center text-3xl font-bold tracking-[-0.04em] sm:text-5xl">
+    Características <span class="text-primary">Premium</span>
+  </h2>
+
+  <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      features.map((feature) => (
+        <div
+          class:list={[
+            "border-border/60 bg-card overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/8",
+            feature.hero && "sm:col-span-2 lg:col-span-3",
+          ]}
+        >
+          <div class="border-border/60 bg-muted/40 flex items-center gap-2 border-b px-3.5 py-2">
+            <div class="flex gap-1.5">
+              <span class="size-2.5 rounded-full bg-red-500/70" />
+              <span class="size-2.5 rounded-full bg-amber-500/70" />
+              <span class="size-2.5 rounded-full bg-emerald-500/70" />
+            </div>
+            <span class="text-muted-foreground ml-1.5 font-mono text-xs">{feature.filename}</span>
+            <Badge variant="outline" className={`ml-auto ${badgeClass[feature.badge]}`}>
+              {feature.badge}
+            </Badge>
+          </div>
+
+          <div class:list={["p-5", feature.hero && "sm:grid sm:grid-cols-2 sm:items-center sm:gap-8"]}>
+            <img
+              src={feature.image}
+              alt={`${feature.title} ${feature.accent}`}
+              class="mx-auto max-h-56 w-auto object-contain"
+            />
+            <div class:list={[feature.hero ? "mt-4 sm:mt-0" : "mt-4"]}>
+              <h3 class="font-display text-lg font-bold">
+                {feature.title} <span class="text-primary">{feature.accent}</span>
+              </h3>
+              <ul class="text-muted-foreground mt-2.5 space-y-1.5 text-sm">
+                {feature.bullets.map((bullet) => (
+                  <li class="flex gap-2">
+                    <span class="text-primary mt-1.5 size-1 shrink-0 rounded-full bg-current" />
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>
