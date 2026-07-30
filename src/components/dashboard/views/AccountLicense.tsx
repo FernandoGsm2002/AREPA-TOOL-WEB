@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Loader2, BadgeCheck, CalendarClock, Mail, User } from "lucide-react";
+import { Loader2, BadgeCheck, CalendarClock, Mail, User, MonitorCog, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { webApiFetch, loadSession, type WebUser } from "@/lib/web-session";
 
@@ -12,6 +13,9 @@ const statusLabel: Record<string, string> = {
 
 export default function AccountLicense() {
   const [user, setUser] = useState<WebUser | null>(loadSession()?.user ?? null);
+  const [reset, setReset] = useState<{ available: boolean; nextAvailableAt: string | null } | null>(null);
+  const [resetBusy, setResetBusy] = useState(false);
+  const [resetNotice, setResetNotice] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -30,8 +34,25 @@ export default function AccountLicense() {
           dhruOrderId: data.dhruOrderId,
         });
       }
+      const resetStatus = await webApiFetch("/api/web-desktop-reset/status", {});
+      if (resetStatus?.success) setReset({ available: resetStatus.available, nextAvailableAt: resetStatus.nextAvailableAt });
     })();
   }, []);
+
+  const resetDesktop = async () => {
+    if (!confirm("Esto cerrará la sesión de ArepaTool en tu PC actual y liberará el equipo para iniciar en otra PC. Solo podrás usar esta opción una vez cada 24 horas. ¿Continuar?")) return;
+    setResetBusy(true); setResetNotice("");
+    const data = await webApiFetch("/api/web-desktop-reset", {});
+    setResetBusy(false);
+    if (!data) { window.location.href = "/login"; return; }
+    if (!data.success) {
+      setReset({ available: false, nextAvailableAt: data.nextAvailableAt || reset?.nextAvailableAt || null });
+      setResetNotice(data.error || "No se pudo reiniciar la sesión.");
+      return;
+    }
+    setReset({ available: false, nextAvailableAt: data.nextAvailableAt });
+    setResetNotice("PC liberada. Ya puedes iniciar ArepaTool en tu otra computadora.");
+  };
 
   if (!user) {
     return (
@@ -75,6 +96,12 @@ export default function AccountLicense() {
             Orden: {user.dhruOrderId}
           </p>
         )}
+      </div>
+      <div className="border-border/60 bg-card mt-5 rounded-xl border p-6">
+        <div className="flex gap-3"><span className="bg-primary/12 text-primary flex size-9 shrink-0 items-center justify-center rounded-lg"><MonitorCog className="size-[18px]"/></span><div><h3 className="font-semibold">Cambiar de PC</h3><p className="text-muted-foreground mt-1 text-sm">Libera la sesión de escritorio si necesitas usar ArepaTool en otra computadora. Disponible una vez cada 24 horas.</p></div></div>
+        {resetNotice && <p className={`mt-4 rounded-lg px-3 py-2 text-sm ${resetNotice.startsWith("PC liberada") ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>{resetNotice}</p>}
+        {reset && !reset.available && reset.nextAvailableAt && <p className="text-muted-foreground mt-4 text-xs">Próximo reinicio disponible: {new Date(reset.nextAvailableAt).toLocaleString("es-PE")}</p>}
+        <Button className="mt-4" variant={reset?.available === false ? "outline" : "default"} disabled={resetBusy || reset?.available === false} onClick={resetDesktop}>{resetBusy ? <Loader2 className="animate-spin"/> : <RotateCcw/>}{resetBusy ? "Liberando PC…" : reset?.available === false ? "Reinicio utilizado hoy" : "Liberar mi PC"}</Button>
       </div>
     </div>
   );
