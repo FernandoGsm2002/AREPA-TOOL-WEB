@@ -40,7 +40,7 @@ export default function AccountLicense() {
   }, []);
 
   const resetDesktop = async () => {
-    if (!confirm("Esto cerrará la sesión de ArepaTool en tu PC actual y liberará el equipo para iniciar en otra PC. Solo podrás usar esta opción una vez cada 24 horas. ¿Continuar?")) return;
+    if (!confirm("Antes de continuar, cierra ArepaTool en tu PC anterior. Esto liberará el equipo para iniciar en otra PC. Solo podrás usar esta opción una vez cada 24 horas. ¿Continuar?")) return;
     setResetBusy(true); setResetNotice("");
     const data = await webApiFetch("/api/web-desktop-reset", {});
     setResetBusy(false);
@@ -98,7 +98,7 @@ export default function AccountLicense() {
         )}
       </div>
       <div className="border-border/60 bg-card mt-5 rounded-xl border p-6">
-        <div className="flex gap-3"><span className="bg-primary/12 text-primary flex size-9 shrink-0 items-center justify-center rounded-lg"><MonitorCog className="size-[18px]"/></span><div><h3 className="font-semibold">Cambiar de PC</h3><p className="text-muted-foreground mt-1 text-sm">Libera la sesión de escritorio si necesitas usar ArepaTool en otra computadora. Disponible una vez cada 24 horas.</p></div></div>
+        <div className="flex gap-3"><span className="bg-primary/12 text-primary flex size-9 shrink-0 items-center justify-center rounded-lg"><MonitorCog className="size-[18px]"/></span><div><h3 className="font-semibold">Cambiar de PC</h3><p className="text-muted-foreground mt-1 text-sm">Cierra ArepaTool en la PC anterior y libera la sesión para usarla en otra computadora. Disponible una vez cada 24 horas.</p></div></div>
         {resetNotice && <p className={`mt-4 rounded-lg px-3 py-2 text-sm ${resetNotice.startsWith("PC liberada") ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>{resetNotice}</p>}
         {reset && !reset.available && reset.nextAvailableAt && <p className="text-muted-foreground mt-4 text-xs">Próximo reinicio disponible: {new Date(reset.nextAvailableAt).toLocaleString("es-PE")}</p>}
         <Button className="mt-4" variant={reset?.available === false ? "outline" : "default"} disabled={resetBusy || reset?.available === false} onClick={resetDesktop}>{resetBusy ? <Loader2 className="animate-spin"/> : <RotateCcw/>}{resetBusy ? "Liberando PC…" : reset?.available === false ? "Reinicio utilizado hoy" : "Liberar mi PC"}</Button>
