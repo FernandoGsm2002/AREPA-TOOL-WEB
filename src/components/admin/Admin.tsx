@@ -17,7 +17,8 @@ const tabs: { id: Tab; label: string; icon: typeof Users }[] = [
 
 const date = (value?: string | null) => value ? new Date(value).toLocaleString("es-PE") : "—";
 const money = (value?: string | number) => `$${Number(value || 0).toFixed(2)}`;
-const DHRU_API_URL = "https://dhru.arepatool.com/api.php";
+// El software Dhru agrega /api/index.php automáticamente a este dominio.
+const DHRU_API_URL = "https://dhru.arepatool.com";
 
 export default function Admin() {
   const [tab, setTab] = useState<Tab>("users");
