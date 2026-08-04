@@ -15,7 +15,7 @@ export type ChangelogLine =
   | { type: "blank" };
 
 export const changelog: ChangelogLine[] = [
-  { type: "h1", text: "# MDM LOCKS — ArepaTool v2.1.0" },
+  { type: "h1", text: "# MDM LOCKS — ArepaTool v2.1.1" },
   { type: "comment", text: "## Nuevas Funciones y Mejoras — 2026" },
   { type: "blank" },
   { type: "h2", text: "### Apple — Bypass & Format" },
