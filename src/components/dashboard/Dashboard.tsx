@@ -6,6 +6,7 @@ import CreateDns from "./views/CreateDns";
 import MyOperations from "./views/MyOperations";
 import AccountLicense from "./views/AccountLicense";
 import Downloads from "./views/Downloads";
+import WelcomeConfetti from "./WelcomeConfetti";
 
 type Tab = "dns" | "operations" | "account" | "downloads";
 
@@ -45,6 +46,7 @@ export default function Dashboard() {
 
   return (
     <div className="bg-background flex min-h-screen">
+      <WelcomeConfetti username={user.username} />
       <aside className="border-border/70 bg-card/80 hidden w-72 shrink-0 flex-col border-r p-4 shadow-2xl shadow-black/10 sm:flex">
         <a href="/" className="group mb-8 block overflow-hidden rounded-xl border border-white/8 bg-linear-to-br from-white/8 to-transparent px-3 py-1.5 transition-colors hover:border-primary/35">
           <img src="/pngs/arepalanding.png" alt="ArepaTool" className="-my-7 h-28 w-full object-contain transition-transform duration-300 group-hover:scale-[1.03]" />

@@ -50,7 +50,7 @@ export default function Downloads() {
       <section className="border-border/60 bg-card mt-6 rounded-xl border p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="font-semibold">ArepaToolV2 — v2.1.1</p>
+            <p className="font-semibold">ArepaToolV2 — v2.1.2</p>
             <p className="text-muted-foreground mt-1 text-sm">Windows · MDM Edition</p>
           </div>
           <span className="bg-primary/10 text-primary inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium">
@@ -59,7 +59,7 @@ export default function Downloads() {
         </div>
 
         <Button asChild className="mt-4">
-          <a href="https://www.mediafire.com/file/gn39il6ca6az7fa/ArepaToolV2_Setup_v2.1.1.rar/file" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.mediafire.com/file/zhz2rvfom64ukr5/ArepaToolV2_Setup_v2.1.2.rar/file" target="_blank" rel="noopener noreferrer">
             <WindowsIcon className="size-4" />
             Descargar instalador
           </a>

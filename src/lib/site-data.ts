@@ -15,8 +15,17 @@ export type ChangelogLine =
   | { type: "blank" };
 
 export const changelog: ChangelogLine[] = [
-  { type: "h1", text: "# MDM LOCKS — ArepaTool v2.1.1" },
+  { type: "h1", text: "# MDM LOCKS — ArepaTool v2.1.2" },
   { type: "comment", text: "## Nuevas Funciones y Mejoras — 2026" },
+  { type: "blank" },
+  { type: "h2", text: "### Samsung — FULL TESTED" },
+  { type: "plus", text: "Fix Yape 2026 Samsung FULL TESTED!!" },
+  { type: "blank" },
+  { type: "h2", text: "### Motorola MediaTek — FRP" },
+  { type: "plus", text: "Nuevas versiones de Android agregadas para Moto MTK FRP" },
+  { type: "blank" },
+  { type: "h2", text: "### MDM No DNS" },
+  { type: "plus", text: "QR FULLY TESTED!!" },
   { type: "blank" },
   { type: "h2", text: "### Apple — Bypass & Format" },
   { type: "plus", text: "Fix Bypass A12+ y mejoras de estabilidad" },
