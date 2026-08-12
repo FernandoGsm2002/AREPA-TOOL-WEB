@@ -10,11 +10,8 @@ import { Input } from "@/components/ui/input";
 import { ShieldCheck, Loader2 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons/BrandIcons";
 
-// El tipo global de window.turnstile vive en components/auth/Turnstile.tsx
-// (una sola declaración — TS no permite dos formas distintas del mismo global).
-
-const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADcAui1yybCKOv5s";
 const API_BASE = "https://api2.arepatool.com";
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADcAui1yybCKOv5s";
 
 export function WhatsAppTrigger({ children }: { children: React.ReactNode }) {
   return <span onClick={() => window.dispatchEvent(new CustomEvent("open-wa-modal"))}>{children}</span>;
@@ -26,7 +23,7 @@ export default function WhatsAppModal() {
   const [status, setStatus] = useState<{ text: string; type: "error" | "info" } | null>(null);
   const [loading, setLoading] = useState(false);
   const [link, setLink] = useState<string | null>(null);
-
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | undefined>(undefined);
 
@@ -42,27 +39,30 @@ export default function WhatsAppModal() {
     setStatus(null);
     setLink(null);
     setLoading(false);
+    setTurnstileToken(null);
 
+    let interval: number | undefined;
     const renderWidget = () => {
-      if (window.turnstile && turnstileRef.current) {
-        turnstileRef.current.innerHTML = "";
-        widgetId.current = window.turnstile.render(turnstileRef.current, {
-          sitekey: TURNSTILE_SITE_KEY,
-        });
-      }
+      if (!window.turnstile || !turnstileRef.current || widgetId.current) return;
+
+      widgetId.current = window.turnstile.render(turnstileRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        action: "whatsapp_group",
+        callback: (token: string) => setTurnstileToken(token),
+        "expired-callback": () => setTurnstileToken(null),
+        "error-callback": () => setTurnstileToken(null),
+      });
+      if (interval) window.clearInterval(interval);
     };
 
-    if (window.turnstile) {
-      renderWidget();
-    } else {
-      const interval = setInterval(() => {
-        if (window.turnstile) {
-          clearInterval(interval);
-          renderWidget();
-        }
-      }, 200);
-      return () => clearInterval(interval);
-    }
+    renderWidget();
+    if (!widgetId.current) interval = window.setInterval(renderWidget, 200);
+
+    return () => {
+      if (interval) window.clearInterval(interval);
+      if (widgetId.current && window.turnstile) window.turnstile.remove(widgetId.current);
+      widgetId.current = undefined;
+    };
   }, [open]);
 
   async function submit() {
@@ -71,8 +71,7 @@ export default function WhatsAppModal() {
       return;
     }
 
-    const token = window.turnstile?.getResponse(widgetId.current);
-    if (!token) {
+    if (!turnstileToken) {
       setStatus({ text: "Completa la verificación de seguridad primero.", type: "error" });
       return;
     }
@@ -84,7 +83,7 @@ export default function WhatsAppModal() {
       const res = await fetch(`${API_BASE}/api/whatsapp-group`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), turnstileToken: token }),
+        body: JSON.stringify({ email: email.trim(), turnstileToken }),
       });
       const data = await res.json();
 
@@ -92,11 +91,13 @@ export default function WhatsAppModal() {
         setLink(data.link);
       } else {
         setStatus({ text: data.error || "No se pudo verificar. Intenta de nuevo.", type: "error" });
-        window.turnstile?.reset(widgetId.current);
+        setTurnstileToken(null);
+        if (widgetId.current) window.turnstile?.reset(widgetId.current);
       }
     } catch {
       setStatus({ text: "Error de conexión. Intenta más tarde.", type: "error" });
-      window.turnstile?.reset(widgetId.current);
+      setTurnstileToken(null);
+      if (widgetId.current) window.turnstile?.reset(widgetId.current);
     } finally {
       setLoading(false);
     }
