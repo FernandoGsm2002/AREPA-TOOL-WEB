@@ -15,6 +15,19 @@ export type ChangelogLine =
   | { type: "blank" };
 
 export const changelog: ChangelogLine[] = [
+  { type: "h1", text: "# MDM LOCKS — ArepaTool v2.1.3" },
+  { type: "comment", text: "## Nuevas Funciones y Correcciones — 2026" },
+  { type: "blank" },
+  { type: "h2", text: "### Samsung KG — DNS" },
+  { type: "plus", text: "Fix Samsung KG Locked DNS Profile 2026" },
+  { type: "blank" },
+  { type: "h2", text: "### Motorola MediaTek — Fastboot" },
+  { type: "plus", text: "FRP Remove vía Fastboot para Moto G05, G06, G15 y G17" },
+  { type: "plus", text: "Desbloqueo temporal de bootloader agregado" },
+  { type: "blank" },
+  { type: "h2", text: "### NVDATA" },
+  { type: "plus", text: "NVData Repair IMEI agregado" },
+  { type: "blank" },
   { type: "h1", text: "# MDM LOCKS — ArepaTool v2.1.2" },
   { type: "comment", text: "## Nuevas Funciones y Mejoras — 2026" },
   { type: "blank" },
