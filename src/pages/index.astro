@@ -10,11 +10,12 @@ import Pricing from "@/components/site/Pricing.astro";
 import Resellers from "@/components/site/Resellers.astro";
 import Footer from "@/components/site/Footer.astro";
 import WhatsAppModal from "@/components/site/WhatsAppModal";
+import InstallerAccessModal from "@/components/site/InstallerAccessModal";
 ---
 
 <Layout
-  title="ArepaTool v2.1.3 - Professional Unlock & MDM Tool"
-  description="ArepaTool v2.1.3 is the ultimate professional unlocking software for Android and iOS. Features include MDM bypass, Samsung FRP unlock, banking app fixes, and iCloud bypass."
+  title="ArepaTool v2.2.0 - Professional Unlock & MDM Tool"
+  description="ArepaTool v2.2.0 adds Transsion MediaTek support, ArepaRedirector, Apple A12/A13 passcode support, and ArepaHotspot compatibility improvements."
 >
   <Navbar />
   <AnnouncementBanner />
@@ -26,4 +27,5 @@ import WhatsAppModal from "@/components/site/WhatsAppModal";
   <Resellers />
   <Footer />
   <WhatsAppModal client:load />
+  <InstallerAccessModal client:load />
 </Layout>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, KeyRound, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
+import { Download, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
 import { WindowsIcon } from "@/components/icons/BrandIcons";
 import { webApiFetch } from "@/lib/web-session";
 
@@ -50,7 +50,7 @@ export default function Downloads() {
       <section className="border-border/60 bg-card mt-6 rounded-xl border p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="font-semibold">ArepaToolV2 — v2.1.3</p>
+            <p className="font-semibold">ArepaToolV2 — v2.2.0</p>
             <p className="text-muted-foreground mt-1 text-sm">Windows · MDM Edition</p>
           </div>
           <span className="bg-primary/10 text-primary inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium">
@@ -58,18 +58,10 @@ export default function Downloads() {
           </span>
         </div>
 
-        <Button asChild className="mt-4">
-          <a href="https://www.mediafire.com/file/kpgejhdxqzqz8uw/ArepaToolV2_Setup_v2.1.3.rar/file" target="_blank" rel="noopener noreferrer">
-            <WindowsIcon className="size-4" />
-            Descargar instalador
-          </a>
+        <Button className="mt-4" onClick={() => window.dispatchEvent(new CustomEvent("open-installer-access"))}>
+          <WindowsIcon className="size-4" />
+          Solicitar instalador
         </Button>
-
-        <div className="border-primary/30 bg-primary/8 shadow-primary/15 mt-4 inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 font-mono text-sm shadow-lg transition-transform duration-300 hover:scale-[1.02]">
-          <KeyRound className="text-primary size-4" />
-          <span className="text-muted-foreground">contraseña del rar:</span>
-          <strong className="bg-primary/15 text-primary animate-pulse rounded px-1.5 py-0.5 tracking-wide">arepatool2026</strong>
-        </div>
       </section>
 
       <section className="mt-8">

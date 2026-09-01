@@ -5,6 +5,7 @@ import { loadSession, clearSession, type WebUser } from "@/lib/web-session";
 import CreateDns from "./views/CreateDns";
 import MyOperations from "./views/MyOperations";
 import AccountLicense from "./views/AccountLicense";
+import InstallerAccessModal from "@/components/site/InstallerAccessModal";
 import Downloads from "./views/Downloads";
 import WelcomeConfetti from "./WelcomeConfetti";
 
@@ -120,6 +121,7 @@ export default function Dashboard() {
         {tab === "account" && <AccountLicense />}
         {tab === "downloads" && <Downloads />}
       </main>
+      <InstallerAccessModal />
     </div>
   );
 }
