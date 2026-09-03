@@ -35,7 +35,7 @@ export default function RegisterForm() {
         return;
       }
       setComplete(true);
-      setStatus(data.message || "✓ Cuenta Creada. Contacta a tu distribuidor para activar.");
+      setStatus(data.message || "¡Registro exitoso!\n\nTu cuenta está lista para ser activada.\n¡Contáctate con un reseller!");
     } catch {
       setStatus("Error de red");
     } finally {
