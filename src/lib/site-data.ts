@@ -1,5 +1,6 @@
 export const navLinks = [
   { label: "Inicio", href: "/" },
+  { label: "Modelos soportados", href: "/supportedmodels" },
   { label: "Características", href: "#features" },
   { label: "Precios", href: "#pricing" },
   { label: "Manuales", href: "/instructions.html" },
