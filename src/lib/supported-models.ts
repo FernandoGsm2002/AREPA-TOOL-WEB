@@ -47,11 +47,11 @@ export const supportedModels: SupportedModel[] = [
   { sku: "XT2625", name: "Moto G37 / G47 5G", android: [16] },
 ];
 
-export const auxiliaryModels = [
+export const testModels = [
   { sku: "XT2623", name: "Moto G17", codename: "g17" },
-  { sku: "XT2535", name: "Motorola Lagos", codename: "lagos" },
-  { sku: "XT2523", name: "Motorola Lamulg", codename: "lamulg" },
-  { sku: "XT2521", name: "Motorola Lamu", codename: "lamu" },
+  { sku: "XT2535", name: "Moto G06", codename: "lagos" },
+  { sku: "XT2523", name: "Moto G05", codename: "lamulg" },
+  { sku: "XT2521", name: "Moto G15", codename: "lamu" },
 ];
 
 export const androidVersions = Array.from(

@@ -1,15 +1,15 @@
 ---
 import { faAndroid } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { KeyRound, RotateCcw, Search, Wrench } from "lucide-react";
+import { KeyRound, RotateCcw, Search } from "lucide-react";
 import Layout from "@/layouts/Layout.astro";
 import Navbar from "@/components/site/Navbar.astro";
 import Footer from "@/components/site/Footer.astro";
 import WhatsAppModal from "@/components/site/WhatsAppModal";
-import { androidVersions, auxiliaryModels, supportedCombinations } from "@/lib/supported-models";
+import { androidVersions, supportedCombinations, testModels } from "@/lib/supported-models";
 
 const byAndroid = androidVersions.map((android) => ({ android, models: supportedCombinations.filter((model) => model.android === android) }));
-const totalModels = supportedCombinations.length + auxiliaryModels.length;
+const totalModels = supportedCombinations.length + testModels.length;
 ---
 
 <Layout title="Modelos soportados | ArepaTool" description="Modelos Motorola soportados por ArepaTool.">
@@ -46,13 +46,13 @@ const totalModels = supportedCombinations.length + auxiliaryModels.length;
               </div>
             </section>
           ))}
-          <section class="android-group" data-group="auxiliary">
-            <div class="android-heading"><span>Operaciones auxiliares</span><i></i><small>{auxiliaryModels.length}</small></div>
+          <section class="android-group" data-group="test">
+            <div class="android-heading"><span>Modelos para test</span><i></i><small>{testModels.length}</small></div>
             <div class="model-grid">
-              {auxiliaryModels.map((model) => (
-                <article class="model-card auxiliary-card" data-model-card data-android="auxiliary" data-search={`${model.sku} ${model.name} ${model.codename}`.toLowerCase()}>
+              {testModels.map((model) => (
+                <article class="model-card test-card" data-model-card data-android="test" data-search={`${model.sku} ${model.name} ${model.codename}`.toLowerCase()}>
                   <span class="model-sku">{model.sku}</span><h2>{model.name}</h2>
-                  <div class="model-operations"><span><Wrench className="size-3.5" /> Operación auxiliar</span></div>
+                  <div class="model-operations"><span><KeyRound className="size-3.5" /> Temp Unlock BL</span><span><RotateCcw className="size-3.5" /> Android FRP</span></div>
                 </article>
               ))}
             </div>
@@ -120,7 +120,7 @@ const totalModels = supportedCombinations.length + auxiliaryModels.length;
   .model-card h2 { margin-top: .75rem; color: white; font-size: .91rem; font-weight: 650; line-height: 1.32; }
   .model-operations { display: flex; flex-wrap: wrap; gap: .35rem .6rem; margin-top: 1.2rem; color: oklch(0.62 0.035 205); font-size: .68rem; }
   .model-operations span { display: inline-flex; align-items: center; gap: .35rem; }
-  .auxiliary-card { border-left: 2px solid oklch(0.7 0.12 205); }
+  .test-card { background: oklch(0.16 0.022 205 / .7); }
   .catalog-empty { margin-top: 2rem; border: 1px dashed oklch(0.76 0.02 255 / 18%); border-radius: .7rem; padding: 1.1rem; color: oklch(0.62 0.02 255); font-size: .88rem; }
   @media (max-width: 1023px) { .model-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 640px) { .models-wrap { width: min(100% - 1.5rem, 76rem); padding-top: 2rem; } .motorola-backdrop { top: -12rem; right: -25rem; opacity: .06; } .model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } .model-card { min-height: 9.5rem; padding: .75rem; } .model-card h2 { font-size: .84rem; } .android-filter { width: 100%; } .android-filter button { flex: 1 0 auto; justify-content: center; } }
