@@ -6,7 +6,10 @@ import {
   ChevronRight,
   CirclePlay,
   Clock3,
+  Layers3,
+  MonitorPlay,
   Play,
+  Sparkles,
   Video,
 } from "lucide-react";
 import { webApiFetch } from "@/lib/web-session";
@@ -66,7 +69,7 @@ function MuxTutorialPlayer({ video, title }: { video: MuxVideo; title: string })
     return () => { disposed = true; script?.removeEventListener("load", render); };
   }, [title, video]);
 
-  return <div ref={host} className="h-full w-full bg-black" />;
+  return <div ref={host} className="h-full w-full bg-black [&_mux-player]:block" />;
 }
 
 // Cuando estén listos los materiales, agrega las rutas públicas del .mp4 y el
@@ -173,30 +176,41 @@ export default function Tutorials() {
   }, []);
 
   return (
-    <div className="max-w-6xl">
-      <header className="border-border/60 bg-card/70 overflow-hidden rounded-2xl border p-6 sm:p-8">
-        <div className="flex flex-wrap items-start justify-between gap-5">
+    <div className="mx-auto max-w-7xl">
+      <header className="border-border/70 bg-card/80 relative overflow-hidden rounded-2xl border p-5 sm:p-8">
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-2/5 bg-[radial-gradient(circle_at_80%_30%,oklch(0.66_0.145_253_/_18%),transparent_58%)] lg:block" />
+        <div className="relative flex flex-wrap items-start justify-between gap-6">
           <div className="max-w-2xl">
             <div className="text-primary flex items-center gap-2 text-sm font-medium">
-              <BookOpen className="size-4" /> Centro de aprendizaje
+              <Sparkles className="size-4" /> Aprende con ArepaTool
             </div>
-            <h2 className="font-display mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+            <h2 className="font-display mt-3 text-2xl font-bold tracking-tight sm:text-3xl lg:text-[2rem]">
               Tutoriales de ArepaTool
             </h2>
-            <p className="text-muted-foreground mt-2 text-sm leading-relaxed sm:text-base">
+            <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-base">
               Guías breves, por módulo y pensadas para que cada proceso se haga
               en el orden correcto.
             </p>
           </div>
-          <div className="border-border/70 bg-background/50 rounded-xl border px-4 py-3 text-right">
-            <p className="text-lg font-semibold">{readyCount}/8</p>
-            <p className="text-muted-foreground text-xs">videos publicados</p>
+          <div className="border-border/70 bg-background/60 flex min-w-34 items-center gap-3 rounded-xl border px-4 py-3 sm:mt-1">
+            <span className="bg-primary/12 text-primary flex size-9 items-center justify-center rounded-lg"><MonitorPlay className="size-[18px]" /></span>
+            <div>
+              <p className="text-base font-semibold">{readyCount} de 8</p>
+              <p className="text-muted-foreground text-xs">guías disponibles</p>
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(17rem,.8fr)]">
-        <section className="border-border/60 bg-card overflow-hidden rounded-2xl border">
+      <div className="mt-5 grid gap-5 lg:mt-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,.72fr)] lg:items-start">
+        <section className="border-border/70 bg-card overflow-hidden rounded-2xl border shadow-xl shadow-black/5">
+          <div className="border-border/50 bg-muted/30 flex items-center justify-between border-b px-4 py-3 sm:px-5">
+            <div className="min-w-0">
+              <p className="text-primary text-xs font-medium">Ahora viendo</p>
+              <p className="truncate text-sm font-semibold">{selected.title}</p>
+            </div>
+            <span className="text-muted-foreground bg-background/70 inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border/60 px-2.5 py-1 text-xs"><Clock3 className="size-3" /> {selected.duration}</span>
+          </div>
           <div className="bg-muted/45 relative aspect-video overflow-hidden">
             {selectedVideo ? (
               <MuxTutorialPlayer video={selectedVideo} title={selected.title} />
@@ -232,17 +246,20 @@ export default function Tutorials() {
               </div>
             )}
           </div>
-          <div className="p-6 sm:p-7">
-            <p className="text-primary text-sm font-medium">
-              {selected.module}
-            </p>
-            <h3 className="font-display mt-1 text-xl font-bold">
+          <div className="p-5 sm:p-6">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-primary text-sm font-medium">{selected.module}</p>
+                <h3 className="font-display mt-1 text-xl font-bold">
               {selected.title}
-            </h3>
-            <p className="text-muted-foreground mt-3 max-w-2xl text-sm leading-relaxed">
+                </h3>
+              </div>
+              {selectedVideo && <span className="border-primary/20 bg-primary/10 text-primary inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium"><CirclePlay className="size-3.5" /> Listo para ver</span>}
+            </div>
+            <p className="text-muted-foreground mt-3 max-w-2xl text-sm leading-relaxed sm:text-[0.9375rem]">
               {selected.instruction}
             </p>
-            <div className="text-muted-foreground mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs">
+            <div className="text-muted-foreground border-border/60 mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t pt-4 text-xs">
               <span className="inline-flex items-center gap-1.5">
                 <Clock3 className="size-3.5" /> {selected.duration}
               </span>
@@ -254,12 +271,12 @@ export default function Tutorials() {
           </div>
         </section>
 
-        <aside className="border-border/60 bg-card rounded-2xl border p-2 sm:p-3">
-          <div className="flex items-center justify-between px-3 py-3">
-            <h3 className="font-display font-bold">Guías</h3>
-            <span className="text-muted-foreground text-xs">8 tutoriales</span>
+        <aside className="border-border/70 bg-card rounded-2xl border p-2.5 sm:p-3 lg:sticky lg:top-6">
+          <div className="flex items-center justify-between px-2.5 py-2.5 sm:px-3 sm:py-3">
+            <h3 className="font-display flex items-center gap-2 font-bold"><Layers3 className="text-primary size-4" /> Guías</h3>
+            <span className="text-muted-foreground text-xs">Selecciona una</span>
           </div>
-          <div className="max-h-[34rem] space-y-1 overflow-y-auto pr-1">
+          <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:max-h-[34rem] lg:grid-cols-1 lg:space-y-1 lg:overflow-y-auto lg:pr-1">
             {tutorials.map((tutorial, index) => {
               const isSelected = tutorial.id === selected.id;
               return (
@@ -267,29 +284,29 @@ export default function Tutorials() {
                   key={tutorial.id}
                   type="button"
                   onClick={() => setSelectedId(tutorial.id)}
-                  className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors ${isSelected ? "bg-primary text-primary-foreground" : "hover:bg-muted text-foreground"}`}
+                  className={`group flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left transition-colors sm:px-3 sm:py-3 ${isSelected ? "bg-primary text-primary-foreground shadow-lg shadow-primary/15" : "hover:bg-muted text-foreground"}`}
                 >
                   <span
-                    className={`flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ${isSelected ? "bg-white/15" : "bg-muted text-muted-foreground group-hover:bg-background"}`}
+                    className={`flex size-7 shrink-0 items-center justify-center rounded-lg text-xs font-semibold sm:size-8 ${isSelected ? "bg-white/15" : "bg-muted text-muted-foreground group-hover:bg-background"}`}
                   >
                     {index + 1}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-medium">
+                    <span className="block line-clamp-2 text-xs font-medium leading-snug sm:text-sm lg:truncate">
                       {tutorial.title}
                     </span>
                     <span
-                      className={`mt-0.5 block text-xs ${isSelected ? "text-primary-foreground/70" : "text-muted-foreground"}`}
+                      className={`mt-1 block truncate text-[0.68rem] ${isSelected ? "text-primary-foreground/70" : "text-muted-foreground"}`}
                     >
                       {tutorial.module}
                     </span>
                   </span>
                   {videos[tutorial.id] || tutorial.videoSrc ? (
-                    <CheckCircle2 className="size-4 shrink-0" />
+                    <CheckCircle2 className="hidden size-4 shrink-0 lg:block" />
                   ) : isSelected ? (
-                    <Play className="size-4 shrink-0" />
+                    <Play className="hidden size-4 shrink-0 lg:block" />
                   ) : (
-                    <ChevronRight className="text-muted-foreground size-4 shrink-0" />
+                    <ChevronRight className="text-muted-foreground hidden size-4 shrink-0 lg:block" />
                   )}
                 </button>
               );
