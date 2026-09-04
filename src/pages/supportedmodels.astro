@@ -1,132 +1,66 @@
 ---
-import { Cpu, KeyRound, RotateCcw, Search, Wrench } from "lucide-react";
+import { faAndroid } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { KeyRound, RotateCcw, Search, Wrench } from "lucide-react";
 import Layout from "@/layouts/Layout.astro";
 import Navbar from "@/components/site/Navbar.astro";
 import Footer from "@/components/site/Footer.astro";
 import WhatsAppModal from "@/components/site/WhatsAppModal";
-import {
-  androidVersions,
-  auxiliaryModels,
-  supportedCombinations,
-} from "@/lib/supported-models";
+import { androidVersions, auxiliaryModels, supportedCombinations } from "@/lib/supported-models";
 
-const byAndroid = androidVersions.map((android) => ({
-  android,
-  models: supportedCombinations.filter((model) => model.android === android),
-}));
+const byAndroid = androidVersions.map((android) => ({ android, models: supportedCombinations.filter((model) => model.android === android) }));
+const totalModels = supportedCombinations.length + auxiliaryModels.length;
 ---
 
-<Layout
-  title="Modelos Motorola soportados | ArepaTool"
-  description="Consulta los modelos Motorola MediaTek y versiones Android compatibles con Unlock Bootloader, FRP y LK auxiliar en ArepaTool."
->
+<Layout title="Modelos soportados | ArepaTool" description="Modelos Motorola soportados por ArepaTool.">
   <Navbar />
-  <main class="supported-shell">
-    <section class="supported-hero">
-      <div class="mx-auto grid max-w-7xl gap-10 px-4 py-15 sm:px-6 lg:grid-cols-[1.2fr_.8fr] lg:py-22">
-        <div class="max-w-3xl">
-          <div class="status-line"><span></span> Catálogo público Motorola MediaTek</div>
-          <h1>El modelo correcto.<br /><em>La versión exacta.</em></h1>
-          <p class="hero-copy">Busca por modelo o SKU antes de iniciar la operación. Cada versión de Android se muestra por separado para elegir la compatibilidad correcta.</p>
-          <div class="hero-actions">
-            <a href="#catalogo" class="catalog-action">Ver catálogo <span>↓</span></a>
-          <p>Actualizado con los manifests de compatibilidad.</p>
+  <main class="models-page">
+    <div class="models-wrap">
+      <header class="models-header"><h1>Modelos soportados</h1><span>{totalModels}</span></header>
+      <nav class="brand-nav" aria-label="Marcas de modelos soportados">
+        <a href="#motorola" class="brand-tab is-active" aria-current="page"><span class="brand-mark">M</span>Motorola</a>
+      </nav>
+
+      <section id="motorola" class="brand-stage" aria-label="Modelos Motorola soportados">
+        <img src="/pngs/motorola.png" alt="" class="motorola-backdrop" aria-hidden="true" />
+        <div class="catalog-controls" role="search">
+          <label class="search-field"><Search className="size-4" /><input id="model-search" type="search" placeholder="Buscar modelo o SKU" autocomplete="off" /></label>
+          <div class="android-filter" aria-label="Filtrar por Android">
+            <button type="button" class="is-selected" data-version="all">Todos</button>
+            {androidVersions.map((android) => <button type="button" data-version={android}><FontAwesomeIcon icon={faAndroid} /> Android {android}</button>)}
           </div>
         </div>
+        <p id="catalog-status" class="catalog-status" aria-live="polite">{totalModels} modelos visibles</p>
 
-        <aside class="catalog-meter" aria-label="Resumen del catálogo">
-          <div class="meter-top"><Cpu className="size-5" /><span>VAL Protocol</span></div>
-          <div class="meter-number">{supportedCombinations.length + auxiliaryModels.length}</div>
-          <p>compatibilidades Motorola publicadas</p>
-          <div class="meter-rule"></div>
-          <div class="meter-list">
-            <span><b>{supportedCombinations.length}</b> combinaciones Android</span>
-            <span><b>{auxiliaryModels.length}</b> operaciones auxiliares</span>
-            <span><b>2</b> operaciones por modelo</span>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section id="catalogo" class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
-      <div class="catalog-heading">
-        <div>
-          <p class="section-kicker">Filtro de compatibilidad</p>
-          <h2>Modelos Motorola soportados</h2>
-          <p>Unlock Bootloader y restablecimiento FRP disponibles para las combinaciones que se muestran.</p>
-        </div>
-        <div class="operation-key" aria-label="Operaciones incluidas">
-          <span><KeyRound className="size-3.5" /> Unlock BL</span>
-          <span><RotateCcw className="size-3.5" /> FRP Android</span>
-        </div>
-      </div>
-
-      <div class="catalog-controls" role="search">
-        <label class="search-field">
-          <Search className="size-4" />
-          <input id="model-search" type="search" placeholder="Buscar Moto Edge, XT2307, G54..." autocomplete="off" />
-        </label>
-        <div class="android-filter" aria-label="Filtrar por Android">
-          <button type="button" class="is-selected" data-version="all">Todos</button>
-          {androidVersions.map((android) => <button type="button" data-version={android}>Android {android}</button>)}
-        </div>
-      </div>
-
-      <p id="catalog-status" class="catalog-status" aria-live="polite">{supportedCombinations.length + auxiliaryModels.length} compatibilidades visibles</p>
-
-      <div class="android-groups">
-        {byAndroid.map(({ android, models }) => (
-          <section class="android-group" data-group={android}>
-            <div class="android-heading">
-              <span>Android {android}</span>
-              <i></i>
-              <small>{models.length} combinaciones</small>
-            </div>
+        <div class="android-groups">
+          {byAndroid.map(({ android, models }) => (
+            <section class="android-group" data-group={android}>
+              <div class="android-heading"><span><FontAwesomeIcon icon={faAndroid} /> Android {android}</span><i></i><small>{models.length}</small></div>
+              <div class="model-grid">
+                {models.map((model) => (
+                  <article class="model-card" data-model-card data-android={android} data-search={`${model.sku} ${model.name}`.toLowerCase()}>
+                    <span class="model-sku">{model.sku}</span><h2>{model.name}</h2>
+                    <div class="model-operations"><span><KeyRound className="size-3.5" /> Unlock BL</span><span><RotateCcw className="size-3.5" /> Android FRP</span></div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))}
+          <section class="android-group" data-group="auxiliary">
+            <div class="android-heading"><span>Operaciones auxiliares</span><i></i><small>{auxiliaryModels.length}</small></div>
             <div class="model-grid">
-              {models.map((model) => (
-                <article class="model-card" data-model-card data-android={android} data-search={`${model.sku} ${model.name}`.toLowerCase()}>
-                  <div class="model-top">
-                    <span class="model-sku">{model.sku}</span>
-                    <span class="android-chip">A{android}</span>
-                  </div>
-                  <h3>{model.name}</h3>
-                  <div class="model-operations">
-                    <span><KeyRound className="size-3.5" /> Unlock BL</span>
-                    <span><RotateCcw className="size-3.5" /> FRP Android</span>
-                  </div>
+              {auxiliaryModels.map((model) => (
+                <article class="model-card auxiliary-card" data-model-card data-android="auxiliary" data-search={`${model.sku} ${model.name} ${model.codename}`.toLowerCase()}>
+                  <span class="model-sku">{model.sku}</span><h2>{model.name}</h2>
+                  <div class="model-operations"><span><Wrench className="size-3.5" /> Operación auxiliar</span></div>
                 </article>
               ))}
             </div>
           </section>
-        ))}
-        <section class="android-group" data-group="auxiliary">
-          <div class="android-heading">
-            <span>Operaciones auxiliares</span>
-            <i></i>
-            <small>{auxiliaryModels.length} modelos</small>
-          </div>
-          <div class="model-grid">
-            {auxiliaryModels.map((model) => (
-              <article class="model-card auxiliary-card" data-model-card data-android="auxiliary" data-search={`${model.sku} ${model.name} ${model.codename}`.toLowerCase()}>
-                <div class="model-top">
-                  <span class="model-sku">{model.sku}</span>
-                  <span class="android-chip">AUX</span>
-                </div>
-                <h3>{model.name}</h3>
-                <div class="model-operations">
-                  <span><Wrench className="size-3.5" /> Operación auxiliar</span>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      <div id="catalog-empty" class="catalog-empty" hidden>
-        No hay una combinación publicada que coincida con tu búsqueda. Verifica el SKU y la versión de Android desde Read Info.
-      </div>
-    </section>
-
+        </div>
+        <div id="catalog-empty" class="catalog-empty" hidden>No encontramos un modelo compatible.</div>
+      </section>
+    </div>
   </main>
   <Footer />
   <WhatsAppModal client:load />
@@ -140,82 +74,54 @@ const byAndroid = androidVersions.map((android) => ({
   const status = document.querySelector<HTMLElement>("#catalog-status");
   const empty = document.querySelector<HTMLElement>("#catalog-empty");
   let selectedVersion = "all";
-
   const render = () => {
-    const query = input?.value.trim().toLowerCase() ?? "";
-    let visible = 0;
-    cards.forEach((card) => {
-      const matchesVersion = selectedVersion === "all" || card.dataset.android === selectedVersion;
-      const matchesSearch = !query || (card.dataset.search ?? "").includes(query);
-      const show = matchesVersion && matchesSearch;
-      card.hidden = !show;
-      if (show) visible += 1;
-    });
+    const query = input?.value.trim().toLowerCase() ?? ""; let visible = 0;
+    cards.forEach((card) => { const show = (selectedVersion === "all" || card.dataset.android === selectedVersion) && (!query || (card.dataset.search ?? "").includes(query)); card.hidden = !show; if (show) visible += 1; });
     groups.forEach((group) => { group.hidden = !group.querySelector("[data-model-card]:not([hidden])"); });
-    if (status) status.textContent = `${visible} ${visible === 1 ? "combinación visible" : "combinaciones visibles"}`;
+    if (status) status.textContent = `${visible} ${visible === 1 ? "modelo visible" : "modelos visibles"}`;
     if (empty) empty.hidden = visible !== 0;
   };
-
   input?.addEventListener("input", render);
-  filterButtons.forEach((button) => button.addEventListener("click", () => {
-    selectedVersion = button.dataset.version ?? "all";
-    filterButtons.forEach((item) => item.classList.toggle("is-selected", item === button));
-    render();
-  }));
+  filterButtons.forEach((button) => button.addEventListener("click", () => { selectedVersion = button.dataset.version ?? "all"; filterButtons.forEach((item) => item.classList.toggle("is-selected", item === button)); render(); }));
 </script>
 
 <style>
-  .supported-shell { background: radial-gradient(900px 440px at 85% 0%, oklch(0.55 0.13 253 / 16%), transparent 70%), #0b101a; }
-  .supported-hero { border-bottom: 1px solid oklch(0.76 0.02 255 / 14%); background: linear-gradient(180deg, oklch(0.13 0.017 255 / .96), oklch(0.09 0.014 255 / .85)); }
-  .status-line, .section-kicker { color: oklch(0.76 0.065 205); font: 600 .72rem/1.2 var(--font-mono); letter-spacing: .08em; }
-  .status-line { display: flex; align-items: center; gap: .55rem; }
-  .status-line span { width: .48rem; height: .48rem; border-radius: 999px; background: #2ee59d; box-shadow: 0 0 0 5px rgb(46 229 157 / .12); }
-  h1, h2 { font-family: var(--font-display); letter-spacing: -.055em; }
-  h1 { margin-top: 1.3rem; font-size: clamp(2.75rem, 6.2vw, 5.4rem); line-height: .93; font-weight: 700; }
-  h1 em { color: oklch(0.79 0.07 205); font-style: normal; }
-  .hero-copy { max-width: 39rem; margin-top: 1.6rem; color: oklch(0.75 0.025 255); font-size: 1.05rem; line-height: 1.7; }
-  .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
-  .catalog-action { display: inline-flex; align-items: center; gap: .65rem; border-radius: .7rem; background: oklch(0.71 0.14 253); padding: .8rem 1rem; color: white; font-size: .9rem; font-weight: 650; box-shadow: 0 12px 30px oklch(0.5 0.16 253 / .18); }
-  .catalog-action span { font-size: 1rem; }
-  .hero-actions p { color: oklch(0.59 0.02 255); font-size: .8rem; }
-  .catalog-meter { align-self: center; border: 1px solid oklch(0.76 0.02 255 / 17%); border-radius: 1rem; padding: 1.35rem; background: linear-gradient(135deg, oklch(0.18 0.025 255 / .9), oklch(0.12 0.017 255 / .9)); box-shadow: 0 24px 70px rgb(0 0 0 / .2); }
-  .meter-top { display: flex; align-items: center; gap: .55rem; color: oklch(0.72 0.035 255); font: 600 .72rem/1 var(--font-mono); }
-  .meter-number { margin-top: 1.45rem; color: white; font-family: var(--font-display); font-size: 4rem; font-weight: 700; letter-spacing: -.08em; line-height: .9; }
-  .catalog-meter p { margin-top: .55rem; color: oklch(0.63 0.022 255); font-size: .88rem; }
-  .meter-rule { height: 1px; margin: 1.25rem 0; background: oklch(0.76 0.02 255 / 15%); }
-  .meter-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; color: oklch(0.68 0.02 255); font-size: .72rem; line-height: 1.4; }
-  .meter-list b { display: block; color: oklch(0.87 0.04 205); font: 600 1rem/1 var(--font-mono); }
-  .catalog-heading { display: flex; justify-content: space-between; gap: 2rem; align-items: end; }
-  h2 { margin-top: .55rem; font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1; font-weight: 700; }
-  .catalog-heading p:not(.section-kicker) { max-width: 38rem; margin-top: .75rem; color: oklch(0.66 0.02 255); line-height: 1.6; }
-  .operation-key { display: flex; gap: .55rem; flex-wrap: wrap; justify-content: end; }
-  .operation-key span, .model-operations span { display: inline-flex; align-items: center; gap: .35rem; }
-  .operation-key span { border: 1px solid oklch(0.76 0.02 255 / 15%); border-radius: 999px; padding: .42rem .65rem; color: oklch(0.76 0.035 255); font-size: .75rem; }
-  .catalog-controls { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 2.6rem; border-block: 1px solid oklch(0.76 0.02 255 / 13%); padding: .85rem 0; }
-  .search-field { display: flex; min-width: min(100%, 19rem); flex: 1 1 18rem; align-items: center; gap: .6rem; border-radius: .55rem; background: oklch(0.16 0.017 255); padding: 0 .8rem; color: oklch(0.64 0.02 255); }
-  .search-field input { width: 100%; border: 0; background: transparent; padding: .72rem 0; color: white; font-size: .9rem; outline: none; }
-  .search-field input::placeholder { color: oklch(0.51 0.02 255); }
-  .android-filter { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
-  .android-filter button { border-radius: .45rem; padding: .52rem .62rem; color: oklch(0.65 0.02 255); font-size: .76rem; transition: background .18s, color .18s; }
-  .android-filter button:hover { background: oklch(0.23 0.025 255); color: white; }
-  .android-filter button.is-selected { background: oklch(0.7 0.14 253); color: white; }
-  .catalog-status { margin-top: .9rem; color: oklch(0.54 0.02 255); font: 500 .72rem/1 var(--font-mono); }
+  .models-page { min-height: calc(100vh - 5.5rem); background: #0b101a; }
+  .models-wrap { width: min(100% - 2rem, 76rem); margin: 0 auto; padding: 2.8rem 0 5rem; }
+  .models-header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+  .models-header h1 { color: oklch(0.97 0.004 255); font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; letter-spacing: -.055em; line-height: 1; }
+  .models-header > span { color: oklch(0.62 0.025 255); font: 600 .75rem/1 var(--font-mono); }
+  .brand-nav { display: flex; gap: .5rem; margin-top: 2rem; border-bottom: 1px solid oklch(0.76 0.02 255 / 15%); }
+  .brand-tab { display: inline-flex; align-items: center; gap: .6rem; border-bottom: 2px solid transparent; padding: .7rem .75rem .85rem; color: oklch(0.65 0.02 255); font-size: .88rem; font-weight: 650; }
+  .brand-tab.is-active { border-color: #e60000; color: white; }
+  .brand-mark { display: grid; width: 1.45rem; height: 1.45rem; place-items: center; border-radius: 999px; background: #e60000; color: white; font: 700 .67rem/1 var(--font-display); }
+  .brand-stage { position: relative; isolation: isolate; overflow: hidden; padding-top: 1.35rem; }
+  .motorola-backdrop { position: absolute; z-index: -1; top: -13.5rem; right: -17rem; width: 49rem; max-width: none; opacity: .075; pointer-events: none; }
+  .catalog-controls { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+  .search-field { display: flex; min-width: min(100%, 18rem); flex: 1 1 19rem; align-items: center; gap: .65rem; border: 1px solid oklch(0.76 0.02 255 / 16%); border-radius: .65rem; background: oklch(0.15 0.017 255 / .8); padding: 0 .85rem; color: oklch(0.62 0.02 255); }
+  .search-field:focus-within { border-color: oklch(0.7 0.12 253 / .75); }
+  .search-field input { width: 100%; border: 0; background: transparent; padding: .78rem 0; color: white; font-size: .9rem; outline: none; }
+  .search-field input::placeholder { color: oklch(0.48 0.018 255); }
+  .android-filter { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .android-filter button { display: inline-flex; align-items: center; gap: .35rem; border: 1px solid transparent; border-radius: .5rem; padding: .58rem .63rem; color: oklch(0.62 0.02 255); font-size: .76rem; transition: border-color .16s, background .16s, color .16s; }
+  .android-filter button:hover { border-color: oklch(0.76 0.02 255 / 19%); color: white; }
+  .android-filter button.is-selected { border-color: oklch(0.7 0.12 253 / .48); background: oklch(0.67 0.14 253 / .18); color: oklch(0.88 0.045 253); }
+  .catalog-status { margin-top: 1.1rem; color: oklch(0.49 0.018 255); font: 500 .7rem/1 var(--font-mono); }
   .android-groups { margin-top: 2rem; }
-  .android-group + .android-group { margin-top: 3.1rem; }
-  .android-heading { display: flex; align-items: center; gap: .75rem; margin-bottom: .85rem; }
-  .android-heading span { color: oklch(0.84 0.045 205); font: 600 .9rem/1 var(--font-mono); }
+  .android-group + .android-group { margin-top: 2.7rem; }
+  .android-heading { display: flex; align-items: center; gap: .7rem; margin-bottom: .8rem; }
+  .android-heading span { display: inline-flex; align-items: center; gap: .4rem; color: oklch(0.82 0.05 205); font: 600 .82rem/1 var(--font-mono); }
   .android-heading i { height: 1px; flex: 1; background: oklch(0.76 0.02 255 / 14%); }
-  .android-heading small { color: oklch(0.47 0.018 255); font-size: .72rem; }
+  .android-heading small { color: oklch(0.45 0.018 255); font: .7rem/1 var(--font-mono); }
   .model-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; }
-  .model-card { min-height: 10.5rem; border: 1px solid oklch(0.76 0.02 255 / 13%); border-radius: .7rem; background: oklch(0.14 0.016 255 / .68); padding: .9rem; }
-  .model-card:hover { border-color: oklch(0.72 0.09 205 / .48); background: oklch(0.17 0.022 255 / .9); }
-  .model-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-  .model-sku { color: oklch(0.77 0.025 255); font: 600 .72rem/1 var(--font-mono); }
-  .android-chip { border-radius: .3rem; background: oklch(0.68 0.135 253 / .18); padding: .28rem .36rem; color: oklch(0.83 0.08 253); font: 600 .67rem/1 var(--font-mono); }
-  .model-card h3 { margin-top: .85rem; color: oklch(0.96 0.004 255); font-size: .92rem; font-weight: 620; line-height: 1.35; }
-  .model-operations { display: flex; flex-wrap: wrap; gap: .35rem .55rem; margin-top: 1.35rem; color: oklch(0.62 0.03 205); font-size: .68rem; }
-  .catalog-empty { margin-top: 2rem; border: 1px dashed oklch(0.76 0.02 255 / 23%); border-radius: .75rem; padding: 1.3rem; color: oklch(0.64 0.02 255); font-size: .9rem; }
+  .model-card { min-height: 8.8rem; border: 1px solid oklch(0.76 0.02 255 / 13%); border-radius: .72rem; background: oklch(0.145 0.016 255 / .75); padding: .85rem; transition: border-color .16s, background .16s; }
+  .model-card:hover { border-color: oklch(0.71 0.1 205 / .52); background: oklch(0.175 0.021 255 / .9); }
+  .model-sku { color: oklch(0.67 0.025 255); font: 600 .69rem/1 var(--font-mono); }
+  .model-card h2 { margin-top: .75rem; color: white; font-size: .91rem; font-weight: 650; line-height: 1.32; }
+  .model-operations { display: flex; flex-wrap: wrap; gap: .35rem .6rem; margin-top: 1.2rem; color: oklch(0.62 0.035 205); font-size: .68rem; }
+  .model-operations span { display: inline-flex; align-items: center; gap: .35rem; }
   .auxiliary-card { border-left: 2px solid oklch(0.7 0.12 205); }
+  .catalog-empty { margin-top: 2rem; border: 1px dashed oklch(0.76 0.02 255 / 18%); border-radius: .7rem; padding: 1.1rem; color: oklch(0.62 0.02 255); font-size: .88rem; }
   @media (max-width: 1023px) { .model-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media (max-width: 640px) { .supported-hero { text-align: left; } .catalog-heading { align-items: flex-start; flex-direction: column; gap: 1rem; } .operation-key { justify-content: start; } .model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } .model-card { min-height: 11rem; padding: .75rem; } .model-card h3 { font-size: .84rem; } .model-operations { margin-top: 1rem; gap: .3rem; } .meter-list { grid-template-columns: repeat(3, 1fr); } .android-filter { width: 100%; } }
+  @media (max-width: 640px) { .models-wrap { width: min(100% - 1.5rem, 76rem); padding-top: 2rem; } .motorola-backdrop { top: -12rem; right: -25rem; opacity: .06; } .model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } .model-card { min-height: 9.5rem; padding: .75rem; } .model-card h2 { font-size: .84rem; } .android-filter { width: 100%; } .android-filter button { flex: 1 0 auto; justify-content: center; } }
 </style>
