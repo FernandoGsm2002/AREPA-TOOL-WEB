@@ -1,5 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Captions, CheckCircle2, ChevronRight, CirclePlay, Clock3, Play, Video } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  BookOpen,
+  Captions,
+  CheckCircle2,
+  ChevronRight,
+  CirclePlay,
+  Clock3,
+  Play,
+  Video,
+} from "lucide-react";
 import { webApiFetch } from "@/lib/web-session";
 
 type Tutorial = {
@@ -11,37 +20,155 @@ type Tutorial = {
   videoSrc?: string;
   captionsSrc?: string;
   posterSrc?: string;
-  embedUrl?: string;
 };
+
+type MuxVideo = {
+  id: string;
+  playbackId: string;
+  playbackToken: string;
+  thumbnailToken: string;
+  storyboardToken: string;
+};
+
+const MUX_PLAYER_SCRIPT_ID = "arepa-mux-player";
+
+function MuxTutorialPlayer({ video, title }: { video: MuxVideo; title: string }) {
+  const host = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let disposed = false;
+    const render = () => {
+      if (disposed || !host.current) return;
+      const player = document.createElement("mux-player");
+      player.setAttribute("playback-id", video.playbackId);
+      player.setAttribute("playback-token", video.playbackToken);
+      player.setAttribute("thumbnail-token", video.thumbnailToken);
+      player.setAttribute("storyboard-token", video.storyboardToken);
+      player.setAttribute("title", title);
+      player.setAttribute("preload", "none");
+      player.style.width = "100%";
+      player.style.height = "100%";
+      host.current.replaceChildren(player);
+    };
+
+    if (customElements.get("mux-player")) {
+      render();
+      return () => { disposed = true; };
+    }
+    let script = document.getElementById(MUX_PLAYER_SCRIPT_ID) as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement("script");
+      script.id = MUX_PLAYER_SCRIPT_ID;
+      script.src = "https://cdn.jsdelivr.net/npm/@mux/mux-player";
+      document.head.appendChild(script);
+    }
+    script.addEventListener("load", render, { once: true });
+    return () => { disposed = true; script?.removeEventListener("load", render); };
+  }, [title, video]);
+
+  return <div ref={host} className="h-full w-full bg-black" />;
+}
 
 // Cuando estén listos los materiales, agrega las rutas públicas del .mp4 y el
 // subtítulo .vtt correspondiente. El reproductor mostrará CC automáticamente.
 const tutorials: Tutorial[] = [
-  { id: "it-admin-locks", module: "MDM", title: "IT Admin Locks", instruction: "Identifica el tipo de bloqueo y sigue el método indicado antes de modificar el equipo.", duration: "6 min" },
-  { id: "oppo-locks", module: "Android", title: "Oppo Locks", instruction: "Prepara el dispositivo y verifica la conexión antes de comenzar el procedimiento.", duration: "2 min" },
-  { id: "motorola", module: "MDM", title: "Motorola", instruction: "Revisa el modelo y aplica el método compatible para su configuración.", duration: "3 min" },
-  { id: "nvdata", module: "MediaTek", title: "NVData Repair", instruction: "Carga una copia de respaldo, valida los IMEI y guarda el parche en otra ubicación.", duration: "2 min" },
-  { id: "fix-yape", module: "Samsung", title: "Fix Yape", instruction: "Sigue las validaciones previas y reinicia el dispositivo al finalizar el proceso.", duration: "3 min" },
-  { id: "transsion-payjoy", module: "MediaTek", title: "Transsion PayJoy", instruction: "Conecta el equipo en el modo indicado y espera la confirmación antes de desconectarlo.", duration: "2 min" },
-  { id: "arepa-redirector", module: "ArepaRedirector", title: "USB Redirector", instruction: "Inicia una sesión, comparte el enlace generado y conserva la herramienta abierta durante el trabajo.", duration: "2 min" },
-  { id: "apple-bypass", module: "Apple", title: "Apple Bypass", instruction: "Confirma la versión compatible y prepara el hardware necesario antes de comenzar.", duration: "2 min" },
+  {
+    id: "it-admin-locks",
+    module: "MDM",
+    title: "IT Admin Locks",
+    instruction:
+      "En este tutorial explicamos brevemente, los 3 metodos para saltar el bloque IT Admin, Multimarcas, y para los dispositivos que piden WI-FI para configurar.",
+    duration: "6 min",
+  },
+  {
+    id: "oppo-locks",
+    module: "Android",
+    title: "Oppo Locks",
+    instruction:
+      "En este tutorial , explicamos acerca del bloqueo Oguard de Oppo , Pantalla blanca o negra, como es conocida, metodo via DNS , prestar atencion.",
+    duration: "2 min",
+  },
+  {
+    id: "motorola",
+    module: "MDM",
+    title: "Motorola",
+    instruction:
+      "En este video, explicamos como hacer FRP o Unlock Bootloader, en dispositivos Motorola Mediatek, y explicamos brevemente a como saltar el bloque de Claro multimarcas.",
+    duration: "3 min",
+  },
+  {
+    id: "nvdata",
+    module: "MediaTek",
+    title: "NVData Repair",
+    instruction:
+      "En este video explicamos brevemente, como reparar el imei en dispositivos Honor 4G&5G Mediatek Devices.",
+    duration: "2 min",
+  },
+  {
+    id: "fix-yape",
+    module: "Samsung",
+    title: "Fix Yape",
+    instruction:
+      "En este video explicamos brevemente, como Fixear las apps bancarias , en especial la mas usada Yape y la que sufrio una actualizacion, simple y sencillo.",
+    duration: "3 min",
+  },
+  {
+    id: "transsion-payjoy",
+    module: "MediaTek",
+    title: "Transsion PayJoy",
+    instruction:
+      "En este video, explicamos , los diferentes metodos en dispositivos Transsion - Infinix - Tecno - Itel , metodos como Payjoy Lock - FRP - Factory Reset.",
+    duration: "2 min",
+  },
+  {
+    id: "arepa-redirector",
+    module: "ArepaRedirector",
+    title: "USB Redirector",
+    instruction:
+      "En este video tutorial , se explica la instalacion de USB-redirector en la herramienta ArepaTool, para que puedas hacer tus remotos.",
+    duration: "2 min",
+  },
+  {
+    id: "apple-bypass",
+    module: "Apple",
+    title: "Apple Bypass",
+    instruction:
+      "En este video tutorial , explicamos como son los pasos correctos para hacer un registro , para la herramienta RUST. Partner de ArepaTool.",
+    duration: "2 min",
+  },
 ];
 
 export default function Tutorials() {
   const [selectedId, setSelectedId] = useState(tutorials[0].id);
-  const [embeds, setEmbeds] = useState<Record<string, string>>({});
-  const selected = useMemo(() => tutorials.find((item) => item.id === selectedId) ?? tutorials[0], [selectedId]);
-  const selectedEmbed = embeds[selected.id];
-  const readyCount = Object.keys(embeds).length;
+  const [videos, setVideos] = useState<Record<string, MuxVideo>>({});
+  const selected = useMemo(
+    () => tutorials.find((item) => item.id === selectedId) ?? tutorials[0],
+    [selectedId],
+  );
+  const selectedVideo = videos[selected.id];
+  const readyCount = Object.keys(videos).length;
 
   useEffect(() => {
     void (async () => {
       const data = await webApiFetch("/api/web-tutorials");
-      if (!data) { window.location.href = "/login"; return; }
+      if (!data) {
+        window.location.href = "/login";
+        return;
+      }
       if (!data.success || !Array.isArray(data.videos)) return;
-      setEmbeds(Object.fromEntries(data.videos
-        .filter((video: unknown): video is { id: string; embedUrl: string } => Boolean(video) && typeof (video as { id?: unknown }).id === "string" && typeof (video as { embedUrl?: unknown }).embedUrl === "string")
-        .map((video) => [video.id, video.embedUrl])));
+      setVideos(
+        Object.fromEntries(
+          data.videos
+            .filter(
+              (video: unknown): video is MuxVideo =>
+                Boolean(video) &&
+                ["id", "playbackId", "playbackToken", "thumbnailToken", "storyboardToken"].every(
+                  (key) => typeof (video as Record<string, unknown>)[key] === "string",
+                ),
+            )
+            .map((video) => [video.id, video]),
+        ),
+      );
     })();
   }, []);
 
@@ -50,9 +177,16 @@ export default function Tutorials() {
       <header className="border-border/60 bg-card/70 overflow-hidden rounded-2xl border p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-5">
           <div className="max-w-2xl">
-            <div className="text-primary flex items-center gap-2 text-sm font-medium"><BookOpen className="size-4" /> Centro de aprendizaje</div>
-            <h2 className="font-display mt-3 text-2xl font-bold tracking-tight sm:text-3xl">Tutoriales de ArepaTool</h2>
-            <p className="text-muted-foreground mt-2 text-sm leading-relaxed sm:text-base">Guías breves, por módulo y pensadas para que cada proceso se haga en el orden correcto.</p>
+            <div className="text-primary flex items-center gap-2 text-sm font-medium">
+              <BookOpen className="size-4" /> Centro de aprendizaje
+            </div>
+            <h2 className="font-display mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+              Tutoriales de ArepaTool
+            </h2>
+            <p className="text-muted-foreground mt-2 text-sm leading-relaxed sm:text-base">
+              Guías breves, por módulo y pensadas para que cada proceso se haga
+              en el orden correcto.
+            </p>
           </div>
           <div className="border-border/70 bg-background/50 rounded-xl border px-4 py-3 text-right">
             <p className="text-lg font-semibold">{readyCount}/8</p>
@@ -64,29 +198,58 @@ export default function Tutorials() {
       <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(17rem,.8fr)]">
         <section className="border-border/60 bg-card overflow-hidden rounded-2xl border">
           <div className="bg-muted/45 relative aspect-video overflow-hidden">
-            {selectedEmbed ? (
-              <iframe className="h-full w-full bg-black" src={selectedEmbed} title={selected.title} allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+            {selectedVideo ? (
+              <MuxTutorialPlayer video={selectedVideo} title={selected.title} />
             ) : selected.videoSrc ? (
-              <video className="h-full w-full bg-black object-contain" controls preload="metadata" poster={selected.posterSrc}>
+              <video
+                className="h-full w-full bg-black object-contain"
+                controls
+                preload="metadata"
+                poster={selected.posterSrc}
+              >
                 <source src={selected.videoSrc} type="video/mp4" />
-                {selected.captionsSrc && <track kind="subtitles" srcLang="es" label="Español" src={selected.captionsSrc} default />}
+                {selected.captionsSrc && (
+                  <track
+                    kind="subtitles"
+                    srcLang="es"
+                    label="Español"
+                    src={selected.captionsSrc}
+                    default
+                  />
+                )}
                 Tu navegador no puede reproducir este video.
               </video>
             ) : (
               <div className="relative flex h-full flex-col items-center justify-center px-7 text-center">
-                <span className="bg-primary/12 text-primary flex size-14 items-center justify-center rounded-2xl"><Video className="size-7" /></span>
+                <span className="bg-primary/12 text-primary flex size-14 items-center justify-center rounded-2xl">
+                  <Video className="size-7" />
+                </span>
                 <p className="mt-4 font-semibold">Video en preparación</p>
-                <p className="text-muted-foreground mt-1 max-w-sm text-sm">Este tutorial aparecerá aquí apenas se publique su guía en video.</p>
+                <p className="text-muted-foreground mt-1 max-w-sm text-sm">
+                  Este tutorial aparecerá aquí apenas se publique su guía en
+                  video.
+                </p>
               </div>
             )}
           </div>
           <div className="p-6 sm:p-7">
-            <p className="text-primary text-sm font-medium">{selected.module}</p>
-            <h3 className="font-display mt-1 text-xl font-bold">{selected.title}</h3>
-            <p className="text-muted-foreground mt-3 max-w-2xl text-sm leading-relaxed">{selected.instruction}</p>
+            <p className="text-primary text-sm font-medium">
+              {selected.module}
+            </p>
+            <h3 className="font-display mt-1 text-xl font-bold">
+              {selected.title}
+            </h3>
+            <p className="text-muted-foreground mt-3 max-w-2xl text-sm leading-relaxed">
+              {selected.instruction}
+            </p>
             <div className="text-muted-foreground mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs">
-              <span className="inline-flex items-center gap-1.5"><Clock3 className="size-3.5" /> {selected.duration}</span>
-              <span className="inline-flex items-center gap-1.5"><Captions className="size-3.5" /> Subtítulos en español {selected.captionsSrc ? "disponibles" : "al publicar"}</span>
+              <span className="inline-flex items-center gap-1.5">
+                <Clock3 className="size-3.5" /> {selected.duration}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Captions className="size-3.5" /> Subtítulos en español{" "}
+                {selected.captionsSrc ? "disponibles" : "al publicar"}
+              </span>
             </div>
           </div>
         </section>
@@ -100,10 +263,34 @@ export default function Tutorials() {
             {tutorials.map((tutorial, index) => {
               const isSelected = tutorial.id === selected.id;
               return (
-                <button key={tutorial.id} type="button" onClick={() => setSelectedId(tutorial.id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors ${isSelected ? "bg-primary text-primary-foreground" : "hover:bg-muted text-foreground"}`}>
-                  <span className={`flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ${isSelected ? "bg-white/15" : "bg-muted text-muted-foreground group-hover:bg-background"}`}>{index + 1}</span>
-                  <span className="min-w-0 flex-1"><span className="block truncate text-sm font-medium">{tutorial.title}</span><span className={`mt-0.5 block text-xs ${isSelected ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{tutorial.module}</span></span>
-                  {embeds[tutorial.id] || tutorial.videoSrc ? <CheckCircle2 className="size-4 shrink-0" /> : isSelected ? <Play className="size-4 shrink-0" /> : <ChevronRight className="text-muted-foreground size-4 shrink-0" />}
+                <button
+                  key={tutorial.id}
+                  type="button"
+                  onClick={() => setSelectedId(tutorial.id)}
+                  className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors ${isSelected ? "bg-primary text-primary-foreground" : "hover:bg-muted text-foreground"}`}
+                >
+                  <span
+                    className={`flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ${isSelected ? "bg-white/15" : "bg-muted text-muted-foreground group-hover:bg-background"}`}
+                  >
+                    {index + 1}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium">
+                      {tutorial.title}
+                    </span>
+                    <span
+                      className={`mt-0.5 block text-xs ${isSelected ? "text-primary-foreground/70" : "text-muted-foreground"}`}
+                    >
+                      {tutorial.module}
+                    </span>
+                  </span>
+                  {videos[tutorial.id] || tutorial.videoSrc ? (
+                    <CheckCircle2 className="size-4 shrink-0" />
+                  ) : isSelected ? (
+                    <Play className="size-4 shrink-0" />
+                  ) : (
+                    <ChevronRight className="text-muted-foreground size-4 shrink-0" />
+                  )}
                 </button>
               );
             })}
@@ -111,7 +298,11 @@ export default function Tutorials() {
         </aside>
       </div>
 
-      <p className="text-muted-foreground mt-5 flex items-start gap-2 text-xs leading-relaxed"><CirclePlay className="mt-0.5 size-3.5 shrink-0" /> Cada video puede incluir subtítulos en español. Actívalos con el botón CC del reproductor cuando estén disponibles.</p>
+      <p className="text-muted-foreground mt-5 flex items-start gap-2 text-xs leading-relaxed">
+        <CirclePlay className="mt-0.5 size-3.5 shrink-0" /> Cada video puede
+        incluir subtítulos en español. Actívalos con el botón CC del reproductor
+        cuando estén disponibles.
+      </p>
     </div>
   );
 }
