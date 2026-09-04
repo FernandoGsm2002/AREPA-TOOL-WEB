@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Globe2, History, BadgeCheck, Download, LogOut, Loader2, ChevronRight, ShieldCheck, Settings2 } from "lucide-react";
+import { Globe2, History, BadgeCheck, Download, LogOut, Loader2, ChevronRight, ShieldCheck, Settings2, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { loadSession, clearSession, type WebUser } from "@/lib/web-session";
 import CreateDns from "./views/CreateDns";
@@ -7,15 +7,17 @@ import MyOperations from "./views/MyOperations";
 import AccountLicense from "./views/AccountLicense";
 import InstallerAccessModal from "@/components/site/InstallerAccessModal";
 import Downloads from "./views/Downloads";
+import Tutorials from "./views/Tutorials";
 import WelcomeConfetti from "./WelcomeConfetti";
 
-type Tab = "dns" | "operations" | "account" | "downloads";
+type Tab = "dns" | "operations" | "account" | "downloads" | "tutorials";
 
 const tabs: { id: Tab; label: string; icon: typeof Globe2 }[] = [
   { id: "dns", label: "Crear DNS", icon: Globe2 },
   { id: "operations", label: "Mis Operaciones", icon: History },
   { id: "account", label: "Cuenta y Licencia", icon: BadgeCheck },
   { id: "downloads", label: "Descargas", icon: Download },
+  { id: "tutorials", label: "Tutoriales", icon: BookOpen },
 ];
 
 export default function Dashboard() {
@@ -98,14 +100,14 @@ export default function Dashboard() {
         </div>
       </aside>
 
-      <div className="border-border/60 bg-card/95 fixed inset-x-0 bottom-0 z-40 flex justify-around border-t p-2 backdrop-blur-xl sm:hidden">
+      <div className="border-border/60 bg-card/95 fixed inset-x-0 bottom-0 z-40 flex gap-1 overflow-x-auto border-t p-2 backdrop-blur-xl sm:hidden">
         {tabs.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             type="button"
             onClick={() => setTab(id)}
             aria-label={label}
-            className={`flex flex-col items-center gap-0.5 rounded-md px-3 py-1.5 text-[0.65rem] ${
+            className={`flex shrink-0 flex-col items-center gap-0.5 rounded-md px-3 py-1.5 text-[0.65rem] ${
               tab === id ? "text-primary" : "text-muted-foreground"
             }`}
           >
@@ -120,6 +122,7 @@ export default function Dashboard() {
         {tab === "operations" && <MyOperations />}
         {tab === "account" && <AccountLicense />}
         {tab === "downloads" && <Downloads />}
+        {tab === "tutorials" && <Tutorials />}
       </main>
       <InstallerAccessModal />
     </div>
