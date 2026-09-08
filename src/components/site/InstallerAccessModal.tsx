@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Download, Loader2, MessageCircle, ShieldCheck } from "lucide-react";
+import { KeyRound, Loader2, MessageCircle, ShieldCheck, UsersRound } from "lucide-react";
 
 const API_BASE = "https://api2.arepatool.com";
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADcAui1yybCKOv5s";
@@ -12,7 +12,7 @@ export default function InstallerAccessModal() {
   const [identifier, setIdentifier] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [access, setAccess] = useState<{ downloadUrl: string; groupLink: string } | null>(null);
+  const [access, setAccess] = useState<{ groupLink: string } | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | undefined>(undefined);
@@ -72,8 +72,8 @@ export default function InstallerAccessModal() {
         body: JSON.stringify({ identifier: identifier.trim(), turnstileToken }),
       });
       const data = await res.json();
-      if (res.ok && data.downloadUrl && data.groupLink) {
-        setAccess({ downloadUrl: data.downloadUrl, groupLink: data.groupLink });
+      if (res.ok && data.groupLink) {
+        setAccess({ groupLink: data.groupLink });
       } else {
         setStatus(data.error || "No se pudo verificar el acceso. Intenta de nuevo.");
         setTurnstileToken(null);
@@ -90,19 +90,26 @@ export default function InstallerAccessModal() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader className="items-center text-center">
-          <div className="bg-primary/12 text-primary flex size-14 items-center justify-center rounded-full"><Download className="size-7" /></div>
+          <div className="bg-primary/12 text-primary flex size-14 items-center justify-center rounded-full"><KeyRound className="size-7" /></div>
           <DialogTitle className="text-xl">Descargar ArepaTool</DialogTitle>
         </DialogHeader>
         {access ? (
-          <div className="space-y-3 text-center">
-            <p className="text-muted-foreground text-sm">Tu licencia está activa. Únete al grupo privado para soporte y novedades.</p>
-            <Button asChild variant="secondary" className="w-full"><a href={access.groupLink} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" />Unirme al grupo privado</a></Button>
-            <Button asChild className="w-full"><a href={access.downloadUrl} target="_blank" rel="noopener noreferrer"><Download className="size-4" />Descargar instalador</a></Button>
-            <p className="text-muted-foreground text-center text-xs">El enlace de descarga vence en 10 minutos.</p>
+          <div className="space-y-4 text-center">
+            <p className="text-muted-foreground text-sm leading-6">Tu licencia está activa. La descarga se comparte exclusivamente en el grupo oficial.</p>
+            <div className="border-primary/30 from-primary/12 to-background relative overflow-hidden rounded-2xl border bg-linear-to-br px-5 py-4 shadow-inner shadow-black/20">
+              <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-linear-to-r from-transparent via-primary/70 to-transparent"></div>
+              <span className="text-primary inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.12em] uppercase"><KeyRound className="size-3.5" />Clave de descompresión</span>
+              <p className="font-mono mt-2 text-3xl font-extrabold tracking-[0.22em]">6767</p>
+            </div>
+            <div className="border-border/60 bg-muted/35 flex items-start gap-3 rounded-xl border p-3.5 text-left">
+              <UsersRound className="text-primary mt-0.5 size-4 shrink-0" />
+              <p className="text-muted-foreground text-xs leading-5">Únete al grupo oficial para recibir la descarga, soporte y noticias exclusivas de nuevas funciones.</p>
+            </div>
+            <Button asChild className="w-full shadow-lg shadow-primary/20"><a href={access.groupLink} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" />Unirme al grupo oficial</a></Button>
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-muted-foreground text-center text-sm">Verifica tu licencia para recibir la descarga y la invitación al grupo privado.</p>
+            <p className="text-muted-foreground text-center text-sm leading-6">Verifica tu licencia para recibir la clave de descompresión y acceder al grupo oficial de descargas y noticias exclusivas.</p>
             <Input placeholder="Usuario o correo registrado" autoComplete="username" value={identifier} onChange={(e) => setIdentifier(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
             <div ref={turnstileRef} className="flex justify-center" />
             {status && <p className="text-destructive text-center text-sm">{status}</p>}

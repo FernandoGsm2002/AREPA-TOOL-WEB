@@ -12,10 +12,22 @@ export type ChangelogLine =
   | { type: "comment"; text: string }
   | { type: "h2"; text: string }
   | { type: "plus"; text: string }
+  | { type: "fixed"; text: string }
   | { type: "pending"; text: string }
   | { type: "blank" };
 
 export const changelog: ChangelogLine[] = [
+  { type: "h1", text: "# ArepaTool v2.2.1" },
+  { type: "comment", text: "## Xiaomi · MDM · Correcciones de conectividad — 2026" },
+  { type: "blank" },
+  { type: "h2", text: "### Xiaomi — QR MDM" },
+  { type: "plus", text: "Nuevo método QR MDM para dispositivos Xiaomi" },
+  { type: "plus", text: "Eliminación de aplicaciones MDM" },
+  { type: "blank" },
+  { type: "h2", text: "### MDM No DNS — Conectividad" },
+  { type: "fixed", text: "FIX: sin conexión a internet en dispositivos Unisoc — TESTED" },
+  { type: "fixed", text: "FIX: conectividad en algunos MediaTek y Unisoc — TESTED" },
+  { type: "blank" },
   { type: "h1", text: "# ArepaTool v2.2.0" },
   { type: "comment", text: "## Novedades y correcciones — 2026" },
   { type: "blank" },
