@@ -1,5 +1,5 @@
 ---
-import { CheckCircle2, Store } from "lucide-react";
+import { ArrowRight, CheckCircle2, ShieldCheck, Store, Zap } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 
 const perks = [
@@ -14,38 +14,47 @@ const perks = [
 <section id="pricing" class="mx-auto max-w-7xl px-4 py-18 sm:px-6">
   <h2 class="font-display text-center text-3xl font-bold tracking-[-0.04em] sm:text-5xl">Precios</h2>
 
-  <div class="border-primary/45 from-card to-primary/7 relative mx-auto mt-10 max-w-xl overflow-hidden rounded-3xl border-2 bg-linear-to-br p-8 shadow-2xl shadow-primary/10 sm:p-10">
-    <div class="bg-primary/15 pointer-events-none absolute -top-24 -right-20 size-48 rounded-full blur-3xl"></div>
-    <span class="bg-primary text-primary-foreground absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-bold tracking-wide uppercase">
-      Más Popular
+  <div class="border-primary/45 from-card via-card to-primary/10 relative mx-auto mt-10 max-w-2xl overflow-hidden rounded-3xl border bg-linear-to-br p-5 shadow-2xl shadow-primary/10 sm:p-8">
+    <div class="bg-primary/20 pointer-events-none absolute -top-28 -right-24 size-64 rounded-full blur-3xl"></div>
+    <div class="bg-primary/10 pointer-events-none absolute -bottom-32 -left-20 size-60 rounded-full blur-3xl"></div>
+    <span class="bg-primary text-primary-foreground relative inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-extrabold tracking-[0.1em] uppercase shadow-lg shadow-primary/25">
+      <Zap className="size-3.5 fill-current" />
+      Licencia anual
     </span>
 
-    <div class="relative flex flex-wrap items-center justify-center gap-6 text-center">
-      <div class="h-20 w-32 overflow-hidden rounded-xl border border-white/8 bg-white/[0.03]">
-        <img src="/pngs/arepalanding.png" alt="Licencia" class="-my-9 h-38 w-full object-contain" />
+    <div class="relative mt-6 grid items-center gap-6 sm:grid-cols-[160px_1fr] sm:gap-8">
+      <div class="border-primary/20 from-primary/12 to-background/40 flex h-32 items-center justify-center overflow-hidden rounded-2xl border bg-linear-to-br shadow-inner shadow-black/20">
+        <img src="/pngs/arepalanding.png" alt="Licencia ArepaTool" class="-my-12 h-56 w-full object-contain" />
       </div>
-      <div>
-        <h3 class="font-display text-xl font-bold">Licencia Activation</h3>
-        <p class="text-primary mt-1 text-xl font-bold">Consultar Precio</p>
+      <div class="text-left">
+        <div class="flex items-center gap-2">
+          <ShieldCheck className="text-primary size-5" />
+          <h3 class="font-display text-xl font-bold tracking-[-0.03em] sm:text-2xl">Licencia Activation</h3>
+        </div>
+        <p class="text-muted-foreground mt-2 text-sm leading-6">Activa ArepaTool con un distribuidor oficial verificado.</p>
+        <p class="font-display text-primary mt-4 text-3xl font-bold tracking-[-0.04em]">Consultar Precio</p>
       </div>
     </div>
 
-    <div class="border-border/60 my-6 border-t"></div>
+    <div class="border-border/60 relative my-7 border-t"></div>
 
-    <ul class="relative grid gap-3 sm:grid-cols-2">
+    <ul class="relative grid gap-x-7 gap-y-3 sm:grid-cols-2">
       {
         perks.map((perk) => (
-          <li class="flex items-start gap-2 text-sm">
-            <CheckCircle2 className="text-primary mt-0.5 size-4 shrink-0" />
+          <li class="flex items-start gap-2.5 text-sm leading-5">
+            <span class="bg-primary/12 text-primary mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full">
+              <CheckCircle2 className="size-3.5" />
+            </span>
             <span>{perk}</span>
           </li>
         ))
       }
     </ul>
 
-    <a href="#resellers" class={buttonVariants({ size: "lg", className: "relative mt-7 w-full shadow-xl shadow-primary/20" })}>
+    <a href="#resellers" class={buttonVariants({ size: "lg", className: "relative mt-8 w-full shadow-xl shadow-primary/20 transition-transform hover:-translate-y-0.5" })}>
       <Store className="size-4" />
-      Activar Ahora
+      Ver distribuidores y resellers
+      <ArrowRight className="ml-auto size-4" />
     </a>
   </div>
 </section>

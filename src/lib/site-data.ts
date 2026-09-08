@@ -249,6 +249,7 @@ export interface Reseller {
   logo: string;
   region: string;
   details: string;
+  role: "distributor" | "reseller";
   links: { icon: "whatsapp" | "telegram" | "globe"; href: string }[];
 }
 
@@ -258,6 +259,7 @@ export const resellers: Reseller[] = [
     logo: "/pngs/leopepe.png",
     region: "Worldwide",
     details: "Payments: USDT - BINANCE - PEN",
+    role: "distributor",
     links: [
       { icon: "whatsapp", href: "https://chat.whatsapp.com/ItqFr6uwlrOEvkXZQLiYaj" },
       { icon: "telegram", href: "https://t.me/ctrone21" },
@@ -268,6 +270,7 @@ export const resellers: Reseller[] = [
     logo: "/pngs/smartbeunlock.png",
     region: "Worldwide",
     details: "Payments: USDT - BINANCE",
+    role: "reseller",
     links: [
       { icon: "globe", href: "https://smartbeunlock.com" },
       { icon: "whatsapp", href: "https://wa.me/573226859899" },
@@ -278,6 +281,7 @@ export const resellers: Reseller[] = [
     logo: "/pngs/ohideraunlocker.jpg",
     region: "Worldwide",
     details: "Payments: USDT - BINANCE",
+    role: "reseller",
     links: [
       { icon: "globe", href: "https://ohideraunlocker.com" },
       { icon: "whatsapp", href: "https://wa.me/+8801660122234" },
@@ -288,6 +292,7 @@ export const resellers: Reseller[] = [
     logo: "/pngs/javierbarongsm.png",
     region: "Worldwide",
     details: "Payments: BINANCE",
+    role: "reseller",
     links: [
       { icon: "globe", href: "https://javierbarongsm.com" },
       { icon: "whatsapp", href: "https://wa.me/15419309244" },
@@ -298,6 +303,7 @@ export const resellers: Reseller[] = [
     logo: "/pngs/elmexicanounlock.jpeg",
     region: "México",
     details: "WhatsApp: +52 55 7989 8071",
+    role: "reseller",
     links: [
       { icon: "whatsapp", href: "https://wa.me/525579898071" },
       { icon: "telegram", href: "https://t.me/elmexicanounlockmx" },
@@ -308,6 +314,7 @@ export const resellers: Reseller[] = [
     logo: "/pngs/mhunlock.jpeg",
     region: "Worldwide",
     details: "Worldwide Reseller",
+    role: "reseller",
     links: [
       { icon: "globe", href: "https://mhunlock.com/" },
       { icon: "whatsapp", href: "https://wa.me/12543511079" },
