@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { KeyRound, Loader2, MessageCircle, ShieldCheck, UsersRound } from "lucide-react";
+import { Download, KeyRound, Loader2, MessageCircle, ShieldCheck, UsersRound } from "lucide-react";
 
 const API_BASE = "https://api2.arepatool.com";
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADcAui1yybCKOv5s";
+const INSTALLER_URL = "https://www.mediafire.com/file/yxghcr2weeuzyug/ArepaToolV2_Setup_v2.2.1.rar/file";
 
 export default function InstallerAccessModal() {
   const [open, setOpen] = useState(false);
@@ -95,7 +96,7 @@ export default function InstallerAccessModal() {
         </DialogHeader>
         {access ? (
           <div className="space-y-4 text-center">
-            <p className="text-muted-foreground text-sm leading-6">Tu licencia está activa. La descarga se comparte exclusivamente en el grupo oficial.</p>
+            <p className="text-muted-foreground text-sm leading-6">Tu licencia está activa. Únete al grupo oficial para recibir soporte y enterarte primero de las novedades exclusivas.</p>
             <div className="border-primary/30 from-primary/12 to-background relative overflow-hidden rounded-2xl border bg-linear-to-br px-5 py-4 shadow-inner shadow-black/20">
               <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-linear-to-r from-transparent via-primary/70 to-transparent"></div>
               <span className="text-primary inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.12em] uppercase"><KeyRound className="size-3.5" />Clave de descompresión</span>
@@ -103,9 +104,10 @@ export default function InstallerAccessModal() {
             </div>
             <div className="border-border/60 bg-muted/35 flex items-start gap-3 rounded-xl border p-3.5 text-left">
               <UsersRound className="text-primary mt-0.5 size-4 shrink-0" />
-              <p className="text-muted-foreground text-xs leading-5">Únete al grupo oficial para recibir la descarga, soporte y noticias exclusivas de nuevas funciones.</p>
+              <p className="text-muted-foreground text-xs leading-5">El grupo oficial reúne las noticias exclusivas, soporte y avisos de nuevas funciones.</p>
             </div>
             <Button asChild className="w-full shadow-lg shadow-primary/20"><a href={access.groupLink} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" />Unirme al grupo oficial</a></Button>
+            <Button asChild variant="secondary" className="w-full"><a href={INSTALLER_URL} target="_blank" rel="noopener noreferrer"><Download className="size-4" />Descargar ArepaTool v2.2.1</a></Button>
           </div>
         ) : (
           <div className="space-y-4">
