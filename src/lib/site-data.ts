@@ -248,7 +248,7 @@ export interface Reseller {
   name: string;
   logo: string;
   region: string;
-  payments: string;
+  details: string;
   links: { icon: "whatsapp" | "telegram" | "globe"; href: string }[];
 }
 
@@ -257,7 +257,7 @@ export const resellers: Reseller[] = [
     name: "Leope-Gsm",
     logo: "/pngs/leopepe.png",
     region: "Worldwide",
-    payments: "Payments: USDT - BINANCE - PEN",
+    details: "Payments: USDT - BINANCE - PEN",
     links: [
       { icon: "whatsapp", href: "https://chat.whatsapp.com/ItqFr6uwlrOEvkXZQLiYaj" },
       { icon: "telegram", href: "https://t.me/ctrone21" },
@@ -267,7 +267,7 @@ export const resellers: Reseller[] = [
     name: "SmartBeUnlock",
     logo: "/pngs/smartbeunlock.png",
     region: "Worldwide",
-    payments: "Payments: USDT - BINANCE",
+    details: "Payments: USDT - BINANCE",
     links: [
       { icon: "globe", href: "https://smartbeunlock.com" },
       { icon: "whatsapp", href: "https://wa.me/573226859899" },
@@ -277,7 +277,7 @@ export const resellers: Reseller[] = [
     name: "Ohidera Unlocker",
     logo: "/pngs/ohideraunlocker.jpg",
     region: "Worldwide",
-    payments: "Payments: USDT - BINANCE",
+    details: "Payments: USDT - BINANCE",
     links: [
       { icon: "globe", href: "https://ohideraunlocker.com" },
       { icon: "whatsapp", href: "https://wa.me/+8801660122234" },
@@ -287,10 +287,31 @@ export const resellers: Reseller[] = [
     name: "JavierBaronGSM",
     logo: "/pngs/javierbarongsm.png",
     region: "Worldwide",
-    payments: "Payments: BINANCE",
+    details: "Payments: BINANCE",
     links: [
       { icon: "globe", href: "https://javierbarongsm.com" },
       { icon: "whatsapp", href: "https://wa.me/15419309244" },
+    ],
+  },
+  {
+    name: "Elmexicanounlock.com",
+    logo: "/pngs/elmexicanounlock.jpeg",
+    region: "México",
+    details: "WhatsApp: +52 55 7989 8071",
+    links: [
+      { icon: "whatsapp", href: "https://wa.me/525579898071" },
+      { icon: "telegram", href: "https://t.me/elmexicanounlockmx" },
+    ],
+  },
+  {
+    name: "MHUnlock.com",
+    logo: "/pngs/mhunlock.jpeg",
+    region: "Worldwide",
+    details: "Worldwide Reseller",
+    links: [
+      { icon: "globe", href: "https://mhunlock.com/" },
+      { icon: "whatsapp", href: "https://wa.me/12543511079" },
+      { icon: "telegram", href: "https://t.me/mhunlock" },
     ],
   },
 ];
