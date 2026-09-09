@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
+import { Download, HardDriveDownload, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
 import { WindowsIcon } from "@/components/icons/BrandIcons";
 import { webApiFetch } from "@/lib/web-session";
 
@@ -12,8 +12,27 @@ interface DownloadTool {
   downloadUrl: string;
 }
 
+interface DownloadRom {
+  id: string;
+  name: string;
+  version?: string | null;
+  device_model: string;
+  android_version?: string | null;
+  size_bytes: number;
+  description?: string | null;
+  downloadUrl: string;
+}
+
+function formatFileSize(bytes: number) {
+  if (!Number.isFinite(bytes) || bytes <= 0) return "Archivo ROM";
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+  return `${(bytes / 1024 ** index).toFixed(index >= 3 ? 2 : 0)} ${units[index]}`;
+}
+
 export default function Downloads() {
   const [tools, setTools] = useState<DownloadTool[] | null>(null);
+  const [roms, setRoms] = useState<DownloadRom[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +49,8 @@ export default function Downloads() {
         setError(data.error || "No se pudieron cargar las descargas.");
         return;
       }
-      setTools(data.tools);
+      setTools(data.tools || []);
+      setRoms(data.roms || []);
     } catch {
       setError("No se pudieron cargar las descargas. Revisa tu conexión e intenta nuevamente.");
     } finally {
@@ -102,6 +122,40 @@ export default function Downloads() {
                 <Button asChild className="mt-5 w-full">
                   <a href={tool.downloadUrl} download>
                     <Download className="size-4" /> Descargar .exe
+                  </a>
+                </Button>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="mt-10">
+        <div>
+          <h3 className="font-display text-lg font-bold">ROMs de soporte</h3>
+          <p className="text-muted-foreground mt-1 text-sm">Firmware privado disponible únicamente mientras tu licencia esté activa.</p>
+        </div>
+
+        {!loading && !error && roms?.length === 0 && (
+          <div className="border-border/60 bg-card text-muted-foreground mt-4 rounded-xl border border-dashed p-5 text-sm">
+            Aún no hay ROMs publicadas para tu cuenta.
+          </div>
+        )}
+
+        {roms && roms.length > 0 && (
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {roms.map((rom) => (
+              <article key={rom.id} className="border-border/60 bg-card rounded-xl border p-5 transition-colors hover:border-primary/45">
+                <div className="flex items-start justify-between gap-3">
+                  <span className="text-primary bg-primary/10 inline-flex rounded-md px-2 py-1 text-[0.65rem] font-semibold tracking-wider uppercase">ROM</span>
+                  <span className="text-muted-foreground text-xs">{formatFileSize(rom.size_bytes)}</span>
+                </div>
+                <h4 className="mt-3 font-semibold">{rom.name}</h4>
+                <p className="text-muted-foreground mt-1 text-sm">{rom.device_model}{rom.version ? ` · ${rom.version}` : ""}{rom.android_version ? ` · Android ${rom.android_version}` : ""}</p>
+                {rom.description && <p className="text-muted-foreground mt-3 min-h-10 text-sm leading-relaxed">{rom.description}</p>}
+                <Button asChild className="mt-5 w-full">
+                  <a href={rom.downloadUrl} download>
+                    <HardDriveDownload className="size-4" /> Descargar ROM
                   </a>
                 </Button>
               </article>
