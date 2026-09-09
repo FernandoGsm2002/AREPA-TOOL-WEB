@@ -148,7 +148,7 @@ export default function Downloads() {
               <article key={rom.id} className="border-border/60 bg-card rounded-xl border p-5 transition-colors hover:border-primary/45">
                 <div className="flex items-start justify-between gap-3">
                   <span className="text-primary bg-primary/10 inline-flex rounded-md px-2 py-1 text-[0.65rem] font-semibold tracking-wider uppercase">ROM</span>
-                  <span className="text-muted-foreground text-xs">{formatFileSize(rom.size_bytes)}</span>
+                  <span className="text-muted-foreground text-xs">{formatFileSize(Number(rom.size_bytes))}</span>
                 </div>
                 <h4 className="mt-3 font-semibold">{rom.name}</h4>
                 <p className="text-muted-foreground mt-1 text-sm">{rom.device_model}{rom.version ? ` · ${rom.version}` : ""}{rom.android_version ? ` · Android ${rom.android_version}` : ""}</p>
