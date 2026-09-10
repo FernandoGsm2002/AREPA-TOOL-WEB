@@ -39,11 +39,12 @@ export default function UpdateLaunchModal() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="fixed right-5 bottom-5 z-40 inline-flex size-12 items-center justify-center rounded-full border border-amber-300/45 bg-[#12120d] text-amber-200 shadow-lg shadow-black/40 transition-colors hover:bg-amber-300/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-200"
+          className="fixed bottom-5 left-5 z-40 inline-flex h-12 items-center gap-2 rounded-full border border-amber-300/45 bg-[#12120d] px-4 text-sm font-semibold text-amber-100 shadow-lg shadow-black/40 transition-colors hover:bg-amber-300/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-200"
           aria-label="Abrir aviso de ROM Patch"
           title="Aviso de ROM Patch"
         >
-          <AlertTriangle className="size-5" />
+          <AlertTriangle className="size-5 shrink-0 text-amber-300" />
+          <span>Anuncio importante</span>
         </button>
       )}
     </>
