@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, Flame, HardDriveDownload, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
+import { Download, HardDriveDownload, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
 import { WindowsIcon } from "@/components/icons/BrandIcons";
 import { webApiFetch } from "@/lib/web-session";
 
@@ -132,10 +132,7 @@ export default function Downloads() {
 
       <section className="mt-10">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="flex size-8 items-center justify-center rounded-lg border border-amber-300/35 bg-amber-400/10 text-amber-300" aria-hidden="true"><Flame className="size-4" /></span>
-            <h3 className="font-display text-lg font-bold">ROMs de soporte</h3>
-          </div>
+          <h3 className="font-display text-lg font-bold">ROMs de soporte</h3>
           <p className="text-muted-foreground mt-1 text-sm">Firmware privado disponible únicamente mientras tu licencia esté activa.</p>
         </div>
 
@@ -148,19 +145,18 @@ export default function Downloads() {
         {roms && roms.length > 0 && (
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {roms.map((rom) => (
-              <article key={rom.id} className="group border-amber-300/20 bg-card relative overflow-hidden rounded-2xl border p-5 shadow-xl shadow-black/8 transition-all duration-200 hover:-translate-y-0.5 hover:border-amber-300/45 hover:shadow-[0_14px_28px_rgba(245,158,11,0.12)]">
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-amber-200/50" />
+              <article key={rom.id} className="group border-primary/25 bg-card relative overflow-hidden rounded-2xl border p-5 shadow-xl shadow-black/8 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/55 hover:shadow-primary/10">
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-primary/55" />
                 <div className="flex items-start justify-between gap-3">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/25 bg-amber-400/10 px-2.5 py-1 text-[0.65rem] font-semibold tracking-wider text-amber-200 uppercase"><Flame className="size-3" /> ROM Patch</span>
+                  <span className="text-primary inline-flex rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[0.65rem] font-semibold tracking-wider uppercase">ROM Patch</span>
                   <span className="text-muted-foreground rounded-full bg-muted/70 px-2.5 py-1 text-xs tabular-nums">{formatFileSize(Number(rom.size_bytes))}</span>
                 </div>
                 <h4 className="mt-3 font-semibold">{rom.name}</h4>
                 <p className="text-muted-foreground mt-1 text-sm">{rom.device_model}{rom.version ? ` · ${rom.version}` : ""}{rom.android_version ? ` · Android ${rom.android_version}` : ""}</p>
                 {rom.description && <p className="text-muted-foreground mt-3 min-h-10 text-sm leading-relaxed">{rom.description}</p>}
-                <Button asChild className="mt-5 w-full border border-amber-200/25 bg-amber-500 text-amber-950 shadow-[0_8px_20px_rgba(245,158,11,0.22)] transition-all hover:-translate-y-px hover:bg-amber-400 hover:shadow-[0_12px_24px_rgba(245,158,11,0.3)] focus-visible:ring-amber-300">
+                <Button asChild className="rom-download-button mt-5 w-full border border-primary/55 bg-primary text-primary-foreground focus-visible:ring-primary">
                   <a href={rom.downloadUrl} download>
-                    <Flame className="size-4" /> Descargar ROM
-                    <HardDriveDownload className="size-4 opacity-75" />
+                    <HardDriveDownload className="size-4" /> Descargar ROM
                   </a>
                 </Button>
               </article>
