@@ -1,25 +1,22 @@
 ---
-import { X } from "lucide-react";
+import { ArrowRight, Flame, LogIn } from "lucide-react";
 ---
 
-<div
-  id="announcement-banner"
-  class="border-primary/35 from-primary/14 via-card to-card flex items-center justify-center gap-3 border-y bg-linear-to-r px-4 py-2 text-center text-sm text-foreground sm:px-5"
->
-  <img src="/pngs/arepatool-v2.2.2-update.png" alt="ArepaTool v2.2.2" class="size-12 shrink-0 rounded-md border border-primary/30 object-cover object-top shadow-md shadow-primary/15 sm:size-14" loading="eager" decoding="async" />
-  <strong class="font-display tracking-tight">🚀 ArepaTool v2.2.2 ya está disponible</strong>
-  <button
-    id="announcement-close"
-    class="text-muted-foreground hover:text-foreground ml-1 rounded-md p-1 leading-none transition-colors hover:bg-white/8"
-    title="Cerrar"
-    aria-label="Cerrar"
-  >
-    <X className="size-4" />
-  </button>
-</div>
-
-<script>
-  document.getElementById("announcement-close")?.addEventListener("click", () => {
-    document.getElementById("announcement-banner")?.remove();
-  });
-</script>
+<aside class="border-b border-amber-300/25 bg-[#17120a] px-4 py-2.5 text-amber-50" aria-label="Novedad de ArepaTool">
+  <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-center text-sm sm:justify-between sm:text-left">
+    <div class="flex items-center justify-center gap-2.5 sm:justify-start">
+      <span class="flex size-7 shrink-0 items-center justify-center rounded-full border border-amber-300/35 bg-amber-400/10 text-amber-300 shadow-[0_0_18px_rgba(251,191,36,0.16)]" aria-hidden="true">
+        <Flame className="size-4" />
+      </span>
+      <p class="font-medium tracking-tight">
+        <span class="font-display mr-1.5 text-amber-300">🔥 NEW</span>
+        ROM Patch para <strong class="text-white">Infinix, Tecno e Itel</strong>
+      </p>
+    </div>
+    <a href="/login" class="group inline-flex items-center gap-1.5 font-semibold text-amber-200 underline decoration-amber-300/45 underline-offset-4 transition-colors hover:text-white hover:decoration-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-300">
+      <LogIn className="size-3.5" />
+      Inicia sesión y ve a Descargas
+      <ArrowRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+    </a>
+  </div>
+</aside>
