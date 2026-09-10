@@ -1,7 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Navbar from "@/components/site/Navbar.astro";
-import AnnouncementBanner from "@/components/site/AnnouncementBanner.astro";
 import Hero from "@/components/site/Hero.astro";
 import Changelog from "@/components/site/Changelog.astro";
 import Features from "@/components/site/Features.astro";
@@ -11,6 +10,7 @@ import Resellers from "@/components/site/Resellers.astro";
 import Footer from "@/components/site/Footer.astro";
 import WhatsAppModal from "@/components/site/WhatsAppModal";
 import InstallerAccessModal from "@/components/site/InstallerAccessModal";
+import UpdateLaunchModal from "@/components/site/UpdateLaunchModal";
 ---
 
 <Layout
@@ -19,7 +19,6 @@ import InstallerAccessModal from "@/components/site/InstallerAccessModal";
 >
   <Navbar />
   <main class="landing-shell">
-    <AnnouncementBanner />
     <Hero />
     <Changelog />
     <Features />
@@ -29,5 +28,6 @@ import InstallerAccessModal from "@/components/site/InstallerAccessModal";
   </main>
   <Footer />
   <WhatsAppModal client:load />
+  <UpdateLaunchModal client:load />
   <InstallerAccessModal client:load />
 </Layout>
