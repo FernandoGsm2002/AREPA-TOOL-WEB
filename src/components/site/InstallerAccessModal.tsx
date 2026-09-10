@@ -2,18 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Download, KeyRound, Loader2, MessageCircle, ShieldCheck, UsersRound } from "lucide-react";
+import { Download, Flame, Loader2, MessageCircle, ShieldCheck } from "lucide-react";
 
 const API_BASE = "https://api2.arepatool.com";
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADcAui1yybCKOv5s";
-const INSTALLER_URL = "https://www.mediafire.com/file/yxghcr2weeuzyug/ArepaToolV2_Setup_v2.2.1.rar/file";
 
 export default function InstallerAccessModal() {
   const [open, setOpen] = useState(false);
   const [identifier, setIdentifier] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [access, setAccess] = useState<{ groupLink: string } | null>(null);
+  const [access, setAccess] = useState<{ groupLink: string; downloadUrl: string } | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | undefined>(undefined);
@@ -73,8 +72,8 @@ export default function InstallerAccessModal() {
         body: JSON.stringify({ identifier: identifier.trim(), turnstileToken }),
       });
       const data = await res.json();
-      if (res.ok && data.groupLink) {
-        setAccess({ groupLink: data.groupLink });
+      if (res.ok && data.groupLink && data.downloadUrl) {
+        setAccess({ groupLink: data.groupLink, downloadUrl: data.downloadUrl });
       } else {
         setStatus(data.error || "No se pudo verificar el acceso. Intenta de nuevo.");
         setTurnstileToken(null);
@@ -91,27 +90,24 @@ export default function InstallerAccessModal() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader className="items-center text-center">
-          <div className="bg-primary/12 text-primary flex size-14 items-center justify-center rounded-full"><KeyRound className="size-7" /></div>
-          <DialogTitle className="text-xl">Descargar ArepaTool</DialogTitle>
+          <div className="bg-primary/12 text-primary flex size-14 items-center justify-center rounded-full"><Flame className="size-7" /></div>
+          <DialogTitle className="text-xl">Descargar ArepaTool v2.2.2</DialogTitle>
         </DialogHeader>
         {access ? (
           <div className="space-y-4 text-center">
-            <p className="text-muted-foreground text-sm leading-6">Tu licencia está activa. Únete al grupo oficial para recibir soporte y enterarte primero de las novedades exclusivas.</p>
-            <div className="border-primary/30 from-primary/12 to-background relative overflow-hidden rounded-2xl border bg-linear-to-br px-5 py-4 shadow-inner shadow-black/20">
-              <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-linear-to-r from-transparent via-primary/70 to-transparent"></div>
-              <span className="text-primary inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.12em] uppercase"><KeyRound className="size-3.5" />Clave de descompresión</span>
-              <p className="font-mono mt-2 text-3xl font-extrabold tracking-[0.22em]">6767</p>
+            <p className="text-muted-foreground text-sm leading-6">Acceso confirmado. Tu enlace de descarga directa es privado y vence en 10 minutos.</p>
+            <div className="border-primary/35 from-primary/16 via-primary/8 to-background relative overflow-hidden rounded-2xl border bg-linear-to-br px-5 py-4 shadow-lg shadow-primary/10">
+              <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-primary/80 to-transparent" />
+              <Flame className="text-primary mx-auto size-7 motion-safe:animate-pulse" />
+              <p className="mt-2 font-semibold">Nueva versión lista</p>
+              <p className="text-muted-foreground mt-1 text-xs">ArepaToolV2_Setup_v2.2.2.rar</p>
             </div>
-            <div className="border-border/60 bg-muted/35 flex items-start gap-3 rounded-xl border p-3.5 text-left">
-              <UsersRound className="text-primary mt-0.5 size-4 shrink-0" />
-              <p className="text-muted-foreground text-xs leading-5">El grupo oficial reúne las noticias exclusivas, soporte y avisos de nuevas funciones.</p>
-            </div>
-            <Button asChild className="w-full shadow-lg shadow-primary/20"><a href={access.groupLink} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" />Unirme al grupo oficial</a></Button>
-            <Button asChild variant="secondary" className="w-full"><a href={INSTALLER_URL} target="_blank" rel="noopener noreferrer"><Download className="size-4" />Descargar ArepaTool v2.2.1</a></Button>
+            <Button asChild className="w-full shadow-xl shadow-primary/30 motion-safe:animate-pulse"><a href={access.downloadUrl} target="_blank" rel="noopener noreferrer"><Download className="size-4" />Descargar ahora</a></Button>
+            <Button asChild variant="secondary" className="w-full"><a href={access.groupLink} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" />Unirme al grupo oficial</a></Button>
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-muted-foreground text-center text-sm leading-6">Verifica tu licencia para recibir la clave de descompresión y acceder al grupo oficial de descargas y noticias exclusivas.</p>
+            <p className="text-muted-foreground text-center text-sm leading-6">Verifica tu usuario o correo para recibir un enlace directo, privado y temporal de descarga.</p>
             <Input placeholder="Usuario o correo registrado" autoComplete="username" value={identifier} onChange={(e) => setIdentifier(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
             <div ref={turnstileRef} className="flex justify-center" />
             {status && <p className="text-destructive text-center text-sm">{status}</p>}

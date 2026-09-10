@@ -17,6 +17,23 @@ export type ChangelogLine =
   | { type: "blank" };
 
 export const changelog: ChangelogLine[] = [
+  { type: "h1", text: "# ArepaTool v2.2.2" },
+  { type: "comment", text: "## Infinix · Tecno · Itel — ROM Patch MTK" },
+  { type: "blank" },
+  { type: "h2", text: "### ROM Patch para dispositivos con security plugin" },
+  { type: "plus", text: "Base de datos de ROM Patch para Infinix y Tecno" },
+  { type: "plus", text: "Requiere bootloader desbloqueado antes de aplicar el método" },
+  { type: "blank" },
+  { type: "h2", text: "### Nuevo soporte MediaTek" },
+  { type: "plus", text: "Soporte MTK añadido para Infinix, Tecno e Itel" },
+  { type: "plus", text: "FRP Remove, PayJoy Bypass Erase y Factory Reset" },
+  { type: "blank" },
+  { type: "h2", text: "### Modelos iniciales" },
+  { type: "plus", text: "Infinix Smart 8 / Smart 8 Pro / Smart 9 HD / HOT 40i / HOT 50i" },
+  { type: "plus", text: "Infinix NOTE 50 / NOTE 50 Pro / NOTE 50X 5G / NOTE 50 Pro+ 5G" },
+  { type: "plus", text: "Tecno Camon 20 / Camon 20 Pro / Camon 30 5G / Camon 30S Pro" },
+  { type: "plus", text: "Tecno Spark 20C / Spark 20 Pro+ / Spark Go 2024 / Pova 6" },
+  { type: "blank" },
   { type: "h1", text: "# ArepaTool v2.2.1" },
   { type: "comment", text: "## Xiaomi · MDM · Correcciones de conectividad — 2026" },
   { type: "blank" },

@@ -70,7 +70,7 @@ export default function Downloads() {
       <section className="border-border/60 bg-card mt-6 rounded-xl border p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="font-semibold">ArepaToolV2 — v2.2.1</p>
+            <p className="font-semibold">ArepaToolV2 — v2.2.2</p>
             <p className="text-muted-foreground mt-1 text-sm">Windows · MDM Edition</p>
           </div>
           <span className="bg-primary/10 text-primary inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium">
