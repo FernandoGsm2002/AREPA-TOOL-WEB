@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AlertTriangle } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { AlertTriangle, X } from "lucide-react";
+import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export default function UpdateLaunchModal() {
   const [open, setOpen] = useState(true);
@@ -8,12 +8,21 @@ export default function UpdateLaunchModal() {
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="w-[min(96vw,62rem)] max-w-none gap-0 overflow-y-auto border-primary/45 bg-[#070d16] p-0 shadow-2xl shadow-black/80 sm:w-[min(94vw,62rem)]" aria-describedby={undefined}>
+        <DialogContent showCloseButton={false} className="w-[calc(100vw-1rem)] max-w-none max-h-[calc(100dvh-1rem)] gap-0 overflow-y-auto border-primary/45 bg-[#070d16] p-0 shadow-2xl shadow-black/80 sm:w-[min(94vw,62rem)] sm:max-h-[calc(100vh-2rem)]" aria-describedby={undefined}>
           <DialogTitle className="sr-only">ArepaTool v2.2.2 ya está disponible</DialogTitle>
+          <DialogClose asChild>
+            <button
+              type="button"
+              className="sticky top-2 z-20 ml-auto mr-2 mt-2 -mb-11 flex size-11 items-center justify-center rounded-full border border-white/20 bg-[#070d16]/95 text-white shadow-lg shadow-black/40 backdrop-blur transition-colors hover:bg-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              aria-label="Cerrar anuncio"
+            >
+              <X className="size-5" />
+            </button>
+          </DialogClose>
           <img
             src="/pngs/arepatool-v2.2.2-update.png"
             alt="ArepaTool v2.2.2: actualización con soporte Infinix, Tecno e Itel"
-            className="block max-h-[72vh] w-full object-contain"
+            className="block max-h-[44dvh] w-full object-contain sm:max-h-[72vh]"
           />
           <p className="border-primary/25 border-t bg-[#090f19] px-6 py-4 text-center font-display text-sm font-bold tracking-tight text-foreground sm:text-base">
             🚀 ArepaTool v2.2.2 ya está disponible
