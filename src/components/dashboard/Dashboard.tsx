@@ -50,8 +50,8 @@ export default function Dashboard() {
   return (
     <div className="bg-background flex min-h-screen">
       <WelcomeConfetti username={user.username} />
-      <aside className="border-border/70 bg-card/80 hidden w-72 shrink-0 flex-col border-r p-4 shadow-2xl shadow-black/10 sm:flex">
-        <a href="/" className="group mb-8 block overflow-hidden rounded-xl border border-white/8 bg-linear-to-br from-white/8 to-transparent px-3 py-1.5 transition-colors hover:border-primary/35">
+      <aside className="border-border/70 bg-sidebar/95 hidden w-72 shrink-0 flex-col border-r p-4 shadow-[12px_0_35px_rgba(0,0,0,0.12)] sm:flex">
+        <a href="/" className="group mb-8 block overflow-hidden rounded-xl border border-white/8 bg-linear-to-br from-white/8 to-transparent px-3 py-1.5 shadow-lg shadow-black/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-primary/10">
           <img src="/pngs/arepalanding.png" alt="ArepaTool" className="-my-7 h-28 w-full object-contain transition-transform duration-300 group-hover:scale-[1.03]" />
         </a>
 
@@ -62,13 +62,13 @@ export default function Dashboard() {
               key={id}
               type="button"
               onClick={() => setTab(id)}
-              className={`group flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium transition-all duration-200 ${
+              className={`group flex items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
                 tab === id
-                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  ? "border-primary/55 bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                  : "border-transparent text-muted-foreground hover:border-border/80 hover:bg-accent hover:text-foreground"
               }`}
             >
-              <span className={`flex size-8 shrink-0 items-center justify-center rounded-lg ${tab === id ? "bg-white/15" : "bg-muted/80 group-hover:bg-background"}`}>
+              <span className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${tab === id ? "bg-white/15" : "bg-muted/80 group-hover:bg-background"}`}>
                 <Icon className="size-4" />
               </span>
               <span className="flex-1">{label}</span>
@@ -76,14 +76,14 @@ export default function Dashboard() {
             </button>
           ))}
           {user.status === "admin" && (
-            <a href="/admin" className="text-muted-foreground hover:bg-accent hover:text-foreground group mt-3 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200">
+            <a href="/admin" className="text-muted-foreground hover:bg-accent hover:text-foreground group mt-3 flex items-center gap-3 rounded-xl border border-transparent px-3 py-3 text-sm font-medium transition-all duration-200 hover:border-border/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
               <span className="bg-muted/80 group-hover:bg-background flex size-8 shrink-0 items-center justify-center rounded-lg"><Settings2 className="size-4" /></span>
               Administración
             </a>
           )}
         </nav>
 
-        <div className="border-border/70 bg-muted/35 mt-5 rounded-xl border p-3">
+        <div className="border-border/70 bg-muted/35 mt-5 rounded-xl border p-3 shadow-lg shadow-black/5">
           <div className="mb-3 flex items-center gap-2.5">
             <span className="bg-primary/15 text-primary flex size-9 shrink-0 items-center justify-center rounded-full">
               <ShieldCheck className="size-[18px]" />
@@ -100,15 +100,15 @@ export default function Dashboard() {
         </div>
       </aside>
 
-      <div className="border-border/60 bg-card/95 fixed inset-x-0 bottom-0 z-40 flex gap-1 overflow-x-auto border-t p-2 backdrop-blur-xl sm:hidden">
+      <div className="border-border/60 bg-sidebar/95 fixed inset-x-0 bottom-0 z-40 flex gap-1 overflow-x-auto border-t p-2 shadow-[0_-10px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl sm:hidden">
         {tabs.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             type="button"
             onClick={() => setTab(id)}
             aria-label={label}
-            className={`flex shrink-0 flex-col items-center gap-0.5 rounded-md px-3 py-1.5 text-[0.65rem] ${
-              tab === id ? "text-primary" : "text-muted-foreground"
+            className={`flex shrink-0 flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-[0.65rem] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+              tab === id ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent hover:text-foreground"
             }`}
           >
             <Icon className="size-5" />
@@ -117,7 +117,7 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <main className="flex-1 overflow-y-auto p-6 pb-24 sm:p-10 sm:pb-10">
+      <main className="flex-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(64,112,255,0.07),transparent_36rem)] p-6 pb-24 sm:p-10 sm:pb-10">
         {tab === "dns" && <CreateDns />}
         {tab === "operations" && <MyOperations />}
         {tab === "account" && <AccountLicense />}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, HardDriveDownload, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
+import { Download, Flame, HardDriveDownload, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
 import { WindowsIcon } from "@/components/icons/BrandIcons";
 import { webApiFetch } from "@/lib/web-session";
 
@@ -67,7 +67,7 @@ export default function Downloads() {
       <h2 className="font-display text-2xl font-bold">Descargas</h2>
       <p className="text-muted-foreground mt-1 text-sm">Software y utilidades disponibles para tu licencia activa.</p>
 
-      <section className="border-border/60 bg-card mt-6 rounded-xl border p-6">
+      <section className="border-primary/25 bg-card mt-6 rounded-2xl border p-6 shadow-xl shadow-primary/5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="font-semibold">ArepaToolV2 — v2.2.2</p>
@@ -78,7 +78,7 @@ export default function Downloads() {
           </span>
         </div>
 
-        <Button className="mt-4" onClick={() => window.dispatchEvent(new CustomEvent("open-installer-access"))}>
+        <Button className="mt-5 shadow-lg shadow-primary/20" onClick={() => window.dispatchEvent(new CustomEvent("open-installer-access"))}>
           <WindowsIcon className="size-4" />
           Solicitar instalador
         </Button>
@@ -115,11 +115,11 @@ export default function Downloads() {
         {tools && (
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {tools.map((tool) => (
-              <article key={tool.key} className="border-border/60 bg-card rounded-xl border p-5 transition-colors hover:border-primary/45">
+              <article key={tool.key} className="border-border/60 bg-card rounded-xl border p-5 shadow-lg shadow-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/45 hover:shadow-primary/10">
                 <span className="text-primary bg-primary/10 inline-flex rounded-md px-2 py-1 text-[0.65rem] font-semibold tracking-wider uppercase">{tool.category}</span>
                 <h4 className="mt-3 font-semibold">{tool.title}</h4>
                 <p className="text-muted-foreground mt-1 min-h-10 text-sm leading-relaxed">{tool.description}</p>
-                <Button asChild className="mt-5 w-full">
+                <Button asChild className="mt-5 w-full shadow-lg shadow-primary/15">
                   <a href={tool.downloadUrl} download>
                     <Download className="size-4" /> Descargar .exe
                   </a>
@@ -132,7 +132,10 @@ export default function Downloads() {
 
       <section className="mt-10">
         <div>
-          <h3 className="font-display text-lg font-bold">ROMs de soporte</h3>
+          <div className="flex items-center gap-2">
+            <span className="flex size-8 items-center justify-center rounded-lg border border-amber-300/35 bg-amber-400/10 text-amber-300" aria-hidden="true"><Flame className="size-4" /></span>
+            <h3 className="font-display text-lg font-bold">ROMs de soporte</h3>
+          </div>
           <p className="text-muted-foreground mt-1 text-sm">Firmware privado disponible únicamente mientras tu licencia esté activa.</p>
         </div>
 
@@ -145,17 +148,19 @@ export default function Downloads() {
         {roms && roms.length > 0 && (
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {roms.map((rom) => (
-              <article key={rom.id} className="border-border/60 bg-card rounded-xl border p-5 transition-colors hover:border-primary/45">
+              <article key={rom.id} className="group border-amber-300/20 bg-card relative overflow-hidden rounded-2xl border p-5 shadow-xl shadow-black/8 transition-all duration-200 hover:-translate-y-0.5 hover:border-amber-300/45 hover:shadow-[0_14px_28px_rgba(245,158,11,0.12)]">
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-amber-200/50" />
                 <div className="flex items-start justify-between gap-3">
-                  <span className="text-primary bg-primary/10 inline-flex rounded-md px-2 py-1 text-[0.65rem] font-semibold tracking-wider uppercase">ROM</span>
-                  <span className="text-muted-foreground text-xs">{formatFileSize(Number(rom.size_bytes))}</span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/25 bg-amber-400/10 px-2.5 py-1 text-[0.65rem] font-semibold tracking-wider text-amber-200 uppercase"><Flame className="size-3" /> ROM Patch</span>
+                  <span className="text-muted-foreground rounded-full bg-muted/70 px-2.5 py-1 text-xs tabular-nums">{formatFileSize(Number(rom.size_bytes))}</span>
                 </div>
                 <h4 className="mt-3 font-semibold">{rom.name}</h4>
                 <p className="text-muted-foreground mt-1 text-sm">{rom.device_model}{rom.version ? ` · ${rom.version}` : ""}{rom.android_version ? ` · Android ${rom.android_version}` : ""}</p>
                 {rom.description && <p className="text-muted-foreground mt-3 min-h-10 text-sm leading-relaxed">{rom.description}</p>}
-                <Button asChild className="mt-5 w-full">
+                <Button asChild className="mt-5 w-full border border-amber-200/25 bg-amber-500 text-amber-950 shadow-[0_8px_20px_rgba(245,158,11,0.22)] transition-all hover:-translate-y-px hover:bg-amber-400 hover:shadow-[0_12px_24px_rgba(245,158,11,0.3)] focus-visible:ring-amber-300">
                   <a href={rom.downloadUrl} download>
-                    <HardDriveDownload className="size-4" /> Descargar ROM
+                    <Flame className="size-4" /> Descargar ROM
+                    <HardDriveDownload className="size-4 opacity-75" />
                   </a>
                 </Button>
               </article>
