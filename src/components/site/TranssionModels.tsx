@@ -53,34 +53,34 @@ export default function TranssionModels() {
   );
 
   return (
-    <section id="transsion" className="mt-16 border-t border-border/70 pt-10" aria-labelledby="transsion-title">
-      <div className="flex flex-wrap items-start justify-between gap-4">
+    <section id="transsion" className="transsion-stage" aria-labelledby="transsion-title">
+      <div className="transsion-header">
         <div>
-          <h2 id="transsion-title" className="font-display text-2xl font-bold tracking-tight text-white">Infinix · Tecno · Itel</h2>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">Modelos ROM Patch sincronizados desde el catálogo de soporte.</p>
+          <h2 id="transsion-title">Infinix · Tecno · Itel</h2>
+          <p>Modelos ROM Patch sincronizados desde el catálogo de soporte.</p>
         </div>
-        <span className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+        <span className="transsion-count">
           {loading ? "Sincronizando…" : `${roms.length} ROMs activas`}
         </span>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2" aria-label="Operaciones soportadas">
+      <div className="transsion-operations" aria-label="Operaciones soportadas">
         {operations.map(({ label, icon: Icon }) => (
-          <span key={label} className="inline-flex items-center gap-1.5 rounded-md border border-border/80 bg-card px-2.5 py-1.5 text-xs font-medium text-foreground">
-            <Icon className="size-3.5 text-primary" />
+          <span key={label}>
+            <Icon className="size-3.5" />
             {label}
           </span>
         ))}
       </div>
 
-      <div className="mt-7 flex flex-wrap gap-2" role="group" aria-label="Filtrar por marca">
+      <div className="transsion-filter" role="group" aria-label="Filtrar por marca">
         {brands.map((item) => (
           <button
             key={item}
             type="button"
             aria-pressed={brand === item}
             onClick={() => setBrand(item)}
-            className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${brand === item ? "border-primary/50 bg-primary text-primary-foreground" : "border-border/80 bg-card text-muted-foreground hover:border-primary/35 hover:text-foreground"}`}
+            className={brand === item ? "is-selected" : ""}
           >
             {item}
           </button>
@@ -88,31 +88,31 @@ export default function TranssionModels() {
       </div>
 
       {loading && (
-        <div className="mt-5 flex items-center gap-2 rounded-xl border border-border/70 bg-card px-4 py-5 text-sm text-muted-foreground">
-          <LoaderCircle className="size-4 animate-spin text-primary" /> Cargando modelos disponibles…
+        <div className="transsion-state">
+          <LoaderCircle className="size-4 animate-spin" /> Cargando modelos disponibles…
         </div>
       )}
 
       {failed && (
-        <p className="mt-5 rounded-xl border border-border/70 bg-card px-4 py-5 text-sm text-muted-foreground">No se pudo sincronizar el catálogo en este momento. Intenta actualizar la página.</p>
+        <p className="transsion-state">No se pudo sincronizar el catálogo en este momento. Intenta actualizar la página.</p>
       )}
 
       {!loading && !failed && visibleRoms.length === 0 && (
-        <p className="mt-5 rounded-xl border border-dashed border-border/70 px-4 py-5 text-sm text-muted-foreground">Aún no hay ROM Patch publicadas para {brand}.</p>
+        <p className="transsion-state is-empty">Aún no hay ROM Patch publicadas para {brand}.</p>
       )}
 
       {!loading && !failed && visibleRoms.length > 0 && (
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="transsion-grid">
           {visibleRoms.map((rom) => {
             const romBrand = brandFor(rom.name);
             return (
-              <article key={rom.id} className="border-border/70 bg-card rounded-xl border p-4 shadow-lg shadow-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/45 hover:shadow-primary/10">
-                <div className="flex items-start justify-between gap-3">
-                  <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[0.68rem] font-semibold tracking-wide text-primary uppercase">{romBrand}</span>
-                  {rom.androidVersion && <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium tabular-nums text-muted-foreground">Android {rom.androidVersion}</span>}
+              <article key={rom.id} className="transsion-card">
+                <div className="transsion-meta">
+                  <span className="transsion-brand">{romBrand}</span>
+                  {rom.androidVersion && <span>Android {rom.androidVersion}</span>}
                 </div>
-                <h3 className="mt-4 text-sm font-semibold text-white">{rom.name}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Modelo: {rom.deviceModel}</p>
+                <h3>{rom.name}</h3>
+                <p>Modelo: {rom.deviceModel}</p>
               </article>
             );
           })}

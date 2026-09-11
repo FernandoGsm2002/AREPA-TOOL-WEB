@@ -18,9 +18,9 @@ const totalModels = supportedCombinations.length + testModels.length;
   <main class="models-page">
     <div class="models-wrap">
       <header class="models-header"><h1>Modelos soportados</h1><span>{totalModels}</span></header>
-      <nav class="brand-nav" aria-label="Marcas de modelos soportados">
-        <a href="#motorola" class="brand-tab is-active" aria-current="page"><span class="brand-mark">M</span>Motorola</a>
-        <a href="#transsion" class="brand-tab"><span class="brand-mark transsion-mark">T</span>Infinix · Tecno · Itel</a>
+      <nav class="brand-nav" role="tablist" aria-label="Marcas de modelos soportados">
+        <button type="button" class="brand-tab is-active" role="tab" aria-selected="true" aria-controls="motorola" data-catalog-tab="motorola"><span class="brand-mark">M</span>Motorola</button>
+        <button type="button" class="brand-tab" role="tab" aria-selected="false" aria-controls="transsion-panel" data-catalog-tab="transsion-panel"><span class="brand-mark transsion-mark">T</span>Infinix · Tecno · Itel</button>
       </nav>
 
       <section id="motorola" class="brand-stage" aria-label="Modelos Motorola soportados">
@@ -62,7 +62,7 @@ const totalModels = supportedCombinations.length + testModels.length;
         </div>
         <div id="catalog-empty" class="catalog-empty" hidden>No encontramos un modelo compatible.</div>
       </section>
-      <TranssionModels client:load />
+      <div id="transsion-panel" role="tabpanel" hidden><TranssionModels client:load /></div>
     </div>
   </main>
   <Footer />
@@ -76,6 +76,8 @@ const totalModels = supportedCombinations.length + testModels.length;
   const groups = Array.from(document.querySelectorAll<HTMLElement>("[data-group]"));
   const status = document.querySelector<HTMLElement>("#catalog-status");
   const empty = document.querySelector<HTMLElement>("#catalog-empty");
+  const catalogTabs = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-catalog-tab]"));
+  const catalogPanels = Array.from(document.querySelectorAll<HTMLElement>("#motorola, #transsion-panel"));
   let selectedVersion = "all";
   const render = () => {
     const query = input?.value.trim().toLowerCase() ?? ""; let visible = 0;
@@ -86,6 +88,15 @@ const totalModels = supportedCombinations.length + testModels.length;
   };
   input?.addEventListener("input", render);
   filterButtons.forEach((button) => button.addEventListener("click", () => { selectedVersion = button.dataset.version ?? "all"; filterButtons.forEach((item) => item.classList.toggle("is-selected", item === button)); render(); }));
+  catalogTabs.forEach((tab) => tab.addEventListener("click", () => {
+    const selected = tab.dataset.catalogTab;
+    catalogPanels.forEach((panel) => { panel.hidden = panel.id !== selected; });
+    catalogTabs.forEach((item) => {
+      const active = item === tab;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-selected", String(active));
+    });
+  }));
 </script>
 
 <style>
@@ -95,7 +106,7 @@ const totalModels = supportedCombinations.length + testModels.length;
   .models-header h1 { color: oklch(0.97 0.004 255); font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; letter-spacing: -.055em; line-height: 1; }
   .models-header > span { color: oklch(0.62 0.025 255); font: 600 .75rem/1 var(--font-mono); }
   .brand-nav { display: flex; gap: .5rem; margin-top: 2rem; border-bottom: 1px solid oklch(0.76 0.02 255 / 15%); }
-  .brand-tab { display: inline-flex; align-items: center; gap: .6rem; border-bottom: 2px solid transparent; padding: .7rem .75rem .85rem; color: oklch(0.65 0.02 255); font-size: .88rem; font-weight: 650; }
+  .brand-tab { display: inline-flex; align-items: center; gap: .6rem; border: 0; border-bottom: 2px solid transparent; background: transparent; padding: .7rem .75rem .85rem; color: oklch(0.65 0.02 255); font-size: .88rem; font-weight: 650; }
   .brand-tab.is-active { border-color: #e60000; color: white; }
   .brand-mark { display: grid; width: 1.45rem; height: 1.45rem; place-items: center; border-radius: 999px; background: #e60000; color: white; font: 700 .67rem/1 var(--font-display); }
   .transsion-mark { background: oklch(0.62 0.14 235); }
@@ -126,6 +137,27 @@ const totalModels = supportedCombinations.length + testModels.length;
   .model-operations span { display: inline-flex; align-items: center; gap: .35rem; }
   .test-card { background: oklch(0.16 0.022 205 / .7); }
   .catalog-empty { margin-top: 2rem; border: 1px dashed oklch(0.76 0.02 255 / 18%); border-radius: .7rem; padding: 1.1rem; color: oklch(0.62 0.02 255); font-size: .88rem; }
+  :global(.transsion-stage) { padding-top: 1.35rem; }
+  :global(.transsion-header) { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  :global(.transsion-header h2) { color: oklch(0.97 0.004 255); font: 700 1.25rem/1.15 var(--font-display); letter-spacing: -.03em; }
+  :global(.transsion-header p) { margin-top: .45rem; color: oklch(0.62 0.02 255); font-size: .88rem; }
+  :global(.transsion-count) { color: oklch(0.49 0.018 255); font: 500 .7rem/1 var(--font-mono); }
+  :global(.transsion-operations) { display: flex; flex-wrap: wrap; gap: .35rem .75rem; margin-top: 1.4rem; color: oklch(0.62 0.035 205); font-size: .72rem; }
+  :global(.transsion-operations span) { display: inline-flex; align-items: center; gap: .35rem; }
+  :global(.transsion-filter) { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: 1.5rem; }
+  :global(.transsion-filter button) { display: inline-flex; align-items: center; border: 1px solid transparent; border-radius: .5rem; background: transparent; padding: .58rem .63rem; color: oklch(0.62 0.02 255); font-size: .76rem; transition: border-color .16s, background .16s, color .16s; }
+  :global(.transsion-filter button:hover) { border-color: oklch(0.76 0.02 255 / 19%); color: white; }
+  :global(.transsion-filter button.is-selected) { border-color: oklch(0.7 0.12 253 / .48); background: oklch(0.67 0.14 253 / .18); color: oklch(0.88 0.045 253); }
+  :global(.transsion-state) { display: flex; align-items: center; gap: .5rem; margin-top: 1.25rem; border: 1px solid oklch(0.76 0.02 255 / 13%); border-radius: .72rem; background: oklch(0.145 0.016 255 / .75); padding: 1rem; color: oklch(0.62 0.02 255); font-size: .88rem; }
+  :global(.transsion-state.is-empty) { border-style: dashed; }
+  :global(.transsion-grid) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin-top: 1.25rem; }
+  :global(.transsion-card) { min-height: 8.8rem; border: 1px solid oklch(0.76 0.02 255 / 13%); border-radius: .72rem; background: oklch(0.145 0.016 255 / .75); padding: .85rem; transition: border-color .16s, background .16s; }
+  :global(.transsion-card:hover) { border-color: oklch(0.71 0.1 205 / .52); background: oklch(0.175 0.021 255 / .9); }
+  :global(.transsion-meta) { display: flex; align-items: flex-start; justify-content: space-between; gap: .6rem; color: oklch(0.67 0.025 255); font: 600 .69rem/1 var(--font-mono); }
+  :global(.transsion-brand) { color: oklch(0.62 0.035 205); }
+  :global(.transsion-card h3) { margin-top: .75rem; color: white; font-size: .91rem; font-weight: 650; line-height: 1.32; }
+  :global(.transsion-card p) { margin-top: .45rem; color: oklch(0.62 0.02 255); font-size: .75rem; line-height: 1.4; }
   @media (max-width: 1023px) { .model-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media (max-width: 640px) { .models-wrap { width: min(100% - 1.5rem, 76rem); padding-top: 2rem; } .motorola-backdrop { top: -12rem; right: -25rem; opacity: .06; } .model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } .model-card { min-height: 9.5rem; padding: .75rem; } .model-card h2 { font-size: .84rem; } .android-filter { width: 100%; } .android-filter button { flex: 1 0 auto; justify-content: center; } }
+  @media (max-width: 1023px) { :global(.transsion-grid) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .models-wrap { width: min(100% - 1.5rem, 76rem); padding-top: 2rem; } .motorola-backdrop { top: -12rem; right: -25rem; opacity: .06; } .model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } .model-card { min-height: 9.5rem; padding: .75rem; } .model-card h2 { font-size: .84rem; } .android-filter { width: 100%; } .android-filter button { flex: 1 0 auto; justify-content: center; } :global(.transsion-grid) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } :global(.transsion-card) { min-height: 9.5rem; padding: .75rem; } :global(.transsion-card h3) { font-size: .84rem; } }
 </style>
