@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { HardDriveDownload, LoaderCircle, RotateCcw, ShieldCheck, WalletCards } from "lucide-react";
+import { HardDriveDownload, LoaderCircle, RotateCcw, Search, ShieldCheck, WalletCards } from "lucide-react";
 
 const API_BASE = "https://api2.arepatool.com";
 const brands = ["Todos", "Infinix", "Tecno", "Itel"] as const;
@@ -16,7 +16,26 @@ const operations = [
   { label: "FRP", icon: ShieldCheck },
   { label: "Factory Reset", icon: RotateCcw },
   { label: "PayJoy", icon: WalletCards },
-  { label: "ROM Patch · Security Plugin", icon: HardDriveDownload },
+];
+
+const metaModels: { brand: Exclude<Brand, "Todos">; name: string }[] = [
+  { brand: "Infinix", name: "Smart 8" },
+  { brand: "Infinix", name: "Smart 8 Pro" },
+  { brand: "Infinix", name: "Smart 9 HD" },
+  { brand: "Infinix", name: "HOT 40i" },
+  { brand: "Infinix", name: "HOT 50i" },
+  { brand: "Infinix", name: "NOTE 50" },
+  { brand: "Infinix", name: "NOTE 50 Pro" },
+  { brand: "Infinix", name: "NOTE 50X 5G" },
+  { brand: "Infinix", name: "NOTE 50 Pro+ 5G" },
+  { brand: "Tecno", name: "Camon 20" },
+  { brand: "Tecno", name: "Camon 20 Pro" },
+  { brand: "Tecno", name: "Camon 30 5G" },
+  { brand: "Tecno", name: "Camon 30S Pro" },
+  { brand: "Tecno", name: "Spark 20C" },
+  { brand: "Tecno", name: "Spark 20 Pro+" },
+  { brand: "Tecno", name: "Spark Go 2024" },
+  { brand: "Tecno", name: "Pova 6" },
 ];
 
 function brandFor(name: string): Exclude<Brand, "Todos"> {
@@ -29,6 +48,7 @@ function brandFor(name: string): Exclude<Brand, "Todos"> {
 export default function TranssionModels() {
   const [roms, setRoms] = useState<Rom[]>([]);
   const [brand, setBrand] = useState<Brand>("Todos");
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
 
@@ -47,20 +67,23 @@ export default function TranssionModels() {
     return () => controller.abort();
   }, []);
 
-  const visibleRoms = useMemo(
-    () => brand === "Todos" ? roms : roms.filter((rom) => brandFor(rom.name) === brand),
-    [brand, roms],
-  );
+  const normalizedSearch = search.trim().toLowerCase();
+  const visibleMetaModels = useMemo(() => metaModels.filter((model) =>
+    (brand === "Todos" || model.brand === brand) && (!normalizedSearch || `${model.brand} ${model.name}`.toLowerCase().includes(normalizedSearch)),
+  ), [brand, normalizedSearch]);
+  const visibleRoms = useMemo(() => roms.filter((rom) =>
+    (brand === "Todos" || brandFor(rom.name) === brand) && (!normalizedSearch || `${rom.name} ${rom.deviceModel} ${rom.androidVersion ?? ""}`.toLowerCase().includes(normalizedSearch)),
+  ), [brand, normalizedSearch, roms]);
 
   return (
     <section id="transsion" className="transsion-stage" aria-labelledby="transsion-title">
       <div className="transsion-header">
         <div>
           <h2 id="transsion-title">Infinix · Tecno · Itel</h2>
-          <p>Modelos ROM Patch sincronizados desde el catálogo de soporte.</p>
+          <p>Compatibilidad Meta y catálogo ROM Patch para dispositivos Transsion.</p>
         </div>
         <span className="transsion-count">
-          {loading ? "Sincronizando…" : `${roms.length} ROMs activas`}
+          {loading ? "Sincronizando ROM Patch…" : `${metaModels.length} Meta · ${roms.length} ROM Patch`}
         </span>
       </div>
 
@@ -73,7 +96,12 @@ export default function TranssionModels() {
         ))}
       </div>
 
-      <div className="transsion-filter" role="group" aria-label="Filtrar por marca">
+      <div className="transsion-controls">
+        <label className="transsion-search">
+          <Search className="size-4" />
+          <input value={search} onChange={(event) => setSearch(event.target.value)} type="search" placeholder="Buscar modelo, código o Android" aria-label="Buscar modelo Transsion" />
+        </label>
+        <div className="transsion-filter" role="group" aria-label="Filtrar por marca">
         {brands.map((item) => (
           <button
             key={item}
@@ -85,7 +113,27 @@ export default function TranssionModels() {
             {item}
           </button>
         ))}
+        </div>
       </div>
+
+      <div className="transsion-heading"><span>Operaciones vía Meta</span><i></i><small>{visibleMetaModels.length}</small></div>
+      <p className="transsion-caption">FRP, Factory Reset y PayJoy disponibles en modo Meta.</p>
+      {visibleMetaModels.length === 0 ? (
+        <p className="transsion-state is-empty">No encontramos modelos Meta con esa búsqueda.</p>
+      ) : (
+        <div className="transsion-grid">
+          {visibleMetaModels.map((model) => (
+            <article key={`${model.brand}-${model.name}`} className="transsion-card">
+              <div className="transsion-meta"><span className="transsion-brand">{model.brand}</span><span>META</span></div>
+              <h3>{model.name}</h3>
+              <p className="transsion-card-operations">FRP · Factory Reset · PayJoy</p>
+            </article>
+          ))}
+        </div>
+      )}
+
+      <div className="transsion-heading transsion-rom-heading"><span>ROM Patch vía ADB</span><i></i><small>{loading ? "…" : visibleRoms.length}</small></div>
+      <p className="transsion-caption">ROM Patch para Security Plugin. Requiere ADB autorizado y bootloader desbloqueado.</p>
 
       {loading && (
         <div className="transsion-state">
@@ -98,7 +146,7 @@ export default function TranssionModels() {
       )}
 
       {!loading && !failed && visibleRoms.length === 0 && (
-        <p className="transsion-state is-empty">Aún no hay ROM Patch publicadas para {brand}.</p>
+        <p className="transsion-state is-empty">Aún no hay ROM Patch publicadas con esa búsqueda.</p>
       )}
 
       {!loading && !failed && visibleRoms.length > 0 && (
@@ -108,11 +156,11 @@ export default function TranssionModels() {
             return (
               <article key={rom.id} className="transsion-card">
                 <div className="transsion-meta">
-                  <span className="transsion-brand">{romBrand}</span>
+                  <span className="transsion-brand">{romBrand} · ADB</span>
                   {rom.androidVersion && <span>Android {rom.androidVersion}</span>}
                 </div>
                 <h3>{rom.name}</h3>
-                <p>Modelo: {rom.deviceModel}</p>
+                <p>Modelo: {rom.deviceModel} · ROM Patch</p>
               </article>
             );
           })}
