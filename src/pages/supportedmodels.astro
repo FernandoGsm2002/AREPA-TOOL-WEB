@@ -6,19 +6,21 @@ import Layout from "@/layouts/Layout.astro";
 import Navbar from "@/components/site/Navbar.astro";
 import Footer from "@/components/site/Footer.astro";
 import WhatsAppModal from "@/components/site/WhatsAppModal";
+import TranssionModels from "@/components/site/TranssionModels";
 import { androidVersions, supportedCombinations, testModels } from "@/lib/supported-models";
 
 const byAndroid = androidVersions.map((android) => ({ android, models: supportedCombinations.filter((model) => model.android === android) }));
 const totalModels = supportedCombinations.length + testModels.length;
 ---
 
-<Layout title="Modelos soportados | ArepaTool" description="Modelos Motorola soportados por ArepaTool.">
+<Layout title="Modelos soportados | ArepaTool" description="Modelos Motorola, Infinix, Tecno e Itel soportados por ArepaTool.">
   <Navbar />
   <main class="models-page">
     <div class="models-wrap">
       <header class="models-header"><h1>Modelos soportados</h1><span>{totalModels}</span></header>
       <nav class="brand-nav" aria-label="Marcas de modelos soportados">
         <a href="#motorola" class="brand-tab is-active" aria-current="page"><span class="brand-mark">M</span>Motorola</a>
+        <a href="#transsion" class="brand-tab"><span class="brand-mark transsion-mark">T</span>Infinix · Tecno · Itel</a>
       </nav>
 
       <section id="motorola" class="brand-stage" aria-label="Modelos Motorola soportados">
@@ -60,6 +62,7 @@ const totalModels = supportedCombinations.length + testModels.length;
         </div>
         <div id="catalog-empty" class="catalog-empty" hidden>No encontramos un modelo compatible.</div>
       </section>
+      <TranssionModels client:load />
     </div>
   </main>
   <Footer />
@@ -95,6 +98,7 @@ const totalModels = supportedCombinations.length + testModels.length;
   .brand-tab { display: inline-flex; align-items: center; gap: .6rem; border-bottom: 2px solid transparent; padding: .7rem .75rem .85rem; color: oklch(0.65 0.02 255); font-size: .88rem; font-weight: 650; }
   .brand-tab.is-active { border-color: #e60000; color: white; }
   .brand-mark { display: grid; width: 1.45rem; height: 1.45rem; place-items: center; border-radius: 999px; background: #e60000; color: white; font: 700 .67rem/1 var(--font-display); }
+  .transsion-mark { background: oklch(0.62 0.14 235); }
   .brand-stage { position: relative; isolation: isolate; overflow: hidden; padding-top: 1.35rem; }
   .motorola-backdrop { position: absolute; z-index: -1; top: -13.5rem; right: -17rem; width: 49rem; max-width: none; opacity: .075; pointer-events: none; }
   .catalog-controls { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
