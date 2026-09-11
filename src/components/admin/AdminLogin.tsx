@@ -4,11 +4,14 @@ import { Input } from "@/components/ui/input";
 import { LockKeyhole, Loader2, ShieldCheck } from "lucide-react";
 import { saveSession } from "@/lib/web-session";
 import { webLoginStep1, webLoginStep2 } from "@/lib/web-login-api";
+import Turnstile from "@/components/auth/Turnstile";
 
 export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
   const [stage, setStage] = useState<"credentials" | "totp">("credentials");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
   const [code, setCode] = useState("");
   const [loginTicket, setLoginTicket] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -35,13 +38,19 @@ export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
       setError("Usuario y contraseña son obligatorios.");
       return;
     }
+    if (!turnstileToken) {
+      setError("Completa la verificación de seguridad para continuar.");
+      return;
+    }
     setLoading(true);
     setError(null);
 
     try {
-      const data = await webLoginStep1(username.trim(), password);
+      const data = await webLoginStep1(username.trim(), password, turnstileToken);
       if (!data.success) {
         setError(data.error || "No se pudo iniciar sesión.");
+        setTurnstileToken(null);
+        setTurnstileKey((key) => key + 1);
         setLoading(false);
         return;
       }
@@ -59,6 +68,8 @@ export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
       finish(data);
     } catch {
       setError("Error de red. Intenta de nuevo.");
+      setTurnstileToken(null);
+      setTurnstileKey((key) => key + 1);
       setLoading(false);
     }
   }
@@ -106,6 +117,7 @@ export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
               <label className="text-sm font-medium" htmlFor="admin-password">Contraseña</label>
               <Input id="admin-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
             </div>
+            <Turnstile key={turnstileKey} action="web_login" onToken={setTurnstileToken} />
             {error && <p className="text-destructive text-sm">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? <Loader2 className="size-4 animate-spin" /> : <LockKeyhole className="size-4" />}
