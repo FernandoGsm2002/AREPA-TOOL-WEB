@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { HardDriveDownload, LoaderCircle, RotateCcw, Search, ShieldCheck, WalletCards } from "lucide-react";
+import { BadgeCheck, Flame, HardDriveDownload, LoaderCircle, LockKeyhole, RotateCcw, Search, ShieldCheck, WalletCards } from "lucide-react";
 
 const API_BASE = "https://api2.arepatool.com";
 const brands = ["Todos", "Infinix", "Tecno", "Itel"] as const;
@@ -13,9 +13,10 @@ type Rom = {
 };
 
 const operations = [
-  { label: "FRP", icon: ShieldCheck },
-  { label: "Factory Reset", icon: RotateCcw },
-  { label: "PayJoy", icon: WalletCards },
+  { label: "FRP", icon: ShieldCheck, target: "transsion-meta-support" },
+  { label: "Factory Reset", icon: RotateCcw, target: "transsion-meta-support" },
+  { label: "PayJoy", icon: WalletCards, target: "transsion-meta-support" },
+  { label: "Security Plugin", icon: HardDriveDownload, target: "transsion-rom-support" },
 ];
 
 const metaModels: { brand: Exclude<Brand, "Todos">; name: string }[] = [
@@ -51,6 +52,7 @@ export default function TranssionModels() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
+  const [activeOperation, setActiveOperation] = useState("Security Plugin");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -75,12 +77,17 @@ export default function TranssionModels() {
     (brand === "Todos" || brandFor(rom.name) === brand) && (!normalizedSearch || `${rom.name} ${rom.deviceModel} ${rom.androidVersion ?? ""}`.toLowerCase().includes(normalizedSearch)),
   ), [brand, normalizedSearch, roms]);
 
+  function focusOperation(label: string, target: string) {
+    setActiveOperation(label);
+    document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <section id="transsion" className="transsion-stage" aria-labelledby="transsion-title">
       <div className="transsion-header">
         <div>
           <h2 id="transsion-title">Infinix · Tecno · Itel</h2>
-          <p>Compatibilidad Meta y catálogo ROM Patch para dispositivos Transsion.</p>
+          <p>ROM Patch Fastboot y operaciones Meta para dispositivos Transsion.</p>
         </div>
         <span className="transsion-count">
           {loading ? "Sincronizando ROM Patch…" : `${metaModels.length} Meta · ${roms.length} ROM Patch`}
@@ -88,11 +95,17 @@ export default function TranssionModels() {
       </div>
 
       <div className="transsion-operations" aria-label="Operaciones soportadas">
-        {operations.map(({ label, icon: Icon }) => (
-          <span key={label}>
+        {operations.map(({ label, icon: Icon, target }) => (
+          <button
+            key={label}
+            type="button"
+            className={activeOperation === label ? "is-selected" : ""}
+            aria-pressed={activeOperation === label}
+            onClick={() => focusOperation(label, target)}
+          >
             <Icon className="size-3.5" />
             {label}
-          </span>
+          </button>
         ))}
       </div>
 
@@ -116,24 +129,12 @@ export default function TranssionModels() {
         </div>
       </div>
 
-      <div className="transsion-heading"><span>Operaciones vía Meta</span><i></i><small>{visibleMetaModels.length}</small></div>
-      <p className="transsion-caption">FRP, Factory Reset y PayJoy disponibles en modo Meta.</p>
-      {visibleMetaModels.length === 0 ? (
-        <p className="transsion-state is-empty">No encontramos modelos Meta con esa búsqueda.</p>
-      ) : (
-        <div className="transsion-grid">
-          {visibleMetaModels.map((model) => (
-            <article key={`${model.brand}-${model.name}`} className="transsion-card">
-              <div className="transsion-meta"><span className="transsion-brand">{model.brand}</span><span>META</span></div>
-              <h3>{model.name}</h3>
-              <p className="transsion-card-operations">FRP · Factory Reset · PayJoy</p>
-            </article>
-          ))}
-        </div>
-      )}
-
-      <div className="transsion-heading transsion-rom-heading"><span>ROM Patch vía ADB</span><i></i><small>{loading ? "…" : visibleRoms.length}</small></div>
-      <p className="transsion-caption">ROM Patch para Security Plugin. Requiere ADB autorizado y bootloader desbloqueado.</p>
+      <section id="transsion-rom-support" className="transsion-rom-stage" aria-labelledby="transsion-rom-title">
+      <div className="transsion-heading transsion-rom-heading"><span id="transsion-rom-title"><Flame className="size-3.5" /> ROM Patch vía Fastboot <b>NEW</b></span><i></i><small>{loading ? "…" : visibleRoms.length}</small></div>
+      <div className="transsion-rom-notice">
+        <div><BadgeCheck className="size-4" /><strong>ROMs completamente testeadas</strong><span>Security Plugin · Fastboot</span></div>
+        <p><LockKeyhole className="size-4" /><b>Requisito obligatorio:</b> bootloader desbloqueado. ArepaTool no desbloquea el bootloader.</p>
+      </div>
 
       {loading && (
         <div className="transsion-state">
@@ -156,7 +157,7 @@ export default function TranssionModels() {
             return (
               <article key={rom.id} className="transsion-card">
                 <div className="transsion-meta">
-                  <span className="transsion-brand">{romBrand} · ADB</span>
+                  <span className="transsion-brand">{romBrand} · FASTBOOT</span>
                   {rom.androidVersion && <span>Android {rom.androidVersion}</span>}
                 </div>
                 <h3>{rom.name}</h3>
@@ -166,6 +167,25 @@ export default function TranssionModels() {
           })}
         </div>
       )}
+      </section>
+
+      <section id="transsion-meta-support" className="transsion-meta-stage" aria-labelledby="transsion-meta-title">
+      <div className="transsion-heading"><span id="transsion-meta-title">Operaciones vía Meta</span><i></i><small>{visibleMetaModels.length}</small></div>
+      <p className="transsion-caption">FRP, Factory Reset y PayJoy disponibles en modo Meta.</p>
+      {visibleMetaModels.length === 0 ? (
+        <p className="transsion-state is-empty">No encontramos modelos Meta con esa búsqueda.</p>
+      ) : (
+        <div className="transsion-grid">
+          {visibleMetaModels.map((model) => (
+            <article key={`${model.brand}-${model.name}`} className="transsion-card">
+              <div className="transsion-meta"><span className="transsion-brand">{model.brand}</span><span>META</span></div>
+              <h3>{model.name}</h3>
+              <p className="transsion-card-operations">FRP · Factory Reset · PayJoy</p>
+            </article>
+          ))}
+        </div>
+      )}
+      </section>
     </section>
   );
 }
