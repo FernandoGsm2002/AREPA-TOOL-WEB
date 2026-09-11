@@ -15,11 +15,15 @@ export interface WebLoginStep1Result {
 }
 
 /** Paso 1: usuario + contraseña. Puede devolver el token directo o pedir 2FA. */
-export async function webLoginStep1(username: string, password: string): Promise<WebLoginStep1Result> {
+export async function webLoginStep1(
+  username: string,
+  password: string,
+  turnstileToken: string,
+): Promise<WebLoginStep1Result> {
   const res = await fetch(`${API_BASE}/api/web-login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ username, password, turnstileToken }),
   });
   return res.json();
 }

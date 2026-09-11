@@ -4,10 +4,13 @@ import { Input } from "@/components/ui/input";
 import { LockKeyhole, Loader2 } from "lucide-react";
 import { saveSession } from "@/lib/web-session";
 import { webLoginStep1 } from "@/lib/web-login-api";
+import Turnstile from "@/components/auth/Turnstile";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -17,15 +20,21 @@ export default function LoginForm() {
       setError("Usuario y contraseña son obligatorios.");
       return;
     }
+    if (!turnstileToken) {
+      setError("Completa la verificación de seguridad para continuar.");
+      return;
+    }
 
     setLoading(true);
     setError(null);
 
     try {
-      const data = await webLoginStep1(username.trim(), password);
+      const data = await webLoginStep1(username.trim(), password, turnstileToken);
 
       if (!data.success) {
         setError(data.error || "No se pudo iniciar sesión.");
+        setTurnstileToken(null);
+        setTurnstileKey((key) => key + 1);
         setLoading(false);
         return;
       }
@@ -53,6 +62,8 @@ export default function LoginForm() {
       window.location.href = "/dashboard";
     } catch {
       setError("Error de red. Intenta de nuevo.");
+      setTurnstileToken(null);
+      setTurnstileKey((key) => key + 1);
       setLoading(false);
     }
   }
@@ -84,6 +95,8 @@ export default function LoginForm() {
           placeholder="••••••••"
         />
       </div>
+
+      <Turnstile key={turnstileKey} action="web_login" onToken={setTurnstileToken} />
 
       {error && <p className="text-destructive text-sm">{error}</p>}
 

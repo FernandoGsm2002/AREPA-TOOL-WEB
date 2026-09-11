@@ -13,7 +13,13 @@ declare global {
 
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADcAui1yybCKOv5s";
 
-export default function Turnstile({ onToken }: { onToken: (token: string | null) => void }) {
+export default function Turnstile({
+  onToken,
+  action,
+}: {
+  onToken: (token: string | null) => void;
+  action?: string;
+}) {
   const container = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | undefined>(undefined);
 
@@ -24,6 +30,7 @@ export default function Turnstile({ onToken }: { onToken: (token: string | null)
       if (!window.turnstile || !container.current || widgetId.current) return;
       widgetId.current = window.turnstile.render(container.current, {
         sitekey: TURNSTILE_SITE_KEY,
+        ...(action ? { action } : {}),
         callback: (token: string) => onToken(token),
         "expired-callback": () => onToken(null),
         "error-callback": () => onToken(null),
@@ -38,7 +45,7 @@ export default function Turnstile({ onToken }: { onToken: (token: string | null)
       if (interval) window.clearInterval(interval);
       if (widgetId.current && window.turnstile) window.turnstile.remove(widgetId.current);
     };
-  }, [onToken]);
+  }, [action, onToken]);
 
   return <div ref={container} className="flex justify-center" />;
 }
