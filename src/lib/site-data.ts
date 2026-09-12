@@ -350,4 +350,16 @@ export const resellers: Reseller[] = [
       { icon: "telegram", href: "https://t.me/mhunlock" },
     ],
   },
+  {
+    name: "HR Unlocker",
+    logo: "/pngs/hrunlocker.jpeg",
+    region: "Ecuador",
+    details: "WhatsApp: +593 97 941 6069",
+    role: "reseller",
+    links: [
+      { icon: "globe", href: "https://hrunlock.com/" },
+      { icon: "whatsapp", href: "https://wa.me/593979416069" },
+      { icon: "telegram", href: "https://t.me/HamilSotalin" },
+    ],
+  },
 ];
