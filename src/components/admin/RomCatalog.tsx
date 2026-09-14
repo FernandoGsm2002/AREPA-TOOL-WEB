@@ -9,7 +9,7 @@ type Rom = {
   rom_file: string; size_bytes: number | string; description?: string | null; is_active: boolean;
 };
 
-const supported = ".zip,.rar,.7z,.img,.tar,.tgz,.gz";
+const supported = ".arepa,.zip,.rar,.7z,.img,.tar,.tgz,.gz";
 const formatSize = (value: number | string) => {
   const bytes = Number(value);
   if (!Number.isFinite(bytes) || bytes <= 0) return "Tamaño no disponible";
