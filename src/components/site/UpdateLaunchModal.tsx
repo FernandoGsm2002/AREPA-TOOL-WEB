@@ -9,7 +9,7 @@ export default function UpdateLaunchModal() {
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent showCloseButton={false} className="w-[calc(100vw-1rem)] max-w-none max-h-[calc(100dvh-1rem)] gap-0 overflow-y-auto border-primary/45 bg-[#070d16] p-0 shadow-2xl shadow-black/80 sm:w-[min(94vw,62rem)] sm:max-h-[calc(100vh-2rem)]" aria-describedby={undefined}>
-          <DialogTitle className="sr-only">ArepaTool v2.2.2 ya está disponible</DialogTitle>
+          <DialogTitle className="sr-only">ArepaTool v2.2.3 ya está disponible</DialogTitle>
           <DialogClose asChild>
             <button
               type="button"
@@ -20,12 +20,12 @@ export default function UpdateLaunchModal() {
             </button>
           </DialogClose>
           <img
-            src="/pngs/arepatool-v2.2.2-update.png"
-            alt="ArepaTool v2.2.2: actualización con soporte Infinix, Tecno e Itel"
+            src="/pngs/arepatool-v2.2.3-update.png"
+            alt="ArepaTool v2.2.3: Infinix y Tecno bootloader, Samsung Exynos y Unisoc"
             className="block max-h-[44dvh] w-full object-contain sm:max-h-[72vh]"
           />
           <p className="border-primary/25 border-t bg-[#090f19] px-6 py-4 text-center font-display text-sm font-bold tracking-tight text-foreground sm:text-base">
-            🚀 ArepaTool v2.2.2 ya está disponible
+            🚀 ArepaTool v2.2.3 ya está disponible
           </p>
           <section className="border-amber-300/25 bg-amber-300/7 border-t px-5 py-5 text-left sm:px-7">
             <div className="flex items-start gap-3">
