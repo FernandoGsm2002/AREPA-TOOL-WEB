@@ -26,6 +26,8 @@ export default function RomCatalog() {
   const [message, setMessage] = useState(""); const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<{ completed: number; total: number } | null>(null);
   const uploadSessionId = useRef<string | null>(null);
+  const uploadAbortController = useRef<AbortController | null>(null);
+  const uploadCancelled = useRef(false);
   const call = async (path: string, body: Record<string, unknown> = {}) => {
     const data = await webApiFetch(`/api/admin/${path}`, body);
     if (!data?.success) throw new Error(data?.error || "No se pudo completar la operación.");
@@ -43,10 +45,31 @@ export default function RomCatalog() {
     setMessage(""); setEditing(rom); setFile(null); setName(rom.name); setDeviceModel(rom.device_model);
     setVersion(rom.version || ""); setAndroidVersion(rom.android_version || ""); setDescription(rom.description || ""); setIsActive(rom.is_active);
   };
+  const cancelActiveUpload = async () => {
+    const sessionId = uploadSessionId.current;
+    uploadAbortController.current?.abort();
+    uploadAbortController.current = null;
+    uploadSessionId.current = null;
+    if (!sessionId) return;
+    await call("roms/upload/cancel", { uploadSessionId: sessionId });
+  };
+  const cancelUpload = async () => {
+    if (!busy || editing) return;
+    uploadCancelled.current = true;
+    setMessage("Cancelando carga y eliminando las partes temporales…");
+    try {
+      await cancelActiveUpload();
+      setMessage("Carga cancelada. Las partes temporales fueron eliminadas.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "No se pudo cancelar la carga.");
+    } finally {
+      setProgress(null); setBusy(false);
+    }
+  };
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if ((!editing && !file) || !name.trim() || !deviceModel.trim() || busy) return;
-    setBusy(true); setMessage(""); setProgress(null);
+    setBusy(true); setMessage(""); setProgress(null); uploadCancelled.current = false;
     try {
       if (editing) {
         await call("roms/save", { id: editing.id, name: name.trim(), deviceModel: deviceModel.trim(), version: version.trim(), androidVersion: androidVersion.trim(), description: description.trim(), isActive });
@@ -55,6 +78,9 @@ export default function RomCatalog() {
       const selectedFile = file!;
       const start = await call("roms/upload/start", { filename: selectedFile.name, contentType: selectedFile.type || "application/octet-stream", sizeBytes: selectedFile.size });
       uploadSessionId.current = start.uploadSessionId;
+      const controller = new AbortController();
+      uploadAbortController.current = controller;
+      if (uploadCancelled.current) { await cancelActiveUpload(); return; }
       const total = start.partCount as number; const parts: { ETag: string; PartNumber: number }[] = new Array(total); let next = 0;
       setProgress({ completed: 0, total });
       const uploadWorker = async () => {
@@ -62,7 +88,7 @@ export default function RomCatalog() {
           const index = next++; const partNumber = index + 1;
           const signed = await call("roms/upload/part-url", { uploadSessionId: start.uploadSessionId, partNumber });
           const startByte = index * start.partSize;
-          const response = await fetch(signed.uploadUrl, { method: "PUT", body: selectedFile.slice(startByte, Math.min(startByte + start.partSize, selectedFile.size)) });
+          const response = await fetch(signed.uploadUrl, { method: "PUT", body: selectedFile.slice(startByte, Math.min(startByte + start.partSize, selectedFile.size)), signal: controller.signal });
           if (!response.ok) throw new Error(`R2 rechazó la parte ${partNumber} (${response.status}).`);
           const etag = response.headers.get("etag");
           if (!etag) throw new Error("R2 no expuso el ETag. Configura CORS para exponer el encabezado ETag.");
@@ -74,8 +100,11 @@ export default function RomCatalog() {
       await call("roms/upload/complete", { uploadSessionId: start.uploadSessionId, parts, name: name.trim(), deviceModel: deviceModel.trim(), version: version.trim(), androidVersion: androidVersion.trim(), description: description.trim(), isActive });
       uploadSessionId.current = null; setMessage("ROM cargada y publicada para usuarios con licencia."); resetForm(); await load();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo guardar la ROM.");
-    } finally { setBusy(false); setProgress(null); }
+      if (!uploadCancelled.current) {
+        try { await cancelActiveUpload(); } catch { /* El mensaje principal conserva el error original. */ }
+        setMessage(error instanceof Error ? error.message : "No se pudo guardar la ROM.");
+      }
+    } finally { uploadAbortController.current = null; if (!uploadCancelled.current) { setBusy(false); setProgress(null); } }
   }
   async function remove(rom: Rom) {
     if (busy || !window.confirm(`¿Eliminar “${rom.name}”? También se borrará el archivo de R2.`)) return;
@@ -95,7 +124,7 @@ export default function RomCatalog() {
       <label className="text-muted-foreground flex items-center gap-2 text-sm md:col-span-2"><input type="checkbox" checked={isActive} disabled={busy} onChange={(event) => setIsActive(event.target.checked)} />Visible para usuarios con licencia activa</label>
       {progress && <div className="border-primary/25 bg-primary/6 rounded-lg border px-3 py-3 text-sm md:col-span-2"><div className="flex justify-between gap-3"><span>Subiendo partes a R2…</span><b>{progress.completed}/{progress.total}</b></div><div className="bg-muted mt-2 h-2 overflow-hidden rounded-full"><div className="bg-primary h-full transition-[width]" style={{ width: `${Math.round((progress.completed / progress.total) * 100)}%` }} /></div></div>}
       {message && <p className="text-muted-foreground text-sm md:col-span-2">{message}</p>}
-      <div className="flex gap-2 md:col-span-2"><Button disabled={busy}>{busy ? <Loader2 className="animate-spin" /> : <HardDriveUpload />}{busy ? "Guardando…" : editing ? "Guardar detalles" : "Subir ROM a R2"}</Button>{editing && <Button type="button" variant="outline" disabled={busy} onClick={resetForm}>Cancelar</Button>}</div>
+      <div className="flex flex-wrap gap-2 md:col-span-2"><Button disabled={busy}>{busy ? <Loader2 className="animate-spin" /> : <HardDriveUpload />}{busy ? "Guardando…" : editing ? "Guardar detalles" : "Subir ROM a R2"}</Button>{editing && <Button type="button" variant="outline" disabled={busy} onClick={resetForm}>Cancelar</Button>}{busy && !editing && <Button type="button" variant="outline" onClick={() => void cancelUpload()}><X className="size-4" />Cancelar carga</Button>}</div>
     </form>
     <div className="mt-6 grid gap-3 sm:grid-cols-2">{roms.map((rom) => <article key={rom.id} className="border-border/60 bg-card rounded-xl border p-4"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><h3 className="font-semibold">{rom.name}</h3><p className="text-muted-foreground mt-1 text-xs">{rom.device_model}{rom.version ? ` · ${rom.version}` : ""}</p></div><span className="bg-primary/10 text-primary shrink-0 rounded-full px-2 py-1 text-xs">{formatSize(rom.size_bytes)}</span></div><p className="text-muted-foreground mt-3 truncate font-mono text-xs" title={rom.rom_file}>{rom.rom_file}</p><div className="mt-4 flex items-center justify-between gap-2"><span className="text-muted-foreground text-xs">{rom.is_active ? "Visible" : "Oculta"}</span><div className="flex gap-1"><Button size="sm" variant="outline" disabled={busy} onClick={() => startEdit(rom)}><Pencil className="size-3.5" />Editar</Button><Button size="sm" variant="ghost" className="text-destructive" disabled={busy} onClick={() => void remove(rom)} aria-label={`Eliminar ${rom.name}`}><Trash2 className="size-3.5" /></Button></div></div></article>)}{roms.length === 0 && <p className="text-muted-foreground col-span-full rounded-xl border border-dashed p-8 text-center text-sm">Aún no hay ROMs publicadas.</p>}</div>
   </section>;
