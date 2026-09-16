@@ -6,8 +6,11 @@ import { webApiFetch } from "@/lib/web-session";
 
 type Rom = {
   id: string; name: string; version?: string | null; device_model: string; android_version?: string | null;
+  slug?: string | null; key_hex?: string | null; profile_id?: string | null; profile_name?: string | null;
   rom_file: string; size_bytes: number | string; description?: string | null; is_active: boolean;
 };
+
+type FlashProfile = { id: string; name: string; manufacturer?: string | null };
 
 const supported = ".arepa,.zip,.rar,.7z,.img,.tar,.tgz,.gz";
 const formatSize = (value: number | string) => {
@@ -18,10 +21,12 @@ const formatSize = (value: number | string) => {
 
 export default function RomCatalog() {
   const [roms, setRoms] = useState<Rom[]>([]);
+  const [profiles, setProfiles] = useState<FlashProfile[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [editing, setEditing] = useState<Rom | null>(null);
   const [name, setName] = useState(""); const [deviceModel, setDeviceModel] = useState("");
   const [version, setVersion] = useState(""); const [androidVersion, setAndroidVersion] = useState("");
+  const [slug, setSlug] = useState(""); const [keyHex, setKeyHex] = useState(""); const [profileId, setProfileId] = useState("");
   const [description, setDescription] = useState(""); const [isActive, setIsActive] = useState(true);
   const [message, setMessage] = useState(""); const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<{ completed: number; total: number } | null>(null);
@@ -34,16 +39,23 @@ export default function RomCatalog() {
     return data;
   };
   const resetForm = () => {
-    setEditing(null); setFile(null); setName(""); setDeviceModel(""); setVersion(""); setAndroidVersion(""); setDescription(""); setIsActive(true); setProgress(null);
+    setEditing(null); setFile(null); setName(""); setDeviceModel(""); setVersion(""); setAndroidVersion(""); setSlug(""); setKeyHex(""); setProfileId(profiles[0]?.id || ""); setDescription(""); setIsActive(true); setProgress(null);
   };
   const load = async () => {
     try { const data = await call("roms/list"); setRoms(data.roms || []); }
     catch (error) { setMessage(error instanceof Error ? error.message : "No se pudo cargar el catálogo."); }
   };
-  useEffect(() => { void load(); }, []);
+  const loadProfiles = async () => {
+    try {
+      const data = await call("roms/profiles");
+      setProfiles(data.profiles || []);
+      setProfileId((current) => current || data.profiles?.[0]?.id || "");
+    } catch (error) { setMessage(error instanceof Error ? error.message : "No se pudieron cargar los perfiles de flash."); }
+  };
+  useEffect(() => { void Promise.all([load(), loadProfiles()]); }, []);
   const startEdit = (rom: Rom) => {
     setMessage(""); setEditing(rom); setFile(null); setName(rom.name); setDeviceModel(rom.device_model);
-    setVersion(rom.version || ""); setAndroidVersion(rom.android_version || ""); setDescription(rom.description || ""); setIsActive(rom.is_active);
+    setVersion(rom.version || ""); setAndroidVersion(rom.android_version || ""); setSlug(rom.slug || ""); setKeyHex(rom.key_hex || ""); setProfileId(rom.profile_id || ""); setDescription(rom.description || ""); setIsActive(rom.is_active);
   };
   const cancelActiveUpload = async () => {
     const sessionId = uploadSessionId.current;
@@ -69,10 +81,16 @@ export default function RomCatalog() {
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if ((!editing && !file) || !name.trim() || !deviceModel.trim() || busy) return;
+    const normalizedAndroid = androidVersion.trim().replace(/^android\s*/i, "");
+    const normalizedKey = keyHex.trim().toLowerCase();
+    if (!/^\d{1,2}$/.test(normalizedAndroid)) { setMessage("Android debe ser un número, por ejemplo 15 o 16."); return; }
+    if (!/^[0-9a-f]{64}$/.test(normalizedKey)) { setMessage("KEY_HEX debe tener exactamente 64 caracteres hexadecimales."); return; }
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug.trim().toLowerCase())) { setMessage("El slug solo puede usar minúsculas, números y guiones."); return; }
+    if (!profileId) { setMessage("Selecciona un perfil de flash."); return; }
     setBusy(true); setMessage(""); setProgress(null); uploadCancelled.current = false;
     try {
       if (editing) {
-        await call("roms/save", { id: editing.id, name: name.trim(), deviceModel: deviceModel.trim(), version: version.trim(), androidVersion: androidVersion.trim(), description: description.trim(), isActive });
+        await call("roms/save", { id: editing.id, name: name.trim(), deviceModel: deviceModel.trim(), version: version.trim(), androidVersion: normalizedAndroid, slug: slug.trim().toLowerCase(), keyHex: normalizedKey, profileId, description: description.trim(), isActive });
         setMessage("Detalles de la ROM actualizados."); resetForm(); await load(); return;
       }
       const selectedFile = file!;
@@ -97,7 +115,7 @@ export default function RomCatalog() {
         }
       };
       await Promise.all([uploadWorker(), uploadWorker(), uploadWorker()]);
-      await call("roms/upload/complete", { uploadSessionId: start.uploadSessionId, parts, name: name.trim(), deviceModel: deviceModel.trim(), version: version.trim(), androidVersion: androidVersion.trim(), description: description.trim(), isActive });
+      await call("roms/upload/complete", { uploadSessionId: start.uploadSessionId, parts, name: name.trim(), deviceModel: deviceModel.trim(), version: version.trim(), androidVersion: normalizedAndroid, slug: slug.trim().toLowerCase(), keyHex: normalizedKey, profileId, description: description.trim(), isActive });
       uploadSessionId.current = null; setMessage("ROM cargada y publicada para usuarios con licencia."); resetForm(); await load();
     } catch (error) {
       if (!uploadCancelled.current) {
@@ -120,12 +138,15 @@ export default function RomCatalog() {
       {!editing && <label className="grid gap-1.5 text-sm md:col-span-2">Archivo ROM<Input required type="file" accept={supported} disabled={busy} onChange={(event) => setFile(event.target.files?.[0] || null)} />{file && <span className="text-muted-foreground truncate font-mono text-xs">{file.name} · {formatSize(file.size)}</span>}</label>}
       <label className="grid gap-1.5 text-sm">Nombre visible<Input required value={name} disabled={busy} onChange={(event) => setName(event.target.value)} placeholder="ROM oficial" /></label><label className="grid gap-1.5 text-sm">Modelo<Input required value={deviceModel} disabled={busy} onChange={(event) => setDeviceModel(event.target.value)} placeholder="Xiaomi 14C" /></label>
       <label className="grid gap-1.5 text-sm">Versión<Input value={version} disabled={busy} onChange={(event) => setVersion(event.target.value)} placeholder="OS1.0.8" /></label><label className="grid gap-1.5 text-sm">Android<Input value={androidVersion} disabled={busy} onChange={(event) => setAndroidVersion(event.target.value)} placeholder="Android 14" /></label>
+      <label className="grid gap-1.5 text-sm md:col-span-2">Slug estable<Input required value={slug} disabled={busy} onChange={(event) => setSlug(event.target.value)} placeholder="infinix-note-50-pro-x6855-os16" autoCapitalize="none" spellCheck={false} /><span className="text-muted-foreground text-xs">Identificador permanente para el programa y las descargas; usa minúsculas y guiones.</span></label>
+      <label className="grid gap-1.5 text-sm">KEY_HEX (64 caracteres)<Input required value={keyHex} disabled={busy} onChange={(event) => setKeyHex(event.target.value)} placeholder="a1b2…" autoCapitalize="none" autoComplete="off" spellCheck={false} className="font-mono" /><span className="text-muted-foreground text-xs">Clave usada para descomprimir la ROM.</span></label>
+      <label className="grid gap-1.5 text-sm">Perfil de flash<select required value={profileId} disabled={busy || profiles.length === 0} onChange={(event) => setProfileId(event.target.value)} className="border-input bg-background focus-visible:ring-ring h-10 w-full rounded-md border px-3 text-sm outline-none focus-visible:ring-2">{profiles.length === 0 && <option value="">Cargando perfiles…</option>}{profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}{profile.manufacturer ? ` · ${profile.manufacturer}` : ""}</option>)}</select><span className="text-muted-foreground text-xs">Determina el flujo de instalación en ArepaTool.</span></label>
       <label className="grid gap-1.5 text-sm md:col-span-2">Descripción<Input value={description} disabled={busy} onChange={(event) => setDescription(event.target.value)} placeholder="Notas de compatibilidad o región" /></label>
       <label className="text-muted-foreground flex items-center gap-2 text-sm md:col-span-2"><input type="checkbox" checked={isActive} disabled={busy} onChange={(event) => setIsActive(event.target.checked)} />Visible para usuarios con licencia activa</label>
       {progress && <div className="border-primary/25 bg-primary/6 rounded-lg border px-3 py-3 text-sm md:col-span-2"><div className="flex justify-between gap-3"><span>Subiendo partes a R2…</span><b>{progress.completed}/{progress.total}</b></div><div className="bg-muted mt-2 h-2 overflow-hidden rounded-full"><div className="bg-primary h-full transition-[width]" style={{ width: `${Math.round((progress.completed / progress.total) * 100)}%` }} /></div></div>}
       {message && <p className="text-muted-foreground text-sm md:col-span-2">{message}</p>}
       <div className="flex flex-wrap gap-2 md:col-span-2"><Button disabled={busy}>{busy ? <Loader2 className="animate-spin" /> : <HardDriveUpload />}{busy ? "Guardando…" : editing ? "Guardar detalles" : "Subir ROM a R2"}</Button>{editing && <Button type="button" variant="outline" disabled={busy} onClick={resetForm}>Cancelar</Button>}{busy && !editing && <Button type="button" variant="outline" onClick={() => void cancelUpload()}><X className="size-4" />Cancelar carga</Button>}</div>
     </form>
-    <div className="mt-6 grid gap-3 sm:grid-cols-2">{roms.map((rom) => <article key={rom.id} className="border-border/60 bg-card rounded-xl border p-4"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><h3 className="font-semibold">{rom.name}</h3><p className="text-muted-foreground mt-1 text-xs">{rom.device_model}{rom.version ? ` · ${rom.version}` : ""}</p></div><span className="bg-primary/10 text-primary shrink-0 rounded-full px-2 py-1 text-xs">{formatSize(rom.size_bytes)}</span></div><p className="text-muted-foreground mt-3 truncate font-mono text-xs" title={rom.rom_file}>{rom.rom_file}</p><div className="mt-4 flex items-center justify-between gap-2"><span className="text-muted-foreground text-xs">{rom.is_active ? "Visible" : "Oculta"}</span><div className="flex gap-1"><Button size="sm" variant="outline" disabled={busy} onClick={() => startEdit(rom)}><Pencil className="size-3.5" />Editar</Button><Button size="sm" variant="ghost" className="text-destructive" disabled={busy} onClick={() => void remove(rom)} aria-label={`Eliminar ${rom.name}`}><Trash2 className="size-3.5" /></Button></div></div></article>)}{roms.length === 0 && <p className="text-muted-foreground col-span-full rounded-xl border border-dashed p-8 text-center text-sm">Aún no hay ROMs publicadas.</p>}</div>
+    <div className="mt-6 grid gap-3 sm:grid-cols-2">{roms.map((rom) => <article key={rom.id} className="border-border/60 bg-card rounded-xl border p-4"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><h3 className="font-semibold">{rom.name}</h3><p className="text-muted-foreground mt-1 text-xs">{rom.device_model}{rom.version ? ` · ${rom.version}` : ""}{rom.android_version ? ` · Android ${rom.android_version.replace(/^android\s*/i, "")}` : ""}</p></div><span className="bg-primary/10 text-primary shrink-0 rounded-full px-2 py-1 text-xs">{formatSize(rom.size_bytes)}</span></div><div className="text-muted-foreground mt-3 grid gap-1 text-xs"><p className="truncate font-mono" title={rom.slug || undefined}>slug: {rom.slug || "—"}</p><p>Perfil: {rom.profile_name || "Sin perfil"}</p><p className="truncate font-mono" title={rom.rom_file}>{rom.rom_file}</p></div><div className="mt-4 flex items-center justify-between gap-2"><span className="text-muted-foreground text-xs">{rom.is_active ? "Visible" : "Oculta"}</span><div className="flex gap-1"><Button size="sm" variant="outline" disabled={busy} onClick={() => startEdit(rom)}><Pencil className="size-3.5" />Editar</Button><Button size="sm" variant="ghost" className="text-destructive" disabled={busy} onClick={() => void remove(rom)} aria-label={`Eliminar ${rom.name}`}><Trash2 className="size-3.5" /></Button></div></div></article>)}{roms.length === 0 && <p className="text-muted-foreground col-span-full rounded-xl border border-dashed p-8 text-center text-sm">Aún no hay ROMs publicadas.</p>}</div>
   </section>;
 }
