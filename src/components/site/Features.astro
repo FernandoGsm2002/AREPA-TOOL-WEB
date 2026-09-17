@@ -9,21 +9,23 @@ const badgeClass: Record<FeatureBadge, string> = {
 };
 ---
 
-<section id="features" class="mx-auto max-w-7xl px-4 py-18 sm:px-6">
-  <h2 class="font-display text-center text-3xl font-bold tracking-[-0.04em] sm:text-5xl">
-    Características <span class="text-primary">Premium</span>
-  </h2>
+<section id="features" class="section-plain">
+  <div class="site-container features-layout">
+    <div class="section-heading">
+      <h2>Módulos pensados para el trabajo real.</h2>
+      <p>Accede a las operaciones que más usas desde una interfaz directa, con soporte por chipset y métodos actualizados para tu flujo de taller.</p>
+    </div>
 
-  <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  <div class="feature-grid">
     {
       features.map((feature) => (
         <div
           class:list={[
-            "border-border/60 bg-card overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/8",
-            feature.hero && "sm:col-span-2 lg:col-span-3",
+            "feature-panel overflow-hidden transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-primary/45",
+            feature.hero && "feature-panel--hero",
           ]}
         >
-          <div class="border-border/60 bg-muted/40 flex items-center gap-2 border-b px-3.5 py-2">
+          <div class="flex items-center gap-2 border-b border-white/10 px-3.5 py-2">
             <div class="flex gap-1.5">
               <span class="size-2.5 rounded-full bg-red-500/70" />
               <span class="size-2.5 rounded-full bg-amber-500/70" />
@@ -35,7 +37,7 @@ const badgeClass: Record<FeatureBadge, string> = {
             </Badge>
           </div>
 
-          <div class:list={["p-5", feature.hero && "sm:grid sm:grid-cols-2 sm:items-center sm:gap-8"]}>
+          <div class:list={["p-5", feature.hero && "feature-panel__body"]}>
             <img
               src={feature.image}
               alt={`${feature.title} ${feature.accent}`}
@@ -58,5 +60,6 @@ const badgeClass: Record<FeatureBadge, string> = {
         </div>
       ))
     }
+  </div>
   </div>
 </section>

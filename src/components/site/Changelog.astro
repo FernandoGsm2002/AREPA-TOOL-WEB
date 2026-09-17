@@ -12,20 +12,26 @@ const lineClass: Record<string, string> = {
 };
 ---
 
-<section class="mx-auto max-w-7xl px-4 py-18 sm:px-6">
-  <div class="border-border/60 bg-card overflow-hidden rounded-2xl border shadow-xl shadow-black/10">
-    <div class="border-border/60 bg-muted/40 flex items-center gap-2 border-b px-4 py-2.5">
+<section class="section-plain">
+  <div class="site-container changelog-layout">
+    <div class="section-heading">
+      <h2>Actualizaciones que llegan al taller.</h2>
+      <p>La cobertura se construye versión a versión. Revisa qué cambió, qué está probado y qué métodos siguen en beta antes de comenzar un trabajo.</p>
+      <div class="changelog-meta"><strong>● live changelog</strong><span>2026 · v2.2.3</span></div>
+    </div>
+    <div class="changelog-window">
+      <div class="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
       <div class="flex gap-1.5">
         <span class="size-3 rounded-full bg-red-500/70"></span>
         <span class="size-3 rounded-full bg-amber-500/70"></span>
         <span class="size-3 rounded-full bg-emerald-500/70"></span>
       </div>
       <span class="text-muted-foreground ml-2 font-mono text-xs">arepatool@v2.2.3 ~ CHANGELOG.md</span>
-      <span class="text-primary-foreground bg-primary ml-auto inline-flex items-center rounded-full px-2.5 py-1 text-[0.62rem] font-bold tracking-[0.1em] uppercase shadow-lg shadow-primary/20">
+      <span class="text-primary ml-auto text-[0.62rem] font-bold tracking-[0.1em] uppercase">
         Versión actual
       </span>
-    </div>
-    <pre class="max-h-[28rem] overflow-y-auto p-6 font-mono text-[0.82rem] leading-relaxed whitespace-pre-wrap">{
+      </div>
+      <pre class="max-h-[28rem] overflow-y-auto p-6 font-mono text-[0.82rem] leading-relaxed whitespace-pre-wrap">{
       changelog.map((line) =>
         line.type === "blank" ? (
           <span class={lineClass.blank} />
@@ -33,6 +39,7 @@ const lineClass: Record<string, string> = {
           <span class={`block ${lineClass[line.type]}`}>{line.text}</span>
         ),
       )
-    }</pre>
+      }</pre>
+    </div>
   </div>
 </section>

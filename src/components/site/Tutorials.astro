@@ -3,10 +3,12 @@ import { Play } from "lucide-react";
 import { tutorials } from "@/lib/site-data";
 ---
 
-<section id="tutorials" class="mx-auto max-w-7xl px-4 py-18 sm:px-6">
-  <h2 class="font-display text-center text-3xl font-bold tracking-[-0.04em] sm:text-5xl">
-    Tutoriales <span class="text-primary">Oficiales</span>
-  </h2>
+<section id="tutorials" class="section-plain">
+  <div class="site-container tutorials-layout">
+    <div class="section-heading">
+      <h2>Aprende el flujo antes de conectar.</h2>
+      <p>Tutoriales oficiales para preparar tu equipo, elegir el método y ejecutar cada operación con más contexto.</p>
+    </div>
 
   <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {
@@ -32,6 +34,7 @@ import { tutorials } from "@/lib/site-data";
         </button>
       ))
     }
+  </div>
   </div>
 </section>
 

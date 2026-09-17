@@ -6,11 +6,15 @@ const distributor = resellers.filter((reseller) => reseller.role === "distributo
 const resellerList = resellers.filter((reseller) => reseller.role === "reseller");
 ---
 
-<section id="resellers" class="mx-auto max-w-7xl px-4 py-18 pb-24 sm:px-6">
-  <h2 class="font-display text-center text-3xl font-bold tracking-[-0.04em] sm:text-5xl">Distribuidores y Resellers Oficiales</h2>
+<section id="resellers" class="section-plain">
+  <div class="site-container resellers-layout">
+  <div class="section-heading">
+    <h2>Habla con un distribuidor verificado.</h2>
+    <p>Compra tu licencia directamente con los contactos oficiales de ArepaTool. El panel no cobra ni procesa pagos.</p>
+  </div>
 
   <div class="mx-auto mt-10 max-w-sm">
-    <h3 class="font-display mb-4 text-center text-lg font-bold">Distribuidor Oficial</h3>
+    <h3 class="font-display mb-4 text-lg font-bold">Distribuidor oficial</h3>
     {
       distributor.map((reseller) => <ResellerCard reseller={reseller} verifiedLabel="Oficial" />)
     }
@@ -18,10 +22,11 @@ const resellerList = resellers.filter((reseller) => reseller.role === "reseller"
 
   <div class="border-border/60 my-12 border-t sm:my-16"></div>
 
-  <h3 class="font-display text-center text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Resellers Oficiales</h3>
-  <div class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  <h3 class="font-display text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Resellers oficiales</h3>
+  <div class="reseller-grid mt-7">
     {
       resellerList.map((reseller) => <ResellerCard reseller={reseller} verifiedLabel="Reseller" />)
     }
+  </div>
   </div>
 </section>

@@ -13,13 +13,12 @@ const iconFor = { whatsapp: WhatsAppIcon, telegram: TelegramIcon, globe: Globe }
 const labelFor = { whatsapp: "WhatsApp", telegram: "Telegram", globe: "Sitio web" };
 ---
 
-<article class="group border-border/70 from-card via-card to-primary/8 relative overflow-hidden rounded-3xl border bg-linear-to-br p-5 shadow-lg shadow-black/8 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-2xl hover:shadow-primary/12 sm:p-6">
-  <div class="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-primary/70 to-transparent opacity-50 transition-opacity duration-300 group-hover:opacity-100"></div>
+<article class="group border-border/70 relative overflow-hidden border p-5 transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-primary/60 sm:p-6">
   <span class="bg-primary/12 text-primary absolute top-4 right-4 inline-flex items-center gap-1 rounded-full border border-primary/20 px-2 py-1 text-[10px] font-bold tracking-[0.08em] uppercase" title={verifiedLabel}>
     <ShieldCheck className="size-3.5" />
     {verifiedLabel}
   </span>
-  <div class="border-primary/20 bg-background/45 mx-auto flex size-20 items-center justify-center overflow-hidden rounded-2xl border p-1.5 shadow-inner shadow-black/20">
+  <div class="border-primary/20 bg-background/45 mx-auto flex size-20 items-center justify-center overflow-hidden border p-1.5">
     <img src={reseller.logo} alt={reseller.name} class="size-full rounded-xl object-cover" loading="lazy" />
   </div>
   <h4 class="mt-4 pr-20 text-left text-base font-bold tracking-[-0.02em]">{reseller.name}</h4>
@@ -27,7 +26,7 @@ const labelFor = { whatsapp: "WhatsApp", telegram: "Telegram", globe: "Sitio web
     <MapPin className="text-primary size-3.5 shrink-0" />
     {reseller.region}
   </p>
-  <p class="border-border/55 bg-background/35 text-primary mt-4 truncate rounded-xl border px-3 py-2 text-left text-xs font-semibold" title={reseller.details}>{reseller.details}</p>
+  <p class="border-border/55 bg-background/35 text-primary mt-4 truncate border px-3 py-2 text-left text-xs font-semibold" title={reseller.details}>{reseller.details}</p>
   <div class="mt-4 flex items-center justify-between border-t border-border/55 pt-4">
     <span class="text-muted-foreground text-[10px] font-bold tracking-[0.1em] uppercase">Contactar</span>
     <div class="flex gap-2">
@@ -41,7 +40,7 @@ const labelFor = { whatsapp: "WhatsApp", telegram: "Telegram", globe: "Sitio web
               rel="noopener noreferrer"
               aria-label={`${labelFor[link.icon]} de ${reseller.name}`}
               title={`${labelFor[link.icon]} de ${reseller.name}`}
-              class="border-border/70 bg-background/50 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-primary/70 text-muted-foreground flex size-10 items-center justify-center rounded-xl border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+              class="border-border/70 bg-background/50 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-primary/70 text-muted-foreground flex size-10 items-center justify-center border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-card"
             >
               <LinkIcon className="size-4" />
             </a>
