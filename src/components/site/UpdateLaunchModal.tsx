@@ -9,7 +9,7 @@ export default function UpdateLaunchModal() {
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent showCloseButton={false} className="w-[calc(100vw-1rem)] max-w-none max-h-[calc(100dvh-1rem)] gap-0 overflow-y-auto rounded-[1.35rem] border-[#e98a24]/45 bg-[#fffaf2] p-0 text-[#34261c] shadow-2xl shadow-[#9b5c1c]/20 sm:w-[min(94vw,58rem)] sm:max-h-[calc(100vh-2rem)]" aria-describedby={undefined}>
-          <DialogTitle className="sr-only">ArepaTool v2.2.3 ya está disponible</DialogTitle>
+          <DialogTitle className="sr-only">ArepaTool v2.2.4 ya está disponible</DialogTitle>
           <DialogClose asChild>
             <button
               type="button"
@@ -22,14 +22,14 @@ export default function UpdateLaunchModal() {
           <div className="bg-[#fff0dc] px-2 pb-2 sm:px-3 sm:pb-3">
             <img
               src="/pngs/arepatool-v2.2.3-update.png"
-              alt="ArepaTool v2.2.3: Infinix y Tecno bootloader, Samsung Exynos y Unisoc"
+              alt="ArepaTool v2.2.4: Infinix y Tecno bootloader, Samsung Exynos y Unisoc"
               className="block max-h-[44dvh] w-full rounded-[1rem] border border-[#e98a24]/25 bg-[#121820] object-contain shadow-lg shadow-[#9b5c1c]/15 sm:max-h-[64vh]"
             />
           </div>
           <div className="flex items-center justify-center gap-2 border-t border-[#e98a24]/20 bg-[#fffaf2] px-6 py-4 text-center">
             <Rocket className="size-5 shrink-0 text-[#d66e12]" />
             <p className="font-display text-sm font-bold tracking-tight text-[#4b2b14] sm:text-base">
-              ArepaTool v2.2.3 ya está disponible
+              ArepaTool v2.2.4 ya está disponible
             </p>
           </div>
           <section className="border-t border-[#e98a24]/20 bg-[#fff0dc] px-5 py-5 text-left sm:px-7">
