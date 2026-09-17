@@ -1,50 +1,18 @@
 ---
-const plans = [
-  {
-    eyebrow: "ArepaTool Rent",
-    name: "Tool Rental",
-    duration: "12 hours",
-    price: "4",
-    description: "PayPal, crypto or reseller activation.",
-    featured: false,
-    accent: true,
-  },
-  {
-    eyebrow: "ArepaTool Pro",
-    name: "Professional",
-    duration: "3 months",
-    price: "12",
-    description: "Professional access for your workshop.",
-    featured: false,
-    accent: false,
-  },
-  {
-    eyebrow: "ArepaTool Pro",
-    name: "Professional",
-    duration: "6 months",
-    price: "19",
-    description: "The balanced plan for active unlockers.",
-    featured: true,
-    accent: false,
-  },
-  {
-    eyebrow: "ArepaTool Pro",
-    name: "Professional",
-    duration: "1 year",
-    price: "26",
-    description: "Full-year access for your daily work.",
-    featured: false,
-    accent: false,
-  },
-];
+import { getLocaleCopy, localeFromPath, localizedPath, type Locale } from "@/lib/i18n";
+
+interface Props { locale?: Locale; }
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const copy = getLocaleCopy(locale);
+const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: index === 2, accent: index === 0 }));
 ---
 
 <section id="pricing" class="pricing-section">
   <div class="site-container">
     <div class="pricing-heading">
-      <p class="pricing-kicker">ArepaTool licensing</p>
-      <h2>Choose your plan</h2>
-      <p>Our updates are always free. Access every release with an active ArepaTool license.</p>
+      <p class="pricing-kicker">{copy.pricing.kicker}</p>
+      <h2>{copy.pricing.title}</h2>
+      <p>{copy.pricing.description}</p>
     </div>
 
     <div class="pricing-grid">
@@ -54,18 +22,18 @@ const plans = [
           plan.accent && "pricing-plan--accent",
           plan.featured && "pricing-plan--featured",
         ]}>
-          {plan.featured && <span class="pricing-plan__badge">Popular</span>}
+          {plan.featured && <span class="pricing-plan__badge">{copy.pricing.popular}</span>}
           <p class="pricing-plan__eyebrow">{plan.eyebrow}</p>
           <h3>{plan.name}</h3>
           <p class="pricing-plan__duration">{plan.duration}</p>
           <div class="pricing-plan__price">
-            <span>Price /</span>
+            <span>{copy.pricing.price}</span>
             <strong>${plan.price}</strong>
           </div>
           <p class="pricing-plan__description">{plan.description}</p>
           <div class="pricing-plan__actions">
-            <a class="pricing-button pricing-button--primary" href="/resellers">Buy Now</a>
-            <a class="pricing-button pricing-button--secondary" href="/resellers">Buy From Resellers</a>
+            <a class="pricing-button pricing-button--primary" href={localizedPath(locale, "/resellers")}>{copy.pricing.buyNow}</a>
+            <a class="pricing-button pricing-button--secondary" href={localizedPath(locale, "/resellers")}>{copy.pricing.reseller}</a>
           </div>
         </article>
       ))}

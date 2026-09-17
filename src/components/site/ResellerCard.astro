@@ -2,15 +2,22 @@
 import { Globe, MapPin, ShieldCheck } from "lucide-react";
 import type { Reseller } from "@/lib/site-data";
 import { WhatsAppIcon, TelegramIcon } from "@/components/icons/BrandIcons";
+import { getLocaleCopy, type Locale } from "@/lib/i18n";
 
 interface Props {
   reseller: Reseller;
   verifiedLabel: string;
+  locale?: Locale;
 }
 
-const { reseller, verifiedLabel } = Astro.props;
+const { reseller, verifiedLabel, locale = "es" } = Astro.props;
+const copy = getLocaleCopy(locale);
 const iconFor = { whatsapp: WhatsAppIcon, telegram: TelegramIcon, globe: Globe };
-const labelFor = { whatsapp: "WhatsApp", telegram: "Telegram", globe: "Sitio web" };
+const labelFor = locale === "en"
+  ? { whatsapp: "WhatsApp", telegram: "Telegram", globe: "Website" }
+  : locale === "pt-br"
+    ? { whatsapp: "WhatsApp", telegram: "Telegram", globe: "Site" }
+    : { whatsapp: "WhatsApp", telegram: "Telegram", globe: "Sitio web" };
 ---
 
 <article class="group border-border/70 relative overflow-hidden border p-5 transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-primary/60 sm:p-6">
@@ -28,7 +35,7 @@ const labelFor = { whatsapp: "WhatsApp", telegram: "Telegram", globe: "Sitio web
   </p>
   <p class="border-border/55 bg-background/35 text-primary mt-4 truncate border px-3 py-2 text-left text-xs font-semibold" title={reseller.details}>{reseller.details}</p>
   <div class="mt-4 flex items-center justify-between border-t border-border/55 pt-4">
-    <span class="text-muted-foreground text-[10px] font-bold tracking-[0.1em] uppercase">Contactar</span>
+    <span class="text-muted-foreground text-[10px] font-bold tracking-[0.1em] uppercase">{copy.footer.contact}</span>
     <div class="flex gap-2">
       {
         reseller.links.map((link) => {

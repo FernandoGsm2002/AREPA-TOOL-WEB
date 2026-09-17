@@ -1,6 +1,11 @@
 ---
 import { resellers } from "@/lib/site-data";
 import ResellerCard from "@/components/site/ResellerCard.astro";
+import { getLocaleCopy, localeFromPath, type Locale } from "@/lib/i18n";
+
+interface Props { locale?: Locale; }
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const copy = getLocaleCopy(locale);
 
 const distributor = resellers.filter((reseller) => reseller.role === "distributor");
 const resellerList = resellers.filter((reseller) => reseller.role === "reseller");
@@ -9,23 +14,23 @@ const resellerList = resellers.filter((reseller) => reseller.role === "reseller"
 <section id="resellers" class="section-plain">
   <div class="site-container resellers-layout">
   <div class="section-heading">
-    <h2>Habla con un distribuidor verificado.</h2>
-    <p>Compra tu licencia con un vendedor autorizado. No caigas en estafas.</p>
+    <h2>{copy.resellers.title}</h2>
+    <p>{copy.resellers.description}</p>
   </div>
 
   <div class="mx-auto mt-10 max-w-sm">
-    <h3 class="font-display mb-4 text-lg font-bold">Distribuidor oficial</h3>
+    <h3 class="font-display mb-4 text-lg font-bold">{copy.resellers.official}</h3>
     {
-      distributor.map((reseller) => <ResellerCard reseller={reseller} verifiedLabel="Oficial" />)
+      distributor.map((reseller) => <ResellerCard reseller={reseller} verifiedLabel={copy.resellers.officialLabel} locale={locale} />)
     }
   </div>
 
   <div class="border-border/60 my-12 border-t sm:my-16"></div>
 
-  <h3 class="font-display text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Resellers oficiales</h3>
+  <h3 class="font-display text-2xl font-bold tracking-[-0.03em] sm:text-3xl">{copy.resellers.resellers}</h3>
   <div class="reseller-grid mt-7">
     {
-      resellerList.map((reseller) => <ResellerCard reseller={reseller} verifiedLabel="Reseller" />)
+      resellerList.map((reseller) => <ResellerCard reseller={reseller} verifiedLabel={copy.resellers.resellerLabel} locale={locale} />)
     }
   </div>
   </div>

@@ -1,0 +1,35 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Navbar from "@/components/site/Navbar.astro";
+import AnnouncementBanner from "@/components/site/AnnouncementBanner.astro";
+import BrandMarquee from "@/components/site/BrandMarquee.astro";
+import Hero from "@/components/site/Hero.astro";
+import ReleaseConsole from "@/components/site/ReleaseConsole.astro";
+import Pricing from "@/components/site/Pricing.astro";
+import Footer from "@/components/site/Footer.astro";
+import WhatsAppModal from "@/components/site/WhatsAppModal";
+import InstallerAccessModal from "@/components/site/InstallerAccessModal";
+import UpdateLaunchModal from "@/components/site/UpdateLaunchModal";
+import type { Locale } from "@/lib/i18n";
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const metadata = {
+  es: { title: "ArepaTool v2.2.4 - Professional Unlock & MDM Tool", description: "ArepaTool v2.2.4 añade soporte TECNO, Infinix e itel, bases de datos ROM Patch, FRP Samsung Exynos y soporte Unisoc ampliado." },
+  en: { title: "ArepaTool v2.2.4 - Professional Unlock & MDM Tool", description: "ArepaTool v2.2.4 adds TECNO, Infinix and itel support, ROM Patch databases, Samsung Exynos FRP and expanded Unisoc support." },
+  "pt-br": { title: "ArepaTool v2.2.4 - Ferramenta profissional de Unlock e MDM", description: "A ArepaTool v2.2.4 adiciona suporte TECNO, Infinix e itel, bancos de ROM Patch, FRP Samsung Exynos e suporte ampliado a Unisoc." },
+}[locale];
+---
+
+<Layout title={metadata.title} description={metadata.description} locale={locale}>
+  <Navbar locale={locale} />
+  <AnnouncementBanner locale={locale} />
+  <main class="landing-shell"><Hero locale={locale} /></main>
+  <BrandMarquee />
+  <ReleaseConsole locale={locale} />
+  <Pricing locale={locale} />
+  <Footer locale={locale} />
+  <WhatsAppModal client:load locale={locale} />
+  <UpdateLaunchModal client:load locale={locale} />
+  <InstallerAccessModal client:load locale={locale} />
+</Layout>

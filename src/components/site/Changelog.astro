@@ -1,5 +1,10 @@
 ---
 import { changelog } from "@/lib/site-data";
+import { getLocaleCopy, localeFromPath, type Locale } from "@/lib/i18n";
+
+interface Props { locale?: Locale; }
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const copy = getLocaleCopy(locale);
 
 const lineClass: Record<string, string> = {
   h1: "text-[#a84e0d] font-bold",
@@ -15,8 +20,8 @@ const lineClass: Record<string, string> = {
 <section class="section-plain">
   <div class="site-container changelog-layout">
     <div class="section-heading">
-      <h2>Changelog of changes in ArepaTool.</h2>
-      <p>Mantente al tanto de las actualizaciones; solemos publicar novedades con frecuencia.</p>
+      <h2>{copy.updates.title}</h2>
+      <p>{copy.updates.description}</p>
       <div class="changelog-meta"><strong>● live changelog</strong><span>2026 · v2.2.4</span></div>
     </div>
     <div class="changelog-window">
@@ -28,7 +33,7 @@ const lineClass: Record<string, string> = {
       </div>
       <span class="ml-2 font-mono text-xs text-[#68737b]">arepatool@v2.2.4 ~ CHANGELOG.md</span>
       <span class="ml-auto text-[0.62rem] font-bold tracking-[0.1em] text-[#a27a23] uppercase">
-        Versión actual
+        {copy.updates.current}
       </span>
       </div>
       <pre class="max-h-[28rem] overflow-y-auto bg-[#f8f7f1] p-6 font-mono text-[0.82rem] leading-relaxed text-[#34404a] whitespace-pre-wrap">{

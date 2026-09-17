@@ -1,0 +1,137 @@
+---
+import { KeyRound, RotateCcw, Search } from "lucide-react";
+import Layout from "@/layouts/Layout.astro";
+import Navbar from "@/components/site/Navbar.astro";
+import Footer from "@/components/site/Footer.astro";
+import WhatsAppModal from "@/components/site/WhatsAppModal";
+import TranssionModels from "@/components/site/TranssionModels";
+import { androidVersions, supportedCombinations, testModels } from "@/lib/supported-models";
+import { getLocaleCopy, localeFromPath, type Locale } from "@/lib/i18n";
+
+interface Props { locale: Locale; }
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const copy = getLocaleCopy(locale);
+const byAndroid = androidVersions.map((android) => ({ android, models: supportedCombinations.filter((model) => model.android === android) }));
+const totalModels = supportedCombinations.length + testModels.length;
+---
+
+<Layout title={`${copy.models.title} | ArepaTool`} description={copy.models.motorola}>
+  <Navbar locale={locale} />
+  <main class="localized-models-page">
+    <div class="localized-models-wrap">
+      <header class="localized-models-header"><h1>{copy.models.title}</h1><span>{totalModels}</span></header>
+      <nav class="localized-brand-nav" role="tablist" aria-label={copy.models.ariaBrands}>
+        <button type="button" class="localized-brand-tab is-active" role="tab" aria-selected="true" aria-controls="localized-motorola" data-localized-tab="localized-motorola"><span class="localized-brand-mark">M</span>Motorola</button>
+        <button type="button" class="localized-brand-tab" role="tab" aria-selected="false" aria-controls="localized-transsion" data-localized-tab="localized-transsion"><span class="localized-brand-mark localized-brand-mark--transsion">T</span>{copy.models.transsion}</button>
+      </nav>
+
+      <section id="localized-motorola" class="localized-model-stage" aria-label={copy.models.motorola}>
+        <div class="localized-model-controls" role="search">
+          <label class="localized-search"><Search className="size-4" /><input id="localized-model-search" type="search" placeholder={copy.models.search} autocomplete="off" /></label>
+          <div class="localized-android-filter" aria-label={copy.models.androidFilter}>
+            <button type="button" class="is-selected" data-localized-version="all">{copy.models.all}</button>
+            {androidVersions.map((android) => <button type="button" data-localized-version={android}>Android {android}</button>)}
+          </div>
+        </div>
+        <p id="localized-catalog-status" class="localized-catalog-status" aria-live="polite">{totalModels} {copy.models.visibleMany}</p>
+        <div class="localized-android-groups">
+          {byAndroid.map(({ android, models }) => (
+            <section class="localized-android-group" data-localized-group={android}>
+              <div class="localized-android-heading"><span>Android {android}</span><i></i><small>{models.length}</small></div>
+              <div class="localized-model-grid">
+                {models.map((model) => (
+                  <article class="localized-model-card" data-localized-model-card data-localized-android={android} data-localized-search={`${model.sku} ${model.name}`.toLowerCase()}>
+                    <span class="localized-model-sku">{model.sku}</span><h2>{model.name}</h2>
+                    <div class="localized-model-operations"><span><KeyRound className="size-3.5" /> {copy.models.operations.unlock}</span><span><RotateCcw className="size-3.5" /> {copy.models.operations.frp}</span></div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))}
+          <section class="localized-android-group" data-localized-group="test">
+            <div class="localized-android-heading"><span>{copy.models.test}</span><i></i><small>{testModels.length}</small></div>
+            <div class="localized-model-grid">
+              {testModels.map((model) => (
+                <article class="localized-model-card localized-test-card" data-localized-model-card data-localized-android="test" data-localized-search={`${model.sku} ${model.name} ${model.codename}`.toLowerCase()}>
+                  <span class="localized-model-sku">{model.sku}</span><h2>{model.name}</h2>
+                  <div class="localized-model-operations"><span><KeyRound className="size-3.5" /> {copy.models.operations.tempUnlock}</span><span><RotateCcw className="size-3.5" /> {copy.models.operations.frp}</span></div>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+        <p id="localized-catalog-empty" class="localized-catalog-empty" hidden>{copy.models.empty}</p>
+      </section>
+      <div id="localized-transsion" role="tabpanel" hidden><TranssionModels client:load locale={locale} /></div>
+    </div>
+  </main>
+  <Footer locale={locale} />
+  <WhatsAppModal client:load locale={locale} />
+</Layout>
+
+<script define:vars={{ one: copy.models.visibleOne, many: copy.models.visibleMany }}>
+  const input = document.querySelector<HTMLInputElement>("#localized-model-search");
+  const filters = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-localized-version]"));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-localized-model-card]"));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>("[data-localized-group]"));
+  const status = document.querySelector<HTMLElement>("#localized-catalog-status");
+  const empty = document.querySelector<HTMLElement>("#localized-catalog-empty");
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-localized-tab]"));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>("#localized-motorola, #localized-transsion"));
+  let selectedVersion = "all";
+  const render = () => {
+    const query = input?.value.trim().toLowerCase() ?? "";
+    let visible = 0;
+    cards.forEach((card) => {
+      const show = (selectedVersion === "all" || card.dataset.localizedAndroid === selectedVersion) && (!query || (card.dataset.localizedSearch ?? "").includes(query));
+      card.hidden = !show;
+      if (show) visible += 1;
+    });
+    groups.forEach((group) => { group.hidden = !group.querySelector("[data-localized-model-card]:not([hidden])"); });
+    if (status) status.textContent = `${visible} ${visible === 1 ? one : many}`;
+    if (empty) empty.hidden = visible !== 0;
+  };
+  input?.addEventListener("input", render);
+  filters.forEach((button) => button.addEventListener("click", () => { selectedVersion = button.dataset.localizedVersion ?? "all"; filters.forEach((item) => item.classList.toggle("is-selected", item === button)); render(); }));
+  tabs.forEach((tab) => tab.addEventListener("click", () => { const selected = tab.dataset.localizedTab; panels.forEach((panel) => { panel.hidden = panel.id !== selected; }); tabs.forEach((item) => { const active = item === tab; item.classList.toggle("is-active", active); item.setAttribute("aria-selected", String(active)); }); }));
+</script>
+
+<style>
+  .localized-models-page { min-height: calc(100vh - 5.5rem); background: #f6f7f3; color: #17222d; }
+  .localized-models-wrap { width: min(100% - 2rem, 76rem); margin: 0 auto; padding: 2.8rem 0 5rem; }
+  .localized-models-header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+  .localized-models-header h1 { color: #17222d; font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; letter-spacing: -.055em; line-height: 1; }
+  .localized-models-header span { color: #6c7881; font: 600 .75rem/1 var(--font-mono); }
+  .localized-brand-nav { display: flex; gap: .5rem; margin-top: 2rem; border-bottom: 1px solid rgb(23 34 45 / 15%); }
+  .localized-brand-tab { display: inline-flex; align-items: center; gap: .6rem; border: 0; border-bottom: 2px solid transparent; background: transparent; padding: .7rem .75rem .85rem; color: #66737d; font-size: .88rem; font-weight: 650; }
+  .localized-brand-tab.is-active { border-color: #d89b24; color: #17222d; }
+  .localized-brand-mark { display: grid; width: 1.45rem; height: 1.45rem; place-items: center; border-radius: 999px; background: #d89b24; color: white; font: 700 .67rem/1 var(--font-display); }
+  .localized-brand-mark--transsion { background: #5d8f99; }
+  .localized-model-stage { padding-top: 1.35rem; }
+  .localized-model-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+  .localized-search { display: flex; min-width: min(100%, 18rem); flex: 1 1 19rem; align-items: center; gap: .65rem; border: 1px solid rgb(23 34 45 / 18%); border-radius: .65rem; background: white; padding: 0 .85rem; color: #67737c; }
+  .localized-search:focus-within { border-color: #d89b24; }
+  .localized-search input { width: 100%; border: 0; background: transparent; padding: .78rem 0; color: #17222d; font-size: .9rem; outline: none; }
+  .localized-search input::placeholder { color: #89939b; }
+  .localized-android-filter { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .localized-android-filter button { border: 1px solid transparent; border-radius: .5rem; background: transparent; padding: .58rem .63rem; color: #68747d; font-size: .76rem; }
+  .localized-android-filter button:hover, .localized-android-filter button.is-selected { border-color: rgb(216 155 36 / 65%); background: rgb(216 155 36 / 13%); color: #8a641b; }
+  .localized-catalog-status { margin-top: 1.1rem; color: #7a858e; font: 500 .7rem/1 var(--font-mono); }
+  .localized-android-groups { margin-top: 2rem; }
+  .localized-android-group + .localized-android-group { margin-top: 2.7rem; }
+  .localized-android-heading { display: flex; align-items: center; gap: .7rem; margin-bottom: .8rem; }
+  .localized-android-heading span { color: #5b6b76; font: 600 .82rem/1 var(--font-mono); }
+  .localized-android-heading i { height: 1px; flex: 1; background: rgb(23 34 45 / 15%); }
+  .localized-android-heading small { color: #879199; font: .7rem/1 var(--font-mono); }
+  .localized-model-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; }
+  .localized-model-card { min-height: 8.8rem; border: 1px solid rgb(23 34 45 / 14%); border-radius: .72rem; background: white; padding: .85rem; transition: border-color .16s, background .16s; }
+  .localized-model-card:hover { border-color: rgb(216 155 36 / 58%); background: #fffdf7; }
+  .localized-model-sku { color: #6b7780; font: 600 .69rem/1 var(--font-mono); }
+  .localized-model-card h2 { margin-top: .75rem; color: #17222d; font-size: .91rem; font-weight: 650; line-height: 1.32; }
+  .localized-model-operations { display: flex; flex-wrap: wrap; gap: .35rem .6rem; margin-top: 1.2rem; color: #7b641f; font-size: .68rem; }
+  .localized-model-operations span { display: inline-flex; align-items: center; gap: .35rem; }
+  .localized-test-card { background: #fffaf0; }
+  .localized-catalog-empty { margin-top: 2rem; border: 1px dashed rgb(23 34 45 / 20%); border-radius: .7rem; padding: 1.1rem; color: #64727d; font-size: .88rem; }
+  @media (max-width: 1023px) { .localized-model-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .localized-models-wrap { width: min(100% - 1.5rem, 76rem); padding-top: 2rem; } .localized-brand-nav { overflow-x: auto; } .localized-brand-tab { flex: 0 0 auto; } .localized-android-filter { width: 100%; } .localized-android-filter button { flex: 1 0 auto; } .localized-model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } .localized-model-card { min-height: 9.5rem; padding: .75rem; } .localized-model-card h2 { font-size: .84rem; } }
+</style>

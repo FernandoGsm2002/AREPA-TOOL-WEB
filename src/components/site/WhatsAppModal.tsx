@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ShieldCheck, Loader2 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons/BrandIcons";
+import { modalCopy, type Locale } from "@/lib/i18n";
 
 const API_BASE = "https://api2.arepatool.com";
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADcAui1yybCKOv5s";
@@ -17,7 +18,9 @@ export function WhatsAppTrigger({ children }: { children: React.ReactNode }) {
   return <span onClick={() => window.dispatchEvent(new CustomEvent("open-wa-modal"))}>{children}</span>;
 }
 
-export default function WhatsAppModal() {
+export default function WhatsAppModal({ locale = "es" }: { locale?: Locale }) {
+  const copy = modalCopy[locale];
+  const whatsappJoin = locale === "es" ? "Unirme al Grupo WhatsApp" : locale === "en" ? "Join WhatsApp group" : "Entrar no grupo do WhatsApp";
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<{ text: string; type: "error" | "info" } | null>(null);
@@ -110,23 +113,23 @@ export default function WhatsAppModal() {
           <div className="flex size-14 items-center justify-center rounded-full bg-[#25D366]/15 text-[#25D366]">
             <WhatsAppIcon className="size-7" />
           </div>
-          <DialogTitle className="text-xl">Acceso al Grupo Oficial</DialogTitle>
+          <DialogTitle className="text-xl">{copy.whatsappTitle}</DialogTitle>
         </DialogHeader>
 
         {link ? (
           <div className="space-y-3 text-center">
-            <p className="text-muted-foreground text-sm">¡Tu correo tiene acceso! Únete al grupo oficial.</p>
+            <p className="text-muted-foreground text-sm">{copy.whatsappSuccess}</p>
             <Button asChild className="w-full bg-[#25D366] text-white hover:bg-[#1ea952]">
               <a href={link} target="_blank" rel="noopener noreferrer">
                 <WhatsAppIcon className="size-4" />
-                Unirme al Grupo WhatsApp
+                {whatsappJoin}
               </a>
             </Button>
           </div>
         ) : (
           <div className="space-y-4">
             <p className="text-muted-foreground text-center text-sm">
-              Ingresa tu correo registrado para obtener el link del grupo de WhatsApp.
+              {copy.whatsappDescription}
             </p>
             <Input
               type="email"
@@ -144,7 +147,7 @@ export default function WhatsAppModal() {
             )}
             <Button className="w-full" disabled={loading} onClick={submit}>
               {loading ? <Loader2 className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />}
-              Verificar Acceso
+              {copy.whatsappButton}
             </Button>
           </div>
         )}

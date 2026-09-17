@@ -3,11 +3,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Download, Flame, Loader2, MessageCircle, ShieldCheck } from "lucide-react";
+import { modalCopy, type Locale } from "@/lib/i18n";
 
 const API_BASE = "https://api2.arepatool.com";
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADcAui1yybCKOv5s";
 
-export default function InstallerAccessModal() {
+export default function InstallerAccessModal({ locale = "es" }: { locale?: Locale }) {
+  const copy = modalCopy[locale];
   const [open, setOpen] = useState(false);
   const [identifier, setIdentifier] = useState("");
   const [status, setStatus] = useState<string | null>(null);
@@ -91,27 +93,27 @@ export default function InstallerAccessModal() {
       <DialogContent className="sm:max-w-sm">
         <DialogHeader className="items-center text-center">
           <div className="bg-primary/12 text-primary flex size-14 items-center justify-center rounded-full"><Flame className="size-7" /></div>
-          <DialogTitle className="text-xl">Descargar ArepaTool v2.2.4</DialogTitle>
+          <DialogTitle className="text-xl">{copy.downloadTitle}</DialogTitle>
         </DialogHeader>
         {access ? (
           <div className="space-y-4 text-center">
-            <p className="text-muted-foreground text-sm leading-6">Acceso confirmado. Tu enlace de descarga directa es privado y vence en 10 minutos.</p>
+            <p className="text-muted-foreground text-sm leading-6">{copy.accessConfirmed}</p>
             <div className="border-primary/35 from-primary/16 via-primary/8 to-background relative overflow-hidden rounded-2xl border bg-linear-to-br px-5 py-4 shadow-lg shadow-primary/10">
               <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-primary/80 to-transparent" />
               <Flame className="text-primary mx-auto size-7 motion-safe:animate-pulse" />
-              <p className="mt-2 font-semibold">Nueva versión lista</p>
+              <p className="mt-2 font-semibold">{copy.newVersion}</p>
               <p className="text-muted-foreground mt-1 text-xs">ArepaToolV2_Setup_v2.2.4.exe</p>
             </div>
-            <Button asChild className="w-full shadow-xl shadow-primary/30 motion-safe:animate-pulse"><a href={access.downloadUrl} target="_blank" rel="noopener noreferrer"><Download className="size-4" />Descargar ahora</a></Button>
-            <Button asChild variant="secondary" className="w-full"><a href={access.groupLink} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" />Unirme al grupo oficial</a></Button>
+            <Button asChild className="w-full shadow-xl shadow-primary/30 motion-safe:animate-pulse"><a href={access.downloadUrl} target="_blank" rel="noopener noreferrer"><Download className="size-4" />{copy.downloadNow}</a></Button>
+            <Button asChild variant="secondary" className="w-full"><a href={access.groupLink} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" />{copy.joinOfficial}</a></Button>
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-muted-foreground text-center text-sm leading-6">Verifica tu usuario o correo para recibir un enlace directo, privado y temporal de descarga.</p>
-            <Input placeholder="Usuario o correo registrado" autoComplete="username" value={identifier} onChange={(e) => setIdentifier(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
+            <p className="text-muted-foreground text-center text-sm leading-6">{copy.verifyDescription}</p>
+            <Input placeholder={copy.identifierPlaceholder} autoComplete="username" value={identifier} onChange={(e) => setIdentifier(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
             <div ref={turnstileRef} className="flex justify-center" />
             {status && <p className="text-destructive text-center text-sm">{status}</p>}
-            <Button className="w-full" disabled={loading} onClick={submit}>{loading ? <Loader2 className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />}Verificar y continuar</Button>
+            <Button className="w-full" disabled={loading} onClick={submit}>{loading ? <Loader2 className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />}{copy.verifyButton}</Button>
           </div>
         )}
       </DialogContent>

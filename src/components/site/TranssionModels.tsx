@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { BadgeCheck, Flame, HardDriveDownload, LoaderCircle, LockKeyhole, RotateCcw, Search, ShieldCheck, WalletCards } from "lucide-react";
+import { getLocaleCopy, type Locale } from "@/lib/i18n";
 
 const API_BASE = "https://api2.arepatool.com";
 const brands = ["Todos", "Infinix", "Tecno", "Itel"] as const;
@@ -46,7 +47,8 @@ function brandFor(name: string): Exclude<Brand, "Todos"> {
   return "Infinix";
 }
 
-export default function TranssionModels() {
+export default function TranssionModels({ locale = "es" }: { locale?: Locale }) {
+  const copy = getLocaleCopy(locale);
   const [roms, setRoms] = useState<Rom[]>([]);
   const [brand, setBrand] = useState<Brand>("Todos");
   const [search, setSearch] = useState("");
@@ -87,10 +89,10 @@ export default function TranssionModels() {
       <div className="transsion-header">
         <div>
           <h2 id="transsion-title">Infinix · Tecno · Itel</h2>
-          <p>ROM Patch Fastboot y operaciones Meta para dispositivos Transsion.</p>
+          <p>{copy.models.transsionDescription}</p>
         </div>
         <span className="transsion-count">
-          {loading ? "Sincronizando ROM Patch…" : `${metaModels.length} Meta · ${roms.length} ROM Patch`}
+          {loading ? copy.models.syncing : `${metaModels.length} Meta · ${roms.length} ROM Patch`}
         </span>
       </div>
 
@@ -132,22 +134,22 @@ export default function TranssionModels() {
       <section id="transsion-rom-support" className="transsion-rom-stage" aria-labelledby="transsion-rom-title">
       <div className="transsion-heading transsion-rom-heading"><span id="transsion-rom-title"><Flame className="size-3.5" /> ROM Patch vía Fastboot <b>NEW</b></span><i></i><small>{loading ? "…" : visibleRoms.length}</small></div>
       <div className="transsion-rom-notice">
-        <div><BadgeCheck className="size-4" /><strong>ROMs completamente testeadas</strong><span>Security Plugin · Fastboot</span></div>
-        <p><LockKeyhole className="size-4" /><b>Requisito obligatorio:</b> bootloader desbloqueado. ArepaTool no desbloquea el bootloader.</p>
+        <div><BadgeCheck className="size-4" /><strong>{copy.models.tested}</strong><span>Security Plugin · Fastboot</span></div>
+        <p><LockKeyhole className="size-4" /><b>{copy.models.requirement}</b> {copy.models.requirementText}</p>
       </div>
 
       {loading && (
         <div className="transsion-state">
-          <LoaderCircle className="size-4 animate-spin" /> Cargando modelos disponibles…
+          <LoaderCircle className="size-4 animate-spin" /> {copy.models.loading}
         </div>
       )}
 
       {failed && (
-        <p className="transsion-state">No se pudo sincronizar el catálogo en este momento. Intenta actualizar la página.</p>
+        <p className="transsion-state">{copy.models.failed}</p>
       )}
 
       {!loading && !failed && visibleRoms.length === 0 && (
-        <p className="transsion-state is-empty">Aún no hay ROM Patch publicadas con esa búsqueda.</p>
+        <p className="transsion-state is-empty">{copy.models.romEmpty}</p>
       )}
 
       {!loading && !failed && visibleRoms.length > 0 && (
@@ -161,7 +163,7 @@ export default function TranssionModels() {
                   {rom.androidVersion && <span>Android {rom.androidVersion}</span>}
                 </div>
                 <h3>{rom.name}</h3>
-                <p>Modelo: {rom.deviceModel} · ROM Patch</p>
+                <p>{copy.models.model}: {rom.deviceModel} · ROM Patch</p>
               </article>
             );
           })}
@@ -170,10 +172,10 @@ export default function TranssionModels() {
       </section>
 
       <section id="transsion-meta-support" className="transsion-meta-stage" aria-labelledby="transsion-meta-title">
-      <div className="transsion-heading"><span id="transsion-meta-title">Operaciones vía Meta</span><i></i><small>{visibleMetaModels.length}</small></div>
-      <p className="transsion-caption">FRP, Factory Reset y PayJoy disponibles en modo Meta.</p>
+      <div className="transsion-heading"><span id="transsion-meta-title">{copy.models.meta}</span><i></i><small>{visibleMetaModels.length}</small></div>
+      <p className="transsion-caption">{copy.models.metaDescription}</p>
       {visibleMetaModels.length === 0 ? (
-        <p className="transsion-state is-empty">No encontramos modelos Meta con esa búsqueda.</p>
+        <p className="transsion-state is-empty">{copy.models.metaEmpty}</p>
       ) : (
         <div className="transsion-grid">
           {visibleMetaModels.map((model) => (

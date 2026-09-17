@@ -2,32 +2,37 @@
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { WindowsIcon } from "@/components/icons/BrandIcons";
+import { getLocaleCopy, localeFromPath, localizedPath, type Locale } from "@/lib/i18n";
+
+interface Props { locale?: Locale; }
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const copy = getLocaleCopy(locale);
 ---
 
 <section class="hero-section">
   <div class="site-container hero-grid">
     <div class="hero-copy">
-      <p class="hero-kicker">Modern software</p>
-      <h1>ArepaTool <span>Professional tool for you.</span></h1>
-      <p>A modern tool designed for unlockers like you</p>
+      <p class="hero-kicker">{copy.hero.kicker}</p>
+      <h1>ArepaTool <span>{copy.hero.titleAccent}</span></h1>
+      <p>{copy.hero.description}</p>
       <div class="hero-release" aria-label="Versión y plataforma">
         <strong>v2.2.4</strong>
-        <span>Windows</span>
-        <span>Licencia protegida</span>
+        <span>{copy.hero.platform}</span>
+        <span>{copy.hero.license}</span>
       </div>
 
       <div class="hero-actions">
-        <a href="/pricing" class={buttonVariants({ size: "lg", className: "shadow-lg shadow-primary/15" })}>
-          Ver licencia
+        <a href={localizedPath(locale, "/pricing")} class={buttonVariants({ size: "lg", className: "shadow-lg shadow-primary/15" })}>
+          {copy.hero.licenseCta}
           <ArrowRight className="size-4" />
         </a>
         <button type="button" data-open-installer-access class={buttonVariants({ size: "lg", variant: "secondary" })}>
           <WindowsIcon className="size-4" />
-          Descargar ArepaTool
+          {copy.hero.downloadCta}
         </button>
       </div>
 
-      <div class="hero-proof" aria-label="Módulos principales">
+      <div class="hero-proof" aria-label={copy.hero.proofLabel}>
         <span>FRP</span>
         <span>MDM</span>
         <span>iCloud</span>
@@ -40,13 +45,13 @@ import { WindowsIcon } from "@/components/icons/BrandIcons";
       <img
         class="hero-mascot"
         src="/pngs/windowslog.png"
-        alt="Mascota de ArepaTool trabajando en un equipo Windows"
+        alt={copy.hero.mascotAlt}
         loading="eager"
         decoding="async"
       />
     </div>
   </div>
-  <p class="site-container hero-tagline">Compatible with modern brands on the market</p>
+  <p class="site-container hero-tagline">{copy.hero.tagline}</p>
 </section>
 
 <script>

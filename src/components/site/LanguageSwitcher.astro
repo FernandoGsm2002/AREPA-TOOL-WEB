@@ -1,0 +1,53 @@
+---
+import { localeOptions, localizedPath, localeFromPath, type Locale } from "@/lib/i18n";
+
+interface Props {
+  locale?: Locale;
+}
+
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const options = localeOptions.map((option) => ({ ...option, href: localizedPath(option.code, Astro.url.pathname) }));
+---
+
+<label class="language-switcher">
+  <span class="sr-only">{localeOptions.find((option) => option.code === locale)?.label ?? "Language"}</span>
+  <select aria-label="Language" data-language-switcher>
+    {options.map((option) => <option value={option.href} selected={option.code === locale}>{option.short}</option>)}
+  </select>
+</label>
+
+<script>
+  document.querySelectorAll<HTMLSelectElement>("[data-language-switcher]").forEach((select) => {
+    select.addEventListener("change", () => {
+      if (select.value) window.location.href = select.value;
+    });
+  });
+</script>
+
+<style>
+  .language-switcher {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .language-switcher select {
+    min-height: 2.2rem;
+    border: 1px solid rgb(216 155 36 / 38%);
+    border-radius: .55rem;
+    background: #fffaf2;
+    padding: 0 1.8rem 0 .65rem;
+    color: #8f4b12;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: .06em;
+    outline: none;
+  }
+
+  .language-switcher select:hover,
+  .language-switcher select:focus-visible {
+    border-color: #d97819;
+    box-shadow: 0 0 0 3px rgb(217 120 25 / 14%);
+  }
+</style>

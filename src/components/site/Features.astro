@@ -1,152 +1,39 @@
 ---
 import { Apple, CircuitBoard, Database, Download, Gauge, LockKeyhole, RadioTower, ShieldCheck, Smartphone, Wifi } from "lucide-react";
+import { featureCopy } from "@/lib/i18n";
+import { localeFromPath, type Locale } from "@/lib/i18n";
+
+interface Props { locale?: Locale; }
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const featureIcons = [CircuitBoard, ShieldCheck, Download, Smartphone, RadioTower, Database, Gauge, Wifi, LockKeyhole, Apple];
+const content = featureCopy[locale];
+const groups = content.groups.map((group, index) => ({ ...group, icon: featureIcons[index] }));
 ---
 
 <section id="features" class="features-page">
   <div class="site-container features-layout">
-    <div class="features-quickbar" aria-label="Protocolos principales">
-      <span>MediaTek</span>
-      <span>Fastboot</span>
-      <span>ADB</span>
-      <span>Unisoc</span>
-      <span>Apple iOS</span>
+    <div class="features-quickbar" aria-label="Core protocols">
+      {content.quick.map((item) => <span>{item}</span>)}
     </div>
 
     <div class="feature-groups">
-      <article class="feature-cluster feature-cluster--wide">
-        <div class="feature-cluster__header">
-          <span class="feature-cluster__icon"><CircuitBoard aria-hidden="true" /></span>
-          <div><p class="feature-cluster__eyebrow">Core protocols</p><h2>Protocolos base</h2></div>
-        </div>
-        <ul class="feature-list">
-          <li>MediaTek para operaciones de servicio y reparación.</li>
-          <li>Fastboot para diagnóstico, desbloqueo y escritura de ROMs modificadas.</li>
-          <li>ADB para operaciones avanzadas y equipos rooteados.</li>
-          <li>Unisoc para dispositivos Transsion y otras plataformas compatibles.</li>
-          <li>Apple iOS para bypass, passcode y Hello en hardware compatible.</li>
-        </ul>
-      </article>
-
-      <article class="feature-cluster">
-        <div class="feature-cluster__header">
-          <span class="feature-cluster__icon"><ShieldCheck aria-hidden="true" /></span>
-          <div><p class="feature-cluster__eyebrow">Samsung</p><h2>Operaciones ADB</h2></div>
-        </div>
-        <ul class="feature-list">
-          <li>Activar ADB en Android OS 16.</li>
-          <li>Eliminar FRP en Android OS 16.</li>
-          <li>Cambiar CSC y eliminar FRP vía ADB.</li>
-          <li>Eliminar cuenta Samsung vía ADB.</li>
-          <li>Desactivar actualizaciones y recuperar apps bancarias.</li>
-          <li>Fix Yape para dispositivos rooteados.</li>
-          <li>Activar IMEI 2 vía ADB root.</li>
-          <li>Borrar datos de usuario vía ADB.</li>
-        </ul>
-      </article>
-
-      <article class="feature-cluster">
-        <div class="feature-cluster__header">
-          <span class="feature-cluster__icon"><Download aria-hidden="true" /></span>
-          <div><p class="feature-cluster__eyebrow">Samsung 2026</p><h2>Exynos Download Mode</h2></div>
-        </div>
-        <ul class="feature-list">
-          <li>Todos los procesadores Exynos soportados.</li>
-          <li>FRP desde Download Mode.</li>
-          <li>Flash mediante Odin.</li>
-          <li>Compatibilidad con seguridades inferiores a 05/2026.</li>
-        </ul>
-      </article>
-
-      <article class="feature-cluster">
-        <div class="feature-cluster__header">
-          <span class="feature-cluster__icon"><Smartphone aria-hidden="true" /></span>
-          <div><p class="feature-cluster__eyebrow">Motorola MediaTek</p><h2>FRP y bootloader</h2></div>
-        </div>
-        <ul class="feature-list">
-          <li>FRP y unlock bootloader para dispositivos Motorola MediaTek.</li>
-          <li>Soporte para la gran mayoría de equipos Motorola 2025 y 2026.</li>
-          <li>Versiones de Android 11, 12, 13, 14, 15 y 16.</li>
-        </ul>
-      </article>
-
-      <article class="feature-cluster">
-        <div class="feature-cluster__header">
-          <span class="feature-cluster__icon"><RadioTower aria-hidden="true" /></span>
-          <div><p class="feature-cluster__eyebrow">Transsion</p><h2>Infinix · Itel · Tecno</h2></div>
-        </div>
-        <ul class="feature-list">
-          <li>Protocolo Meta para FRP, factory reset y PayJoy bypass.</li>
-          <li>Fastboot para escribir ROMs modificadas.</li>
-          <li>LK Editor para unlock bootloader en AARCH64 y ARM32.</li>
-          <li>Soporte para security plugin y anticrack.</li>
-        </ul>
-      </article>
-
-      <article class="feature-cluster">
-        <div class="feature-cluster__header">
-          <span class="feature-cluster__icon"><Database aria-hidden="true" /></span>
-          <div><p class="feature-cluster__eyebrow">Unisoc Transsion</p><h2>Factory reset y PayJoy</h2></div>
-        </div>
-        <ul class="feature-list">
-          <li>Unisoc para Infinix, Itel y Tecno.</li>
-          <li>Factory reset y PayJoy con seguridades inferiores a 09/2026.</li>
-          <li>Protocolo vía diagnóstico para puertos cerrados.</li>
-          <li>FRP y factory reset en dispositivos compatibles.</li>
-        </ul>
-      </article>
-
-      <article class="feature-cluster">
-        <div class="feature-cluster__header">
-          <span class="feature-cluster__icon"><Gauge aria-hidden="true" /></span>
-          <div><p class="feature-cluster__eyebrow">Honor 4G · 5G</p><h2>Reparación NVData</h2></div>
-        </div>
-        <ul class="feature-list">
-          <li>Reparación de NVData para dispositivos Honor 4G y 5G.</li>
-          <li>Diagnóstico de conectividad y recuperación del equipo.</li>
-        </ul>
-      </article>
-
-      <article class="feature-cluster">
-        <div class="feature-cluster__header">
-          <span class="feature-cluster__icon"><Wifi aria-hidden="true" /></span>
-          <div><p class="feature-cluster__eyebrow">ZTE · Nubia 2026</p><h2>Diagnóstico y reset</h2></div>
-        </div>
-        <ul class="feature-list">
-          <li>FRP y factory reset para ZTE y Nubia compatibles.</li>
-          <li>Protocolo de diagnóstico para puertos cerrados.</li>
-          <li>Operaciones Unisoc en modelos 2026.</li>
-        </ul>
-      </article>
-
-      <article class="feature-cluster feature-cluster--wide">
-        <div class="feature-cluster__header">
-          <span class="feature-cluster__icon"><LockKeyhole aria-hidden="true" /></span>
-          <div><p class="feature-cluster__eyebrow">MDM Locks · DNS</p><h2>Bloqueos corporativos</h2></div>
-        </div>
-        <ul class="feature-list feature-list--columns">
-          <li>IT Admin, Kiosk, Claro y Telcel.</li>
-          <li>White Screen y Oppo Locks.</li>
-          <li>Métodos DNS y sin DNS.</li>
-          <li>ADB sin relock.</li>
-          <li>Método QR para equipos que piden Wi-Fi al iniciar.</li>
-          <li>ArepaHotspot para editar la red inalámbrica y configurar el equipo sin riesgo de relock.</li>
-        </ul>
-      </article>
-
-      <article class="feature-cluster feature-cluster--wide">
-        <div class="feature-cluster__header">
-          <span class="feature-cluster__icon"><Apple aria-hidden="true" /></span>
-          <div><p class="feature-cluster__eyebrow">Apple iOS</p><h2>Bypass y passcode</h2></div>
-        </div>
-        <ul class="feature-list">
-          <li>Bypass Hello hasta iOS 26.1 en iPhone 11 hasta 17 Pro Max compatibles.</li>
-          <li>A12 y A13: bypass passcode y Hello.</li>
-          <li>Operaciones sin créditos en los métodos compatibles.</li>
-        </ul>
-      </article>
+      {groups.map((group) => {
+        const Icon = group.icon;
+        return (
+          <article class:list={["feature-cluster", group.wide && "feature-cluster--wide"]}>
+            <div class="feature-cluster__header">
+              <span class="feature-cluster__icon"><Icon aria-hidden="true" /></span>
+              <div><p class="feature-cluster__eyebrow">{group.eyebrow}</p><h2>{group.title}</h2></div>
+            </div>
+            <ul class:list={["feature-list", group.wide && "feature-list--columns"]}>
+              {group.bullets.map((bullet) => <li>{bullet}</li>)}
+            </ul>
+          </article>
+        );
+      })}
     </div>
 
-    <p class="features-note">La compatibilidad puede depender del modelo exacto, chipset, versión de Android/iOS, nivel de seguridad y estado del bootloader. Revisa el soporte del equipo antes de comenzar.</p>
+    <p class="features-note">{content.note}</p>
   </div>
 </section>
 

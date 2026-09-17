@@ -1,13 +1,7 @@
-export const navLinks = [
-  { label: "Inicio", href: "/" },
-  { label: "Modelos soportados", href: "/supportedmodels" },
-  { label: "Actualizaciones", href: "/updates" },
-  { label: "Características", href: "/features" },
-  { label: "Tutoriales", href: "/tutorials" },
-  { label: "Manuales", href: "/instructions" },
-  { label: "Precios", href: "/pricing" },
-  { label: "Distribuidores", href: "/resellers" },
-];
+import { getNavLinks } from "./i18n";
+
+export const navLinks = getNavLinks("es");
+export { getNavLinks };
 
 export type ChangelogLine =
   | { type: "h1"; text: string }

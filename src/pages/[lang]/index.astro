@@ -1,0 +1,12 @@
+---
+import LocalizedHome from "@/components/site/LocalizedHome.astro";
+import { isLocale, type Locale } from "@/lib/i18n";
+
+const locale = (isLocale(Astro.params.lang) ? Astro.params.lang : "es") as Locale;
+
+export function getStaticPaths() {
+  return ["es", "en", "pt-br"].map((lang) => ({ params: { lang } }));
+}
+---
+
+<LocalizedHome locale={locale} />

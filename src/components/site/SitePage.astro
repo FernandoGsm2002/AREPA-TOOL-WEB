@@ -3,18 +3,20 @@ import Layout from "@/layouts/Layout.astro";
 import Navbar from "@/components/site/Navbar.astro";
 import Footer from "@/components/site/Footer.astro";
 import WhatsAppModal from "@/components/site/WhatsAppModal";
+import { localeFromPath, type Locale } from "@/lib/i18n";
 
 interface Props {
   title: string;
   description: string;
+  locale?: Locale;
 }
 
-const { title, description } = Astro.props;
+const { title, description, locale = localeFromPath(Astro.url.pathname) } = Astro.props;
 ---
 
 <Layout title={title} description={description}>
-  <Navbar />
+  <Navbar locale={locale} />
   <slot />
-  <Footer />
+  <Footer locale={locale} />
   <WhatsAppModal client:load />
 </Layout>

@@ -1,18 +1,24 @@
 ---
 import { ArrowRight, Mail } from "lucide-react";
 import { TelegramIcon, WhatsAppIcon } from "@/components/icons/BrandIcons";
-import { navLinks } from "@/lib/site-data";
+import { getLocaleCopy, getNavLinks, localeFromPath, localizedPath, type Locale } from "@/lib/i18n";
+
+interface Props {
+  locale?: Locale;
+}
+
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const copy = getLocaleCopy(locale);
+const navLinks = getNavLinks(locale);
 ---
 
 <footer class="site-footer">
   <div class="site-container">
     <div class="site-footer-grid">
       <section class="site-footer-column site-footer-support">
-        <h2>Support</h2>
+        <h2>{copy.footer.support}</h2>
         <p>
-          Our support team is ready to help you with any questions or comments you may have! The
-          staff will answer incoming emails within 24 hours. The official support language is
-          English.
+          {copy.footer.supportText}
         </p>
         <a class="site-footer-contact" href="mailto:arepadadmin@arepatool.com">
           <Mail aria-hidden="true" />
@@ -21,32 +27,32 @@ import { navLinks } from "@/lib/site-data";
       </section>
 
       <section class="site-footer-column">
-        <h2>Useful links</h2>
+        <h2>{copy.footer.useful}</h2>
         <nav class="site-footer-links" aria-label="Enlaces útiles">
-          {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+          {navLinks.map((link) => <a href={localizedPath(locale, link.href)}>{link.label}</a>)}
         </nav>
       </section>
 
       <section class="site-footer-column">
-        <h2>My account</h2>
+        <h2>{copy.footer.account}</h2>
         <nav class="site-footer-links" aria-label="Enlaces de cuenta">
-          <a href="/login">Login</a>
-          <a href="/register">Sign Up</a>
-          <a href="/recover">Forgot Password</a>
+          <a href="/login">{copy.footer.login}</a>
+          <a href="/register">{copy.footer.signup}</a>
+          <a href="/recover">{copy.footer.forgot}</a>
         </nav>
       </section>
 
       <section class="site-footer-column site-footer-downloads">
-        <h2>Download modules</h2>
-        <p>Access your account to download the latest ArepaTool modules.</p>
+        <h2>{copy.footer.download}</h2>
+        <p>{copy.footer.downloadText}</p>
         <a class="site-footer-download" href="/login">
-          <span>Access downloads</span>
+          <span>{copy.footer.downloadAction}</span>
           <ArrowRight aria-hidden="true" />
         </a>
       </section>
     </div>
 
-    <div class="site-footer-socials" aria-label="Redes sociales">
+    <div class="site-footer-socials" aria-label={copy.footer.social}>
       <a href="https://chat.whatsapp.com/JpHJt9SvJzc1EdqVHbmY4B?mode=gi_t" target="_blank" rel="noreferrer" aria-label="WhatsApp">
         <WhatsAppIcon className="size-5" />
       </a>
@@ -56,7 +62,7 @@ import { navLinks } from "@/lib/site-data";
     </div>
 
     <div class="site-footer-bottom">
-      <a class="site-footer-brand" href="/" aria-label="ArepaTool inicio">
+      <a class="site-footer-brand" href={localizedPath(locale, "/")} aria-label={copy.footer.homeLabel}>
         <span class="site-footer-brand__logo" aria-hidden="true">
           <img src="/pngs/arepatool-logo-mark.png" alt="" />
         </span>
@@ -65,7 +71,7 @@ import { navLinks } from "@/lib/site-data";
           <small>MDM Tool</small>
         </span>
       </a>
-      <p>Designed by ArepaTool Developers · All rights reserved · © 2026</p>
+      <p>{copy.footer.copyright}</p>
     </div>
   </div>
 </footer>

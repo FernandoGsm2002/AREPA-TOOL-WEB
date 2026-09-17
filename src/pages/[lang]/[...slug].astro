@@ -1,0 +1,49 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SitePage from "@/components/site/SitePage.astro";
+import Features from "@/components/site/Features.astro";
+import Changelog from "@/components/site/Changelog.astro";
+import Tutorials from "@/components/site/Tutorials.astro";
+import Resellers from "@/components/site/Resellers.astro";
+import LocalizedInstructions from "@/components/site/LocalizedInstructions.astro";
+import LocalizedModels from "@/components/site/LocalizedModels.astro";
+import Pricing from "@/components/site/Pricing.astro";
+import Navbar from "@/components/site/Navbar.astro";
+import Footer from "@/components/site/Footer.astro";
+import WhatsAppModal from "@/components/site/WhatsAppModal";
+import { isLocale, type Locale } from "@/lib/i18n";
+
+export function getStaticPaths() {
+  const slugs = ["supportedmodels", "features", "updates", "tutorials", "instructions", "pricing", "resellers"];
+  return ["es", "en", "pt-br"].flatMap((lang) => slugs.map((slug) => ({ params: { lang, slug } })));
+}
+
+const locale = (isLocale(Astro.params.lang) ? Astro.params.lang : "es") as Locale;
+const slug = Array.isArray(Astro.params.slug) ? Astro.params.slug.join("/") : Astro.params.slug ?? "";
+const pages = {
+  features: { title: { es: "Características", en: "Features", "pt-br": "Recursos" }, description: { es: "Módulos Android, Apple, MDM y DNS incluidos en ArepaTool.", en: "Android, Apple, MDM and DNS modules included in ArepaTool.", "pt-br": "Módulos Android, Apple, MDM e DNS incluídos na ArepaTool." } },
+  updates: { title: { es: "Actualizaciones", en: "Updates", "pt-br": "Atualizações" }, description: { es: "Novedades y cambios recientes de ArepaTool.", en: "Recent ArepaTool news and changes.", "pt-br": "Novidades e mudanças recentes da ArepaTool." } },
+  tutorials: { title: { es: "Tutoriales", en: "Tutorials", "pt-br": "Tutoriais" }, description: { es: "Tutoriales oficiales para preparar y usar ArepaTool.", en: "Official tutorials to prepare and use ArepaTool.", "pt-br": "Tutoriais oficiais para preparar e usar a ArepaTool." } },
+  instructions: { title: { es: "Manuales", en: "Guides", "pt-br": "Manuais" }, description: { es: "Guía de preparación y uso para técnicos GSM.", en: "Preparation and usage guides for GSM technicians.", "pt-br": "Guias de preparação e uso para técnicos GSM." } },
+  pricing: { title: { es: "Precios y licencia", en: "Pricing and license", "pt-br": "Preços e licença" }, description: { es: "Consulta la licencia de ArepaTool con distribuidores oficiales.", en: "Ask official resellers about your ArepaTool license.", "pt-br": "Consulte sua licença ArepaTool com revendedores oficiais." } },
+  resellers: { title: { es: "Distribuidores", en: "Resellers", "pt-br": "Revendedores" }, description: { es: "Contactos de distribuidores y resellers oficiales de ArepaTool.", en: "Official ArepaTool distributor and reseller contacts.", "pt-br": "Contatos de distribuidores e revendedores oficiais da ArepaTool." } },
+} as const;
+const page = pages[slug as keyof typeof pages];
+---
+
+{slug === "supportedmodels" ? (
+  <LocalizedModels locale={locale} />
+) : page ? (
+  <SitePage locale={locale} title={`${page.title[locale]} | ArepaTool`} description={page.description[locale]}>
+    {slug === "features" && <main class="site-page"><Features locale={locale} /></main>}
+    {slug === "updates" && <main class="site-page"><Changelog locale={locale} /></main>}
+    {slug === "tutorials" && <main class="site-page"><Tutorials locale={locale} /></main>}
+    {slug === "instructions" && <LocalizedInstructions locale={locale} />}
+    {slug === "pricing" && <main class="site-page"><Pricing locale={locale} /></main>}
+    {slug === "resellers" && <main class="site-page"><Resellers locale={locale} /></main>}
+  </SitePage>
+) : (
+  <Layout locale={locale} title="ArepaTool" description="ArepaTool">
+    <Navbar locale={locale} /><main class="site-page"><div class="site-container page-heading"><h1>404</h1></div></main><Footer locale={locale} /><WhatsAppModal client:load />
+  </Layout>
+)}

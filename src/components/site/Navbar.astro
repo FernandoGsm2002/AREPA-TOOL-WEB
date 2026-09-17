@@ -3,14 +3,22 @@ import { UserPlus, LogIn } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/icons/BrandIcons";
 import MobileNav from "./MobileNav";
-import { navLinks } from "@/lib/site-data";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { getLocaleCopy, getNavLinks, localeFromPath, localizedPath, withoutLocale, type Locale } from "@/lib/i18n";
 
-const currentPath = Astro.url.pathname;
+interface Props {
+  locale?: Locale;
+}
+
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const currentPath = withoutLocale(Astro.url.pathname);
+const copy = getLocaleCopy(locale);
+const navLinks = getNavLinks(locale);
 ---
 
 <header class="site-header">
   <div class="site-container site-nav-inner">
-    <a href="/" class="site-brand">
+    <a href={localizedPath(locale, "/")} class="site-brand">
       <span class="site-brand-logo" aria-hidden="true">
         <img src="/pngs/arepatool-logo-mark.png" alt="" />
       </span>
@@ -24,7 +32,7 @@ const currentPath = Astro.url.pathname;
       {
         navLinks.map((link) => (
           <a
-            href={link.href}
+            href={localizedPath(locale, link.href)}
             class:list={[
               currentPath === link.href && "text-foreground",
             ]}
@@ -37,13 +45,14 @@ const currentPath = Astro.url.pathname;
     </nav>
 
     <div class="site-nav-actions">
+      <LanguageSwitcher locale={locale} />
       <Button
         data-open-wa
         className="site-nav-whatsapp bg-[#25D366] text-white shadow-lg shadow-[#25D366]/15 hover:bg-[#1ea952]"
         size="sm"
       >
         <WhatsAppIcon className="size-4" />
-        Grupo WhatsApp
+        {copy.nav.whatsapp}
       </Button>
       <a
         href="/login"
@@ -53,14 +62,14 @@ const currentPath = Astro.url.pathname;
         data-size="sm"
       >
         <LogIn className="size-4" />
-        Iniciar sesión
+        {copy.nav.login}
       </a>
       <a href="/register" class={`site-nav-register ${buttonVariants({ size: "sm", className: "shadow-lg shadow-primary/20" })}`} data-slot="button" data-variant="default" data-size="sm">
         <UserPlus className="size-4" />
-        Registro
+        {copy.nav.register}
       </a>
     </div>
 
-    <MobileNav client:load />
+    <MobileNav client:load locale={locale} />
   </div>
 </header>

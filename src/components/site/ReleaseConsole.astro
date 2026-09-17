@@ -1,9 +1,17 @@
+---
+import { getLocaleCopy, localeFromPath, type Locale } from "@/lib/i18n";
+
+interface Props { locale?: Locale; }
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const copy = getLocaleCopy(locale);
+---
+
 <section class="release-console-section" aria-labelledby="release-console-title">
   <div class="site-container">
     <div class="release-console-heading">
-      <p class="release-console-kicker">Latest release</p>
+      <p class="release-console-kicker">{copy.release.kicker}</p>
       <h2 id="release-console-title">ArepaTool v2.2.4</h2>
-      <p>17/09/2026 · What’s new?</p>
+      <p>{copy.release.whatsNew}</p>
     </div>
 
     <div class="release-console" role="region" aria-label="ArepaTool version 2.2.4 changelog">
@@ -12,7 +20,7 @@
         <span class="release-console__dot release-console__dot--yellow"></span>
         <span class="release-console__dot release-console__dot--green"></span>
         <span class="release-console__path">arepatool@workstation: ~/releases/2.2.4</span>
-        <span class="release-console__status">stable</span>
+        <span class="release-console__status">{copy.release.stable}</span>
       </div>
 
       <pre class="release-console__code"><code><span class="terminal-line terminal-shebang">#!/usr/bin/env bash</span>

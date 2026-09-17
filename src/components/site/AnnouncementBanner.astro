@@ -1,21 +1,26 @@
 ---
 import { ArrowRight, Flame, LogIn } from "lucide-react";
+import { getLocaleCopy, localeFromPath, type Locale } from "@/lib/i18n";
+
+interface Props { locale?: Locale; }
+const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
+const copy = getLocaleCopy(locale);
 ---
 
-<aside class="border-b border-amber-700/20 bg-[#fff7df] px-4 py-2.5 text-[#4a3720]" aria-label="Novedad de ArepaTool">
+<aside class="border-b border-amber-700/20 bg-[#fff7df] px-4 py-2.5 text-[#4a3720]" aria-label={copy.announcement.aria}>
   <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-center text-sm sm:justify-between sm:text-left">
     <div class="flex items-center justify-center gap-2.5 sm:justify-start">
       <span class="flex size-7 shrink-0 items-center justify-center rounded-full border border-amber-700/25 bg-amber-400/15 text-amber-700" aria-hidden="true">
         <Flame className="size-4" />
       </span>
       <p class="font-medium tracking-tight">
-        <span class="font-display mr-1.5 text-amber-700">NEW</span>
-        ROM Patch para <strong class="text-[#2b2116]">Infinix, Tecno e Itel</strong>
+        <span class="font-display mr-1.5 text-amber-700">{copy.announcement.label}</span>
+        {copy.announcement.text} <strong class="text-[#2b2116]">{copy.announcement.brands}</strong>
       </p>
     </div>
     <a href="/login" class="group inline-flex items-center gap-1.5 font-semibold text-amber-800 underline decoration-amber-700/35 underline-offset-4 transition-colors hover:text-[#2b2116] hover:decoration-[#2b2116] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-700">
       <LogIn className="size-3.5" />
-      Inicia sesión y ve a Descargas
+      {copy.announcement.action}
       <ArrowRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
     </a>
   </div>
