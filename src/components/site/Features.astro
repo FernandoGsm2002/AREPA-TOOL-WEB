@@ -12,7 +12,7 @@ const groups = content.groups.map((group, index) => ({ ...group, icon: featureIc
 
 <section id="features" class="features-page">
   <div class="site-container features-layout">
-    <div class="features-quickbar" aria-label="Core protocols">
+    <div class="features-quickbar" aria-label={locale === "es" ? "Protocolos principales" : locale === "pt-br" ? "Protocolos principais" : "Core protocols"}>
       {content.quick.map((item) => <span>{item}</span>)}
     </div>
 

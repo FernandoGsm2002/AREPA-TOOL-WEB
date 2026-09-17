@@ -49,12 +49,17 @@ function brandFor(name: string): Exclude<Brand, "Todos"> {
 
 export default function TranssionModels({ locale = "es" }: { locale?: Locale }) {
   const copy = getLocaleCopy(locale);
+  const localizedOperations = locale === "es"
+    ? ["FRP", "Restablecimiento de fábrica", "PayJoy", "Plugin de seguridad"]
+    : locale === "pt-br"
+      ? ["FRP", "Restauração de fábrica", "PayJoy", "Plugin de segurança"]
+      : ["FRP", "Factory Reset", "PayJoy", "Security Plugin"];
   const [roms, setRoms] = useState<Rom[]>([]);
   const [brand, setBrand] = useState<Brand>("Todos");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
-  const [activeOperation, setActiveOperation] = useState("Security Plugin");
+  const [activeOperation, setActiveOperation] = useState(localizedOperations[3]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -97,24 +102,27 @@ export default function TranssionModels({ locale = "es" }: { locale?: Locale }) 
       </div>
 
       <div className="transsion-operations" aria-label="Operaciones soportadas">
-        {operations.map(({ label, icon: Icon, target }) => (
+        {operations.map(({ label, icon: Icon, target }, index) => {
+          const localizedLabel = localizedOperations[index];
+          return (
           <button
             key={label}
             type="button"
-            className={activeOperation === label ? "is-selected" : ""}
-            aria-pressed={activeOperation === label}
-            onClick={() => focusOperation(label, target)}
+            className={activeOperation === localizedLabel ? "is-selected" : ""}
+            aria-pressed={activeOperation === localizedLabel}
+            onClick={() => focusOperation(localizedLabel, target)}
           >
             <Icon className="size-3.5" />
-            {label}
+            {localizedLabel}
           </button>
-        ))}
+          );
+        })}
       </div>
 
       <div className="transsion-controls">
         <label className="transsion-search">
           <Search className="size-4" />
-          <input value={search} onChange={(event) => setSearch(event.target.value)} type="search" placeholder="Buscar modelo, código o Android" aria-label="Buscar modelo Transsion" />
+          <input value={search} onChange={(event) => setSearch(event.target.value)} type="search" placeholder={locale === "en" ? "Search model, code or Android" : locale === "pt-br" ? "Buscar modelo, código ou Android" : "Buscar modelo, código o Android"} aria-label={locale === "en" ? "Search Transsion model" : locale === "pt-br" ? "Buscar modelo Transsion" : "Buscar modelo Transsion"} />
         </label>
         <div className="transsion-filter" role="group" aria-label="Filtrar por marca">
         {brands.map((item) => (
@@ -132,9 +140,9 @@ export default function TranssionModels({ locale = "es" }: { locale?: Locale }) 
       </div>
 
       <section id="transsion-rom-support" className="transsion-rom-stage" aria-labelledby="transsion-rom-title">
-      <div className="transsion-heading transsion-rom-heading"><span id="transsion-rom-title"><Flame className="size-3.5" /> ROM Patch vía Fastboot <b>NEW</b></span><i></i><small>{loading ? "…" : visibleRoms.length}</small></div>
+      <div className="transsion-heading transsion-rom-heading"><span id="transsion-rom-title"><Flame className="size-3.5" /> {copy.models.romSupport} <b>{locale === "en" ? "NEW" : locale === "pt-br" ? "NOVO" : "NUEVO"}</b></span><i></i><small>{loading ? "…" : visibleRoms.length}</small></div>
       <div className="transsion-rom-notice">
-        <div><BadgeCheck className="size-4" /><strong>{copy.models.tested}</strong><span>Security Plugin · Fastboot</span></div>
+        <div><BadgeCheck className="size-4" /><strong>{copy.models.tested}</strong><span>{locale === "en" ? "Security Plugin · Fastboot" : locale === "pt-br" ? "Plugin de segurança · Fastboot" : "Plugin de seguridad · Fastboot"}</span></div>
         <p><LockKeyhole className="size-4" /><b>{copy.models.requirement}</b> {copy.models.requirementText}</p>
       </div>
 
@@ -182,7 +190,7 @@ export default function TranssionModels({ locale = "es" }: { locale?: Locale }) 
             <article key={`${model.brand}-${model.name}`} className="transsion-card">
               <div className="transsion-meta"><span className="transsion-brand">{model.brand}</span><span>META</span></div>
               <h3>{model.name}</h3>
-              <p className="transsion-card-operations">FRP · Factory Reset · PayJoy</p>
+              <p className="transsion-card-operations">{localizedOperations.slice(0, 3).join(" · ")}</p>
             </article>
           ))}
         </div>

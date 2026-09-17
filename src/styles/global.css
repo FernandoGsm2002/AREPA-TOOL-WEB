@@ -130,6 +130,7 @@
 .site-body { background: #0c1118; color: #f4f3ef; }
 .site-header { position: sticky; top: 0; z-index: 50; border-bottom: 1px solid rgb(255 255 255 / 9%); background: rgb(12 17 24 / 92%); backdrop-filter: blur(16px); }
 .site-nav-inner { display: flex; min-width: 0; min-height: 4.75rem; align-items: center; justify-content: space-between; gap: .65rem; }
+.site-mobile-nav-trigger { display: inline-flex; flex: 0 0 auto; }
 .site-brand { display: inline-flex; align-items: center; gap: .65rem; color: #fff; }
 .site-brand-logo { display: grid; width: 2.8rem; height: 2.8rem; place-items: center; overflow: hidden; }
 .site-brand-logo img { display: block; width: 100%; height: auto; max-width: none; object-fit: contain; }
@@ -182,7 +183,7 @@
 .site-footer { border-top: 1px solid rgb(255 255 255 / 8%); background: #090e14; }
 @media (min-width: 1024px) {
   .site-container { width: min(100% - 3rem, 76rem); }
-  .site-nav-links, .site-nav-actions { display: flex; }
+  .site-nav-links, .site-nav-actions { display: none; }
   .hero-grid { grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr); gap: 4.5rem; padding-block: 6.5rem 7rem; }
   .changelog-layout { grid-template-columns: minmax(14rem, .55fr) minmax(0, 1.45fr); align-items: start; gap: 4rem; }
   .feature-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -191,14 +192,19 @@
   .pricing-layout { grid-template-columns: minmax(0, .7fr) minmax(28rem, 1fr); gap: 5rem; }
   .reseller-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-@media (min-width: 1024px) and (max-width: 1199px) {
+@media (min-width: 1200px) {
+  .site-nav-links, .site-nav-actions { display: flex; }
+  .site-mobile-nav-trigger { display: none; }
+  .site-nav-links a { padding-inline: .32rem; font-size: .71rem; }
+}
+@media (min-width: 1200px) and (max-width: 1299px) {
   .site-nav-inner { gap: .4rem; }
   .site-nav-links a { padding-inline: .28rem; font-size: .7rem; }
   .site-nav-actions { gap: .25rem; }
   .site-nav-whatsapp, .site-nav-login, .site-nav-register { width: 2.25rem; justify-content: center; padding-inline: 0; font-size: 0; }
   .site-nav-whatsapp svg, .site-nav-login svg, .site-nav-register svg { margin: 0; }
 }
-@media (max-width: 1023px) {
+@media (max-width: 1199px) {
   .site-brand-copy { display: none; }
 }
 

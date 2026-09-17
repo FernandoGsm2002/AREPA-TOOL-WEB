@@ -10,9 +10,9 @@ const options = localeOptions.map((option) => ({ ...option, href: localizedPath(
 ---
 
 <label class="language-switcher">
-  <span class="sr-only">{localeOptions.find((option) => option.code === locale)?.label ?? "Language"}</span>
-  <select aria-label="Language" data-language-switcher>
-    {options.map((option) => <option value={option.href} selected={option.code === locale}>{option.short}</option>)}
+  <span class="sr-only">{localeOptions.find((option) => option.code === locale)?.label ?? "Idioma"}</span>
+  <select aria-label="Cambiar idioma" data-language-switcher>
+    {options.map((option) => <option value={option.href} selected={option.code === locale}>{option.flag} {option.short}</option>)}
   </select>
 </label>
 
@@ -31,15 +31,17 @@ const options = localeOptions.map((option) => ({ ...option, href: localizedPath(
   }
 
   .language-switcher select {
+    appearance: auto;
+    max-width: 5.3rem;
     min-height: 2.2rem;
     border: 1px solid rgb(216 155 36 / 38%);
     border-radius: .55rem;
     background: #fffaf2;
-    padding: 0 1.8rem 0 .65rem;
+    padding: 0 .55rem;
     color: #8f4b12;
     cursor: pointer;
     font-family: var(--font-mono);
-    font-size: .65rem;
+    font-size: .78rem;
     font-weight: 800;
     letter-spacing: .06em;
     outline: none;

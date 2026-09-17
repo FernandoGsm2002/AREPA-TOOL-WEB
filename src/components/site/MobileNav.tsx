@@ -23,7 +23,7 @@ export default function MobileNav({ locale }: { locale: Locale }) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Menu">
+        <Button variant="ghost" size="icon" className="site-mobile-nav-trigger" aria-label="Abrir menú">
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
@@ -82,7 +82,7 @@ export default function MobileNav({ locale }: { locale: Locale }) {
               onChange={(event) => changeLanguage(event.target.value as Locale)}
               aria-label={copy.language}
             >
-              {localeOptions.map((option) => <option value={option.code} key={option.code}>{option.label}</option>)}
+              {localeOptions.map((option) => <option value={option.code} key={option.code}>{option.flag} {option.label}</option>)}
             </select>
           </label>
         </div>

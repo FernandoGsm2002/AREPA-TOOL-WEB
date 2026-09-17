@@ -4,6 +4,29 @@ import { getLocaleCopy, localeFromPath, type Locale } from "@/lib/i18n";
 interface Props { locale?: Locale; }
 const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
 const copy = getLocaleCopy(locale);
+const consoleText = locale === "es"
+  ? {
+      whatsNew: "¿Qué hay de nuevo?",
+      cpuList: "LISTA DE CPU COMPATIBLES",
+      lkEditor: "LK EDITOR PARA DESBLOQUEO DE BOOTLOADER · COMPATIBLE CON AARCH64 Y ARM32",
+      securityPlugin: "PLUGIN DE SEGURIDAD",
+      metaSupport: "SOPORTE PARA FRP · RESTABLECIMIENTO DE FÁBRICA · BYPASS DE PAYJOY",
+      downloadMode: "SAMSUNG EXYNOS · MODO DE DESCARGA",
+      supportReset: "SOPORTE PARA FRP Y RESTABLECIMIENTO DE FÁBRICA",
+      timeouts: "TIEMPOS DE ESPERA",
+      enjoy: "Disfruta ArepaTool.",
+    }
+  : {
+      whatsNew: "What's new?",
+      cpuList: "CPU COMPATIBLE LIST",
+      lkEditor: "LK EDITOR FOR UNLOCK BOOTLOADER · SUPPORT AARCH64 & ARM32",
+      securityPlugin: "SECURITY PLUGIN",
+      metaSupport: "SOPORTA FRP · FACTORY RESET · PAYJOY BYPASS",
+      downloadMode: "SAMSUNG EXYNOS DOWNLOAD MODE",
+      supportReset: "SUPPORT FRP & FACTORY RESET",
+      timeouts: "TIMEOUTS",
+      enjoy: "Enjoy ArepaTool.",
+    };
 ---
 
 <section class="release-console-section" aria-labelledby="release-console-title">
@@ -26,13 +49,13 @@ const copy = getLocaleCopy(locale);
       <pre class="release-console__code"><code><span class="terminal-line terminal-shebang">#!/usr/bin/env bash</span>
 <span class="terminal-line terminal-comment"><strong class="terminal-strong"># ArepaTool v2.2.4 - 17/09/2026</strong></span>
 
-<span class="terminal-line terminal-command"><span class="terminal-prompt">$</span> printf "What's new?\n"</span>
+<span class="terminal-line terminal-command"><span class="terminal-prompt">$</span> printf "{consoleText.whatsNew}\n"</span>
 
 <span class="terminal-line terminal-heading"><strong class="terminal-strong"># APARTADO UNISOC</strong></span>
 <span class="terminal-line terminal-brand"><strong>ITEL · INFINIX · TECNO</strong></span>
 <span class="terminal-line terminal-output"><strong>SEGURIDADES ALTAS SOPORTADAS</strong></span>
 <span class="terminal-line terminal-output"><strong>PUERTO PARCHADO SOPORTADO</strong></span>
-<span class="terminal-line terminal-output"><strong>CPU COMPATIBLE LIST</strong></span>
+<span class="terminal-line terminal-output"><strong>{consoleText.cpuList}</strong></span>
 <span class="terminal-line terminal-cpu">SC7731E</span>
 <span class="terminal-line terminal-cpu">SC9863A</span>
 <span class="terminal-line terminal-cpu">SC9863A1</span>
@@ -44,21 +67,21 @@ const copy = getLocaleCopy(locale);
 
 <span class="terminal-line terminal-heading"><strong class="terminal-strong"># APARTADO MEDIATEK</strong></span>
 <span class="terminal-line terminal-brand"><strong>ITEL · INFINIX · TECNO</strong></span>
-<span class="terminal-line terminal-output"><strong>LK EDITOR FOR UNLOCK BOOTLOADER</strong> · SUPPORT AARCH64 &amp; ARM32</span>
+<span class="terminal-line terminal-output"><strong>{consoleText.lkEditor}</strong></span>
 <span class="terminal-line terminal-warning">(NO TODOS LOS MODELOS SOPORTADOS)</span>
 <span class="terminal-line terminal-output"><strong>BASE DE DATOS DE ROM PARCHADAS · +30 MODELOS</strong></span>
-<span class="terminal-line terminal-output">SOPORTA ANTICRACK &amp; SECURITY PLUGIN</span>
+<span class="terminal-line terminal-output">SOPORTA ANTICRACK &amp; {consoleText.securityPlugin}</span>
 
 <span class="terminal-line terminal-heading"><strong class="terminal-strong"># META MODE</strong></span>
 <span class="terminal-line terminal-brand"><strong>INFINIX · UNISOC · ITEL · TECNO</strong></span>
-<span class="terminal-line terminal-output"><strong>SOPORTA FRP · FACTORY RESET · PAYJOY BYPASS</strong></span>
+<span class="terminal-line terminal-output"><strong>{consoleText.metaSupport}</strong></span>
 
-<span class="terminal-line terminal-heading"><strong class="terminal-strong"># SAMSUNG EXYNOS DOWNLOAD MODE</strong></span>
+<span class="terminal-line terminal-heading"><strong class="terminal-strong"># {consoleText.downloadMode}</strong></span>
 <span class="terminal-line terminal-output"><strong>SOPORTA TODOS LOS PROCESADORES EXYNOS</strong></span>
 <span class="terminal-line terminal-note">SEGURIDADES MENORES A 05/2026</span>
 
 <span class="terminal-line terminal-heading"><strong class="terminal-strong"># NUBIA / ZTE · UNISOC</strong></span>
-<span class="terminal-line terminal-output"><strong>SUPPORT FRP &amp; FACTORY RESET</strong></span>
+<span class="terminal-line terminal-output"><strong>{consoleText.supportReset}</strong></span>
 <span class="terminal-line terminal-note">SEGURIDADES INFERIORES A 03/2026</span>
 <span class="terminal-line terminal-cpu">ZTE BLADE A55 4G</span>
 <span class="terminal-line terminal-cpu">NUBIA A36</span>
@@ -68,9 +91,9 @@ const copy = getLocaleCopy(locale);
 <span class="terminal-line terminal-cpu">ZTE BLADE V60 DESIGN</span>
 
 <span class="terminal-line terminal-fixed"><strong>✓ MEJORA DE ESTABILIDAD Y PROTOCOLOS</strong></span>
-<span class="terminal-line terminal-fixed">✓ FIX EN INICIO DE SESIONES Y TIMEOUTS</span>
+<span class="terminal-line terminal-fixed">✓ FIX EN INICIO DE SESIONES Y {consoleText.timeouts}</span>
 <span class="terminal-line terminal-command"><span class="terminal-prompt">$</span> <strong>check_model_supports</strong></span>
-<span class="terminal-line terminal-success"><strong>Enjoy ArepaTool.</strong></span></code></pre>
+<span class="terminal-line terminal-success"><strong>{consoleText.enjoy}</strong></span></code></pre>
     </div>
   </div>
 </section>

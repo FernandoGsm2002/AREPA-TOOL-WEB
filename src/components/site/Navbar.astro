@@ -28,7 +28,7 @@ const navLinks = getNavLinks(locale);
       </span>
     </a>
 
-    <nav class="site-nav-links" aria-label="Navegación principal">
+    <nav class="site-nav-links" aria-label={copy.nav.home === "Inicio" ? "Navegación principal" : "Primary navigation"}>
       {
         navLinks.map((link) => (
           <a
