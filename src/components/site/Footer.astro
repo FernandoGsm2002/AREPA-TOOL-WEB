@@ -1,13 +1,71 @@
 ---
-import { WhatsAppIcon } from "@/components/icons/BrandIcons";
+import { ArrowRight, Mail } from "lucide-react";
+import { TelegramIcon, WhatsAppIcon } from "@/components/icons/BrandIcons";
+import { navLinks } from "@/lib/site-data";
 ---
 
-<footer class="site-footer py-9">
-  <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 sm:flex-row sm:px-6">
-    <p class="text-muted-foreground text-sm">© 2026 ArepaTool v2.2.3 — Desarrollado con ❤️</p>
-    <div class="flex gap-5">
-      <a href="#" class="text-muted-foreground hover:text-foreground text-sm">Términos</a>
-      <a href="#" class="text-muted-foreground hover:text-foreground text-sm">Privacidad</a>
+<footer class="site-footer">
+  <div class="site-container">
+    <div class="site-footer-grid">
+      <section class="site-footer-column site-footer-support">
+        <h2>Support</h2>
+        <p>
+          Our support team is ready to help you with any questions or comments you may have! The
+          staff will answer incoming emails within 24 hours. The official support language is
+          English.
+        </p>
+        <a class="site-footer-contact" href="mailto:arepadadmin@arepatool.com">
+          <Mail aria-hidden="true" />
+          arepadadmin@arepatool.com
+        </a>
+      </section>
+
+      <section class="site-footer-column">
+        <h2>Useful links</h2>
+        <nav class="site-footer-links" aria-label="Enlaces útiles">
+          {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+        </nav>
+      </section>
+
+      <section class="site-footer-column">
+        <h2>My account</h2>
+        <nav class="site-footer-links" aria-label="Enlaces de cuenta">
+          <a href="/login">Login</a>
+          <a href="/register">Sign Up</a>
+          <a href="/recover">Forgot Password</a>
+        </nav>
+      </section>
+
+      <section class="site-footer-column site-footer-downloads">
+        <h2>Download modules</h2>
+        <p>Access your account to download the latest ArepaTool modules.</p>
+        <a class="site-footer-download" href="/login">
+          <span>Access downloads</span>
+          <ArrowRight aria-hidden="true" />
+        </a>
+      </section>
+    </div>
+
+    <div class="site-footer-socials" aria-label="Redes sociales">
+      <a href="https://chat.whatsapp.com/JpHJt9SvJzc1EdqVHbmY4B?mode=gi_t" target="_blank" rel="noreferrer" aria-label="WhatsApp">
+        <WhatsAppIcon className="size-5" />
+      </a>
+      <a href="https://t.me/ctrone21" target="_blank" rel="noreferrer" aria-label="Telegram">
+        <TelegramIcon className="size-5" />
+      </a>
+    </div>
+
+    <div class="site-footer-bottom">
+      <a class="site-footer-brand" href="/" aria-label="ArepaTool inicio">
+        <span class="site-footer-brand__logo" aria-hidden="true">
+          <img src="/pngs/arepatool-logo-mark.png" alt="" />
+        </span>
+        <span class="site-footer-brand__copy">
+          <strong>ArepaTool</strong>
+          <small>MDM Tool</small>
+        </span>
+      </a>
+      <p>Designed by ArepaTool Developers · All rights reserved · © 2026</p>
     </div>
   </div>
 </footer>
@@ -16,7 +74,7 @@ import { WhatsAppIcon } from "@/components/icons/BrandIcons";
   type="button"
   data-open-wa
   aria-label="Abrir grupo de WhatsApp"
-  class="fixed right-5 bottom-5 z-40 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl shadow-[#25D366]/30 transition-transform hover:scale-105"
+  class="site-wa-float fixed right-5 bottom-5 z-40 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl shadow-[#25D366]/30 transition-transform hover:scale-105"
 >
   <WhatsAppIcon className="size-6" />
 </button>
@@ -27,3 +85,202 @@ import { WhatsAppIcon } from "@/components/icons/BrandIcons";
     if (trigger) window.dispatchEvent(new CustomEvent("open-wa-modal"));
   });
 </script>
+
+<style>
+  .site-footer {
+    border-top: 1px solid #efc992;
+    background: #ffeed9;
+    color: #5c4736;
+  }
+
+  .site-footer-grid {
+    display: grid;
+    gap: 2.5rem 2rem;
+    padding-block: 4.5rem 3.75rem;
+  }
+
+  .site-footer-column {
+    min-width: 0;
+  }
+
+  .site-footer-column h2 {
+    color: #b65b15;
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .site-footer-column p {
+    max-width: 19rem;
+    margin-top: 1.25rem;
+    color: #6c594a;
+    font-size: .82rem;
+    line-height: 1.7;
+  }
+
+  .site-footer-support p {
+    max-width: 20rem;
+  }
+
+  .site-footer-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    margin-top: 1rem;
+    color: #5c4736;
+    font-size: .78rem;
+    transition: color .2s ease;
+  }
+
+  .site-footer-contact svg {
+    width: 1rem;
+    height: 1rem;
+    color: #b65b15;
+  }
+
+  .site-footer-contact:hover,
+  .site-footer-links a:hover {
+    color: #b65b15;
+  }
+
+  .site-footer-links {
+    display: grid;
+    gap: .82rem;
+    margin-top: 1.25rem;
+  }
+
+  .site-footer-links a {
+    width: fit-content;
+    color: #6c594a;
+    font-size: .82rem;
+    transition: color .2s ease;
+  }
+
+  .site-footer-downloads p {
+    max-width: 15rem;
+  }
+
+  .site-footer-download {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    margin-top: 1.15rem;
+    color: #b65b15;
+    font-size: .82rem;
+    font-weight: 700;
+  }
+
+  .site-footer-download svg {
+    width: 1rem;
+    height: 1rem;
+    transition: transform .2s ease;
+  }
+
+  .site-footer-download:hover svg {
+    transform: translateX(.2rem);
+  }
+
+  .site-footer-socials {
+    display: flex;
+    justify-content: center;
+    gap: .75rem;
+    border-top: 1px solid #efcf9e;
+    border-bottom: 1px solid #efcf9e;
+    padding-block: 1.5rem;
+  }
+
+  .site-footer-socials a {
+    display: grid;
+    width: 2.65rem;
+    height: 2.65rem;
+    place-items: center;
+    border: 1px solid #edc17f;
+    border-radius: 999px;
+    background: #ffe0b2;
+    color: #a84e0d;
+    transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease;
+  }
+
+  .site-footer-socials a:hover {
+    border-color: #d8791b;
+    background: #f2a044;
+    color: #fffaf2;
+    transform: translateY(-.12rem);
+  }
+
+  .site-footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding-block: 1.65rem 2rem;
+  }
+
+  .site-footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+  }
+
+  .site-footer-brand__logo {
+    display: grid;
+    width: 2.6rem;
+    height: 2.6rem;
+    place-items: center;
+    overflow: hidden;
+    border-radius: .7rem;
+    background: linear-gradient(145deg, #fff7d7 0%, #f3c044 42%, #e8751a 100%);
+  }
+
+  .site-footer-brand__logo img {
+    width: 100%;
+    height: auto;
+  }
+
+  .site-footer-brand__copy strong,
+  .site-footer-brand__copy small {
+    display: block;
+  }
+
+  .site-footer-brand__copy strong {
+    color: #c76516;
+    font-family: 'Avenir Next', 'Segoe UI', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: -.04em;
+  }
+
+  .site-footer-brand__copy small {
+    margin-top: .2rem;
+    color: #9a775a;
+    font-family: var(--font-mono);
+    font-size: .5rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .site-footer-bottom > p {
+    color: #9a775a;
+    font-size: .68rem;
+    text-align: right;
+  }
+
+  @media (min-width: 700px) {
+    .site-footer-grid {
+      grid-template-columns: 1.4fr repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 699px) {
+    .site-footer-bottom {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .site-footer-bottom > p {
+      text-align: left;
+    }
+  }
+</style>

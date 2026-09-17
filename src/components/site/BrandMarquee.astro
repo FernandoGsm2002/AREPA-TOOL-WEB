@@ -1,0 +1,100 @@
+---
+const brands = [
+  { name: "Motorola", slug: "motorola", file: "motorola.svg" },
+  { name: "Samsung", slug: "samsung", file: "samsung.svg" },
+  { name: "Xiaomi", slug: "xiaomi", file: "xiaomi.svg" },
+  { name: "HONOR", slug: "honor", file: "honor.svg" },
+  { name: "Infinix", slug: "infinix", file: "infinix.svg" },
+  { name: "TECNO", slug: "tecno", file: "tecno.svg" },
+  { name: "Itel", slug: "itel", file: "itel.svg" },
+  { name: "OPPO", slug: "oppo", file: "oppo.svg" },
+  { name: "ZTE", slug: "zte", file: "zte.svg" },
+];
+---
+
+<section class="brand-marquee" aria-label="Marcas compatibles con ArepaTool">
+  <div class="brand-marquee__viewport">
+    <div class="brand-marquee__track">
+      {[0, 1].map((copy) => (
+        <div class="brand-marquee__group" aria-hidden={copy === 1 ? "true" : undefined}>
+          {brands.map((brand) => (
+            <div class={`brand-marquee__item brand-marquee__item--${brand.slug}`}>
+              <img
+                src={`/pngs/brands/${brand.file}`}
+                alt={copy === 0 ? brand.name : ""}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .brand-marquee {
+    overflow: hidden;
+    border-block: 1px solid rgb(23 34 45 / 15%);
+    background: #e8e6dd;
+  }
+
+  .brand-marquee__viewport {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 11%, #000 89%, transparent);
+  }
+
+  .brand-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: brand-marquee 34s linear infinite;
+  }
+
+  .brand-marquee__group {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: clamp(2.75rem, 6vw, 6.5rem);
+    padding: 1.25rem clamp(2rem, 7vw, 8rem);
+  }
+
+  .brand-marquee__item {
+    display: flex;
+    flex: none;
+    width: clamp(6.5rem, 11vw, 9rem);
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    opacity: .76;
+  }
+
+  .brand-marquee__item img {
+    display: block;
+    width: 100%;
+    max-width: 8rem;
+    height: 1.65rem;
+    object-fit: contain;
+    filter: grayscale(1) brightness(.58);
+    opacity: .7;
+  }
+
+  .brand-marquee__item--samsung,
+  .brand-marquee__item--xiaomi {
+    width: clamp(8rem, 13vw, 10.5rem);
+  }
+
+  .brand-marquee__item--samsung img,
+  .brand-marquee__item--xiaomi img {
+    max-width: 9.5rem;
+  }
+
+  @keyframes brand-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand-marquee__track { animation-play-state: paused; }
+  }
+</style>

@@ -51,9 +51,7 @@ export default function Dashboard() {
     <div className="bg-background flex min-h-screen">
       <WelcomeConfetti username={user.username} />
       <aside className="border-border/70 bg-sidebar/95 sticky top-0 hidden h-screen w-72 shrink-0 flex-col overflow-hidden border-r py-5 pr-4 pl-6 shadow-[12px_0_35px_rgba(0,0,0,0.12)] sm:flex">
-        <a href="/" className="group mx-1 mb-6 block overflow-hidden rounded-xl border border-white/8 bg-linear-to-br from-white/8 to-transparent px-3 py-1.5 shadow-lg shadow-black/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-primary/10">
-          <img src="/pngs/arepalanding.png" alt="ArepaTool" className="-my-7 h-28 w-full object-contain transition-transform duration-300 group-hover:scale-[1.03]" />
-        </a>
+        <a href="/" className="font-display text-primary mx-1 mb-6 block text-2xl font-black tracking-[-0.06em]">ArepaTool</a>
 
         <div className="border-border/60 mx-1 border-t pt-5">
           <p className="text-muted-foreground mb-2 px-2 text-[0.65rem] font-semibold tracking-[0.16em] uppercase">Panel de control</p>

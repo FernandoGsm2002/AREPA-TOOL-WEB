@@ -1,10 +1,12 @@
 export const navLinks = [
   { label: "Inicio", href: "/" },
   { label: "Modelos soportados", href: "/supportedmodels" },
-  { label: "Características", href: "#features" },
-  { label: "Precios", href: "#pricing" },
-  { label: "Manuales", href: "/instructions.html" },
-  { label: "Distribuidores", href: "#resellers" },
+  { label: "Actualizaciones", href: "/updates" },
+  { label: "Características", href: "/features" },
+  { label: "Tutoriales", href: "/tutorials" },
+  { label: "Manuales", href: "/instructions" },
+  { label: "Precios", href: "/pricing" },
+  { label: "Distribuidores", href: "/resellers" },
 ];
 
 export type ChangelogLine =
@@ -17,7 +19,7 @@ export type ChangelogLine =
   | { type: "blank" };
 
 export const changelog: ChangelogLine[] = [
-  { type: "h1", text: "# ArepaTool v2.2.3" },
+  { type: "h1", text: "# ArepaTool v2.2.4" },
   { type: "comment", text: "## Nuevos métodos · Samsung · Unisoc — 2026" },
   { type: "blank" },
   { type: "h2", text: "### 🔓 Infinix · Tecno — Unlock Bootloader" },
@@ -186,7 +188,6 @@ export type FeatureBadge = "ACTIVE" | "NEW" | "BETA";
 export interface Feature {
   filename: string;
   badge: FeatureBadge;
-  image: string;
   title: string;
   accent: string;
   bullets: string[];
@@ -197,7 +198,6 @@ export const features: Feature[] = [
   {
     filename: "ArepaWifi.sh",
     badge: "ACTIVE",
-    image: "/pngs/arepamdm.png",
     title: "AREPA",
     accent: "HOTSPOT",
     hero: true,
@@ -211,7 +211,6 @@ export const features: Feature[] = [
   {
     filename: "dns-generator.sh",
     badge: "ACTIVE",
-    image: "/pngs/arepadnsgeneradora.png",
     title: "DNS",
     accent: "Creator",
     bullets: [
@@ -225,7 +224,6 @@ export const features: Feature[] = [
   {
     filename: "fix-banking.sh",
     badge: "ACTIVE",
-    image: "/pngs/arepafixbanks.png",
     title: "Fix Apps",
     accent: "Bancarias",
     bullets: [
@@ -237,7 +235,6 @@ export const features: Feature[] = [
   {
     filename: "ios-bypass.sh",
     badge: "ACTIVE",
-    image: "/pngs/arepaa12+.png",
     title: "iOS Bypass",
     accent: "A12+",
     bullets: [
@@ -249,7 +246,6 @@ export const features: Feature[] = [
   {
     filename: "motorola-mdm.sh",
     badge: "NEW",
-    image: "/pngs/arepamotorola.png",
     title: "Motorola",
     accent: "ALL MDM",
     bullets: [
@@ -262,7 +258,6 @@ export const features: Feature[] = [
   {
     filename: "remove-mdm.sh",
     badge: "BETA",
-    image: "/pngs/areparemovemdm.png",
     title: "MDM",
     accent: "No DNS",
     bullets: [
@@ -274,7 +269,6 @@ export const features: Feature[] = [
   {
     filename: "ext4-explorer.sh",
     badge: "NEW",
-    image: "/pngs/arepaext4.png",
     title: "Ext4",
     accent: "Explorer",
     bullets: [

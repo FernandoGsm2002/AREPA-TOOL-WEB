@@ -1,65 +1,331 @@
 ---
-import { Badge } from "@/components/ui/badge";
-import { features, type FeatureBadge } from "@/lib/site-data";
-
-const badgeClass: Record<FeatureBadge, string> = {
-  ACTIVE: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-  NEW: "bg-primary/15 text-primary border-primary/30",
-  BETA: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-};
+import { Apple, CircuitBoard, Database, Download, Gauge, LockKeyhole, RadioTower, ShieldCheck, Smartphone, Wifi } from "lucide-react";
 ---
 
-<section id="features" class="section-plain">
+<section id="features" class="features-page">
   <div class="site-container features-layout">
-    <div class="section-heading">
-      <h2>Módulos pensados para el trabajo real.</h2>
-      <p>Accede a las operaciones que más usas desde una interfaz directa, con soporte por chipset y métodos actualizados para tu flujo de taller.</p>
+    <div class="features-quickbar" aria-label="Protocolos principales">
+      <span>MediaTek</span>
+      <span>Fastboot</span>
+      <span>ADB</span>
+      <span>Unisoc</span>
+      <span>Apple iOS</span>
     </div>
 
-  <div class="feature-grid">
-    {
-      features.map((feature) => (
-        <div
-          class:list={[
-            "feature-panel overflow-hidden transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-primary/45",
-            feature.hero && "feature-panel--hero",
-          ]}
-        >
-          <div class="flex items-center gap-2 border-b border-white/10 px-3.5 py-2">
-            <div class="flex gap-1.5">
-              <span class="size-2.5 rounded-full bg-red-500/70" />
-              <span class="size-2.5 rounded-full bg-amber-500/70" />
-              <span class="size-2.5 rounded-full bg-emerald-500/70" />
-            </div>
-            <span class="text-muted-foreground ml-1.5 font-mono text-xs">{feature.filename}</span>
-            <Badge variant="outline" className={`ml-auto ${badgeClass[feature.badge]}`}>
-              {feature.badge}
-            </Badge>
-          </div>
-
-          <div class:list={["p-5", feature.hero && "feature-panel__body"]}>
-            <img
-              src={feature.image}
-              alt={`${feature.title} ${feature.accent}`}
-              class="mx-auto max-h-56 w-auto object-contain"
-            />
-            <div class:list={[feature.hero ? "mt-4 sm:mt-0" : "mt-4"]}>
-              <h3 class="font-display text-lg font-bold">
-                {feature.title} <span class="text-primary">{feature.accent}</span>
-              </h3>
-              <ul class="text-muted-foreground mt-2.5 space-y-1.5 text-sm">
-                {feature.bullets.map((bullet) => (
-                  <li class="flex gap-2">
-                    <span class="text-primary mt-1.5 size-1 shrink-0 rounded-full bg-current" />
-                    <span>{bullet}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+    <div class="feature-groups">
+      <article class="feature-cluster feature-cluster--wide">
+        <div class="feature-cluster__header">
+          <span class="feature-cluster__icon"><CircuitBoard aria-hidden="true" /></span>
+          <div><p class="feature-cluster__eyebrow">Core protocols</p><h2>Protocolos base</h2></div>
         </div>
-      ))
-    }
-  </div>
+        <ul class="feature-list">
+          <li>MediaTek para operaciones de servicio y reparación.</li>
+          <li>Fastboot para diagnóstico, desbloqueo y escritura de ROMs modificadas.</li>
+          <li>ADB para operaciones avanzadas y equipos rooteados.</li>
+          <li>Unisoc para dispositivos Transsion y otras plataformas compatibles.</li>
+          <li>Apple iOS para bypass, passcode y Hello en hardware compatible.</li>
+        </ul>
+      </article>
+
+      <article class="feature-cluster">
+        <div class="feature-cluster__header">
+          <span class="feature-cluster__icon"><ShieldCheck aria-hidden="true" /></span>
+          <div><p class="feature-cluster__eyebrow">Samsung</p><h2>Operaciones ADB</h2></div>
+        </div>
+        <ul class="feature-list">
+          <li>Activar ADB en Android OS 16.</li>
+          <li>Eliminar FRP en Android OS 16.</li>
+          <li>Cambiar CSC y eliminar FRP vía ADB.</li>
+          <li>Eliminar cuenta Samsung vía ADB.</li>
+          <li>Desactivar actualizaciones y recuperar apps bancarias.</li>
+          <li>Fix Yape para dispositivos rooteados.</li>
+          <li>Activar IMEI 2 vía ADB root.</li>
+          <li>Borrar datos de usuario vía ADB.</li>
+        </ul>
+      </article>
+
+      <article class="feature-cluster">
+        <div class="feature-cluster__header">
+          <span class="feature-cluster__icon"><Download aria-hidden="true" /></span>
+          <div><p class="feature-cluster__eyebrow">Samsung 2026</p><h2>Exynos Download Mode</h2></div>
+        </div>
+        <ul class="feature-list">
+          <li>Todos los procesadores Exynos soportados.</li>
+          <li>FRP desde Download Mode.</li>
+          <li>Flash mediante Odin.</li>
+          <li>Compatibilidad con seguridades inferiores a 05/2026.</li>
+        </ul>
+      </article>
+
+      <article class="feature-cluster">
+        <div class="feature-cluster__header">
+          <span class="feature-cluster__icon"><Smartphone aria-hidden="true" /></span>
+          <div><p class="feature-cluster__eyebrow">Motorola MediaTek</p><h2>FRP y bootloader</h2></div>
+        </div>
+        <ul class="feature-list">
+          <li>FRP y unlock bootloader para dispositivos Motorola MediaTek.</li>
+          <li>Soporte para la gran mayoría de equipos Motorola 2025 y 2026.</li>
+          <li>Versiones de Android 11, 12, 13, 14, 15 y 16.</li>
+        </ul>
+      </article>
+
+      <article class="feature-cluster">
+        <div class="feature-cluster__header">
+          <span class="feature-cluster__icon"><RadioTower aria-hidden="true" /></span>
+          <div><p class="feature-cluster__eyebrow">Transsion</p><h2>Infinix · Itel · Tecno</h2></div>
+        </div>
+        <ul class="feature-list">
+          <li>Protocolo Meta para FRP, factory reset y PayJoy bypass.</li>
+          <li>Fastboot para escribir ROMs modificadas.</li>
+          <li>LK Editor para unlock bootloader en AARCH64 y ARM32.</li>
+          <li>Soporte para security plugin y anticrack.</li>
+        </ul>
+      </article>
+
+      <article class="feature-cluster">
+        <div class="feature-cluster__header">
+          <span class="feature-cluster__icon"><Database aria-hidden="true" /></span>
+          <div><p class="feature-cluster__eyebrow">Unisoc Transsion</p><h2>Factory reset y PayJoy</h2></div>
+        </div>
+        <ul class="feature-list">
+          <li>Unisoc para Infinix, Itel y Tecno.</li>
+          <li>Factory reset y PayJoy con seguridades inferiores a 09/2026.</li>
+          <li>Protocolo vía diagnóstico para puertos cerrados.</li>
+          <li>FRP y factory reset en dispositivos compatibles.</li>
+        </ul>
+      </article>
+
+      <article class="feature-cluster">
+        <div class="feature-cluster__header">
+          <span class="feature-cluster__icon"><Gauge aria-hidden="true" /></span>
+          <div><p class="feature-cluster__eyebrow">Honor 4G · 5G</p><h2>Reparación NVData</h2></div>
+        </div>
+        <ul class="feature-list">
+          <li>Reparación de NVData para dispositivos Honor 4G y 5G.</li>
+          <li>Diagnóstico de conectividad y recuperación del equipo.</li>
+        </ul>
+      </article>
+
+      <article class="feature-cluster">
+        <div class="feature-cluster__header">
+          <span class="feature-cluster__icon"><Wifi aria-hidden="true" /></span>
+          <div><p class="feature-cluster__eyebrow">ZTE · Nubia 2026</p><h2>Diagnóstico y reset</h2></div>
+        </div>
+        <ul class="feature-list">
+          <li>FRP y factory reset para ZTE y Nubia compatibles.</li>
+          <li>Protocolo de diagnóstico para puertos cerrados.</li>
+          <li>Operaciones Unisoc en modelos 2026.</li>
+        </ul>
+      </article>
+
+      <article class="feature-cluster feature-cluster--wide">
+        <div class="feature-cluster__header">
+          <span class="feature-cluster__icon"><LockKeyhole aria-hidden="true" /></span>
+          <div><p class="feature-cluster__eyebrow">MDM Locks · DNS</p><h2>Bloqueos corporativos</h2></div>
+        </div>
+        <ul class="feature-list feature-list--columns">
+          <li>IT Admin, Kiosk, Claro y Telcel.</li>
+          <li>White Screen y Oppo Locks.</li>
+          <li>Métodos DNS y sin DNS.</li>
+          <li>ADB sin relock.</li>
+          <li>Método QR para equipos que piden Wi-Fi al iniciar.</li>
+          <li>ArepaHotspot para editar la red inalámbrica y configurar el equipo sin riesgo de relock.</li>
+        </ul>
+      </article>
+
+      <article class="feature-cluster feature-cluster--wide">
+        <div class="feature-cluster__header">
+          <span class="feature-cluster__icon"><Apple aria-hidden="true" /></span>
+          <div><p class="feature-cluster__eyebrow">Apple iOS</p><h2>Bypass y passcode</h2></div>
+        </div>
+        <ul class="feature-list">
+          <li>Bypass Hello hasta iOS 26.1 en iPhone 11 hasta 17 Pro Max compatibles.</li>
+          <li>A12 y A13: bypass passcode y Hello.</li>
+          <li>Operaciones sin créditos en los métodos compatibles.</li>
+        </ul>
+      </article>
+    </div>
+
+    <p class="features-note">La compatibilidad puede depender del modelo exacto, chipset, versión de Android/iOS, nivel de seguridad y estado del bootloader. Revisa el soporte del equipo antes de comenzar.</p>
   </div>
 </section>
+
+<style>
+  .features-page {
+    background: #f1f0ea;
+    color: #17222d;
+  }
+
+  .features-layout {
+    padding-block: 4.5rem 7rem;
+  }
+
+  .feature-cluster__eyebrow {
+    color: #b65b15;
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .features-quickbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55rem;
+    margin-top: 0;
+  }
+
+  .features-quickbar span {
+    border: 1px solid #e0b47a;
+    border-radius: 999px;
+    background: #fff0dc;
+    padding: .5rem .75rem;
+    color: #8f4b12;
+    font-family: var(--font-mono);
+    font-size: .66rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+  }
+
+  .feature-groups {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2.25rem;
+  }
+
+  .feature-cluster {
+    border-top: 2px solid #e98a24;
+    background: #fffaf2;
+    padding: 1.35rem 1.25rem 1.5rem;
+    box-shadow: 0 12px 28px rgb(90 53 24 / 6%);
+  }
+
+  .feature-cluster__header {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+  }
+
+  .feature-cluster__icon {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid #efc992;
+    border-radius: .8rem;
+    background: #fff0dc;
+    color: #c76516;
+  }
+
+  .feature-cluster__icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .feature-cluster h2 {
+    margin-top: .25rem;
+    color: #3e2a1c;
+    font-family: 'Avenir Next', 'Segoe UI', sans-serif;
+    font-size: 1.25rem;
+    letter-spacing: -.035em;
+  }
+
+  .feature-list {
+    display: grid;
+    gap: .6rem;
+    margin-top: 1.25rem;
+    padding-left: 1.1rem;
+    color: #665548;
+    font-size: .86rem;
+    line-height: 1.55;
+  }
+
+  .feature-list li::marker {
+    color: #d97819;
+  }
+
+  .features-note {
+    max-width: 50rem;
+    margin-top: 2rem;
+    color: #7a6a5d;
+    font-size: .78rem;
+    line-height: 1.6;
+  }
+
+  @media (min-width: 700px) {
+    .feature-groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .feature-cluster--wide {
+      grid-column: span 2;
+    }
+
+    .feature-list--columns {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 2rem;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .feature-groups {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .feature-cluster--wide {
+      grid-column: span 3;
+    }
+  }
+
+  @media (max-width: 699px) {
+    .features-layout {
+      padding-block: 3rem 4.5rem;
+    }
+
+    .features-quickbar {
+      gap: .45rem;
+    }
+
+    .features-quickbar span {
+      padding: .42rem .62rem;
+      font-size: .61rem;
+    }
+
+    .feature-groups {
+      gap: .8rem;
+      margin-top: 1.75rem;
+    }
+
+    .feature-cluster {
+      padding: 1.2rem 1rem 1.3rem;
+    }
+
+    .feature-cluster__header {
+      align-items: flex-start;
+      gap: .7rem;
+    }
+
+    .feature-cluster__icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: .75rem;
+    }
+
+    .feature-cluster h2 {
+      font-size: 1.08rem;
+    }
+
+    .feature-list {
+      gap: .5rem;
+      margin-top: 1rem;
+      font-size: .8rem;
+    }
+
+    .features-note {
+      margin-top: 1.5rem;
+      font-size: .72rem;
+    }
+  }
+</style>

@@ -1,0 +1,185 @@
+<section class="release-console-section" aria-labelledby="release-console-title">
+  <div class="site-container">
+    <div class="release-console-heading">
+      <p class="release-console-kicker">Latest release</p>
+      <h2 id="release-console-title">ArepaTool v2.2.4</h2>
+      <p>17/09/2026 · What’s new?</p>
+    </div>
+
+    <div class="release-console" role="region" aria-label="ArepaTool version 2.2.4 changelog">
+      <div class="release-console__bar" aria-hidden="true">
+        <span class="release-console__dot release-console__dot--red"></span>
+        <span class="release-console__dot release-console__dot--yellow"></span>
+        <span class="release-console__dot release-console__dot--green"></span>
+        <span class="release-console__path">arepatool@workstation: ~/releases/2.2.4</span>
+        <span class="release-console__status">stable</span>
+      </div>
+
+      <pre class="release-console__code"><code><span class="terminal-line terminal-shebang">#!/usr/bin/env bash</span>
+<span class="terminal-line terminal-comment"><strong class="terminal-strong"># ArepaTool v2.2.4 - 17/09/2026</strong></span>
+
+<span class="terminal-line terminal-command"><span class="terminal-prompt">$</span> printf "What's new?\n"</span>
+
+<span class="terminal-line terminal-heading"><strong class="terminal-strong"># APARTADO UNISOC</strong></span>
+<span class="terminal-line terminal-brand"><strong>ITEL · INFINIX · TECNO</strong></span>
+<span class="terminal-line terminal-output"><strong>SEGURIDADES ALTAS SOPORTADAS</strong></span>
+<span class="terminal-line terminal-output"><strong>PUERTO PARCHADO SOPORTADO</strong></span>
+<span class="terminal-line terminal-output"><strong>CPU COMPATIBLE LIST</strong></span>
+<span class="terminal-line terminal-cpu">SC7731E</span>
+<span class="terminal-line terminal-cpu">SC9863A</span>
+<span class="terminal-line terminal-cpu">SC9863A1</span>
+<span class="terminal-line terminal-cpu">TIGER T606</span>
+<span class="terminal-line terminal-cpu">SC9832E</span>
+<span class="terminal-line terminal-cpu">TIGER T603</span>
+<span class="terminal-line terminal-cpu">MediaTek Dimensity 6080 / Unisoc T760</span>
+<span class="terminal-line terminal-cpu">TIGER T616</span>
+
+<span class="terminal-line terminal-heading"><strong class="terminal-strong"># APARTADO MEDIATEK</strong></span>
+<span class="terminal-line terminal-brand"><strong>ITEL · INFINIX · TECNO</strong></span>
+<span class="terminal-line terminal-output"><strong>LK EDITOR FOR UNLOCK BOOTLOADER</strong> · SUPPORT AARCH64 &amp; ARM32</span>
+<span class="terminal-line terminal-warning">(NO TODOS LOS MODELOS SOPORTADOS)</span>
+<span class="terminal-line terminal-output"><strong>BASE DE DATOS DE ROM PARCHADAS · +30 MODELOS</strong></span>
+<span class="terminal-line terminal-output">SOPORTA ANTICRACK &amp; SECURITY PLUGIN</span>
+
+<span class="terminal-line terminal-heading"><strong class="terminal-strong"># META MODE</strong></span>
+<span class="terminal-line terminal-brand"><strong>INFINIX · UNISOC · ITEL · TECNO</strong></span>
+<span class="terminal-line terminal-output"><strong>SOPORTA FRP · FACTORY RESET · PAYJOY BYPASS</strong></span>
+
+<span class="terminal-line terminal-heading"><strong class="terminal-strong"># SAMSUNG EXYNOS DOWNLOAD MODE</strong></span>
+<span class="terminal-line terminal-output"><strong>SOPORTA TODOS LOS PROCESADORES EXYNOS</strong></span>
+<span class="terminal-line terminal-note">SEGURIDADES MENORES A 05/2026</span>
+
+<span class="terminal-line terminal-heading"><strong class="terminal-strong"># NUBIA / ZTE · UNISOC</strong></span>
+<span class="terminal-line terminal-output"><strong>SUPPORT FRP &amp; FACTORY RESET</strong></span>
+<span class="terminal-line terminal-note">SEGURIDADES INFERIORES A 03/2026</span>
+<span class="terminal-line terminal-cpu">ZTE BLADE A55 4G</span>
+<span class="terminal-line terminal-cpu">NUBIA A36</span>
+<span class="terminal-line terminal-cpu">NUBIA AIR 5G</span>
+<span class="terminal-line terminal-cpu">NUBIA NEO 3 GT 5G</span>
+<span class="terminal-line terminal-cpu">NUBIA NEO 3</span>
+<span class="terminal-line terminal-cpu">ZTE BLADE V60 DESIGN</span>
+
+<span class="terminal-line terminal-fixed"><strong>✓ MEJORA DE ESTABILIDAD Y PROTOCOLOS</strong></span>
+<span class="terminal-line terminal-fixed">✓ FIX EN INICIO DE SESIONES Y TIMEOUTS</span>
+<span class="terminal-line terminal-command"><span class="terminal-prompt">$</span> <strong>check_model_supports</strong></span>
+<span class="terminal-line terminal-success"><strong>Enjoy ArepaTool.</strong></span></code></pre>
+    </div>
+  </div>
+</section>
+
+<style>
+  .release-console-section {
+    border-bottom: 1px solid rgb(23 34 45 / 12%);
+    background: #e9e8e1;
+    padding-block: 4.5rem 5.5rem;
+  }
+
+  .release-console-heading {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: .55rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .release-console-heading h2 {
+    width: 100%;
+    margin: 0;
+    color: #17222d;
+    font-family: 'Avenir Next', 'Segoe UI', sans-serif;
+    font-size: clamp(1.85rem, 4vw, 3rem);
+    letter-spacing: -.055em;
+  }
+
+  .release-console-heading p:last-child {
+    margin: 0;
+    color: #65727c;
+    font-size: .95rem;
+  }
+
+  .release-console-kicker,
+  .release-console__status {
+    color: #a27a23;
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .release-console-kicker { width: 100%; margin: 0; }
+
+  .release-console {
+    overflow: hidden;
+    border: 1px solid #c8c6bc;
+    border-radius: .65rem;
+    background: #f8f7f1 !important;
+    color-scheme: light;
+    box-shadow: 0 22px 50px rgb(23 34 45 / 14%);
+  }
+
+  .release-console__bar {
+    display: flex;
+    min-height: 2.65rem;
+    align-items: center;
+    gap: .45rem;
+    padding-inline: 1rem;
+    border-bottom: 1px solid #cfcdc4;
+    background: #e1e0d8;
+    color: #68737b;
+    font-family: var(--font-mono);
+    font-size: .67rem;
+  }
+
+  .release-console__dot { width: .5rem; height: .5rem; border-radius: 50%; }
+  .release-console__dot--red { background: #e87878; }
+  .release-console__dot--yellow { background: #e7bd68; }
+  .release-console__dot--green { background: #75c49a; }
+  .release-console__path { margin-left: .45rem; }
+  .release-console__status { margin-left: auto; color: #75c49a; font-size: .6rem; }
+
+  .release-console__code {
+    max-height: 34rem;
+    overflow: auto;
+    margin: 0;
+    padding: 1.35rem clamp(1rem, 3vw, 2rem) 1.6rem;
+    background: #f8f7f1 !important;
+    color: #34404a;
+    font-family: var(--font-mono);
+    font-size: clamp(.69rem, 1.2vw, .8rem);
+    line-height: 1.75;
+    white-space: pre-wrap;
+  }
+
+  .release-console__code code { background: transparent !important; color: inherit; }
+  .terminal-line { display: block; opacity: 0; transform: translateY(.2rem); animation: terminal-line-in .34s ease-out var(--line-delay, 0ms) forwards; }
+  .terminal-shebang { color: #7e5c17; }
+  .terminal-strong { font-weight: 800; }
+  .terminal-command { color: #263641; }
+  .terminal-prompt { color: #aa7618; }
+  .terminal-comment { color: #7b858b; }
+  .terminal-heading { color: #476d91; }
+  .terminal-brand { color: #7d4f8f; }
+  .terminal-variable { color: #476d91; }
+  .terminal-output { color: #327b59; }
+  .terminal-cpu { color: #416f9a; }
+  .terminal-note { color: #7c6b4d; }
+  .terminal-warning { color: #a16b14; }
+  .terminal-fixed { color: #2b7b83; }
+  .terminal-success { color: #327b59; }
+
+  @keyframes terminal-line-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .release-console__code { scroll-behavior: auto; }
+    .terminal-line { opacity: 1; transform: none; animation: none; }
+  }
+</style>
+
+<script>
+  const releaseLines = document.querySelectorAll<HTMLElement>(".release-console__code .terminal-line");
+  releaseLines.forEach((line, index) => {
+    line.style.setProperty("--line-delay", `${index * 42}ms`);
+  });
+</script>

@@ -11,10 +11,12 @@ const currentPath = Astro.url.pathname;
 <header class="site-header">
   <div class="site-container site-nav-inner">
     <a href="/" class="site-brand">
-      <img src="/pngs/arepalanding.png" alt="ArepaTool" />
+      <span class="site-brand-logo" aria-hidden="true">
+        <img src="/pngs/arepatool-logo-mark.png" alt="" />
+      </span>
       <span class="site-brand-copy">
         <strong>ArepaTool</strong>
-        <span>GSM repair suite</span>
+        <span>MDM Tool</span>
       </span>
     </a>
 
@@ -37,7 +39,7 @@ const currentPath = Astro.url.pathname;
     <div class="site-nav-actions">
       <Button
         data-open-wa
-        className="bg-[#25D366] text-white shadow-lg shadow-[#25D366]/15 hover:bg-[#1ea952]"
+        className="site-nav-whatsapp bg-[#25D366] text-white shadow-lg shadow-[#25D366]/15 hover:bg-[#1ea952]"
         size="sm"
       >
         <WhatsAppIcon className="size-4" />
@@ -45,7 +47,7 @@ const currentPath = Astro.url.pathname;
       </Button>
       <a
         href="/login"
-        class={buttonVariants({ size: "sm", variant: "outline" })}
+        class={`site-nav-login ${buttonVariants({ size: "sm", variant: "outline" })}`}
         data-slot="button"
         data-variant="outline"
         data-size="sm"
@@ -53,7 +55,7 @@ const currentPath = Astro.url.pathname;
         <LogIn className="size-4" />
         Iniciar sesión
       </a>
-      <a href="/register" class={buttonVariants({ size: "sm", className: "shadow-lg shadow-primary/20" })} data-slot="button" data-variant="default" data-size="sm">
+      <a href="/register" class={`site-nav-register ${buttonVariants({ size: "sm", className: "shadow-lg shadow-primary/20" })}`} data-slot="button" data-variant="default" data-size="sm">
         <UserPlus className="size-4" />
         Registro
       </a>

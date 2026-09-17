@@ -102,7 +102,7 @@ export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="border-border/60 bg-card w-full max-w-sm rounded-2xl border p-8 shadow-xl">
         <div className="mb-6 text-center">
-          <img src="/pngs/arepalanding.png" alt="ArepaTool" className="mx-auto h-12 w-auto" />
+          <div className="font-display text-primary text-2xl font-black tracking-[-0.06em]">ArepaTool</div>
           <h1 className="font-display mt-4 text-xl font-bold">Administración</h1>
           <p className="text-muted-foreground mt-1 text-sm">Acceso restringido a personal autorizado</p>
         </div>

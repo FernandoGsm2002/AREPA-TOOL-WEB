@@ -1,0 +1,20 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Navbar from "@/components/site/Navbar.astro";
+import Footer from "@/components/site/Footer.astro";
+import WhatsAppModal from "@/components/site/WhatsAppModal";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <Navbar />
+  <slot />
+  <Footer />
+  <WhatsAppModal client:load />
+</Layout>

@@ -7,8 +7,9 @@ import { WindowsIcon } from "@/components/icons/BrandIcons";
 <section class="hero-section">
   <div class="site-container hero-grid">
     <div class="hero-copy">
-      <h1>Todo lo que tu taller necesita para <span>desbloquear y reparar.</span></h1>
-      <p>ArepaTool reúne módulos Android, Apple, MDM, DNS y soporte remoto en una sola estación de trabajo para técnicos GSM.</p>
+      <p class="hero-kicker">Modern software</p>
+      <h1>ArepaTool <span>Professional tool for you.</span></h1>
+      <p>A modern tool designed for unlockers like you</p>
       <div class="hero-release" aria-label="Versión y plataforma">
         <strong>v2.2.3</strong>
         <span>Windows</span>
@@ -16,7 +17,7 @@ import { WindowsIcon } from "@/components/icons/BrandIcons";
       </div>
 
       <div class="hero-actions">
-        <a href="#pricing" class={buttonVariants({ size: "lg", className: "shadow-lg shadow-primary/15" })}>
+        <a href="/pricing" class={buttonVariants({ size: "lg", className: "shadow-lg shadow-primary/15" })}>
           Ver licencia
           <ArrowRight className="size-4" />
         </a>
@@ -36,19 +37,16 @@ import { WindowsIcon } from "@/components/icons/BrandIcons";
     </div>
 
     <div class="hero-visual">
-      <figure class="hero-window">
-        <div class="hero-window-bar" aria-hidden="true">
-          <i></i><i></i><i></i><span>arepatool.exe · desktop workspace</span>
-        </div>
-        <img
-          src="/pngs/landingdisplay.jpg"
-          alt="Interfaz de ArepaTool v2.2.3 con módulos Samsung, Android, MediaTek, Apple y USB-Redirector"
-          loading="eager"
-          decoding="async"
-        />
-      </figure>
+      <img
+        class="hero-mascot"
+        src="/pngs/windowslog.png"
+        alt="Mascota de ArepaTool trabajando en un equipo Windows"
+        loading="eager"
+        decoding="async"
+      />
     </div>
   </div>
+  <p class="site-container hero-tagline">Compatible with modern brands on the market</p>
 </section>
 
 <script>

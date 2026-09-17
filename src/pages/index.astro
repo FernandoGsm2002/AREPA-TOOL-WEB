@@ -2,12 +2,10 @@
 import Layout from "@/layouts/Layout.astro";
 import Navbar from "@/components/site/Navbar.astro";
 import AnnouncementBanner from "@/components/site/AnnouncementBanner.astro";
+import BrandMarquee from "@/components/site/BrandMarquee.astro";
 import Hero from "@/components/site/Hero.astro";
-import Changelog from "@/components/site/Changelog.astro";
-import Features from "@/components/site/Features.astro";
-import Tutorials from "@/components/site/Tutorials.astro";
+import ReleaseConsole from "@/components/site/ReleaseConsole.astro";
 import Pricing from "@/components/site/Pricing.astro";
-import Resellers from "@/components/site/Resellers.astro";
 import Footer from "@/components/site/Footer.astro";
 import WhatsAppModal from "@/components/site/WhatsAppModal";
 import InstallerAccessModal from "@/components/site/InstallerAccessModal";
@@ -15,19 +13,17 @@ import UpdateLaunchModal from "@/components/site/UpdateLaunchModal";
 ---
 
 <Layout
-  title="ArepaTool v2.2.3 - Professional Unlock & MDM Tool"
-  description="ArepaTool v2.2.3 adds Infinix and Tecno bootloader unlock, Samsung Exynos FRP, and expanded Unisoc support."
+  title="ArepaTool v2.2.4 - Professional Unlock & MDM Tool"
+  description="ArepaTool v2.2.4 adds TECNO, Infinix and itel support, ROM Patch databases, Samsung Exynos FRP and expanded Unisoc support."
 >
   <Navbar />
   <AnnouncementBanner />
   <main class="landing-shell">
     <Hero />
-    <Changelog />
-    <Features />
-    <Tutorials />
-    <Pricing />
-    <Resellers />
   </main>
+  <BrandMarquee />
+  <ReleaseConsole />
+  <Pricing />
   <Footer />
   <WhatsAppModal client:load />
   <UpdateLaunchModal client:load />

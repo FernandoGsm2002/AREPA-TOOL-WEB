@@ -189,4 +189,49 @@ const totalModels = supportedCombinations.length + testModels.length;
   @media (max-width: 1023px) { :global(.transsion-grid) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (prefers-reduced-motion: reduce) { :global(.transsion-rom-heading b) { animation: none; } }
   @media (max-width: 640px) { .models-wrap { width: min(100% - 1.5rem, 76rem); padding-top: 2rem; } .motorola-backdrop { top: -12rem; right: -25rem; opacity: .06; } .model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } .model-card { min-height: 9.5rem; padding: .75rem; } .model-card h2 { font-size: .84rem; } .android-filter { width: 100%; } .android-filter button { flex: 1 0 auto; justify-content: center; } :global(.transsion-search) { flex-basis: 100%; } :global(.transsion-filter) { width: 100%; } :global(.transsion-filter button) { flex: 1 0 auto; justify-content: center; } :global(.transsion-rom-stage) { padding: .85rem; } :global(.transsion-rom-notice > div), :global(.transsion-rom-notice p) { align-items: flex-start; } :global(.transsion-rom-notice > div span) { width: 100%; margin: .05rem 0 0; } :global(.transsion-rom-notice > div) { flex-wrap: wrap; } :global(.transsion-grid) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } :global(.transsion-card) { min-height: 9.5rem; padding: .75rem; } :global(.transsion-card h3) { font-size: .84rem; } }
+
+  .models-page { background: #f6f7f3; color: #17222d; }
+  .models-header h1 { color: #17222d; }
+  .models-header > span { color: #6c7881; }
+  .brand-nav { border-bottom-color: rgb(23 34 45 / 15%); }
+  .brand-tab { color: #66737d; }
+  .brand-tab.is-active { border-color: #d89b24; color: #17222d; }
+  .brand-mark { background: #d89b24; color: #fff; }
+  .transsion-mark { background: #5d8f99; }
+  .search-field { border-color: rgb(23 34 45 / 18%); background: #fff; color: #67737c; }
+  .search-field:focus-within { border-color: #d89b24; }
+  .search-field input { color: #17222d; }
+  .search-field input::placeholder { color: #89939b; }
+  .android-filter button { color: #68747d; }
+  .android-filter button:hover { border-color: rgb(216 155 36 / 45%); color: #17222d; }
+  .android-filter button.is-selected { border-color: rgb(216 155 36 / 65%); background: rgb(216 155 36 / 13%); color: #8a641b; }
+  .catalog-status { color: #7a858e; }
+  .android-heading span { color: #5b6b76; }
+  .android-heading i { background: rgb(23 34 45 / 15%); }
+  .android-heading small { color: #879199; }
+  .model-card { border-color: rgb(23 34 45 / 14%); background: #fff; }
+  .model-card:hover { border-color: rgb(216 155 36 / 58%); background: #fffdf7; }
+  .model-sku { color: #6b7780; }
+  .model-card h2 { color: #17222d; }
+  .model-operations { color: #7b641f; }
+  .test-card { background: #fffaf0; }
+  .catalog-empty { border-color: rgb(23 34 45 / 20%); color: #64727d; }
+  :global(.transsion-header h2) { color: #17222d; }
+  :global(.transsion-header p), :global(.transsion-caption) { color: #66747e; }
+  :global(.transsion-count), :global(.transsion-heading small) { color: #7d8992; }
+  :global(.transsion-heading span) { color: #5b6b76; }
+  :global(.transsion-heading i) { background: rgb(23 34 45 / 15%); }
+  :global(.transsion-search) { border-color: rgb(23 34 45 / 18%); background: #fff; color: #67737c; }
+  :global(.transsion-search input) { color: #17222d; }
+  :global(.transsion-search input::placeholder) { color: #89939b; }
+  :global(.transsion-filter button) { color: #68747d; }
+  :global(.transsion-filter button:hover) { border-color: rgb(216 155 36 / 45%); color: #17222d; }
+  :global(.transsion-filter button.is-selected) { border-color: rgb(216 155 36 / 65%); background: rgb(216 155 36 / 13%); color: #8a641b; }
+  :global(.transsion-rom-stage), :global(.transsion-card), :global(.transsion-state) { border-color: rgb(23 34 45 / 14%); background: #fff; box-shadow: 0 1rem 2.5rem rgb(23 34 45 / 8%); }
+  :global(.transsion-rom-heading span), :global(.transsion-card h3) { color: #17222d; }
+  :global(.transsion-rom-notice) { border-top-color: rgb(23 34 45 / 12%); color: #5e6c77; }
+  :global(.transsion-rom-notice > div) { color: #344450; }
+  :global(.transsion-rom-notice > div span) { color: #7d8992; }
+  :global(.transsion-rom-notice p), :global(.transsion-card p) { color: #66747e; }
+  :global(.transsion-brand), :global(.transsion-card .transsion-card-operations) { color: #7b641f; }
 </style>

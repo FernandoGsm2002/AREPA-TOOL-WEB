@@ -23,8 +23,14 @@ export default function MobileNav() {
       </SheetTrigger>
       <SheetContent side="right" className="w-72">
         <SheetHeader>
-          <SheetTitle className="flex h-14 w-40 items-center overflow-hidden rounded-xl border border-white/8 bg-white/[0.03] px-2">
-            <img src="/pngs/arepalanding.png" alt="ArepaTool" className="-my-8 h-32 w-full object-contain" />
+          <SheetTitle className="mobile-sheet-brand">
+            <span className="mobile-sheet-brand__logo" aria-hidden="true">
+              <img src="/pngs/arepatool-logo-mark.png" alt="" />
+            </span>
+            <span>
+              <strong>ArepaTool</strong>
+              <small>MDM Tool</small>
+            </span>
           </SheetTitle>
         </SheetHeader>
         <nav className="mt-2 flex flex-col gap-1 px-4">

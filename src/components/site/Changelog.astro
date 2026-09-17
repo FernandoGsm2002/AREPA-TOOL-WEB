@@ -2,12 +2,12 @@
 import { changelog } from "@/lib/site-data";
 
 const lineClass: Record<string, string> = {
-  h1: "text-primary font-bold",
-  comment: "text-muted-foreground italic",
-  h2: "text-foreground font-semibold mt-2",
-  plus: "text-emerald-400 before:content-['+_'] before:text-emerald-500/70 pl-3",
-  fixed: "text-sky-300 before:content-['✓_'] before:text-sky-400/80 pl-3",
-  pending: "text-amber-400 before:content-['•_'] before:text-amber-500/70 pl-3",
+  h1: "text-[#a84e0d] font-bold",
+  comment: "text-[#7b7169] italic",
+  h2: "text-[#2f6c6a] font-semibold mt-2",
+  plus: "text-[#2f7b5a] before:content-['+_'] before:text-[#3d9b68]/70 pl-3",
+  fixed: "text-[#2b6c83] before:content-['✓_'] before:text-[#2b6c83]/80 pl-3",
+  pending: "text-[#986a18] before:content-['•_'] before:text-[#986a18]/70 pl-3",
   blank: "block h-3",
 };
 ---
@@ -15,23 +15,23 @@ const lineClass: Record<string, string> = {
 <section class="section-plain">
   <div class="site-container changelog-layout">
     <div class="section-heading">
-      <h2>Actualizaciones que llegan al taller.</h2>
-      <p>La cobertura se construye versión a versión. Revisa qué cambió, qué está probado y qué métodos siguen en beta antes de comenzar un trabajo.</p>
-      <div class="changelog-meta"><strong>● live changelog</strong><span>2026 · v2.2.3</span></div>
+      <h2>Changelog of changes in ArepaTool.</h2>
+      <p>Mantente al tanto de las actualizaciones; solemos publicar novedades con frecuencia.</p>
+      <div class="changelog-meta"><strong>● live changelog</strong><span>2026 · v2.2.4</span></div>
     </div>
     <div class="changelog-window">
-      <div class="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
+      <div class="flex items-center gap-2 border-b border-[#cfcdc4] bg-[#e1e0d8] px-4 py-2.5">
       <div class="flex gap-1.5">
         <span class="size-3 rounded-full bg-red-500/70"></span>
         <span class="size-3 rounded-full bg-amber-500/70"></span>
         <span class="size-3 rounded-full bg-emerald-500/70"></span>
       </div>
-      <span class="text-muted-foreground ml-2 font-mono text-xs">arepatool@v2.2.3 ~ CHANGELOG.md</span>
-      <span class="text-primary ml-auto text-[0.62rem] font-bold tracking-[0.1em] uppercase">
+      <span class="ml-2 font-mono text-xs text-[#68737b]">arepatool@v2.2.4 ~ CHANGELOG.md</span>
+      <span class="ml-auto text-[0.62rem] font-bold tracking-[0.1em] text-[#a27a23] uppercase">
         Versión actual
       </span>
       </div>
-      <pre class="max-h-[28rem] overflow-y-auto p-6 font-mono text-[0.82rem] leading-relaxed whitespace-pre-wrap">{
+      <pre class="max-h-[28rem] overflow-y-auto bg-[#f8f7f1] p-6 font-mono text-[0.82rem] leading-relaxed text-[#34404a] whitespace-pre-wrap">{
       changelog.map((line) =>
         line.type === "blank" ? (
           <span class={lineClass.blank} />
@@ -43,3 +43,17 @@ const lineClass: Record<string, string> = {
     </div>
   </div>
 </section>
+
+<style>
+  .changelog-window {
+    overflow: hidden;
+    border: 1px solid #c8c6bc;
+    border-radius: .65rem;
+    background: #f8f7f1;
+    box-shadow: 0 22px 50px rgb(23 34 45 / 12%);
+  }
+
+  .changelog-window pre {
+    margin: 0;
+  }
+</style>

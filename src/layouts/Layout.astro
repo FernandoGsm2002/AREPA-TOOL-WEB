@@ -10,7 +10,7 @@ const { title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es" class="dark">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,12 +28,12 @@ const { title, description } = Astro.props;
     <meta property="og:url" content="https://www.arepatool.com/" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/pngs/arepalanding.png" />
+    <meta property="og:image" content="/pngs/windowslog.png" />
 
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content="/pngs/arepalanding.png" />
+    <meta property="twitter:image" content="/pngs/windowslog.png" />
 
     <link rel="icon" type="image/x-icon" href="/pngs/logo.ico" />
 
@@ -46,7 +46,7 @@ const { title, description } = Astro.props;
 
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   </head>
-  <body class="bg-background text-foreground font-sans antialiased">
+  <body class="site-body bg-background text-foreground font-sans antialiased">
     <slot />
   </body>
 </html>
