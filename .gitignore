@@ -85,3 +85,4 @@ DHRU-WHATSAPP-BRIDGE/orders_db.json
 __pycache__/
 *.pyc
 *.pyo
+.vercel
