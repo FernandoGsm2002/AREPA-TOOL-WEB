@@ -91,7 +91,11 @@ const totalModels = supportedCombinations.length + testModels.length;
     if (status) status.textContent = `${visible} ${visible === 1 ? one : many}`;
     if (empty) empty.hidden = visible !== 0;
   };
-  input?.addEventListener("input", render);
+  // Mantener operativas las pestañas aunque el buscador todavía no esté
+  // hidratado o haya sido reemplazado por otra variante del layout.
+  if (input && typeof input.addEventListener === "function") {
+    input.addEventListener("input", render);
+  }
   filters.forEach((button) => button.addEventListener("click", () => { selectedVersion = button.dataset.localizedVersion ?? "all"; filters.forEach((item) => item.classList.toggle("is-selected", item === button)); render(); }));
   tabs.forEach((tab) => tab.addEventListener("click", () => { const selected = tab.dataset.localizedTab; panels.forEach((panel) => { panel.hidden = panel.id !== selected; }); tabs.forEach((item) => { const active = item === tab; item.classList.toggle("is-active", active); item.setAttribute("aria-selected", String(active)); }); }));
 </script>

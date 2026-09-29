@@ -86,7 +86,12 @@ const totalModels = supportedCombinations.length + testModels.length;
     if (status) status.textContent = `${visible} ${visible === 1 ? "modelo visible" : "modelos visibles"}`;
     if (empty) empty.hidden = visible !== 0;
   };
-  input?.addEventListener("input", render);
+  // El buscador es opcional en algunas variantes/estados de hidratación. No
+  // dejemos que un nodo inesperado bloquee los listeners de las pestañas y
+  // oculte el catálogo Transsion completo.
+  if (input && typeof input.addEventListener === "function") {
+    input.addEventListener("input", render);
+  }
   filterButtons.forEach((button) => button.addEventListener("click", () => { selectedVersion = button.dataset.version ?? "all"; filterButtons.forEach((item) => item.classList.toggle("is-selected", item === button)); render(); }));
   catalogTabs.forEach((tab) => tab.addEventListener("click", () => {
     const selected = tab.dataset.catalogTab;
