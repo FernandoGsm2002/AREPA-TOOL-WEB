@@ -148,4 +148,44 @@ const totalModels = supportedCombinations.length + testModels.length;
   .localized-catalog-empty { margin-top: 2rem; border: 1px dashed rgb(23 34 45 / 20%); border-radius: .7rem; padding: 1.1rem; color: #64727d; font-size: .88rem; }
   @media (max-width: 1023px) { .localized-model-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 640px) { .localized-models-wrap { width: min(100% - 1.5rem, 76rem); padding-top: 2rem; } .localized-brand-nav { overflow-x: auto; } .localized-brand-tab { flex: 0 0 auto; } .localized-android-filter { width: 100%; } .localized-android-filter button { flex: 1 0 auto; } .localized-model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } .localized-model-card { min-height: 9.5rem; padding: .75rem; } .localized-model-card h2 { font-size: .84rem; } }
+  /* Shared Transsion island styles for the localized routes. */
+  :global(.transsion-stage) { padding-top: 1.35rem; }
+  :global(.transsion-header) { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  :global(.transsion-header h2) { color: #17222d; font: 700 1.25rem/1.15 var(--font-display); letter-spacing: -.03em; }
+  :global(.transsion-header p), :global(.transsion-caption) { margin-top: .45rem; color: #66747e; font-size: .88rem; }
+  :global(.transsion-count), :global(.transsion-heading small) { color: #7d8992; font: 500 .7rem/1 var(--font-mono); }
+  :global(.transsion-operations) { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1.4rem; }
+  :global(.transsion-operations button) { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid rgb(93 143 153 / 35%); border-radius: .52rem; background: #fff; padding: .56rem .68rem; color: #526e78; font-size: .73rem; font-weight: 650; transition: border-color .16s, background .16s, color .16s, transform .16s; }
+  :global(.transsion-operations button:hover), :global(.transsion-operations button.is-selected) { border-color: #5d8f99; background: #edf7f8; color: #17222d; transform: translateY(-1px); }
+  :global(.transsion-controls) { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.5rem; }
+  :global(.transsion-search) { display: flex; min-width: min(100%, 18rem); flex: 1 1 19rem; align-items: center; gap: .65rem; border: 1px solid rgb(23 34 45 / 18%); border-radius: .65rem; background: #fff; padding: 0 .85rem; color: #67737c; }
+  :global(.transsion-search input) { width: 100%; border: 0; background: transparent; padding: .78rem 0; color: #17222d; font-size: .9rem; outline: none; }
+  :global(.transsion-search input::placeholder) { color: #89939b; }
+  :global(.transsion-filter) { display: flex; flex-wrap: wrap; gap: .35rem; }
+  :global(.transsion-filter button) { display: inline-flex; align-items: center; border: 1px solid transparent; border-radius: .5rem; background: transparent; padding: .58rem .63rem; color: #68747d; font-size: .76rem; }
+  :global(.transsion-filter button:hover), :global(.transsion-filter button.is-selected) { border-color: rgb(216 155 36 / 65%); background: rgb(216 155 36 / 13%); color: #8a641b; }
+  :global(.transsion-heading) { display: flex; align-items: center; gap: .7rem; margin: 2rem 0 .45rem; }
+  :global(.transsion-heading span) { display: inline-flex; align-items: center; gap: .4rem; color: #5b6b76; font: 600 .82rem/1 var(--font-mono); }
+  :global(.transsion-heading i) { height: 1px; flex: 1; background: rgb(23 34 45 / 15%); }
+  :global(.transsion-rom-stage), :global(.transsion-card), :global(.transsion-state) { border: 1px solid rgb(23 34 45 / 14%); border-radius: .82rem; background: #fff; box-shadow: 0 1rem 2.5rem rgb(23 34 45 / 8%); }
+  :global(.transsion-rom-stage) { scroll-margin-top: 6.5rem; margin-top: 2.15rem; padding: 1.05rem; }
+  :global(.transsion-rom-heading) { margin: 0 0 .6rem; }
+  :global(.transsion-rom-heading span), :global(.transsion-card h3) { color: #17222d; }
+  :global(.transsion-rom-heading b) { display: inline-flex; align-items: center; border: 1px solid #5d8f99; border-radius: .25rem; background: #edf7f8; padding: .18rem .3rem; color: #344450; font: 700 .6rem/1 var(--font-mono); letter-spacing: .08em; }
+  :global(.transsion-rom-notice) { display: grid; gap: .55rem; border-top: 1px solid rgb(23 34 45 / 12%); padding-top: .75rem; color: #5e6c77; font-size: .78rem; line-height: 1.45; }
+  :global(.transsion-rom-notice > div), :global(.transsion-rom-notice p) { display: flex; align-items: center; gap: .5rem; }
+  :global(.transsion-rom-notice > div) { color: #344450; }
+  :global(.transsion-rom-notice > div span) { margin-left: auto; color: #7d8992; font: 600 .66rem/1 var(--font-mono); }
+  :global(.transsion-rom-notice p), :global(.transsion-card p) { margin: 0; color: #66747e; }
+  :global(.transsion-meta-stage) { scroll-margin-top: 6.5rem; margin-top: 2.7rem; }
+  :global(.transsion-grid) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin-top: 1.25rem; }
+  :global(.transsion-card) { min-height: 8.8rem; border-radius: .72rem; padding: .85rem; transition: border-color .16s, background .16s; }
+  :global(.transsion-card:hover) { border-color: rgb(216 155 36 / 58%); background: #fffdf7; }
+  :global(.transsion-meta) { display: flex; align-items: flex-start; justify-content: space-between; gap: .6rem; color: #6b7780; font: 600 .69rem/1 var(--font-mono); }
+  :global(.transsion-brand), :global(.transsion-card .transsion-card-operations) { color: #7b641f; }
+  :global(.transsion-card h3) { margin-top: .75rem; font-size: .91rem; font-weight: 650; line-height: 1.32; }
+  :global(.transsion-card p) { margin-top: .45rem; font-size: .75rem; line-height: 1.4; }
+  :global(.transsion-card .transsion-card-operations) { margin-top: 1.2rem; font-size: .68rem; }
+  @media (max-width: 1023px) { :global(.transsion-grid) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { :global(.transsion-search) { flex-basis: 100%; } :global(.transsion-filter) { width: 100%; } :global(.transsion-filter button) { flex: 1 0 auto; justify-content: center; } :global(.transsion-rom-stage) { padding: .85rem; } :global(.transsion-grid) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; } :global(.transsion-card) { min-height: 9.5rem; padding: .75rem; } :global(.transsion-card h3) { font-size: .84rem; } }
 </style>
