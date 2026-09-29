@@ -67,8 +67,6 @@ const totalModels = supportedCombinations.length + testModels.length;
   </main>
   <Footer locale={locale} />
   <WhatsAppModal client:load locale={locale} />
-</Layout>
-
 <script define:vars={{ one: copy.models.visibleOne, many: copy.models.visibleMany }}>
   const input = document.querySelector<HTMLInputElement>("#localized-model-search");
   const filters = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-localized-version]"));
@@ -80,7 +78,7 @@ const totalModels = supportedCombinations.length + testModels.length;
   const panels = Array.from(document.querySelectorAll<HTMLElement>("#localized-motorola, #localized-transsion"));
   let selectedVersion = "all";
   const render = () => {
-    const query = input?.value.trim().toLowerCase() ?? "";
+    const query = typeof input?.value === "string" ? input.value.trim().toLowerCase() : "";
     let visible = 0;
     cards.forEach((card) => {
       const show = (selectedVersion === "all" || card.dataset.localizedAndroid === selectedVersion) && (!query || (card.dataset.localizedSearch ?? "").includes(query));
@@ -99,6 +97,7 @@ const totalModels = supportedCombinations.length + testModels.length;
   filters.forEach((button) => button.addEventListener("click", () => { selectedVersion = button.dataset.localizedVersion ?? "all"; filters.forEach((item) => item.classList.toggle("is-selected", item === button)); render(); }));
   tabs.forEach((tab) => tab.addEventListener("click", () => { const selected = tab.dataset.localizedTab; panels.forEach((panel) => { panel.hidden = panel.id !== selected; }); tabs.forEach((item) => { const active = item === tab; item.classList.toggle("is-active", active); item.setAttribute("aria-selected", String(active)); }); }));
 </script>
+</Layout>
 
 <style>
   .localized-models-page { min-height: calc(100vh - 5.5rem); background: #f6f7f3; color: #17222d; }

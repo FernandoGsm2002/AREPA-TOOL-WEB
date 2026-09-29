@@ -67,8 +67,6 @@ const totalModels = supportedCombinations.length + testModels.length;
   </main>
   <Footer />
   <WhatsAppModal client:load />
-</Layout>
-
 <script>
   const input = document.querySelector<HTMLInputElement>("#model-search");
   const filterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-version]"));
@@ -80,7 +78,7 @@ const totalModels = supportedCombinations.length + testModels.length;
   const catalogPanels = Array.from(document.querySelectorAll<HTMLElement>("#motorola, #transsion-panel"));
   let selectedVersion = "all";
   const render = () => {
-    const query = input?.value.trim().toLowerCase() ?? ""; let visible = 0;
+    const query = typeof input?.value === "string" ? input.value.trim().toLowerCase() : ""; let visible = 0;
     cards.forEach((card) => { const show = (selectedVersion === "all" || card.dataset.android === selectedVersion) && (!query || (card.dataset.search ?? "").includes(query)); card.hidden = !show; if (show) visible += 1; });
     groups.forEach((group) => { group.hidden = !group.querySelector("[data-model-card]:not([hidden])"); });
     if (status) status.textContent = `${visible} ${visible === 1 ? "modelo visible" : "modelos visibles"}`;
@@ -103,6 +101,7 @@ const totalModels = supportedCombinations.length + testModels.length;
     });
   }));
 </script>
+</Layout>
 
 <style>
   .models-page { min-height: calc(100vh - 5.5rem); background: #0b101a; }
