@@ -68,7 +68,6 @@ const totalModels = supportedCombinations.length + testModels.length;
   <Footer locale={locale} />
   <WhatsAppModal client:load locale={locale} />
 <script define:vars={{ one: copy.models.visibleOne, many: copy.models.visibleMany }}>
-  const input = document.querySelector<HTMLInputElement>("#localized-model-search");
   const filters = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-localized-version]"));
   const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-localized-model-card]"));
   const groups = Array.from(document.querySelectorAll<HTMLElement>("[data-localized-group]"));
@@ -78,7 +77,8 @@ const totalModels = supportedCombinations.length + testModels.length;
   const panels = Array.from(document.querySelectorAll<HTMLElement>("#localized-motorola, #localized-transsion"));
   let selectedVersion = "all";
   const render = () => {
-    const query = typeof input?.value === "string" ? input.value.trim().toLowerCase() : "";
+    const input = document.getElementById("localized-model-search");
+    const query = input instanceof HTMLInputElement ? input.value.trim().toLowerCase() : "";
     let visible = 0;
     cards.forEach((card) => {
       const show = (selectedVersion === "all" || card.dataset.localizedAndroid === selectedVersion) && (!query || (card.dataset.localizedSearch ?? "").includes(query));
@@ -89,13 +89,24 @@ const totalModels = supportedCombinations.length + testModels.length;
     if (status) status.textContent = `${visible} ${visible === 1 ? one : many}`;
     if (empty) empty.hidden = visible !== 0;
   };
-  // Mantener operativas las pestañas aunque el buscador todavía no esté
-  // hidratado o haya sido reemplazado por otra variante del layout.
-  if (input && typeof input.addEventListener === "function") {
-    input.addEventListener("input", render);
-  }
-  filters.forEach((button) => button.addEventListener("click", () => { selectedVersion = button.dataset.localizedVersion ?? "all"; filters.forEach((item) => item.classList.toggle("is-selected", item === button)); render(); }));
-  tabs.forEach((tab) => tab.addEventListener("click", () => { const selected = tab.dataset.localizedTab; panels.forEach((panel) => { panel.hidden = panel.id !== selected; }); tabs.forEach((item) => { const active = item === tab; item.classList.toggle("is-active", active); item.setAttribute("aria-selected", String(active)); }); }));
+  document.addEventListener("input", (event) => {
+    const target = event.target;
+    if (target instanceof HTMLInputElement && target.id === "localized-model-search") render();
+  });
+  document.addEventListener("click", (event) => {
+    const target = event.target instanceof Element ? event.target.closest("button") : null;
+    if (!(target instanceof HTMLButtonElement)) return;
+    if (target.matches("[data-localized-version]")) {
+      selectedVersion = target.dataset.localizedVersion ?? "all";
+      filters.forEach((item) => item.classList.toggle("is-selected", item === target));
+      render();
+      return;
+    }
+    if (!target.matches("[data-localized-tab]")) return;
+    const selected = target.dataset.localizedTab;
+    panels.forEach((panel) => { panel.hidden = panel.id !== selected; });
+    tabs.forEach((item) => { const active = item === target; item.classList.toggle("is-active", active); item.setAttribute("aria-selected", String(active)); });
+  });
 </script>
 </Layout>
 

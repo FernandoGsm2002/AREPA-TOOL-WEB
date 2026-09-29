@@ -68,7 +68,6 @@ const totalModels = supportedCombinations.length + testModels.length;
   <Footer />
   <WhatsAppModal client:load />
 <script>
-  const input = document.querySelector<HTMLInputElement>("#model-search");
   const filterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-version]"));
   const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-model-card]"));
   const groups = Array.from(document.querySelectorAll<HTMLElement>("[data-group]"));
@@ -78,28 +77,37 @@ const totalModels = supportedCombinations.length + testModels.length;
   const catalogPanels = Array.from(document.querySelectorAll<HTMLElement>("#motorola, #transsion-panel"));
   let selectedVersion = "all";
   const render = () => {
-    const query = typeof input?.value === "string" ? input.value.trim().toLowerCase() : ""; let visible = 0;
+    const input = document.getElementById("model-search");
+    const query = input instanceof HTMLInputElement ? input.value.trim().toLowerCase() : ""; let visible = 0;
     cards.forEach((card) => { const show = (selectedVersion === "all" || card.dataset.android === selectedVersion) && (!query || (card.dataset.search ?? "").includes(query)); card.hidden = !show; if (show) visible += 1; });
     groups.forEach((group) => { group.hidden = !group.querySelector("[data-model-card]:not([hidden])"); });
     if (status) status.textContent = `${visible} ${visible === 1 ? "modelo visible" : "modelos visibles"}`;
     if (empty) empty.hidden = visible !== 0;
   };
-  // El buscador es opcional en algunas variantes/estados de hidratación. No
-  // dejemos que un nodo inesperado bloquee los listeners de las pestañas y
-  // oculte el catálogo Transsion completo.
-  if (input && typeof input.addEventListener === "function") {
-    input.addEventListener("input", render);
-  }
-  filterButtons.forEach((button) => button.addEventListener("click", () => { selectedVersion = button.dataset.version ?? "all"; filterButtons.forEach((item) => item.classList.toggle("is-selected", item === button)); render(); }));
-  catalogTabs.forEach((tab) => tab.addEventListener("click", () => {
-    const selected = tab.dataset.catalogTab;
+  // Delegación de eventos: los nodos pueden ser rehidratados por Astro, pero
+  // el documento permanece estable y mantiene operativos filtros y pestañas.
+  document.addEventListener("input", (event) => {
+    const target = event.target;
+    if (target instanceof HTMLInputElement && target.id === "model-search") render();
+  });
+  document.addEventListener("click", (event) => {
+    const target = event.target instanceof Element ? event.target.closest("button") : null;
+    if (!(target instanceof HTMLButtonElement)) return;
+    if (target.matches("[data-version]")) {
+      selectedVersion = target.dataset.version ?? "all";
+      filterButtons.forEach((item) => item.classList.toggle("is-selected", item === target));
+      render();
+      return;
+    }
+    if (!target.matches("[data-catalog-tab]")) return;
+    const selected = target.dataset.catalogTab;
     catalogPanels.forEach((panel) => { panel.hidden = panel.id !== selected; });
     catalogTabs.forEach((item) => {
-      const active = item === tab;
+      const active = item === target;
       item.classList.toggle("is-active", active);
       item.setAttribute("aria-selected", String(active));
     });
-  }));
+  });
 </script>
 </Layout>
 
