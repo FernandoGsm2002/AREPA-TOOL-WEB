@@ -1,23 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Download, Flame, Loader2, MessageCircle, ShieldCheck } from "lucide-react";
+import { Download, Flame, Loader2 } from "lucide-react";
 import { modalCopy, type Locale } from "@/lib/i18n";
 
 const API_BASE = "https://api2.arepatool.com";
-const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADcAui1yybCKOv5s";
+const INSTALLER_FILE_NAME = "ArepaToolV2_Setup_v2.2.5.exe";
 
 export default function InstallerAccessModal({ locale = "es" }: { locale?: Locale }) {
   const copy = modalCopy[locale];
   const [open, setOpen] = useState(false);
-  const [identifier, setIdentifier] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [access, setAccess] = useState<{ groupLink: string; downloadUrl: string } | null>(null);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const turnstileRef = useRef<HTMLDivElement>(null);
-  const widgetId = useRef<string | undefined>(undefined);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [retry, setRetry] = useState(0);
 
   useEffect(() => {
     const openHandler = () => setOpen(true);
@@ -27,66 +23,43 @@ export default function InstallerAccessModal({ locale = "es" }: { locale?: Local
 
   useEffect(() => {
     if (!open) return;
-    setIdentifier("");
+    const controller = new AbortController();
     setStatus(null);
-    setAccess(null);
-    setLoading(false);
-    setTurnstileToken(null);
-
-    let interval: number | undefined;
-    const renderWidget = () => {
-      if (!window.turnstile || !turnstileRef.current || widgetId.current) return;
-      widgetId.current = window.turnstile.render(turnstileRef.current, {
-        sitekey: TURNSTILE_SITE_KEY,
-        action: "installer_access",
-        callback: (token: string) => setTurnstileToken(token),
-        "expired-callback": () => setTurnstileToken(null),
-        "error-callback": () => setTurnstileToken(null),
-      });
-      if (interval) window.clearInterval(interval);
-    };
-
-    renderWidget();
-    if (!widgetId.current) interval = window.setInterval(renderWidget, 200);
-    return () => {
-      if (interval) window.clearInterval(interval);
-      if (widgetId.current && window.turnstile) window.turnstile.remove(widgetId.current);
-      widgetId.current = undefined;
-    };
-  }, [open]);
-
-  async function submit() {
-    if (!identifier.trim()) {
-      setStatus("Ingresa tu usuario o correo registrado.");
-      return;
-    }
-    if (!turnstileToken) {
-      setStatus("Completa la verificación de seguridad primero.");
-      return;
-    }
-
+    setDownloadUrl(null);
     setLoading(true);
-    setStatus(null);
-    try {
-      const res = await fetch(`${API_BASE}/api/installer-access`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier: identifier.trim(), turnstileToken }),
+
+    fetch(`${API_BASE}/api/installer-access`, {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok || !data.downloadUrl) throw new Error(data.error || "download_unavailable");
+        setDownloadUrl(data.downloadUrl);
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") {
+          setStatus(locale === "es"
+            ? "No se pudo preparar la descarga pública."
+            : locale === "pt-br"
+              ? "Não foi possível preparar o download público."
+              : "The public download could not be prepared.");
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
       });
-      const data = await res.json();
-      if (res.ok && data.groupLink && data.downloadUrl) {
-        setAccess({ groupLink: data.groupLink, downloadUrl: data.downloadUrl });
-      } else {
-        setStatus(data.error || "No se pudo verificar el acceso. Intenta de nuevo.");
-        setTurnstileToken(null);
-        if (widgetId.current) window.turnstile?.reset(widgetId.current);
-      }
-    } catch {
-      setStatus("Error de conexión. Intenta más tarde.");
-    } finally {
-      setLoading(false);
-    }
-  }
+
+    return () => controller.abort();
+  }, [open, retry, locale]);
+
+  const preparingText = locale === "es"
+    ? "Preparando descarga pública…"
+    : locale === "pt-br"
+      ? "Preparando download público…"
+      : "Preparing public download…";
+  const retryText = locale === "es" ? "Reintentar" : locale === "pt-br" ? "Tentar novamente" : "Retry";
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -95,25 +68,24 @@ export default function InstallerAccessModal({ locale = "es" }: { locale?: Local
           <div className="bg-primary/12 text-primary flex size-14 items-center justify-center rounded-full"><Flame className="size-7" /></div>
           <DialogTitle className="text-xl">{copy.downloadTitle}</DialogTitle>
         </DialogHeader>
-        {access ? (
+        {downloadUrl ? (
           <div className="space-y-4 text-center">
             <p className="text-muted-foreground text-sm leading-6">{copy.accessConfirmed}</p>
             <div className="border-primary/35 from-primary/16 via-primary/8 to-background relative overflow-hidden rounded-2xl border bg-linear-to-br px-5 py-4 shadow-lg shadow-primary/10">
               <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-primary/80 to-transparent" />
               <Flame className="text-primary mx-auto size-7 motion-safe:animate-pulse" />
               <p className="mt-2 font-semibold">{copy.newVersion}</p>
-            <p className="text-muted-foreground mt-1 text-xs">ArepaToolV2_Setup_v2.2.5.exe</p>
+              <p className="text-muted-foreground mt-1 text-xs">{INSTALLER_FILE_NAME}</p>
             </div>
-            <Button asChild className="w-full shadow-xl shadow-primary/30 motion-safe:animate-pulse"><a href={access.downloadUrl} target="_blank" rel="noopener noreferrer"><Download className="size-4" />{copy.downloadNow}</a></Button>
-            <Button asChild variant="secondary" className="w-full"><a href={access.groupLink} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" />{copy.joinOfficial}</a></Button>
+            <Button asChild className="w-full shadow-xl shadow-primary/30 motion-safe:animate-pulse">
+              <a href={downloadUrl} download={INSTALLER_FILE_NAME}><Download className="size-4" />{copy.downloadNow}</a>
+            </Button>
           </div>
         ) : (
-          <div className="space-y-4">
-            <p className="text-muted-foreground text-center text-sm leading-6">{copy.verifyDescription}</p>
-            <Input placeholder={copy.identifierPlaceholder} autoComplete="username" value={identifier} onChange={(e) => setIdentifier(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
-            <div ref={turnstileRef} className="flex justify-center" />
-            {status && <p className="text-destructive text-center text-sm">{status}</p>}
-            <Button className="w-full" disabled={loading} onClick={submit}>{loading ? <Loader2 className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />}{copy.verifyButton}</Button>
+          <div className="space-y-4 text-center">
+            <p className="text-muted-foreground text-sm leading-6">{loading ? preparingText : status}</p>
+            {loading && <div className="flex justify-center"><Loader2 className="text-primary size-6 animate-spin" /></div>}
+            {!loading && status && <Button className="w-full" variant="outline" onClick={() => setRetry((value) => value + 1)}><Download className="size-4" />{retryText}</Button>}
           </div>
         )}
       </DialogContent>
