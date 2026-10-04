@@ -102,7 +102,7 @@ export default function InstallerAccessModal({ locale = "es" }: { locale?: Local
               <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-primary/80 to-transparent" />
               <Flame className="text-primary mx-auto size-7 motion-safe:animate-pulse" />
               <p className="mt-2 font-semibold">{copy.newVersion}</p>
-              <p className="text-muted-foreground mt-1 text-xs">ArepaToolV2_Setup_v2.2.4.exe</p>
+            <p className="text-muted-foreground mt-1 text-xs">ArepaToolV2_Setup_v2.2.5.exe</p>
             </div>
             <Button asChild className="w-full shadow-xl shadow-primary/30 motion-safe:animate-pulse"><a href={access.downloadUrl} target="_blank" rel="noopener noreferrer"><Download className="size-4" />{copy.downloadNow}</a></Button>
             <Button asChild variant="secondary" className="w-full"><a href={access.groupLink} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" />{copy.joinOfficial}</a></Button>

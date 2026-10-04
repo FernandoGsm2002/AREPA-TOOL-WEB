@@ -46,8 +46,8 @@ export const localeCopy = {
     announcement: {
       aria: "Novedad de ArepaTool",
       label: "NUEVO",
-      text: "ROM Patch para",
-      brands: "Infinix, Tecno e Itel",
+      text: "Xiaomi Auth FRP",
+      brands: "precio actual desde el servidor",
       action: "Inicia sesión y ve a Descargas",
     },
     hero: {
@@ -62,7 +62,7 @@ export const localeCopy = {
       tagline: "Compatible con marcas modernas del mercado",
       mascotAlt: "Mascota de ArepaTool trabajando en un equipo Windows",
     },
-    release: { kicker: "Última versión", whatsNew: "17/09/2026 · ¿Qué hay de nuevo?", stable: "estable" },
+    release: { kicker: "Última versión", whatsNew: "04/10/2026 · ¿Qué hay de nuevo?", stable: "estable" },
     pricing: {
       kicker: "Licencias ArepaTool",
       title: "Elige tu plan",
@@ -72,7 +72,7 @@ export const localeCopy = {
       buyNow: "Comprar ahora",
       reseller: "Comprar a distribuidores",
       plans: [
-        { eyebrow: "ArepaTool Rent", name: "Alquiler de herramienta", duration: "12 horas", price: "4", description: "PayPal, cripto o activación con un distribuidor." },
+        { eyebrow: "ArepaTool Credits", name: "Crédito de servicio", duration: "1 crédito", price: "1", description: "1 crédito = $1 para servicios compatibles." },
         { eyebrow: "ArepaTool Pro", name: "Profesional", duration: "3 meses", price: "12", description: "Acceso profesional para tu taller." },
         { eyebrow: "ArepaTool Pro", name: "Profesional", duration: "6 meses", price: "19", description: "El plan equilibrado para técnicos activos." },
         { eyebrow: "ArepaTool Pro", name: "Profesional", duration: "1 año", price: "26", description: "Acceso anual para tu trabajo diario." },
@@ -165,11 +165,11 @@ export const localeCopy = {
       login: "Log in",
       register: "Sign up",
     },
-    announcement: { aria: "ArepaTool news", label: "NEW", text: "ROM Patch for", brands: "Infinix, Tecno & Itel", action: "Log in to open Downloads" },
+    announcement: { aria: "ArepaTool news", label: "NEW", text: "Xiaomi Auth FRP", brands: "live price from the server", action: "Log in to open Downloads" },
     hero: { kicker: "Modern software", titleAccent: "Professional tool for you.", description: "A modern tool designed for unlockers like you", platform: "Windows", license: "Protected license", licenseCta: "View license", downloadCta: "Download ArepaTool", proofLabel: "Core modules", tagline: "Compatible with modern brands on the market", mascotAlt: "ArepaTool mascot working on a Windows computer" },
-    release: { kicker: "Latest release", whatsNew: "17/09/2026 · What’s new?", stable: "stable" },
+    release: { kicker: "Latest release", whatsNew: "04/10/2026 · What’s new?", stable: "stable" },
     pricing: { kicker: "ArepaTool licensing", title: "Choose your plan", description: "Our updates are always free. Access every release with an active ArepaTool license.", popular: "Popular", price: "Price /", buyNow: "Buy Now", reseller: "Buy From Resellers", plans: [
-      { eyebrow: "ArepaTool Rent", name: "Tool Rental", duration: "12 hours", price: "4", description: "PayPal, crypto or reseller activation." },
+      { eyebrow: "ArepaTool Credits", name: "Service credit", duration: "1 credit", price: "1", description: "1 credit = $1 for supported services." },
       { eyebrow: "ArepaTool Pro", name: "Professional", duration: "3 months", price: "12", description: "Professional access for your workshop." },
       { eyebrow: "ArepaTool Pro", name: "Professional", duration: "6 months", price: "19", description: "The balanced plan for active unlockers." },
       { eyebrow: "ArepaTool Pro", name: "Professional", duration: "1 year", price: "26", description: "Full-year access for your daily work." },
@@ -189,11 +189,11 @@ export const localeCopy = {
   "pt-br": {
     language: "Idioma",
     nav: { home: "Início", models: "Modelos compatíveis", updates: "Atualizações", features: "Recursos", tutorials: "Tutoriais", instructions: "Manuais", pricing: "Preços", resellers: "Revendedores", whatsapp: "Grupo do WhatsApp", login: "Entrar", register: "Criar conta" },
-    announcement: { aria: "Novidade da ArepaTool", label: "NOVO", text: "ROM Patch para", brands: "Infinix, Tecno e Itel", action: "Entre para abrir os Downloads" },
+    announcement: { aria: "Novidade da ArepaTool", label: "NOVO", text: "Xiaomi Auth FRP", brands: "preço atual do servidor", action: "Entre para abrir os Downloads" },
     hero: { kicker: "Modern software", titleAccent: "Professional tool for you.", description: "A modern tool designed for unlockers like you", platform: "Windows", license: "Licença protegida", licenseCta: "Ver licença", downloadCta: "Baixar ArepaTool", proofLabel: "Módulos principais", tagline: "Compatível com marcas modernas do mercado", mascotAlt: "Mascote da ArepaTool trabalhando em um computador Windows" },
-    release: { kicker: "Última versão", whatsNew: "17/09/2026 · O que há de novo?", stable: "estável" },
+    release: { kicker: "Última versão", whatsNew: "04/10/2026 · O que há de novo?", stable: "estável" },
     pricing: { kicker: "Licenciamento ArepaTool", title: "Escolha seu plano", description: "Nossas atualizações são sempre gratuitas. Acesse cada versão com uma licença ArepaTool ativa.", popular: "Popular", price: "Preço /", buyNow: "Comprar agora", reseller: "Comprar com revendedores", plans: [
-      { eyebrow: "ArepaTool Rent", name: "Aluguel da ferramenta", duration: "12 horas", price: "4", description: "PayPal, cripto ou ativação por revendedor." },
+      { eyebrow: "ArepaTool Credits", name: "Crédito de serviço", duration: "1 crédito", price: "1", description: "1 crédito = $1 para serviços compatíveis." },
       { eyebrow: "ArepaTool Pro", name: "Profissional", duration: "3 meses", price: "12", description: "Acesso profissional para sua oficina." },
       { eyebrow: "ArepaTool Pro", name: "Profissional", duration: "6 meses", price: "19", description: "O plano equilibrado para unlockers ativos." },
       { eyebrow: "ArepaTool Pro", name: "Profissional", duration: "1 ano", price: "26", description: "Acesso anual para o seu trabalho diário." },
@@ -291,11 +291,11 @@ export const modalCopy: Record<Locale, {
   updateImportant: string;
 }> = {
   es: {
-    downloadTitle: "Descargar ArepaTool v2.2.4", accessConfirmed: "Acceso confirmado. Tu enlace de descarga directa es privado y vence en 10 minutos.", newVersion: "Nueva versión lista", downloadNow: "Descargar ahora", joinOfficial: "Unirme al grupo oficial", verifyDescription: "Verifica tu usuario o correo para recibir un enlace directo, privado y temporal de descarga.", identifierPlaceholder: "Usuario o correo registrado", verifyButton: "Verificar y continuar", whatsappTitle: "Acceso al Grupo Oficial", whatsappSuccess: "¡Tu correo tiene acceso! Únete al grupo oficial.", whatsappDescription: "Ingresa tu correo registrado para obtener el link del grupo de WhatsApp.", whatsappButton: "Verificar Acceso", updateTitle: "ArepaTool v2.2.4 ya está disponible", updateHeading: "Advertencia — ROM Patch Transsion", updateIntro: "Para equipos Infinix, Tecno e Itel, verifica que la ROM Patch corresponda exactamente al modelo y versión de Android del dispositivo.", updateBullets: ["Existe riesgo de bootloop o brick si el equipo rechaza el firmware o se usa una ROM incompatible.", "Para mayor seguridad, se recomienda contar con una herramienta de flash vía BROM para recuperación si fuese necesaria.", "El soporte puede orientarte si el proceso presenta inconvenientes."], updateImportant: "Importante: ArepaTool no desbloquea el bootloader. El equipo debe tenerlo desbloqueado antes de aplicar cualquier ROM Patch." },
+    downloadTitle: "Descargar ArepaTool v2.2.5", accessConfirmed: "Acceso confirmado. Tu enlace de descarga directa es privado y vence en 10 minutos.", newVersion: "Nueva versión lista", downloadNow: "Descargar ahora", joinOfficial: "Unirme al grupo oficial", verifyDescription: "Verifica tu usuario o correo para recibir un enlace directo, privado y temporal de descarga.", identifierPlaceholder: "Usuario o correo registrado", verifyButton: "Verificar y continuar", whatsappTitle: "Acceso al Grupo Oficial", whatsappSuccess: "¡Tu correo tiene acceso! Únete al grupo oficial.", whatsappDescription: "Ingresa tu correo registrado para obtener el link del grupo de WhatsApp.", whatsappButton: "Verificar Acceso", updateTitle: "ArepaTool v2.2.5 ya está disponible", updateHeading: "Advertencia — ROM Patch Transsion", updateIntro: "Para equipos Infinix, Tecno e Itel, verifica que la ROM Patch corresponda exactamente al modelo y versión de Android del dispositivo.", updateBullets: ["Existe riesgo de bootloop o brick si el equipo rechaza el firmware o se usa una ROM incompatible.", "Para mayor seguridad, se recomienda contar con una herramienta de flash vía BROM para recuperación si fuese necesaria.", "El soporte puede orientarte si el proceso presenta inconvenientes."], updateImportant: "Importante: ArepaTool no desbloquea el bootloader. El equipo debe tenerlo desbloqueado antes de aplicar cualquier ROM Patch." },
   en: {
-    downloadTitle: "Download ArepaTool v2.2.4", accessConfirmed: "Access confirmed. Your direct download link is private and expires in 10 minutes.", newVersion: "New version ready", downloadNow: "Download now", joinOfficial: "Join official group", verifyDescription: "Verify your username or email to receive a private, temporary direct download link.", identifierPlaceholder: "Registered username or email", verifyButton: "Verify and continue", whatsappTitle: "Official group access", whatsappSuccess: "Your email has access. Join the official group.", whatsappDescription: "Enter your registered email to get the WhatsApp group link.", whatsappButton: "Verify access", updateTitle: "ArepaTool v2.2.4 is now available", updateHeading: "Warning — Transsion ROM Patch", updateIntro: "For Infinix, Tecno and Itel devices, verify that the ROM Patch matches the exact model and Android version.", updateBullets: ["Bootloop or brick risk exists if the device rejects the firmware or an incompatible ROM is used.", "For safety, keep a BROM flashing tool available for recovery if needed.", "Support can guide you if the process has issues."], updateImportant: "Important: ArepaTool does not unlock the bootloader. The device must be unlocked before applying any ROM Patch." },
+    downloadTitle: "Download ArepaTool v2.2.5", accessConfirmed: "Access confirmed. Your direct download link is private and expires in 10 minutes.", newVersion: "New version ready", downloadNow: "Download now", joinOfficial: "Join official group", verifyDescription: "Verify your username or email to receive a private, temporary direct download link.", identifierPlaceholder: "Registered username or email", verifyButton: "Verify and continue", whatsappTitle: "Official group access", whatsappSuccess: "Your email has access. Join the official group.", whatsappDescription: "Enter your registered email to get the WhatsApp group link.", whatsappButton: "Verify access", updateTitle: "ArepaTool v2.2.5 is now available", updateHeading: "Warning — Transsion ROM Patch", updateIntro: "For Infinix, Tecno and Itel devices, verify that the ROM Patch matches the exact model and Android version.", updateBullets: ["Bootloop or brick risk exists if the device rejects the firmware or an incompatible ROM is used.", "For safety, keep a BROM flashing tool available for recovery if needed.", "Support can guide you if the process has issues."], updateImportant: "Important: ArepaTool does not unlock the bootloader. The device must be unlocked before applying any ROM Patch." },
   "pt-br": {
-    downloadTitle: "Baixar ArepaTool v2.2.4", accessConfirmed: "Acesso confirmado. Seu link de download direto é privado e expira em 10 minutos.", newVersion: "Nova versão pronta", downloadNow: "Baixar agora", joinOfficial: "Entrar no grupo oficial", verifyDescription: "Verifique seu usuário ou e-mail para receber um link direto, privado e temporário.", identifierPlaceholder: "Usuário ou e-mail cadastrado", verifyButton: "Verificar e continuar", whatsappTitle: "Acesso ao grupo oficial", whatsappSuccess: "Seu e-mail tem acesso. Entre no grupo oficial.", whatsappDescription: "Digite seu e-mail cadastrado para obter o link do grupo do WhatsApp.", whatsappButton: "Verificar acesso", updateTitle: "A ArepaTool v2.2.4 já está disponível", updateHeading: "Aviso — ROM Patch Transsion", updateIntro: "Para aparelhos Infinix, Tecno e Itel, confirme que a ROM Patch corresponde exatamente ao modelo e à versão do Android.", updateBullets: ["Existe risco de bootloop ou brick se o aparelho rejeitar o firmware ou uma ROM incompatível for usada.", "Por segurança, mantenha uma ferramenta de flash via BROM disponível para recuperação, se necessário.", "O suporte pode orientar você caso o processo apresente problemas."], updateImportant: "Importante: a ArepaTool não desbloqueia o bootloader. O aparelho precisa estar desbloqueado antes de aplicar qualquer ROM Patch." },
+    downloadTitle: "Baixar ArepaTool v2.2.5", accessConfirmed: "Acesso confirmado. Seu link de download direto é privado e expira em 10 minutos.", newVersion: "Nova versão pronta", downloadNow: "Baixar agora", joinOfficial: "Entrar no grupo oficial", verifyDescription: "Verifique seu usuário ou e-mail para receber um link direto, privado e temporário.", identifierPlaceholder: "Usuário ou e-mail cadastrado", verifyButton: "Verificar e continuar", whatsappTitle: "Acesso ao grupo oficial", whatsappSuccess: "Seu e-mail tem acesso. Entre no grupo oficial.", whatsappDescription: "Digite seu e-mail cadastrado para obter o link do grupo do WhatsApp.", whatsappButton: "Verificar acesso", updateTitle: "A ArepaTool v2.2.5 já está disponível", updateHeading: "Aviso — ROM Patch Transsion", updateIntro: "Para aparelhos Infinix, Tecno e Itel, confirme que a ROM Patch corresponde exatamente ao modelo e à versão do Android.", updateBullets: ["Existe risco de bootloop ou brick se o aparelho rejeitar o firmware ou uma ROM incompatível for usada.", "Por segurança, mantenha uma ferramenta de flash via BROM disponível para recuperação, se necessário.", "O suporte pode orientar você caso o processo apresente problemas."], updateImportant: "Importante: a ArepaTool não desbloqueia o bootloader. O aparelho precisa estar desbloqueado antes de aplicar qualquer ROM Patch." },
 };
 
 export function getLocaleCopy(locale: Locale) {

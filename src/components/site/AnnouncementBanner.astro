@@ -1,27 +1,75 @@
 ---
-import { ArrowRight, Flame, LogIn } from "lucide-react";
+import { ArrowRight, Flame, LogIn, Server, Tag } from "lucide-react";
 import { getLocaleCopy, localeFromPath, type Locale } from "@/lib/i18n";
 
 interface Props { locale?: Locale; }
 const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
 const copy = getLocaleCopy(locale);
+const labels = locale === "es"
+  ? { checking: "Consultando…", online: "Servidor activo", offline: "Servidor offline", unavailable: "Estado no disponible", price: "Precio", credits: "créditos" }
+  : locale === "pt-br"
+    ? { checking: "Consultando…", online: "Servidor ativo", offline: "Servidor offline", unavailable: "Status indisponível", price: "Preço", credits: "créditos" }
+    : { checking: "Checking…", online: "Server online", offline: "Server offline", unavailable: "Status unavailable", price: "Price", credits: "credits" };
 ---
 
-<aside class="border-b border-amber-700/20 bg-[#fff7df] px-4 py-2.5 text-[#4a3720]" aria-label={copy.announcement.aria}>
-  <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-center text-sm sm:justify-between sm:text-left">
-    <div class="flex items-center justify-center gap-2.5 sm:justify-start">
-      <span class="flex size-7 shrink-0 items-center justify-center rounded-full border border-amber-700/25 bg-amber-400/15 text-amber-700" aria-hidden="true">
-        <Flame className="size-4" />
-      </span>
-      <p class="font-medium tracking-tight">
-        <span class="font-display mr-1.5 text-amber-700">{copy.announcement.label}</span>
-        {copy.announcement.text} <strong class="text-[#2b2116]">{copy.announcement.brands}</strong>
-      </p>
+<aside class="xiaomi-announcement" aria-label={copy.announcement.aria} data-xiaomi-announcement>
+  <div class="xiaomi-announcement__inner">
+    <div class="xiaomi-announcement__main">
+      <span class="xiaomi-announcement__icon" aria-hidden="true"><Flame className="size-4" /></span>
+      <div class="xiaomi-announcement__copy">
+        <p><span class="xiaomi-announcement__label">{copy.announcement.label}</span> <strong>{copy.announcement.text}</strong></p>
+        <p class="xiaomi-announcement__subline">{copy.announcement.brands}</p>
+      </div>
     </div>
-    <a href="/login" class="group inline-flex items-center gap-1.5 font-semibold text-amber-800 underline decoration-amber-700/35 underline-offset-4 transition-colors hover:text-[#2b2116] hover:decoration-[#2b2116] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-700">
-      <LogIn className="size-3.5" />
-      {copy.announcement.action}
-      <ArrowRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-    </a>
+    <div class="xiaomi-announcement__facts" aria-live="polite">
+      <span class="xiaomi-announcement__fact" data-xiaomi-status><Server className="size-3.5" aria-hidden="true" /><span>{labels.checking}</span></span>
+      <span class="xiaomi-announcement__fact" data-xiaomi-price><Tag className="size-3.5" aria-hidden="true" /><span>{labels.price}: —</span></span>
+    </div>
+    <a class="xiaomi-announcement__action" href="/login"><LogIn className="size-3.5" />{copy.announcement.action}<ArrowRight className="size-3.5" /></a>
   </div>
 </aside>
+
+<script define:vars={{ labels }}>
+  const banner = document.querySelector<HTMLElement>("[data-xiaomi-announcement]");
+  const statusNode = banner?.querySelector<HTMLElement>("[data-xiaomi-status]");
+  const priceNode = banner?.querySelector<HTMLElement>("[data-xiaomi-price]");
+
+  function setStatus(text: string, state: "online" | "offline" | "unknown") {
+    if (!statusNode) return;
+    statusNode.dataset.state = state;
+    const label = statusNode.querySelector("span:last-child");
+    if (label) label.textContent = text;
+  }
+
+  fetch("https://api2.arepatool.com/api/xiaomi-auth/public-status", { headers: { Accept: "application/json" } })
+    .then((response) => response.ok ? response.json() : Promise.reject(new Error("status_unavailable")))
+    .then((data: { active?: boolean; creditCost?: number }) => {
+      const active = data.active === true;
+      setStatus(active ? labels.online : labels.offline, active ? "online" : "offline");
+      if (priceNode && Number.isFinite(Number(data.creditCost)) && Number(data.creditCost) > 0) {
+        const label = priceNode.querySelector("span:last-child");
+        if (label) label.textContent = `${labels.price}: ${Number(data.creditCost).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${labels.credits}`;
+      }
+    })
+    .catch(() => setStatus(labels.unavailable, "unknown"));
+</script>
+
+<style>
+  .xiaomi-announcement { border-bottom: 1px solid rgb(162 122 35 / 24%); background: #fff7df; color: #4a3720; }
+  .xiaomi-announcement__inner { display: flex; max-width: 80rem; align-items: center; gap: .75rem 1.15rem; margin-inline: auto; padding: .7rem 1rem; }
+  .xiaomi-announcement__main { display: flex; min-width: 0; align-items: center; gap: .65rem; }
+  .xiaomi-announcement__icon { display: inline-flex; width: 1.8rem; height: 1.8rem; flex: 0 0 auto; align-items: center; justify-content: center; border: 1px solid rgb(162 122 35 / 30%); border-radius: 999px; background: rgb(234 179 8 / 14%); color: #a27a23; }
+  .xiaomi-announcement__copy { min-width: 0; }
+  .xiaomi-announcement__copy p { margin: 0; }
+  .xiaomi-announcement__copy p:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .xiaomi-announcement__label { margin-right: .45rem; color: #a27a23; font-family: var(--font-display); font-size: .7rem; font-weight: 800; letter-spacing: .08em; }
+  .xiaomi-announcement__subline { margin-top: .12rem !important; color: #795b32; font-size: .7rem; }
+  .xiaomi-announcement__facts { display: flex; flex: 0 0 auto; flex-wrap: wrap; gap: .4rem; }
+  .xiaomi-announcement__fact { display: inline-flex; align-items: center; gap: .35rem; border: 1px solid rgb(162 122 35 / 24%); border-radius: 999px; padding: .28rem .55rem; color: #795b32; font-family: var(--font-mono); font-size: .64rem; white-space: nowrap; }
+  .xiaomi-announcement__fact[data-state="online"] { border-color: rgb(47 123 90 / 30%); color: #2f7b5a; }
+  .xiaomi-announcement__fact[data-state="offline"], .xiaomi-announcement__fact[data-state="unknown"] { border-color: rgb(168 78 13 / 26%); color: #a84e0d; }
+  .xiaomi-announcement__action { display: inline-flex; flex: 0 0 auto; align-items: center; gap: .35rem; margin-left: auto; color: #805816; font-size: .72rem; font-weight: 700; text-decoration: underline; text-decoration-color: rgb(128 88 22 / 35%); text-underline-offset: .22rem; }
+  .xiaomi-announcement__action:hover { color: #2b2116; }
+  @media (max-width: 900px) { .xiaomi-announcement__inner { flex-wrap: wrap; justify-content: center; text-align: center; } .xiaomi-announcement__main { justify-content: center; } .xiaomi-announcement__facts { justify-content: center; } .xiaomi-announcement__action { margin-left: 0; } }
+  @media (max-width: 520px) { .xiaomi-announcement__inner { align-items: stretch; } .xiaomi-announcement__main, .xiaomi-announcement__facts, .xiaomi-announcement__action { width: 100%; } .xiaomi-announcement__main, .xiaomi-announcement__facts, .xiaomi-announcement__action { justify-content: center; } .xiaomi-announcement__copy p:first-child { white-space: normal; } }
+</style>
