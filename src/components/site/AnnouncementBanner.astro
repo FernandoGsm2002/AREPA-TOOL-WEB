@@ -13,9 +13,6 @@ const labels = locale === "es"
 ---
 
 <aside class="xiaomi-announcement" aria-label={copy.announcement.aria} data-xiaomi-announcement>
-  <a class="xiaomi-announcement__poster" href="/login" aria-label="ArepaTool 2.2.5 — novedades y nuevos servicios">
-    <img src="/pngs/arepatool-2.2.5-whats-new.png" alt="ArepaTool 2.2.5 — novedades y nuevos servicios" width="1024" height="1536" loading="eager" fetchpriority="high" decoding="async" />
-  </a>
   <div class="xiaomi-announcement__inner">
     <div class="xiaomi-announcement__main">
       <span class="xiaomi-announcement__icon" aria-hidden="true"><Flame className="size-4" /></span>
@@ -68,9 +65,6 @@ const labels = locale === "es"
 
 <style>
   .xiaomi-announcement { border-bottom: 1px solid rgb(162 122 35 / 24%); background: #fff7df; color: #4a3720; }
-  .xiaomi-announcement__poster { display: block; max-width: 64rem; margin: 0 auto; padding: .85rem 1rem .35rem; background: #0a1118; }
-  .xiaomi-announcement__poster img { display: block; width: auto; max-width: 100%; height: min(72vh, 46rem); margin-inline: auto; border: 1px solid rgb(255 133 18 / 52%); border-radius: 1rem; object-fit: contain; box-shadow: 0 18px 42px rgb(0 0 0 / 26%); transition: transform .25s ease, box-shadow .25s ease; }
-  .xiaomi-announcement__poster:hover img { transform: translateY(-2px); box-shadow: 0 22px 48px rgb(0 0 0 / 36%); }
   .xiaomi-announcement__inner { display: flex; max-width: 80rem; align-items: center; gap: .75rem 1.15rem; margin-inline: auto; padding: .7rem 1rem; }
   .xiaomi-announcement__main { display: flex; min-width: 0; align-items: center; gap: .65rem; }
   .xiaomi-announcement__icon { display: inline-flex; width: 1.8rem; height: 1.8rem; flex: 0 0 auto; align-items: center; justify-content: center; border: 1px solid rgb(162 122 35 / 30%); border-radius: 999px; background: rgb(234 179 8 / 14%); color: #a27a23; }
@@ -87,5 +81,5 @@ const labels = locale === "es"
   .xiaomi-announcement__action { display: inline-flex; flex: 0 0 auto; align-items: center; gap: .35rem; margin-left: auto; color: #805816; font-size: .72rem; font-weight: 700; text-decoration: underline; text-decoration-color: rgb(128 88 22 / 35%); text-underline-offset: .22rem; }
   .xiaomi-announcement__action:hover { color: #2b2116; }
   @media (max-width: 900px) { .xiaomi-announcement__inner { flex-wrap: wrap; justify-content: center; text-align: center; } .xiaomi-announcement__main { justify-content: center; } .xiaomi-announcement__facts { justify-content: center; } .xiaomi-announcement__action { margin-left: 0; } }
-  @media (max-width: 520px) { .xiaomi-announcement__poster { padding: .55rem .55rem .25rem; } .xiaomi-announcement__poster img { width: 100%; height: auto; border-radius: .7rem; } .xiaomi-announcement__inner { align-items: stretch; } .xiaomi-announcement__main, .xiaomi-announcement__facts, .xiaomi-announcement__action { width: 100%; } .xiaomi-announcement__main, .xiaomi-announcement__facts, .xiaomi-announcement__action { justify-content: center; } .xiaomi-announcement__copy p:first-child { white-space: normal; } .xiaomi-announcement__burst { width: 2.8rem; height: 2.8rem; } }
+  @media (max-width: 520px) { .xiaomi-announcement__inner { align-items: stretch; } .xiaomi-announcement__main, .xiaomi-announcement__facts, .xiaomi-announcement__action { width: 100%; } .xiaomi-announcement__main, .xiaomi-announcement__facts, .xiaomi-announcement__action { justify-content: center; } .xiaomi-announcement__copy p:first-child { white-space: normal; } .xiaomi-announcement__burst { width: 2.8rem; height: 2.8rem; } }
 </style>
