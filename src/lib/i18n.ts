@@ -46,8 +46,8 @@ export const localeCopy = {
     announcement: {
       aria: "Novedad de ArepaTool",
       label: "NUEVO",
-      text: "Xiaomi Auth FRP",
-      brands: "Servicio FRP Auth · novedad",
+      text: "Xiaomi FRP MI Assistant Mode",
+      brands: "Servicio FRP Auth",
       action: "Inicia sesión y ve a Descargas",
     },
     hero: {
@@ -165,7 +165,7 @@ export const localeCopy = {
       login: "Log in",
       register: "Sign up",
     },
-    announcement: { aria: "ArepaTool news", label: "NEW", text: "Xiaomi Auth FRP", brands: "FRP Auth service · new", action: "Log in to open Downloads" },
+    announcement: { aria: "Xiaomi FRP MI Assistant Mode service", label: "NEW", text: "Xiaomi FRP MI Assistant Mode", brands: "FRP Auth service", action: "Log in to open Downloads" },
     hero: { kicker: "Modern software", titleAccent: "Professional tool for you.", description: "A modern tool designed for unlockers like you", platform: "Windows", license: "Protected license", licenseCta: "View license", downloadCta: "Download ArepaTool", proofLabel: "Core modules", tagline: "Compatible with modern brands on the market", mascotAlt: "ArepaTool mascot working on a Windows computer" },
     release: { kicker: "Latest release", whatsNew: "07/10/2026 · What’s new?", stable: "stable" },
     pricing: { kicker: "ArepaTool licensing", title: "Choose your plan", description: "Our updates are always free. Access every release with an active ArepaTool license.", popular: "Popular", price: "Price /", buyNow: "Buy Now", reseller: "Buy From Resellers", plans: [
@@ -189,7 +189,7 @@ export const localeCopy = {
   "pt-br": {
     language: "Idioma",
     nav: { home: "Início", models: "Modelos compatíveis", updates: "Atualizações", features: "Recursos", tutorials: "Tutoriais", instructions: "Manuais", pricing: "Preços", resellers: "Revendedores", whatsapp: "Grupo do WhatsApp", login: "Entrar", register: "Criar conta" },
-    announcement: { aria: "Novidade da ArepaTool", label: "NOVO", text: "Xiaomi Auth FRP", brands: "Serviço FRP Auth · novidade", action: "Entre para abrir os Downloads" },
+    announcement: { aria: "Serviço Xiaomi FRP MI Assistant Mode", label: "NOVO", text: "Xiaomi FRP MI Assistant Mode", brands: "Serviço FRP Auth", action: "Entre para abrir os Downloads" },
     hero: { kicker: "Modern software", titleAccent: "Professional tool for you.", description: "A modern tool designed for unlockers like you", platform: "Windows", license: "Licença protegida", licenseCta: "Ver licença", downloadCta: "Baixar ArepaTool", proofLabel: "Módulos principais", tagline: "Compatível com marcas modernas do mercado", mascotAlt: "Mascote da ArepaTool trabalhando em um computador Windows" },
     release: { kicker: "Última versão", whatsNew: "07/10/2026 · O que há de novo?", stable: "estável" },
     pricing: { kicker: "Licenciamento ArepaTool", title: "Escolha seu plano", description: "Nossas atualizações são sempre gratuitas. Acesse cada versão com uma licença ArepaTool ativa.", popular: "Popular", price: "Preço /", buyNow: "Comprar agora", reseller: "Comprar com revendedores", plans: [
