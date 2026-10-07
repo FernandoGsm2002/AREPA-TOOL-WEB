@@ -4,107 +4,54 @@ import { getLocaleCopy, localeFromPath, type Locale } from "@/lib/i18n";
 interface Props { locale?: Locale; }
 const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
 const copy = getLocaleCopy(locale);
-const consoleText = locale === "es"
-  ? {
-      whatsNew: "¿Qué hay de nuevo?",
-      cpuList: "LISTA DE CPU COMPATIBLES",
-      lkEditor: "LK EDITOR PARA DESBLOQUEO DE BOOTLOADER · COMPATIBLE CON AARCH64 Y ARM32",
-      securityPlugin: "PLUGIN DE SEGURIDAD",
-      metaSupport: "SOPORTE PARA FRP · RESTABLECIMIENTO DE FÁBRICA · BYPASS DE PAYJOY",
-      downloadMode: "SAMSUNG EXYNOS · MODO DE DESCARGA",
-      supportReset: "SOPORTE PARA FRP Y RESTABLECIMIENTO DE FÁBRICA",
-      timeouts: "TIEMPOS DE ESPERA",
-      enjoy: "Disfruta ArepaTool.",
-    }
-  : {
-      whatsNew: "What's new?",
-      cpuList: "CPU COMPATIBLE LIST",
-      lkEditor: "LK EDITOR FOR UNLOCK BOOTLOADER · SUPPORT AARCH64 & ARM32",
-      securityPlugin: "SECURITY PLUGIN",
-      metaSupport: "SOPORTA FRP · FACTORY RESET · PAYJOY BYPASS",
-      downloadMode: "SAMSUNG EXYNOS DOWNLOAD MODE",
-      supportReset: "SUPPORT FRP & FACTORY RESET",
-      timeouts: "TIMEOUTS",
-      enjoy: "Enjoy ArepaTool.",
-    };
 ---
 
 <section class="release-console-section" aria-labelledby="release-console-title">
   <div class="site-container">
     <div class="release-console-heading">
       <p class="release-console-kicker">{copy.release.kicker}</p>
-      <h2 id="release-console-title">ArepaTool 2.2.5</h2>
+      <h2 id="release-console-title">ArepaTool 2.2.6</h2>
       <p>{copy.release.whatsNew}</p>
     </div>
 
-    <div class="release-console" role="region" aria-label="ArepaTool version 2.2.5 changelog">
+    <div class="release-console" role="region" aria-label="ArepaTool version 2.2.6 changelog">
       <div class="release-console__bar" aria-hidden="true">
         <span class="release-console__dot release-console__dot--red"></span>
         <span class="release-console__dot release-console__dot--yellow"></span>
         <span class="release-console__dot release-console__dot--green"></span>
-        <span class="release-console__path">arepatool@workstation: ~/releases/2.2.5</span>
+        <span class="release-console__path">arepatool@workstation: ~/releases/2.2.6</span>
         <span class="release-console__status">{copy.release.stable}</span>
       </div>
 
       <pre class="release-console__code"><code><span class="terminal-line terminal-shebang">#!/usr/bin/env bash</span>
-<span class="terminal-line terminal-comment"><strong class="terminal-strong"># ArepaTool 2.2.5 - 04/10/2026</strong></span>
+<span class="terminal-line terminal-comment"><strong class="terminal-strong"># AREPATOOL v2.2.6</strong></span>
+<span class="terminal-line terminal-comment">MDM NEW UPDATE</span>
+<span class="terminal-line terminal-comment">MORE BRANDS · MORE SOLUTIONS · KEEP MOVING FORWARD</span>
 
-<span class="terminal-line terminal-command"><span class="terminal-prompt">$</span> printf "{consoleText.whatsNew}\n"</span>
+<span class="terminal-line terminal-heading"><strong class="terminal-strong"># NEW — ADDED NEW BUTTONS</strong></span>
+<span class="terminal-line terminal-output"><strong>- MDM QR</strong></span>
+<span class="terminal-line terminal-output"><strong>- ADB</strong></span>
 
-<span class="terminal-line terminal-heading"><strong class="terminal-strong"># XIAOMI</strong></span>
-<span class="terminal-line terminal-output"><strong>XIAOMI FRP AUTH SERVICE · CHEAP PRICE</strong></span>
+<span class="terminal-line terminal-heading"><strong class="terminal-strong"># SUPPORTED OPERATIONS</strong></span>
+<span class="terminal-line terminal-output"><strong>IT ADMIN — SUPPORTED</strong></span>
+<span class="terminal-line terminal-note">Bypass and manage enterprise devices.</span>
+<span class="terminal-line terminal-output"><strong>KRECE — SUPPORTED</strong></span>
+<span class="terminal-line terminal-note">Remove / Bypass Krece MDM.</span>
+<span class="terminal-line terminal-output"><strong>CLARO / TELCEL — SUPPORTED</strong></span>
+<span class="terminal-line terminal-note">Full support for Claro and Telcel devices.</span>
+<span class="terminal-line terminal-warning"><strong>KG — NOT SUPPORTED</strong></span>
+<span class="terminal-line terminal-warning">KG devices are not supported.</span>
+<span class="terminal-line terminal-output"><strong>WHITE SCREEN MOTOROLA — SUPPORTED</strong></span>
+<span class="terminal-line terminal-note">Fix White Screen on Motorola devices.</span>
+<span class="terminal-line terminal-output"><strong>CRICKET MOTO — SUPPORTED</strong></span>
+<span class="terminal-line terminal-note">No need DNS. Direct support.</span>
 
-<span class="terminal-line terminal-heading"><strong class="terminal-strong"># APARTADO UNISOC</strong></span>
-<span class="terminal-line terminal-brand"><strong>ITEL · INFINIX · TECNO</strong></span>
-<span class="terminal-line terminal-output"><strong>FIX INFINIX PAYJOY · NO DNS INSTALL NEEDED</strong></span>
-<span class="terminal-line terminal-output"><strong>REGISTER ULTRA FAST</strong></span>
-<span class="terminal-line terminal-output"><strong>SEGURIDADES ALTAS SOPORTADAS</strong></span>
-<span class="terminal-line terminal-output"><strong>PUERTO PARCHADO SOPORTADO</strong></span>
-<span class="terminal-line terminal-output"><strong>{consoleText.cpuList}</strong></span>
-<span class="terminal-line terminal-cpu">SC7731E</span>
-<span class="terminal-line terminal-cpu">SC9863A</span>
-<span class="terminal-line terminal-cpu">SC9863A1</span>
-<span class="terminal-line terminal-cpu">TIGER T606</span>
-<span class="terminal-line terminal-cpu">SC9832E</span>
-<span class="terminal-line terminal-cpu">TIGER T603</span>
-<span class="terminal-line terminal-cpu">MediaTek Dimensity 6080 / Unisoc T760</span>
-<span class="terminal-line terminal-cpu">TIGER T616</span>
+<span class="terminal-line terminal-heading"><strong class="terminal-strong"># MINOR UPDATE</strong></span>
+<span class="terminal-line terminal-fixed"><strong>Fixed Xiaomi — improved with Xiaomi Auth.</strong></span>
 
-<span class="terminal-line terminal-heading"><strong class="terminal-strong"># APARTADO MEDIATEK</strong></span>
-<span class="terminal-line terminal-brand"><strong>ITEL · INFINIX · TECNO</strong></span>
-<span class="terminal-line terminal-output"><strong>UNLOCK BOOTLOADER VIA META MODE · NO OTHER TOOL NEEDED</strong></span>
-<span class="terminal-line terminal-output"><strong>HIGH-SPEED PARTITION MANAGER IN META MODE</strong></span>
-<span class="terminal-line terminal-output"><strong>{consoleText.lkEditor}</strong></span>
-<span class="terminal-line terminal-warning">(NO TODOS LOS MODELOS SOPORTADOS)</span>
-<span class="terminal-line terminal-output"><strong>BASE DE DATOS DE ROM PARCHADAS · +30 MODELOS</strong></span>
-<span class="terminal-line terminal-output">SOPORTA ANTICRACK &amp; {consoleText.securityPlugin}</span>
-
-<span class="terminal-line terminal-heading"><strong class="terminal-strong"># META MODE</strong></span>
-<span class="terminal-line terminal-brand"><strong>INFINIX · UNISOC · ITEL · TECNO</strong></span>
-<span class="terminal-line terminal-output"><strong>{consoleText.metaSupport}</strong></span>
-
-<span class="terminal-line terminal-heading"><strong class="terminal-strong"># {consoleText.downloadMode}</strong></span>
-<span class="terminal-line terminal-output"><strong>SOPORTA TODOS LOS PROCESADORES EXYNOS</strong></span>
-<span class="terminal-line terminal-note">SEGURIDADES MENORES A 05/2026</span>
-
-<span class="terminal-line terminal-heading"><strong class="terminal-strong"># NUBIA / ZTE · UNISOC</strong></span>
-<span class="terminal-line terminal-output"><strong>{consoleText.supportReset}</strong></span>
-<span class="terminal-line terminal-note">SEGURIDADES INFERIORES A 03/2026</span>
-<span class="terminal-line terminal-cpu">ZTE BLADE A55 4G</span>
-<span class="terminal-line terminal-cpu">NUBIA A36</span>
-<span class="terminal-line terminal-cpu">NUBIA AIR 5G</span>
-<span class="terminal-line terminal-cpu">NUBIA NEO 3 GT 5G</span>
-<span class="terminal-line terminal-cpu">NUBIA NEO 3</span>
-<span class="terminal-line terminal-cpu">ZTE BLADE V60 DESIGN</span>
-
-<span class="terminal-line terminal-heading"><strong class="terminal-strong"># APPLE</strong></span>
-<span class="terminal-line terminal-output"><strong>RUST AIO · MDM IPHONE SUPPORT UP TO 27.0.1</strong></span>
-<span class="terminal-line terminal-output"><strong>BYPASS HELLO RAMDISK A12 / A13 AND MORE</strong></span>
-
-<span class="terminal-line terminal-fixed"><strong>✓ MEJORA DE ESTABILIDAD Y PROTOCOLOS</strong></span>
-<span class="terminal-line terminal-fixed">✓ FIX EN INICIO DE SESIONES Y {consoleText.timeouts}</span>
-<span class="terminal-line terminal-command"><span class="terminal-prompt">$</span> <strong>check_model_supports</strong></span>
-<span class="terminal-line terminal-success"><strong>{consoleText.enjoy}</strong></span></code></pre>
+<span class="terminal-line terminal-success"><strong>FAST | STABLE | MORE BRANDS | MORE SOLUTIONS</strong></span>
+<span class="terminal-line terminal-command"><span class="terminal-prompt">$</span> Website: www.arepatool.com</span>
+<span class="terminal-line terminal-success"><strong>BUY NOW!</strong></span></code></pre>
     </div>
   </div>
 </section>
