@@ -1,15 +1,15 @@
 ---
-import { ArrowRight, Flame, LogIn, Server, Tag } from "lucide-react";
+import { ArrowRight, Clock3, Flame, LogIn, Server, Tag } from "lucide-react";
 import { getLocaleCopy, localeFromPath, type Locale } from "@/lib/i18n";
 
 interface Props { locale?: Locale; }
 const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
 const copy = getLocaleCopy(locale);
 const labels = locale === "es"
-  ? { checking: "Consultando…", online: "Servidor activo", offline: "Servidor offline", unavailable: "Estado no disponible", price: "Precio", credits: "créditos" }
+  ? { checking: "Consultando…", online: "Servidor activo", offline: "Servidor offline", unavailable: "Estado no disponible", price: "Precio", credits: "créditos", cooldown: "Cooldown" }
   : locale === "pt-br"
-    ? { checking: "Consultando…", online: "Servidor ativo", offline: "Servidor offline", unavailable: "Status indisponível", price: "Preço", credits: "créditos" }
-    : { checking: "Checking…", online: "Server online", offline: "Server offline", unavailable: "Status unavailable", price: "Price", credits: "credits" };
+    ? { checking: "Consultando…", online: "Servidor ativo", offline: "Servidor offline", unavailable: "Status indisponível", price: "Preço", credits: "créditos", cooldown: "Cooldown" }
+    : { checking: "Checking…", online: "Server online", offline: "Server offline", unavailable: "Status unavailable", price: "Price", credits: "credits", cooldown: "Cooldown" };
 ---
 
 <aside class="xiaomi-announcement" aria-label={copy.announcement.aria} data-xiaomi-announcement>
@@ -25,6 +25,7 @@ const labels = locale === "es"
     <div class="xiaomi-announcement__facts" aria-live="polite">
       <span class="xiaomi-announcement__fact" data-xiaomi-status><Server className="size-3.5" aria-hidden="true" /><span>{labels.checking}</span></span>
       <span class="xiaomi-announcement__fact" data-xiaomi-price><Tag className="size-3.5" aria-hidden="true" /><span>{labels.price}: —</span></span>
+      <span class="xiaomi-announcement__fact" data-xiaomi-cooldown><Clock3 className="size-3.5" aria-hidden="true" /><span>{labels.cooldown}: —</span></span>
     </div>
     <a class="xiaomi-announcement__action" href="/login"><LogIn className="size-3.5" />{copy.announcement.action}<ArrowRight className="size-3.5" /></a>
   </div>
@@ -34,12 +35,25 @@ const labels = locale === "es"
   const banner = document.querySelector("[data-xiaomi-announcement]");
   const statusNode = banner?.querySelector("[data-xiaomi-status]");
   const priceNode = banner?.querySelector("[data-xiaomi-price]");
+  const cooldownNode = banner?.querySelector("[data-xiaomi-cooldown]");
+  let cooldownSeconds = null;
 
   function setStatus(text, state) {
     if (!statusNode) return;
     statusNode.dataset.state = state;
     const label = statusNode.querySelector("span:last-child");
     if (label) label.textContent = text;
+  }
+
+  function renderCooldown() {
+    if (!cooldownNode || cooldownSeconds === null) return;
+    const label = cooldownNode.querySelector("span:last-child");
+    if (!label) return;
+    const total = Math.max(0, cooldownSeconds);
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+    const seconds = total % 60;
+    label.textContent = `${labels.cooldown}: ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   }
 
   const controller = new AbortController();
@@ -57,6 +71,11 @@ const labels = locale === "es"
       if (priceNode && Number.isFinite(Number(data.creditCost)) && Number(data.creditCost) > 0) {
         const label = priceNode.querySelector("span:last-child");
         if (label) label.textContent = `${labels.price}: ${Number(data.creditCost).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${labels.credits}`;
+      }
+      if (Number.isFinite(Number(data.cooldownSeconds))) {
+        cooldownSeconds = Math.max(0, Math.floor(Number(data.cooldownSeconds)));
+        renderCooldown();
+        window.setInterval(() => { cooldownSeconds -= 1; renderCooldown(); }, 1000);
       }
     })
     .catch(() => setStatus(labels.unavailable, "unknown"))
