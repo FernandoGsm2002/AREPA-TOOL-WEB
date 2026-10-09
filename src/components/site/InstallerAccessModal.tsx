@@ -5,7 +5,7 @@ import { Download, Flame, Loader2 } from "lucide-react";
 import { modalCopy, type Locale } from "@/lib/i18n";
 
 const API_BASE = "https://api2.arepatool.com";
-const INSTALLER_FILE_NAME = "ArepaToolV2_Setup_v2.2.6.exe";
+const INSTALLER_FILE_NAME = "ArepaToolV2_Setup_v2.2.7.exe";
 
 export default function InstallerAccessModal({ locale = "es" }: { locale?: Locale }) {
   const copy = modalCopy[locale];

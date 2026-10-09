@@ -14,6 +14,21 @@ export type ChangelogLine =
   | { type: "blank" };
 
 export const changelog: ChangelogLine[] = [
+  { type: "h1", text: "# ArepaTool 2.2.7" },
+  { type: "comment", text: "## ZTE / NUBIA · UNISOC — BETA" },
+  { type: "blank" },
+  { type: "h2", text: "NEW — ZTE / NUBIA UNISOC" },
+  { type: "plus", text: "Erase PayJoy" },
+  { type: "plus", text: "Factory Reset" },
+  { type: "plus", text: "Partition Manager" },
+  { type: "plus", text: "FRP Diag Mode — One Click" },
+  { type: "blank" },
+  { type: "h2", text: "INFINIX · TECNO · ITEL" },
+  { type: "fixed", text: "Transsion Metamode bugs fixed." },
+  { type: "fixed", text: "Improved stability and compatibility in Transsion Metamode." },
+  { type: "blank" },
+  { type: "comment", text: "Website: www.arepatool.com" },
+  { type: "blank" },
   { type: "h1", text: "# ArepaTool 2.2.6" },
   { type: "comment", text: "## MDM NEW UPDATE" },
   { type: "comment", text: "## MORE BRANDS · MORE SOLUTIONS · KEEP MOVING FORWARD" },
