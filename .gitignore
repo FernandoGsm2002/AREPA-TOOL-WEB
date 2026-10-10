@@ -17,6 +17,7 @@ node_modules/
 dist/
 .astro/
 .impeccable/
+.artifacts/
 
 # ==========================================
 # Logs

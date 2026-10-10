@@ -5,7 +5,7 @@ import { Download, Flame, Loader2 } from "lucide-react";
 import { modalCopy, type Locale } from "@/lib/i18n";
 
 const API_BASE = "https://api2.arepatool.com";
-const INSTALLER_FILE_NAME = "ArepaToolV2_Setup_v2.2.7.exe";
+const FALLBACK_INSTALLER_FILE_NAME = "ArepaToolV2_Setup.exe";
 
 export default function InstallerAccessModal({ locale = "es" }: { locale?: Locale }) {
   const copy = modalCopy[locale];
@@ -13,6 +13,7 @@ export default function InstallerAccessModal({ locale = "es" }: { locale?: Local
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [fileName, setFileName] = useState(FALLBACK_INSTALLER_FILE_NAME);
   const [retry, setRetry] = useState(0);
 
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function InstallerAccessModal({ locale = "es" }: { locale?: Local
         const data = await response.json();
         if (!response.ok || !data.downloadUrl) throw new Error(data.error || "download_unavailable");
         setDownloadUrl(data.downloadUrl);
+        setFileName(data.fileName || FALLBACK_INSTALLER_FILE_NAME);
       })
       .catch((error) => {
         if (error.name !== "AbortError") {
@@ -75,10 +77,10 @@ export default function InstallerAccessModal({ locale = "es" }: { locale?: Local
               <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-primary/80 to-transparent" />
               <Flame className="text-primary mx-auto size-7 motion-safe:animate-pulse" />
               <p className="mt-2 font-semibold">{copy.newVersion}</p>
-              <p className="text-muted-foreground mt-1 text-xs">{INSTALLER_FILE_NAME}</p>
+              <p className="text-muted-foreground mt-1 text-xs">{fileName}</p>
             </div>
             <Button asChild className="w-full shadow-xl shadow-primary/30 motion-safe:animate-pulse">
-              <a href={downloadUrl} download={INSTALLER_FILE_NAME}><Download className="size-4" />{copy.downloadNow}</a>
+              <a href={downloadUrl} download={fileName}><Download className="size-4" />{copy.downloadNow}</a>
             </Button>
           </div>
         ) : (

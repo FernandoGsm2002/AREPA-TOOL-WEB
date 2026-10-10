@@ -28,6 +28,29 @@ const emptyApkDraft = (): ApkDraft => ({ name: "", version: "", packageName: "",
 // El software Dhru agrega /api/index.php automáticamente a este dominio.
 const DHRU_API_URL = "https://dhru.arepatool.com";
 
+const fileSha256 = async (file: File) => {
+  const hash = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
+  return Array.from(new Uint8Array(hash), byte => byte.toString(16).padStart(2, "0")).join("");
+};
+
+const uploadFile = (url: string, file: File, contentType: string, onProgress: (percent: number) => void) => new Promise<void>((resolve, reject) => {
+  const request = new XMLHttpRequest();
+  request.open("PUT", url);
+  request.setRequestHeader("Content-Type", contentType);
+  request.upload.onprogress = event => {
+    if (event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
+  };
+  request.onload = () => request.status >= 200 && request.status < 300
+    ? resolve()
+    : reject(new Error(`R2 respondió ${request.status} al cargar el instalador.`));
+  request.onerror = () => reject(new Error("No se pudo conectar con R2 para cargar el instalador."));
+  request.send(file);
+});
+
+const formatFileSize = (bytes?: number | null) => bytes
+  ? `${(Number(bytes) / 1024 / 1024).toFixed(1)} MB`
+  : "";
+
 export default function Admin() {
   const [tab, setTab] = useState<Tab>("users");
   const [allowed, setAllowed] = useState<boolean | null>(null);
@@ -40,6 +63,7 @@ export default function Admin() {
   const [successfulMtk, setSuccessfulMtk] = useState<any[]>([]); const [successfulMtkPage, setSuccessfulMtkPage] = useState(0); const [totalSuccessfulMtk, setTotalSuccessfulMtk] = useState(0);
   const [xiaomiOperations, setXiaomiOperations] = useState<any[]>([]); const [xiaomiPage, setXiaomiPage] = useState(0); const [totalXiaomiOperations, setTotalXiaomiOperations] = useState(0); const [xiaomiCreditCost, setXiaomiCreditCost] = useState("1"); const [xiaomiConfigBusy, setXiaomiConfigBusy] = useState(false);
   const [version, setVersion] = useState<any>(null); const [notice, setNotice] = useState("");
+  const [updateFile, setUpdateFile] = useState<File | null>(null); const [updateBusy, setUpdateBusy] = useState(false); const [updateProgress, setUpdateProgress] = useState(0);
   const [visibleKeyId, setVisibleKeyId] = useState<string | null>(null); const [copied, setCopied] = useState("");
   const [apkDraft, setApkDraft] = useState<ApkDraft | null>(null); const [apkBusy, setApkBusy] = useState(false);
   const [resellerDraft, setResellerDraft] = useState<ResellerDraft | null>(null); const [resellerBusy, setResellerBusy] = useState(false);
@@ -65,7 +89,7 @@ export default function Admin() {
     if (next === "partners") { const [partnerData, logData] = await Promise.all([call("partners/list"), call("partners/logs", {limit:100})]); if (partnerData) setPartners(partnerData.partners); if (logData) setPartnerLogs(logData.logs); }
     if (next === "mtk") await Promise.all([loadSuccessfulMtk(), loadUnsupportedMtk()]);
     if (next === "xiaomi") await Promise.all([loadXiaomiOperations(), loadXiaomiConfig()]);
-    if (next === "version") { const d = await call("app-version/get"); if (d) setVersion(d.version); }
+    if (next === "version") { const d = await call("app-version/get"); if (d) setVersion(d.version || { latest_version:"", min_version:"", download_url:"", sha256:"", message:"" }); }
   };
   useEffect(() => {
     const session = loadSession();
@@ -111,7 +135,50 @@ export default function Admin() {
     try { await navigator.clipboard.writeText(value); setCopied(`${id}:${label}`); setTimeout(() => setCopied(""), 1800); }
     catch { setNotice("No se pudo copiar. Revisa los permisos del navegador."); }
   };
-  const saveVersion = async (e:React.FormEvent) => { e.preventDefault(); const form=new FormData(e.currentTarget as HTMLFormElement); await call("app-version/save", {latestVersion:form.get("latestVersion"),minVersion:form.get("minVersion"),downloadUrl:form.get("downloadUrl")}); loadTab("version"); setNotice("Actualización guardada."); };
+  const saveVersion = async (e:React.FormEvent) => {
+    e.preventDefault(); if (updateBusy) return;
+    const form = new FormData(e.currentTarget as HTMLFormElement);
+    const latestVersion = String(form.get("latestVersion") || "").trim();
+    const downloadUrl = String(form.get("downloadUrl") || "").trim();
+    if (!updateFile && !version?.installer_key && !downloadUrl) {
+      setNotice("Selecciona un instalador o indica una URL HTTPS de respaldo."); return;
+    }
+    setUpdateBusy(true); setUpdateProgress(0); setNotice(updateFile ? "Preparando instalador…" : "Publicando actualización…");
+    try {
+      let uploadedKey: string | undefined;
+      let sha256 = String(form.get("sha256") || "").trim();
+      if (updateFile) {
+        setNotice("Calculando SHA-256…");
+        sha256 = await fileSha256(updateFile);
+        const signed = await call("app-version/upload-url", {
+          version: latestVersion, filename: updateFile.name, sizeBytes: updateFile.size,
+        });
+        if (!signed) return;
+        setNotice("Cargando instalador a R2…");
+        await uploadFile(signed.uploadUrl, updateFile, signed.contentType, setUpdateProgress);
+        uploadedKey = signed.key;
+      }
+      const saved = await call("app-version/save", {
+        latestVersion,
+        minVersion: form.get("minVersion"),
+        downloadUrl,
+        useExternalUrl: !updateFile && Boolean(downloadUrl),
+        sha256,
+        message: form.get("message"),
+        uploadedKey,
+        installerKey: version?.installer_key,
+        installerFileName: updateFile?.name || version?.installer_file_name,
+        installerSizeBytes: updateFile?.size || version?.installer_size_bytes,
+      });
+      if (!saved) return;
+      setUpdateFile(null); setUpdateProgress(100); setVersion(saved.version);
+      const installerInput = document.querySelector<HTMLInputElement>('input[accept^=".exe,.msi"]');
+      if (installerInput) installerInput.value = "";
+      setNotice(`Actualización ${latestVersion} publicada correctamente.`);
+    } catch (err) {
+      setNotice(err instanceof Error ? err.message : "No se pudo publicar la actualización.");
+    } finally { setUpdateBusy(false); }
+  };
   const generateRentals = async (e: React.FormEvent) => {
     e.preventDefault(); if (rentalBusy) return;
     const count = Number(rentalCount);
@@ -158,7 +225,7 @@ export default function Admin() {
       {tab==="xiaomi" && <section><form onSubmit={saveXiaomiConfig} className="border-primary/30 bg-card mb-5 flex flex-wrap items-end gap-4 rounded-xl border p-5"><label className="grid gap-1.5 text-sm"><span className="font-medium">Precio Xiaomi Auth (créditos)</span><Input required type="number" min="0.01" step="0.01" value={xiaomiCreditCost} onChange={e=>setXiaomiCreditCost(e.target.value)} disabled={xiaomiConfigBusy}/><span className="text-muted-foreground text-xs">Costo global descontado por cada FRP + Erase userdata.</span></label><Button disabled={xiaomiConfigBusy}>{xiaomiConfigBusy?<LoaderCircle className="animate-spin"/>:<Check/>}{xiaomiConfigBusy?"Guardando…":"Guardar precio"}</Button></form><div className="mb-4 flex flex-wrap items-end justify-between gap-3"><div><h2 className="font-display text-lg font-semibold">Xiaomi Auth operations</h2><p className="text-muted-foreground mt-1 text-sm">FRP + Erase userdata, incluidos éxitos, fallos y reembolsos.</p></div><span className="bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-medium">{totalXiaomiOperations} operaciones</span></div><div className="border-border/60 overflow-x-auto rounded-xl border"><table className="w-full text-left text-sm"><thead className="bg-muted/50 text-xs"><tr><th className="p-3">Resultado</th><th className="p-3">Usuario</th><th className="p-3">Modelo / versión</th><th className="p-3">Créditos</th><th className="p-3">Referencia</th><th className="p-3">Fecha</th></tr></thead><tbody>{xiaomiOperations.map(o=><tr key={o.id} className="border-border/50 border-t"><td className="p-3"><span className={`rounded-full px-2 py-1 text-xs font-medium ${o.status==="success"?"bg-emerald-500/15 text-emerald-600":o.status==="failed"?"bg-destructive/10 text-destructive":"bg-amber-500/15 text-amber-700"}`}>{o.status==="success"?"✓ DONE":o.status==="failed"?"✕ FAILED":"PROCESSING"}</span><span className="text-muted-foreground mt-1 block text-xs">{o.error_message||o.vendor_status||"FRP + Erase userdata"}</span></td><td className="p-3 text-xs"><b>{o.username||"—"}</b><span className="text-muted-foreground block">{o.email||""}</span></td><td className="p-3"><b>{o.codename||"—"}</b><span className="text-muted-foreground block text-xs">{o.version||"—"}</span></td><td className="p-3 text-xs"><b>{o.status==="success"?`Charged: ${o.cost}`:o.status==="failed"?`Refunded: ${o.cost}`:`Reserved: ${o.cost}`}</b><span className="text-muted-foreground block">Available after: {o.credits_after ?? "—"}</span></td><td className="p-3 font-mono text-xs">{o.request_id}</td><td className="p-3 text-xs">{date(o.completed_at||o.created_at)}</td></tr>)}{xiaomiOperations.length===0&&<tr><td className="text-muted-foreground p-6 text-center" colSpan={6}>Aún no hay operaciones Xiaomi Auth.</td></tr>}</tbody></table></div>{totalXiaomiOperations>0&&<div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm"><span className="text-muted-foreground">Mostrando {xiaomiPage*50+1}–{Math.min((xiaomiPage+1)*50,totalXiaomiOperations)} de {totalXiaomiOperations} · Página {xiaomiPage+1} de {Math.max(1,Math.ceil(totalXiaomiOperations/50))}</span><div className="flex gap-2"><Button size="sm" variant="outline" disabled={xiaomiPage===0} onClick={()=>loadXiaomiOperations(xiaomiPage-1)}>Anterior</Button><Button size="sm" variant="outline" disabled={(xiaomiPage+1)*50>=totalXiaomiOperations} onClick={()=>loadXiaomiOperations(xiaomiPage+1)}>Siguiente</Button></div></div>}</section>}
       {tab==="apks" && <section><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><p className="text-muted-foreground text-sm">Carga .apk, .apks o .xapk directamente en R2. Al reemplazarlo o eliminarlo, el archivo anterior también se borra.</p><Button onClick={()=>editApk()}><Upload/>Subir paquete</Button></div>{apkDraft&&<form onSubmit={saveApk} className="border-primary/30 bg-card mb-6 grid gap-4 rounded-xl border p-5 shadow-lg shadow-primary/5 md:grid-cols-2"><div className="md:col-span-2 flex items-center justify-between"><div><h2 className="font-display font-semibold">{apkDraft.id?"Editar APK":"Nuevo APK"}</h2><p className="text-muted-foreground mt-1 text-xs">{apkDraft.id?"Selecciona un archivo nuevo sólo si deseas reemplazarlo.":"El archivo se carga a R2 y luego se registra en el catálogo."}</p></div><Button type="button" variant="ghost" size="icon" onClick={()=>setApkDraft(null)} aria-label="Cerrar"><X/></Button></div><label className="grid gap-1.5 text-sm">Nombre<Input required value={apkDraft.name} onChange={e=>setApkDraft({...apkDraft,name:e.target.value})} placeholder="Magisk"/></label><label className="grid gap-1.5 text-sm">Versión<Input required value={apkDraft.version} onChange={e=>setApkDraft({...apkDraft,version:e.target.value})} placeholder="29.0"/></label><label className="grid gap-1.5 text-sm md:col-span-2">Archivo (.apk, .apks o .xapk)<Input type="file" accept=".apk,.apks,.xapk,application/vnd.android.package-archive" required={!apkDraft.apkFile} onChange={e=>setApkDraft({...apkDraft,file:e.target.files?.[0]||null})}/>{apkDraft.apkFile&&<span className="text-muted-foreground truncate font-mono text-xs">Actual: {apkDraft.apkFile}</span>}</label><label className="grid gap-1.5 text-sm">Package name<Input value={apkDraft.packageName} onChange={e=>setApkDraft({...apkDraft,packageName:e.target.value})} placeholder="com.example.app"/></label><label className="grid gap-1.5 text-sm">Categoría<select className="border-input bg-background h-10 rounded-md border px-3 text-sm" value={apkDraft.category} onChange={e=>setApkDraft({...apkDraft,category:e.target.value})}><option value="general">General</option><option value="root">Root</option><option value="banking">Banking</option><option value="tools">Tools</option><option value="system">System</option></select></label><label className="grid gap-1.5 text-sm md:col-span-2">Descripción<Input value={apkDraft.description} onChange={e=>setApkDraft({...apkDraft,description:e.target.value})} placeholder="Descripción opcional"/></label><label className="text-muted-foreground flex items-center gap-2 text-sm md:col-span-2"><input type="checkbox" checked={apkDraft.isActive} onChange={e=>setApkDraft({...apkDraft,isActive:e.target.checked})}/>Visible para los usuarios</label><div className="flex gap-2 md:col-span-2"><Button disabled={apkBusy}>{apkBusy?<LoaderCircle className="animate-spin"/>:<Upload/>}{apkBusy?"Cargando a R2…":"Guardar APK"}</Button><Button type="button" variant="outline" disabled={apkBusy} onClick={()=>setApkDraft(null)}>Cancelar</Button></div></form>}<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{apks.map(a=><article key={a.id} className="border-border/60 bg-card rounded-xl border p-4"><div className="flex items-start justify-between gap-2"><div className="min-w-0"><p className="font-semibold">{a.name}</p><p className="text-muted-foreground mt-1 text-xs">{a.version} · {a.category}</p></div><span className="shrink-0 rounded-full bg-muted px-2 py-1 text-xs">{a.is_active?"Activo":"Inactivo"}</span></div><p className="text-muted-foreground mt-3 truncate font-mono text-xs" title={a.apk_file}>{a.apk_file}</p><p className="text-muted-foreground mt-1 text-xs">{a.size_mb ? `${Number(a.size_mb).toFixed(2)} MB` : "Tamaño no registrado"}</p><div className="mt-4 flex gap-2"><Button size="sm" variant="outline" onClick={()=>editApk(a)}><Pencil/>Editar</Button><Button size="sm" variant="ghost" className="text-destructive" onClick={()=>deleteApk(a)}><Trash2/>Eliminar</Button></div></article>)}{apks.length===0&&<p className="text-muted-foreground col-span-full rounded-xl border border-dashed p-8 text-center text-sm">Aún no hay APKs en el catálogo.</p>}</div></section>}
       {tab==="roms" && <RomCatalog />}
-      {tab==="version" && version&&<form onSubmit={saveVersion} className="border-border/60 bg-card max-w-2xl space-y-4 rounded-xl border p-5"><label className="block text-sm">Última versión<Input name="latestVersion" defaultValue={version.latest_version}/></label><label className="block text-sm">Mínima obligatoria<Input name="minVersion" defaultValue={version.min_version||""}/></label><label className="block text-sm">Enlace de descarga<Input name="downloadUrl" defaultValue={version.download_url}/></label><Button>Guardar actualización</Button></form>}
+      {tab==="version" && version&&<form onSubmit={saveVersion} className="border-border/60 bg-card max-w-2xl space-y-5 rounded-xl border p-5"><div><h2 className="font-display text-lg font-semibold">Publicar actualización</h2><p className="text-muted-foreground mt-1 text-sm">Carga el instalador y ArepaTool generará una descarga segura y permanente.</p></div><div className="grid gap-4 sm:grid-cols-2"><label className="block text-sm">Última versión<Input required name="latestVersion" defaultValue={version.latest_version} placeholder="2.2.9"/></label><label className="block text-sm">Mínima obligatoria<Input name="minVersion" defaultValue={version.min_version||""} placeholder="Opcional"/><span className="text-muted-foreground mt-1 block text-xs">Las versiones inferiores no podrán ignorarla.</span></label></div><label className="border-primary/30 bg-primary/5 hover:border-primary/60 block cursor-pointer rounded-xl border border-dashed p-5 transition"><span className="flex items-center gap-2 text-sm font-semibold"><HardDriveUpload className="text-primary size-5"/>Instalador de Windows</span><span className="text-muted-foreground mt-1 block text-xs">Selecciona el .exe o .msi compilado con la versión indicada.</span><Input className="mt-3 cursor-pointer" type="file" accept=".exe,.msi,application/vnd.microsoft.portable-executable,application/x-msi" disabled={updateBusy} onChange={e=>{setUpdateFile(e.target.files?.[0]||null);setUpdateProgress(0)}}/>{updateFile&&<span className="mt-2 block text-sm font-medium">{updateFile.name} · {formatFileSize(updateFile.size)}</span>}{!updateFile&&version.installer_file_name&&<span className="text-muted-foreground mt-2 block text-xs">Publicado actualmente: {version.installer_file_name} · {formatFileSize(version.installer_size_bytes)}</span>}</label>{updateBusy&&<div className="space-y-2"><div className="bg-muted h-2 overflow-hidden rounded-full"><div className="bg-primary h-full transition-[width]" style={{width:`${updateProgress}%`}}/></div><p className="text-muted-foreground text-xs">{updateProgress>0?`Cargando ${updateProgress}%`:"Preparando archivo…"}</p></div>}<details className="border-border/60 rounded-lg border p-3"><summary className="cursor-pointer text-sm font-medium">Usar URL externa en su lugar</summary><div className="mt-3 grid gap-3"><label className="block text-sm">URL HTTPS<Input type="url" name="downloadUrl" defaultValue={version.download_url||""} placeholder="https://.../ArepaTool_Setup.exe"/></label><label className="block text-sm">SHA-256<Input name="sha256" minLength={64} maxLength={64} defaultValue={version.sha256||""} className="font-mono"/><span className="text-muted-foreground mt-1 block text-xs">Al cargar un archivo, el panel lo calcula automáticamente.</span></label></div></details><label className="block text-sm">Mensaje de la versión<Input name="message" defaultValue={version.message||""} placeholder="Mejoras y correcciones incluidas"/></label><Button disabled={updateBusy}>{updateBusy?<LoaderCircle className="animate-spin"/>:<Upload/>}{updateBusy?"Publicando…":"Publicar actualización"}</Button></form>}
       {tab==="resellers" && <section>{resellerDraft&&<form onSubmit={saveReseller} className="border-primary/30 bg-card mb-6 grid gap-4 rounded-xl border p-5 shadow-lg shadow-primary/5 md:grid-cols-2"><div className="md:col-span-2 flex items-start justify-between gap-4"><div><h2 className="font-display font-semibold">Configurar revendedor</h2><p className="text-muted-foreground mt-1 text-xs">Estos precios son los créditos que verá y pagará este revendedor en Dhru y en el bot.</p></div><Button type="button" variant="ghost" size="icon" onClick={()=>setResellerDraft(null)} aria-label="Cerrar"><X/></Button></div><label className="grid gap-1.5 text-sm">Nombre<Input required value={resellerDraft.name} onChange={e=>setResellerDraft({...resellerDraft,name:e.target.value})}/></label><label className="grid gap-1.5 text-sm">Usuario<Input required value={resellerDraft.username} onChange={e=>setResellerDraft({...resellerDraft,username:e.target.value.toLowerCase()})}/></label><label className="grid gap-1.5 text-sm">Precio 3 meses (USD)<Input required type="number" min="0" step="0.01" value={resellerDraft.price3m} onChange={e=>setResellerDraft({...resellerDraft,price3m:e.target.value})}/></label><label className="grid gap-1.5 text-sm">Precio 6 meses (USD)<Input required type="number" min="0" step="0.01" value={resellerDraft.price6m} onChange={e=>setResellerDraft({...resellerDraft,price6m:e.target.value})}/></label><label className="grid gap-1.5 text-sm">Precio 12 meses (USD)<Input required type="number" min="0" step="0.01" value={resellerDraft.price12m} onChange={e=>setResellerDraft({...resellerDraft,price12m:e.target.value})}/></label><label className="grid gap-1.5 text-sm">Precio por crédito (USD)<Input required type="number" min="0.01" step="0.01" value={resellerDraft.creditPrice} onChange={e=>setResellerDraft({...resellerDraft,creditPrice:e.target.value})}/><span className="text-muted-foreground text-xs">El precio que pagará el reseller por cada crédito de ArepaTool.</span></label><label className="grid gap-1.5 text-sm">Precio renta 12 horas (USD)<Input type="number" min="0.01" step="0.01" value={resellerDraft.rentalPrice} onChange={e=>setResellerDraft({...resellerDraft,rentalPrice:e.target.value})} placeholder="Ej. 1.00"/><span className="text-muted-foreground text-xs">El contador empieza con el primer login de la herramienta.</span></label><label className="grid gap-1.5 text-sm">Estado<select className="border-input bg-background h-10 rounded-md border px-3 text-sm" value={resellerDraft.status} onChange={e=>setResellerDraft({...resellerDraft,status:e.target.value})}><option value="active">Activo</option><option value="suspended">Suspendido</option></select></label><label className="grid gap-1.5 text-sm md:col-span-2">Correo<Input type="email" value={resellerDraft.email} onChange={e=>setResellerDraft({...resellerDraft,email:e.target.value})}/></label><label className="grid gap-1.5 text-sm md:col-span-2">Chat ID Telegram (opcional)<Input value={resellerDraft.telegramChatId} onChange={e=>setResellerDraft({...resellerDraft,telegramChatId:e.target.value})}/></label><div className="flex gap-2 md:col-span-2"><Button disabled={resellerBusy}>{resellerBusy?<LoaderCircle className="animate-spin"/>:<Check/>}{resellerBusy?"Guardando…":"Guardar precios"}</Button><Button type="button" variant="outline" disabled={resellerBusy} onClick={()=>setResellerDraft(null)}>Cancelar</Button></div></form>}<div className="grid gap-4 xl:grid-cols-2">{resellers.map(r=>{
         const keyVisible = visibleKeyId === r.id;
         const keyText = String(r.api_key || "");
