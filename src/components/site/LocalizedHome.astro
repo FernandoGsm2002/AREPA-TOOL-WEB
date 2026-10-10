@@ -8,7 +8,6 @@ import ReleaseConsole from "@/components/site/ReleaseConsole.astro";
 import Pricing from "@/components/site/Pricing.astro";
 import Footer from "@/components/site/Footer.astro";
 import WhatsAppModal from "@/components/site/WhatsAppModal";
-import InstallerAccessModal from "@/components/site/InstallerAccessModal";
 import UpdateLaunchModal from "@/components/site/UpdateLaunchModal";
 import type { Locale } from "@/lib/i18n";
 
@@ -31,5 +30,4 @@ const metadata = {
   <Footer locale={locale} />
   <WhatsAppModal client:load locale={locale} />
   <UpdateLaunchModal client:load locale={locale} />
-  <InstallerAccessModal client:load locale={locale} />
 </Layout>

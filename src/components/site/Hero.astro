@@ -1,7 +1,6 @@
 ---
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { WindowsIcon } from "@/components/icons/BrandIcons";
 import { getLocaleCopy, localeFromPath, localizedPath, type Locale } from "@/lib/i18n";
 
 interface Props { locale?: Locale; }
@@ -26,10 +25,6 @@ const copy = getLocaleCopy(locale);
           {copy.hero.licenseCta}
           <ArrowRight className="size-4" />
         </a>
-        <button type="button" data-open-installer-access class={buttonVariants({ size: "lg", variant: "secondary" })}>
-          <WindowsIcon className="size-4" />
-          {copy.hero.downloadCta}
-        </button>
       </div>
 
       <div class="hero-proof" aria-label={copy.hero.proofLabel}>
@@ -53,11 +48,3 @@ const copy = getLocaleCopy(locale);
   </div>
   <p class="site-container hero-tagline">{copy.hero.tagline}</p>
 </section>
-
-<script>
-  document.addEventListener("click", (event) => {
-    if ((event.target as HTMLElement)?.closest("[data-open-installer-access]")) {
-      window.dispatchEvent(new CustomEvent("open-installer-access"));
-    }
-  });
-</script>
