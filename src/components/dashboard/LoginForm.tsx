@@ -5,6 +5,7 @@ import { LockKeyhole, Loader2 } from "lucide-react";
 import { saveSession } from "@/lib/web-session";
 import { webLoginStep1 } from "@/lib/web-login-api";
 import Turnstile from "@/components/auth/Turnstile";
+import TermsConsent from "@/components/auth/TermsConsent";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -13,11 +14,16 @@ export default function LoginForm() {
   const [turnstileKey, setTurnstileKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!username.trim() || !password) {
       setError("Usuario y contraseña son obligatorios.");
+      return;
+    }
+    if (!termsAccepted) {
+      setError("Debes aceptar los términos y condiciones para continuar.");
       return;
     }
     if (!turnstileToken) {
@@ -98,9 +104,15 @@ export default function LoginForm() {
 
       <Turnstile key={turnstileKey} action="web_login" onToken={setTurnstileToken} />
 
+      <TermsConsent
+        accepted={termsAccepted}
+        onAcceptedChange={setTermsAccepted}
+        disabled={loading}
+      />
+
       {error && <p className="text-destructive text-sm">{error}</p>}
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type="submit" className="w-full" disabled={loading || !termsAccepted}>
         {loading ? <Loader2 className="size-4 animate-spin" /> : <LockKeyhole className="size-4" />}
         Iniciar sesión
       </Button>

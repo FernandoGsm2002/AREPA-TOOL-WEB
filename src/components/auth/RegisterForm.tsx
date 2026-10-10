@@ -3,6 +3,7 @@ import { Loader2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Turnstile from "./Turnstile";
+import TermsConsent from "./TermsConsent";
 
 const API_BASE = "https://api2.arepatool.com";
 
@@ -57,13 +58,10 @@ export default function RegisterForm() {
         <label className="text-sm font-medium" htmlFor="password">Contraseña</label>
         <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mínimo 6 caracteres" minLength={6} autoComplete="new-password" required disabled={complete} />
       </div>
-      <label className="text-muted-foreground flex cursor-pointer items-center gap-2 text-sm">
-        <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} disabled={complete} className="accent-primary size-4" />
-        <span>Acepto los <a href="#" className="text-primary hover:underline">términos</a> y condiciones</span>
-      </label>
+      <TermsConsent accepted={terms} onAcceptedChange={setTerms} disabled={complete || loading} />
       {!complete && <Turnstile onToken={setTurnstileToken} />}
       {status && <p className={complete ? "text-emerald-400 whitespace-pre-line text-sm" : "text-destructive whitespace-pre-line text-sm"}>{status}</p>}
-      {!complete && <Button type="submit" className="w-full" disabled={loading}>
+      {!complete && <Button type="submit" className="w-full" disabled={loading || !terms}>
         {loading ? <Loader2 className="size-4 animate-spin" /> : <UserPlus className="size-4" />}
         Crear Cuenta
       </Button>}

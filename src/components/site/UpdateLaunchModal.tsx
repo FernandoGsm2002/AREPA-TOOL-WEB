@@ -6,7 +6,7 @@ import { modalCopy, type Locale } from "@/lib/i18n";
 export default function UpdateLaunchModal({ locale = "es" }: { locale?: Locale }) {
   const [open, setOpen] = useState(true);
   const copy = modalCopy[locale];
-  const reopenLabel = locale === "es" ? "Novedades 2.2.8" : locale === "pt-br" ? "Novidades 2.2.8" : "What’s new in 2.2.8";
+  const reopenLabel = locale === "es" ? "Novedades 2.2.9" : locale === "pt-br" ? "Novidades 2.2.9" : "What’s new in 2.2.9";
 
   return (
     <>
@@ -25,7 +25,7 @@ export default function UpdateLaunchModal({ locale = "es" }: { locale?: Locale }
           <div className="bg-[#06101a] px-2 pb-2 sm:px-3 sm:pb-3">
             <img
               src="/pngs/arepatool-2.2.8-whats-new.png"
-              alt="ArepaTool 2.2.8 — PC session reset, ZTE/Nubia Safe Wipe FRP y ArepaHotspot"
+              alt="ArepaTool 2.2.9 — terms and conditions and Xiaomi FRP Auth fixes"
               className="block max-h-[44dvh] w-full rounded-[1rem] border border-cyan-400/25 bg-[#02070c] object-contain shadow-lg shadow-cyan-500/15 sm:max-h-[64vh]"
             />
           </div>
