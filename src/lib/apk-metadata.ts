@@ -29,9 +29,11 @@ async function findIcon(apk: Blob): Promise<Blob | null> {
     const entries = await zip.getEntries();
     const candidates = entries.filter((entry): entry is FileEntry =>
       isFile(entry) && /^res\//.test(entry.filename) &&
-      /(?:ic_launcher|app_icon|launcher_icon)[^/]*\.(png|webp)$/i.test(entry.filename));
-    const preferred = candidates.sort((a, b) =>
-      Number(/xxxhdpi|xxhdpi|xhdpi/i.test(b.filename)) - Number(/xxxhdpi|xxhdpi|xhdpi/i.test(a.filename)))[0];
+      /(?:^|\/)(?:ic_launcher|app_icon|launcher_icon)[^/]*\.(png|webp)$/i.test(entry.filename));
+    const density = (name: string) =>
+      /xxxhdpi/i.test(name) ? 4 : /xxhdpi/i.test(name) ? 3 :
+      /xhdpi/i.test(name) ? 2 : /hdpi/i.test(name) ? 1 : 0;
+    const preferred = candidates.sort((a, b) => density(b.filename) - density(a.filename))[0];
     return preferred ? await preferred.getData(new BlobWriter()) : null;
   } finally { await zip.close(); }
 }
