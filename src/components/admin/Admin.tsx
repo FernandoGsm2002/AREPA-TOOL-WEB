@@ -172,13 +172,19 @@ export default function Admin() {
     const form = new FormData(e.currentTarget as HTMLFormElement);
     const latestVersion = String(form.get("latestVersion") || "").trim();
     const downloadUrl = String(form.get("downloadUrl") || "").trim();
+    const enteredSha256 = String(form.get("sha256") || "").trim();
     if (!updateFile && !version?.installer_key && !downloadUrl) {
       setNotice("Selecciona un instalador o indica una URL HTTPS de respaldo."); return;
+    }
+    if (!updateFile && latestVersion !== version?.latest_version &&
+        (!downloadUrl || !enteredSha256 ||
+          enteredSha256.toLowerCase() === (version?.sha256 || "").toLowerCase())) {
+      setNotice("Para publicar otra versión, carga su instalador nuevo. Si usas URL externa, indica su URL y SHA-256 nuevos."); return;
     }
     setUpdateBusy(true); setUpdateProgress(0); setNotice(updateFile ? "Preparando instalador…" : "Publicando actualización…");
     try {
       let uploadedKey: string | undefined;
-      let sha256 = String(form.get("sha256") || "").trim();
+      let sha256 = enteredSha256;
       if (updateFile) {
         setNotice("Calculando SHA-256…");
         sha256 = await fileSha256(updateFile);
