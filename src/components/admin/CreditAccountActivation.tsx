@@ -55,7 +55,7 @@ export default function CreditAccountActivation() {
 
   return <div className="border-border/70 bg-card rounded-xl border p-5">
     <h3 className="font-semibold">Cuentas por saldo</h3>
-    <p className="text-muted-foreground mt-1 text-sm">Las cuentas nuevas sin licencia se activan al ingresar en modo créditos con al menos 1 crédito.</p>
+    <p className="text-muted-foreground mt-1 text-sm">Las cuentas nuevas sin licencia o con licencia estándar vencida se activan al ingresar en modo créditos con al menos 1 crédito.</p>
     <form className="mt-4 flex gap-2" onSubmit={event => { event.preventDefault(); void load(); }}>
       <Input value={search} onChange={event => setSearch(event.target.value)}
         placeholder="Buscar usuario o correo" />
