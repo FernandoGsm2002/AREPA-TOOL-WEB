@@ -6,7 +6,7 @@ import { modalCopy, type Locale } from "@/lib/i18n";
 export default function UpdateLaunchModal({ locale = "es" }: { locale?: Locale }) {
   const [open, setOpen] = useState(true);
   const copy = modalCopy[locale];
-  const reopenLabel = locale === "es" ? "Novedades 2.2.9" : locale === "pt-br" ? "Novidades 2.2.9" : "What’s new in 2.2.9";
+  const reopenLabel = locale === "es" ? "Novedades 3.0.1" : locale === "pt-br" ? "Novidades 3.0.1" : "What’s new in 3.0.1";
 
   return (
     <>
@@ -22,12 +22,10 @@ export default function UpdateLaunchModal({ locale = "es" }: { locale?: Locale }
               <X className="size-5" />
             </button>
           </DialogClose>
-          <div className="bg-[#06101a] px-2 pb-2 sm:px-3 sm:pb-3">
-            <img
-              src="/pngs/arepatool-2.2.8-whats-new.png"
-              alt="ArepaTool 2.2.9 — terms and conditions and Xiaomi FRP Auth fixes"
-              className="block max-h-[44dvh] w-full rounded-[1rem] border border-cyan-400/25 bg-[#02070c] object-contain shadow-lg shadow-cyan-500/15 sm:max-h-[64vh]"
-            />
+          <div className="bg-[radial-gradient(circle_at_75%_10%,rgba(34,211,238,.24),transparent_36%),linear-gradient(135deg,#07121d,#0d2639_55%,#07121d)] px-6 py-10 text-center sm:px-12 sm:py-14">
+            <p className="text-sm font-black uppercase tracking-[0.35em] text-cyan-300">BIG UPDATE</p>
+            <p className="mt-4 font-display text-6xl font-black tracking-[-0.08em] text-white sm:text-8xl">v3.0.1</p>
+            <p className="mx-auto mt-3 max-w-xl text-sm font-semibold uppercase tracking-[0.16em] text-cyan-100/80 sm:text-base">New UI · Simple workflow · General improvements</p>
           </div>
           <div className="flex items-center justify-center gap-2 border-t border-cyan-400/20 bg-[#091827] px-6 py-4 text-center">
             <Rocket className="size-5 shrink-0 text-cyan-300" />
