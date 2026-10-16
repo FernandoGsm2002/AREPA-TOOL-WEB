@@ -18,13 +18,19 @@ const formatSize = (value?: number | string | null) => {
 };
 
 const parseName = (filename: string) => {
-  const match = filename.match(/^Root_(?<model>[^_]+)_Bin[._-]?(?<binary>[^_]+)_OS(?<android>[^_]+)_(?<details>.+?)_Magisk_(?<magisk>[0-9]+(?:\.[0-9]+)+)\.tar(?:\.md5)?$/i);
-  if (!match?.groups) return null;
-  const details = match.groups.details.split("_").filter(Boolean);
-  return {
-    model: match.groups.model, binary: match.groups.binary, android: match.groups.android,
-    build: details.shift() || "", region: details.join("_") || "—", magisk: match.groups.magisk,
-  };
+  const normalized = filename.replace(/_+\.tar(?:\.md5)?$/i, ".tar");
+  const canonical = normalized.match(/^Root_(?<model>[^_]+)_Bin[._-]?(?<binary>[^_]+)_OS(?<android>[^_]+)_(?<details>.+?)[_-](?:Magisk|Maisk|Magic)[_-]?v?(?<magisk>[0-9]+(?:\.[0-9]+)+)\.tar(?:\.md5)?$/i);
+  const compact = normalized.match(/^Root_(?<build>[^_]+)_Android[-_](?<android>[^_]+)[_-](?:Magisk|Maisk|Magic)[_-]?v?(?<magisk>[0-9]+(?:\.[0-9]+)+)\.tar(?:\.md5)?$/i);
+  if (canonical?.groups) {
+    const details = canonical.groups.details.split("_").filter(Boolean);
+    return { model: canonical.groups.model, binary: canonical.groups.binary, android: canonical.groups.android, build: details.shift() || "", region: details.join("_").replace(/-+$/, "") || "—", magisk: canonical.groups.magisk };
+  }
+  if (compact?.groups) {
+    const binary = compact.groups.build.match(/UB[SU]?([0-9A-Z])/i)?.[1] || "—";
+    const model = compact.groups.build.match(/^([A-Z]\d{3,4}[A-Z]?)(?=UB|XX|U|S)/i)?.[1] || compact.groups.build.slice(0, 8);
+    return { model, binary, android: compact.groups.android, build: compact.groups.build, region: "—", magisk: compact.groups.magisk };
+  }
+  return null;
 };
 
 export default function SamsungRootCatalog() {
