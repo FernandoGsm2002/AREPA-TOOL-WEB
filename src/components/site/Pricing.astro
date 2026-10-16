@@ -28,7 +28,7 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
           <p class="pricing-plan__duration">{plan.duration}</p>
           <div class="pricing-plan__price">
             <span>{copy.pricing.price}</span>
-            <strong>${plan.price}</strong>
+            <strong>{plan.eyebrow === "ArepaTool Credits" ? `${plan.price} USDT` : `$${plan.price}`}</strong>
           </div>
           <p class="pricing-plan__description">{plan.description}</p>
           <div class="pricing-plan__actions">
