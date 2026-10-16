@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Globe2, History, BadgeCheck, Download, LogOut, Loader2, ChevronRight, ShieldCheck, Settings2, BookOpen } from "lucide-react";
+import { Globe2, History, BadgeCheck, Download, LogOut, Loader2, ChevronRight, ShieldCheck, Settings2, BookOpen, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { loadSession, clearSession, type WebUser } from "@/lib/web-session";
 import CreateDns from "./views/CreateDns";
@@ -8,15 +8,17 @@ import AccountLicense from "./views/AccountLicense";
 import InstallerAccessModal from "@/components/site/InstallerAccessModal";
 import Downloads from "./views/Downloads";
 import Tutorials from "./views/Tutorials";
+import SamsungRootFiles from "./views/SamsungRootFiles";
 import WelcomeConfetti from "./WelcomeConfetti";
 
-type Tab = "dns" | "operations" | "account" | "downloads" | "tutorials";
+type Tab = "dns" | "operations" | "account" | "downloads" | "root-files" | "tutorials";
 
 const tabs: { id: Tab; label: string; icon: typeof Globe2 }[] = [
   { id: "dns", label: "Crear DNS", icon: Globe2 },
   { id: "operations", label: "Mis Operaciones", icon: History },
   { id: "account", label: "Cuenta y Licencia", icon: BadgeCheck },
   { id: "downloads", label: "Descargas", icon: Download },
+  { id: "root-files", label: "Samsung Root", icon: Smartphone },
   { id: "tutorials", label: "Tutoriales", icon: BookOpen },
 ];
 
@@ -122,6 +124,7 @@ export default function Dashboard() {
         {tab === "operations" && <MyOperations />}
         {tab === "account" && <AccountLicense />}
         {tab === "downloads" && <Downloads />}
+        {tab === "root-files" && <SamsungRootFiles />}
         {tab === "tutorials" && <Tutorials />}
       </main>
       <InstallerAccessModal />
