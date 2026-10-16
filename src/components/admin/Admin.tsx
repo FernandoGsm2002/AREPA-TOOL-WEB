@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Activity, AlertTriangle, Box, Users, KeyRound, RefreshCw, LogOut, Search, ShieldAlert, ShieldCheck, Upload, Copy, Check, Eye, EyeOff, ExternalLink, Pencil, Trash2, X, LoaderCircle, HardDriveUpload } from "lucide-react";
+import { Activity, AlertTriangle, Box, Users, KeyRound, RefreshCw, LogOut, Search, ShieldAlert, ShieldCheck, Upload, Copy, Check, Eye, EyeOff, ExternalLink, Pencil, Trash2, X, LoaderCircle, HardDriveUpload, Megaphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { clearSession, loadSession, webApiFetch } from "@/lib/web-session";
@@ -9,9 +9,10 @@ import RomCatalog from "./RomCatalog";
 import AppleServiceAdmin from "./AppleServiceAdmin";
 import CreditAccessPrices from "./CreditAccessPrices";
 import MetaMdmDiagnostics from "./MetaMdmDiagnostics";
+import DesktopAnnouncementAdmin from "./DesktopAnnouncementAdmin";
 import { readApkMetadata } from "@/lib/apk-metadata";
 
-type Tab = "users" | "rentals" | "credit-prices" | "task" | "mtk" | "meta-mdm" | "xiaomi" | "apple" | "apks" | "roms" | "version" | "resellers" | "partners" | "security";
+type Tab = "users" | "rentals" | "credit-prices" | "task" | "mtk" | "meta-mdm" | "xiaomi" | "apple" | "apks" | "roms" | "version" | "announcements" | "resellers" | "partners" | "security";
 const tabs: { id: Tab; label: string; icon: typeof Users }[] = [
   { id: "users", label: "Usuarios", icon: Users }, { id: "task", label: "Task IDs", icon: Search },
   { id: "rentals", label: "Licencias de alquiler", icon: KeyRound },
@@ -21,6 +22,7 @@ const tabs: { id: Tab; label: string; icon: typeof Users }[] = [
   { id: "xiaomi", label: "Xiaomi Auth · Historial", icon: ShieldCheck },
   { id: "apple", label: "Apple · Servicio", icon: ShieldCheck },
   { id: "apks", label: "APK Catalog", icon: Box }, { id: "roms", label: "ROMs", icon: HardDriveUpload }, { id: "version", label: "Actualización", icon: Upload },
+  { id: "announcements", label: "Anuncio V3", icon: Megaphone },
   { id: "resellers", label: "Revendedores", icon: KeyRound },
   { id: "partners", label: "API Partners", icon: Activity },
   { id: "security", label: "Seguridad", icon: ShieldCheck },
@@ -297,6 +299,7 @@ export default function Admin() {
         <div className="grid gap-4 xl:grid-cols-2">{partners.map(p=><article key={p.id} className="border-border/60 bg-card rounded-xl border p-5"><div className="flex items-start justify-between gap-3"><div><h3 className="font-semibold">{p.name}</h3><p className="text-muted-foreground mt-1 font-mono text-xs">{p.key_id}</p></div><span className={`rounded-full px-2 py-1 text-xs ${p.status==="active"?"bg-emerald-500/15 text-emerald-600":"bg-destructive/10 text-destructive"}`}>{p.status==="active"?"Activo":"Suspendido"}</span></div><div className="text-muted-foreground mt-4 grid grid-cols-2 gap-3 text-xs"><span>Última hora: <b className="text-foreground">{p.operations_1h}</b></span><span>Últimas 24 h: <b className="text-foreground">{p.operations_24h}</b></span><span>{p.requests_per_minute}/min</span><span>{p.requests_per_day}/día</span><span className="col-span-2">Última: {date(p.last_operation_at)}</span></div><p className="text-muted-foreground mt-3 text-xs">{(p.allowed_operations||[]).join(" · ") || "Sin operaciones"}</p><div className="mt-4 flex flex-wrap gap-2"><Button size="sm" variant="outline" onClick={()=>editPartner(p)}><Pencil/>Configurar</Button><Button size="sm" variant="outline" onClick={()=>rotatePartner(p.id,p.name)}><RefreshCw/>Rotar clave</Button><Button size="sm" variant={p.status==="active"?"destructive":"default"} onClick={()=>{if(confirm(`¿${p.status==="active"?"Suspender":"Activar"} ${p.name}?`)){call("partners/save",{id:p.id,name:p.name,status:p.status==="active"?"suspended":"active",allowedOperations:p.allowed_operations,requestsPerMinute:p.requests_per_minute,requestsPerDay:p.requests_per_day,notes:p.notes||""}).then(()=>loadTab("partners"));}}}>{p.status==="active"?"Cortar acceso":"Activar"}</Button></div></article>)}{partners.length===0&&<p className="text-muted-foreground col-span-full rounded-xl border border-dashed p-8 text-center text-sm">Aún no hay partners creados.</p>}</div>
         <div className="border-border/60 bg-card mt-6 overflow-x-auto rounded-xl border"><div className="border-border/60 border-b p-4"><h3 className="font-display font-semibold">Últimas operaciones partner</h3><p className="text-muted-foreground mt-1 text-xs">No se almacenan seriales en claro.</p></div><table className="w-full text-left text-sm"><thead className="bg-muted/50 text-xs"><tr><th className="p-3">Partner</th><th className="p-3">Operación</th><th className="p-3">Equipo</th><th className="p-3">Resultado</th><th className="p-3">Fecha</th></tr></thead><tbody>{partnerLogs.map(log=><tr key={log.id} className="border-border/50 border-t"><td className="p-3">{log.partner_name}</td><td className="p-3">{log.operation}</td><td className="p-3">{log.sku||"—"}<span className="text-muted-foreground block text-xs">Android {log.android_version||"—"}</span></td><td className="p-3">{log.success===true?"Correcta":log.success===false?`Error ${log.status_code||""}`:"En proceso"}</td><td className="p-3 text-xs">{date(log.created_at)}</td></tr>)}{partnerLogs.length===0&&<tr><td className="text-muted-foreground p-6 text-center" colSpan={5}>Aún no hay operaciones.</td></tr>}</tbody></table></div>
       </section>}
+      {tab==="announcements" && <DesktopAnnouncementAdmin/>}
       {tab==="security" && <TotpSecurity/>}
     </main></div>;
 }
