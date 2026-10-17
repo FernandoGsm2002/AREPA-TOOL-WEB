@@ -16,6 +16,7 @@ type Report = {
   family_id: string | null;
   has_analysis: boolean;
   has_plan: boolean;
+  has_profile_evidence: boolean;
   files?: Record<string, string>;
   source_jar_sha256?: string | null;
   candidate_jar_sha256?: string | null;
@@ -35,6 +36,30 @@ function saveFile(runId: string, name: string, content: string) {
   const link = document.createElement("a");
   link.href = url;
   link.download = `${runId}_${name}`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function readSummary(content?: string): Record<string, unknown> | null {
+  if (!content) return null;
+  try {
+    const value: unknown = JSON.parse(content);
+    return value && typeof value === "object" && !Array.isArray(value)
+      ? value as Record<string, unknown> : null;
+  } catch { return null; }
+}
+
+type CapturedText = { partition?: string; path?: string; sha256?: string;
+  lines?: unknown[]; gzip_b64?: string | null };
+
+function saveOriginal(runId: string, item: CapturedText) {
+  if (!item.gzip_b64) return;
+  const binary = atob(item.gzip_b64);
+  const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+  const url = URL.createObjectURL(new Blob([bytes], { type: "application/gzip" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${runId}_${item.partition || "text"}_${(item.path || "source").split("/").pop()}.gz`;
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
@@ -97,7 +122,7 @@ export default function MetaMdmDiagnostics() {
           <td className="p-3"><b>{report.identity?.model || "Sin lectura"}</b><span className="text-muted-foreground block text-xs">{report.identity?.brand || ""} · Android {report.identity?.android || "—"}</span></td>
           <td className="p-3"><span className={`rounded-full px-2 py-1 text-xs font-medium ${report.client_outcome === "applied" ? "bg-emerald-500/15 text-emerald-600" : report.client_outcome === "failed" ? "bg-destructive/10 text-destructive" : "bg-amber-500/15 text-amber-700"}`}>{labels[report.client_outcome] || report.client_outcome}</span></td>
           <td className="p-3 text-xs">{report.server_stage || "Sin etapa"}</td>
-          <td className="p-3"><span className="text-muted-foreground block text-xs">{report.has_plan ? "Candidato preparado" : report.has_analysis ? "Análisis disponible" : "Sin candidato"}</span><Button className="mt-1" variant="outline" size="sm" disabled={busy} onClick={() => void open(report.run_id)}><FileText/>Ver archivos</Button></td>
+          <td className="p-3"><span className="text-muted-foreground block text-xs">{report.has_plan ? "Candidato preparado" : report.has_analysis ? "Análisis disponible" : "Sin candidato"}{report.has_profile_evidence ? " · Perfil capturado" : ""}</span><Button className="mt-1" variant="outline" size="sm" disabled={busy} onClick={() => void open(report.run_id)}><FileText/>Ver archivos</Button></td>
         </tr>)}{reports.length === 0 && <tr><td colSpan={6} className="text-muted-foreground p-8 text-center">Aún no hay intentos beta reportados.</td></tr>}</tbody>
       </table>
     </div>
@@ -110,6 +135,24 @@ export default function MetaMdmDiagnostics() {
         <div><h3 className="font-semibold">Intento {selected.run_id}</h3><p className="text-muted-foreground mt-1 text-xs">{selected.profile_id || selected.family_id || "Sin perfil"} · {labels[selected.client_outcome] || selected.client_outcome}</p></div>
         <Button size="sm" variant="outline" onClick={() => setSelected(null)}>Cerrar</Button>
       </div>
+      {(() => {
+        const analysis = readSummary(selected.files?.["server_analysis.json"]);
+        const plan = readSummary(selected.files?.["plan-summary.json"]);
+        const evidence = readSummary(selected.files?.["profile-evidence.json"]);
+        const texts: CapturedText[] = Array.isArray(evidence?.texts) ? evidence.texts : [];
+        return <div className="bg-muted/30 mt-4 grid gap-3 rounded-lg p-3 text-sm sm:grid-cols-2">
+          <div><span className="text-muted-foreground">Perfil</span><p className="font-mono text-xs break-all">{selected.profile_id || String(evidence?.profile_id || "Sin perfil")}</p></div>
+          <div><span className="text-muted-foreground">Decisión</span><p>{plan ? "Plan preparado" : String(analysis?.reason || "Análisis pendiente")}</p></div>
+          <div><span className="text-muted-foreground">Archivos AntiCrack capturados</span><p>{texts.length}</p></div>
+          <div><span className="text-muted-foreground">JAR SHA-256</span><p className="font-mono text-xs break-all">{String(evidence?.jar_sha256 || selected.source_jar_sha256 || "No disponible")}</p></div>
+          {texts.length > 0 && <div className="space-y-2 sm:col-span-2">
+            {texts.map((item, index) => <div key={`${item.partition}:${item.path}:${index}`} className="border-border/60 flex flex-wrap items-center justify-between gap-2 rounded-md border p-2">
+              <span className="font-mono text-xs break-all">{item.partition}:{item.path} · {item.lines?.length || 0} líneas relevantes</span>
+              {item.gzip_b64 && <Button size="sm" variant="outline" onClick={() => saveOriginal(selected.run_id, item)}><ArrowDownToLine/>Original .gz</Button>}
+            </div>)}
+          </div>}
+        </div>;
+      })()}
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         {Object.entries(selected.files || {}).map(([name, content]) => <div key={name} className="border-border/60 flex items-center justify-between gap-3 rounded-lg border p-3">
           <span className="truncate font-mono text-xs">{name}</span>
