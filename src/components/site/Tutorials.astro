@@ -8,7 +8,7 @@ const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
 const copy = getLocaleCopy(locale);
 ---
 
-<section id="tutorials" class="section-plain">
+<section id="tutorials" class="section-plain" data-video-title={copy.tutorials.videoTitle}>
   <div class="site-container tutorials-layout">
     <div class="section-heading">
       <h2>{copy.tutorials.title}</h2>
@@ -44,12 +44,13 @@ const copy = getLocaleCopy(locale);
 </section>
 
 <script>
+  const videoTitle = document.getElementById("tutorials")?.dataset.videoTitle ?? "YouTube video";
   document.querySelectorAll<HTMLElement>("[data-video-card]").forEach((card) => {
     card.addEventListener("click", () => {
       const videoId = card.dataset.videoId;
       const container = card.querySelector<HTMLElement>("[data-video-container]");
       if (!container || !videoId) return;
-      container.innerHTML = `<iframe class="size-full" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" title="${copy.tutorials.videoTitle}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      container.innerHTML = `<iframe class="size-full" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" title="${videoTitle}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     });
   });
 </script>

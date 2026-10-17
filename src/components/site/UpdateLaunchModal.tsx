@@ -6,7 +6,7 @@ import { modalCopy, type Locale } from "@/lib/i18n";
 export default function UpdateLaunchModal({ locale = "es" }: { locale?: Locale }) {
   const [open, setOpen] = useState(true);
   const copy = modalCopy[locale];
-  const reopenLabel = locale === "es" ? "Novedades 3.0.2" : locale === "pt-br" ? "Novidades 3.0.2" : "What’s new in 3.0.2";
+  const reopenLabel = locale === "es" ? "Novedades 3.0.3" : locale === "pt-br" ? "Novidades 3.0.3" : "What’s new in 3.0.3";
 
   return (
     <>
@@ -22,17 +22,10 @@ export default function UpdateLaunchModal({ locale = "es" }: { locale?: Locale }
               <X className="size-5" />
             </button>
           </DialogClose>
-          <img
-            src="/pngs/arepatool-v3.0.2-big-update.png"
-            alt="ArepaTool v3.0.2 — Big Update"
-            className="block max-h-[72vh] w-full object-contain object-top bg-[#02060b]"
-            loading="eager"
-            decoding="async"
-          />
           <div className="bg-[radial-gradient(circle_at_75%_10%,rgba(34,211,238,.24),transparent_36%),linear-gradient(135deg,#07121d,#0d2639_55%,#07121d)] px-6 py-7 text-center sm:px-12 sm:py-9">
-            <p className="text-sm font-black uppercase tracking-[0.35em] text-cyan-300">BIG UPDATE</p>
-            <p className="mt-2 font-display text-5xl font-black tracking-[-0.08em] text-white sm:text-7xl">v3.0.2</p>
-            <p className="mx-auto mt-2 max-w-xl text-sm font-semibold uppercase tracking-[0.16em] text-cyan-100/80 sm:text-base">New UI · Credit mode · More stable</p>
+            <p className="text-sm font-black uppercase tracking-[0.35em] text-cyan-300">AREPATOOL</p>
+            <p className="mt-3 font-display text-5xl font-black tracking-[-0.08em] text-white sm:text-7xl">v3.0.3</p>
+            <p className="mx-auto mt-3 max-w-xl text-sm font-semibold text-cyan-100/80 sm:text-base">{copy.updateHeading}</p>
           </div>
           <div className="flex items-center justify-center gap-2 border-t border-cyan-400/20 bg-[#091827] px-6 py-4 text-center">
             <Rocket className="size-5 shrink-0 text-cyan-300" />

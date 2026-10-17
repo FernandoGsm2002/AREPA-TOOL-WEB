@@ -44,10 +44,10 @@ export const localeCopy = {
       register: "Registro",
     },
     announcement: {
-      aria: "Novedad de ArepaTool",
-      label: "NUEVO",
-      text: "Xiaomi FRP MI Assistant Mode",
-      brands: "Modo por créditos · MDM QR + ADB · Más estable",
+      aria: "Actualización ArepaTool 3.0.3",
+      label: "NUEVA VERSIÓN",
+      text: "ArepaTool v3.0.3",
+      brands: "Samsung Root Files · META Infinix · Correcciones",
       action: "Inicia sesión y ve a Descargas",
     },
     hero: {
@@ -62,7 +62,7 @@ export const localeCopy = {
       tagline: "Compatible con marcas modernas del mercado",
       mascotAlt: "Mascota de ArepaTool trabajando en un equipo Windows",
     },
-    release: { kicker: "BIG UPDATE", whatsNew: "15/10/2026 · ArepaTool v3.0.2", stable: "actual" },
+    release: { kicker: "NUEVA VERSIÓN", whatsNew: "17/10/2026 · ArepaTool v3.0.3", stable: "actual" },
     pricing: {
       kicker: "Licencias ArepaTool",
       title: "Elige tu plan",
@@ -165,9 +165,9 @@ export const localeCopy = {
       login: "Log in",
       register: "Sign up",
     },
-    announcement: { aria: "ArepaTool 3.0.2 Big Update", label: "BIG UPDATE", text: "ArepaTool v3.0.2", brands: "Credit mode · MDM QR + ADB · More stable", action: "Log in to open Downloads" },
+    announcement: { aria: "ArepaTool 3.0.3 update", label: "NEW VERSION", text: "ArepaTool v3.0.3", brands: "Samsung Root Files · Infinix META · Fixes", action: "Log in to open Downloads" },
     hero: { kicker: "BIG UPDATE", titleAccent: "A simpler professional tool.", description: "A renewed interface with a clearer workflow for experienced technicians and new users", platform: "Windows", license: "Protected license", licenseCta: "View license", downloadCta: "Download latest version", proofLabel: "Core modules", tagline: "The first step toward what’s next", mascotAlt: "ArepaTool mascot working on a Windows computer" },
-    release: { kicker: "BIG UPDATE", whatsNew: "10/15/2026 · ArepaTool v3.0.2", stable: "current" },
+    release: { kicker: "NEW VERSION", whatsNew: "10/17/2026 · ArepaTool v3.0.3", stable: "current" },
     pricing: { kicker: "ArepaTool licensing", title: "Choose your plan", description: "Our updates are always free. Access every release with an active ArepaTool license.", popular: "Popular", price: "Price /", buyNow: "Buy Now", reseller: "Buy From Resellers", plans: [
       { eyebrow: "ArepaTool Credits", name: "Service credit", duration: "1 credit", price: "1.5", description: "1 credit = 1.5 USDT for supported services." },
       { eyebrow: "ArepaTool Pro", name: "Professional", duration: "3 months", price: "12", description: "Professional access for your workshop." },
@@ -189,9 +189,9 @@ export const localeCopy = {
   "pt-br": {
     language: "Idioma",
     nav: { home: "Início", models: "Modelos compatíveis", updates: "Atualizações", features: "Recursos", tutorials: "Tutoriais", instructions: "Manuais", pricing: "Preços", resellers: "Revendedores", whatsapp: "Grupo do WhatsApp", login: "Entrar", register: "Criar conta" },
-    announcement: { aria: "ArepaTool 3.0.2 Big Update", label: "BIG UPDATE", text: "ArepaTool v3.0.2", brands: "Modo por créditos · MDM QR + ADB · Mais estável", action: "Entre para abrir os Downloads" },
+    announcement: { aria: "Atualização ArepaTool 3.0.3", label: "NOVA VERSÃO", text: "ArepaTool v3.0.3", brands: "Samsung Root Files · META Infinix · Correções", action: "Entre para abrir os Downloads" },
     hero: { kicker: "BIG UPDATE", titleAccent: "Uma ferramenta profissional mais simples.", description: "Uma interface renovada com um fluxo mais claro para técnicos experientes e novos usuários", platform: "Windows", license: "Licença protegida", licenseCta: "Ver licença", downloadCta: "Baixar versão atual", proofLabel: "Módulos principais", tagline: "O primeiro passo para o que vem a seguir", mascotAlt: "Mascote da ArepaTool trabalhando em um computador Windows" },
-    release: { kicker: "BIG UPDATE", whatsNew: "15/10/2026 · ArepaTool v3.0.2", stable: "atual" },
+    release: { kicker: "NOVA VERSÃO", whatsNew: "17/10/2026 · ArepaTool v3.0.3", stable: "atual" },
     pricing: { kicker: "Licenciamento ArepaTool", title: "Escolha seu plano", description: "Nossas atualizações são sempre gratuitas. Acesse cada versão com uma licença ArepaTool ativa.", popular: "Popular", price: "Preço /", buyNow: "Comprar agora", reseller: "Comprar com revendedores", plans: [
       { eyebrow: "ArepaTool Credits", name: "Crédito de serviço", duration: "1 crédito", price: "1.5", description: "1 crédito = 1.5 USDT para serviços compatíveis." },
       { eyebrow: "ArepaTool Pro", name: "Profissional", duration: "3 meses", price: "12", description: "Acesso profissional para sua oficina." },
@@ -285,17 +285,16 @@ export const modalCopy: Record<Locale, {
   whatsappButton: string;
   updateTitle: string;
   updateHeading: string;
-  updateWarning: string;
   updateIntro: string;
   updateBullets: string[];
   updateImportant: string;
 }> = {
   es: {
-    downloadTitle: "Descargar versión publicada", accessConfirmed: "Descarga disponible. El enlace se genera desde el servidor.", newVersion: "Versión publicada", downloadNow: "Descargar ahora", joinOfficial: "Unirme al grupo oficial", verifyDescription: "Descarga disponible sin usuario ni correo.", identifierPlaceholder: "Usuario o correo registrado", verifyButton: "Verificar y continuar", whatsappTitle: "Acceso al Grupo Oficial", whatsappSuccess: "¡Tu correo tiene acceso! Únete al grupo oficial.", whatsappDescription: "Ingresa tu correo registrado para obtener el link del grupo de WhatsApp.", whatsappButton: "Verificar Acceso", updateTitle: "ArepaTool v3.0.2 ya está disponible", updateHeading: "Big Update — modo por créditos", updateIntro: "ArepaTool v3.0.2 incorpora una nueva interfaz más intuitiva, correcciones de errores y un modo por créditos más fácil de usar.", updateBullets: ["Nuevos botones MDM QR y ADB.", "Soporte para IT Admin, Krece, Claro/Telcel, White Screen Motorola y Cricket Moto.", "Xiaomi FRP Auth mejorado; KG no está soportado.", "Mayor estabilidad y una experiencia más sencilla para usuarios nuevos."], updateImportant: "Esta actualización es el primer paso hacia la nueva generación de ArepaTool." },
+    downloadTitle: "Descargar versión publicada", accessConfirmed: "Descarga disponible. El enlace se genera desde el servidor.", newVersion: "Versión publicada", downloadNow: "Descargar ahora", joinOfficial: "Unirme al grupo oficial", verifyDescription: "Descarga disponible sin usuario ni correo.", identifierPlaceholder: "Usuario o correo registrado", verifyButton: "Verificar y continuar", whatsappTitle: "Acceso al Grupo Oficial", whatsappSuccess: "¡Tu correo tiene acceso! Únete al grupo oficial.", whatsappDescription: "Ingresa tu correo registrado para obtener el link del grupo de WhatsApp.", whatsappButton: "Verificar Acceso", updateTitle: "ArepaTool v3.0.3 ya está disponible", updateHeading: "Samsung Root Files y mejoras de estabilidad", updateIntro: "ArepaTool v3.0.3 reúne nuevas descargas Root y correcciones para operaciones importantes.", updateBullets: ["Samsung Root Files: más de 90 archivos probados y guía de preparación.", "Correcciones en Fix Banking Apps 2026 y en la descarga automática de actualizaciones.", "Mejoras en las operaciones META de Infinix.", "Xiaomi Auth verifica Sideload antes de autorizar y orienta cuando un resultado cobrado no puede confirmarse."], updateImportant: "Ejecuta primero la operación que necesitas y deja Fix Banking Apps 2026 para el final." },
   en: {
-    downloadTitle: "Download published version", accessConfirmed: "Download available. The link is generated by the server.", newVersion: "Published version", downloadNow: "Download now", joinOfficial: "Join official group", verifyDescription: "Download available without a username or email.", identifierPlaceholder: "Registered username or email", verifyButton: "Verify and continue", whatsappTitle: "Official group access", whatsappSuccess: "Your email has access. Join the official group.", whatsappDescription: "Enter your registered email to get the WhatsApp group link.", whatsappButton: "Verify access", updateTitle: "ArepaTool v3.0.2 is now available", updateHeading: "Big Update — credit mode", updateIntro: "ArepaTool v3.0.2 adds a more intuitive interface, bug fixes and a credit mode that is easier to use.", updateBullets: ["New MDM QR and ADB buttons.", "Support for IT Admin, Krece, Claro/Telcel, White Screen Motorola and Cricket Moto.", "Improved Xiaomi FRP Auth; KG is not supported.", "Greater stability and a simpler experience for new users."], updateImportant: "This update is the first step toward the next ArepaTool generation." },
+    downloadTitle: "Download published version", accessConfirmed: "Download available. The link is generated from the server.", newVersion: "Published version", downloadNow: "Download now", joinOfficial: "Join official group", verifyDescription: "Download available without a username or email.", identifierPlaceholder: "Registered username or email", verifyButton: "Verify and continue", whatsappTitle: "Official group access", whatsappSuccess: "Your email has access. Join the official group.", whatsappDescription: "Enter your registered email to get the WhatsApp group link.", whatsappButton: "Verify access", updateTitle: "ArepaTool v3.0.3 is now available", updateHeading: "Samsung Root Files and reliability improvements", updateIntro: "ArepaTool v3.0.3 brings new Root downloads and fixes for important operations.", updateBullets: ["Samsung Root Files: over 90 tested files and a setup guide.", "Fixes for Fix Banking Apps 2026 and automatic update downloads.", "Improved Infinix META operations.", "Xiaomi Auth checks Sideload before authorization and explains charged, unconfirmed results."], updateImportant: "Run the operation you need first, then use Fix Banking Apps 2026 at the end." },
   "pt-br": {
-    downloadTitle: "Baixar versão publicada", accessConfirmed: "Download disponível. O link é gerado pelo servidor.", newVersion: "Versão publicada", downloadNow: "Baixar agora", joinOfficial: "Entrar no grupo oficial", verifyDescription: "Download disponível sem usuário ou e-mail.", identifierPlaceholder: "Usuário ou e-mail cadastrado", verifyButton: "Verificar e continuar", whatsappTitle: "Acesso ao grupo oficial", whatsappSuccess: "Seu e-mail tem acesso. Entre no grupo oficial.", whatsappDescription: "Digite seu e-mail cadastrado para obter o link do grupo do WhatsApp.", whatsappButton: "Verificar acesso", updateTitle: "A ArepaTool v3.0.2 já está disponível", updateHeading: "Big Update — modo por créditos", updateIntro: "A versão 3.0.2 traz uma interface mais intuitiva, correções de erros e um modo por créditos mais fácil de usar.", updateBullets: ["Novos botões MDM QR e ADB.", "Suporte para IT Admin, Krece, Claro/Telcel, White Screen Motorola e Cricket Moto.", "Xiaomi FRP Auth aprimorado; KG não é compatível.", "Mais estabilidade e uma experiência mais simples para novos usuários."], updateImportant: "Esta atualização é o primeiro passo da nova geração da ArepaTool." },
+    downloadTitle: "Baixar versão publicada", accessConfirmed: "Download disponível. O link é gerado pelo servidor.", newVersion: "Versão publicada", downloadNow: "Baixar agora", joinOfficial: "Entrar no grupo oficial", verifyDescription: "Download disponível sem usuário ou e-mail.", identifierPlaceholder: "Usuário ou e-mail cadastrado", verifyButton: "Verificar e continuar", whatsappTitle: "Acesso ao Grupo Oficial", whatsappSuccess: "Seu e-mail tem acesso. Entre no grupo oficial.", whatsappDescription: "Digite seu e-mail cadastrado para obter o link do grupo do WhatsApp.", whatsappButton: "Verificar acesso", updateTitle: "ArepaTool v3.0.3 já está disponível", updateHeading: "Samsung Root Files e melhorias de estabilidade", updateIntro: "ArepaTool v3.0.3 traz novos arquivos Root e correções para operações importantes.", updateBullets: ["Samsung Root Files: mais de 90 arquivos testados e guia de preparação.", "Correções no Fix Banking Apps 2026 e no download automático das atualizações.", "Melhorias nas operações META da Infinix.", "Xiaomi Auth verifica Sideload antes da autorização e orienta quando um resultado cobrado não pode ser confirmado."], updateImportant: "Execute primeiro a operação desejada e deixe Fix Banking Apps 2026 para o final." },
 };
 
 export function getLocaleCopy(locale: Locale) {

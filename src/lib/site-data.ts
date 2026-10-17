@@ -14,6 +14,20 @@ export type ChangelogLine =
   | { type: "blank" };
 
 export const changelog: ChangelogLine[] = [
+  { type: "h1", text: "# ArepaTool 3.0.3" },
+  { type: "comment", text: "## SAMSUNG ROOT · FIXES · MORE RELIABLE UPDATES" },
+  { type: "blank" },
+  { type: "h2", text: "NEW — AREPATOOL V3.0.3" },
+  { type: "plus", text: "Samsung Root Files: more than 90 tested Root files and a setup guide." },
+  { type: "plus", text: "Improved Infinix META operations." },
+  { type: "blank" },
+  { type: "h2", text: "FIXES & RELIABILITY" },
+  { type: "fixed", text: "Fixed issues in Fix Banking Apps 2026." },
+  { type: "fixed", text: "Fixed automatic downloads during ArepaTool updates." },
+  { type: "fixed", text: "Xiaomi Auth checks Sideload before authorization and explains charged, unconfirmed results." },
+  { type: "blank" },
+  { type: "comment", text: "Website: www.arepatool.com" },
+  { type: "blank" },
   { type: "h1", text: "# ArepaTool 3.0.2" },
   { type: "comment", text: "## BIG UPDATE · CREDIT MODE · MORE STABLE" },
   { type: "blank" },

@@ -169,7 +169,7 @@ export default function Tutorials() {
                   (key) => typeof (video as Record<string, unknown>)[key] === "string",
                 ),
             )
-            .map((video) => [video.id, video]),
+            .map((video: MuxVideo) => [video.id, video]),
         ),
       );
     })();
