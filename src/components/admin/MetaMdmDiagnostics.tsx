@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowDownToLine, ChevronLeft, ChevronRight, FileText, RefreshCw } from "lucide-react";
+import { ArrowDownToLine, ChevronLeft, ChevronRight, FileText, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { webApiFetch } from "@/lib/web-session";
 
@@ -73,6 +73,7 @@ export default function MetaMdmDiagnostics({ operation = "meta_mdm" }: {
   const [total, setTotal] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [taskQuery, setTaskQuery] = useState("");
 
   const load = async (nextPage: number) => {
     setBusy(true);
@@ -101,6 +102,20 @@ export default function MetaMdmDiagnostics({ operation = "meta_mdm" }: {
     } finally { setBusy(false); }
   };
 
+  const openByTaskId = async () => {
+    const taskId = taskQuery.trim().toUpperCase();
+    if (!taskId) return;
+    setBusy(true);
+    setError("");
+    try {
+      const result = await webApiFetch("/api/admin/meta-mdm/detail", { taskId });
+      if (!result?.success) throw new Error(result?.error || "No se encontró ese Task ID.");
+      setSelected(result.report);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "No se encontró ese Task ID.");
+    } finally { setBusy(false); }
+  };
+
   useEffect(() => { void load(0); }, []);
 
   return <section className="space-y-5">
@@ -108,11 +123,19 @@ export default function MetaMdmDiagnostics({ operation = "meta_mdm" }: {
       <div>
         <h2 className="font-display text-xl font-semibold">{operation === "payjoy_newsec" ? "Diagnósticos PayJoy NewSec" : "Diagnósticos MDM META"}</h2>
         <p className="text-muted-foreground mt-1 max-w-2xl text-sm">{operation === "payjoy_newsec"
-          ? "Cada intento conserva el registro técnico. En otros modelos se captura solo la lectura diagnóstica, sin escritura ni cobro."
+          ? "Busca el Task ID que ve el usuario para abrir el registro técnico del intento."
           : "Cada intento conserva el log y la evidencia disponible. “Aplicado” es el resultado verificado y reportado por V3; la etapa de la VPS se muestra por separado."}</p>
       </div>
       <Button variant="outline" size="sm" disabled={busy} onClick={() => void load(page)}><RefreshCw/>Actualizar</Button>
     </div>
+    {operation === "payjoy_newsec" && <div className="flex flex-wrap gap-2">
+      <input aria-label="Buscar por Task ID" placeholder="Buscar por Task ID · AT-XXXXXX"
+        className="border-border bg-background text-foreground h-9 min-w-60 rounded-md border px-3 text-sm"
+        value={taskQuery} onChange={event => setTaskQuery(event.target.value)}
+        onKeyDown={event => { if (event.key === "Enter") void openByTaskId(); }} />
+      <Button variant="outline" size="sm" disabled={busy || !taskQuery.trim()}
+        onClick={() => void openByTaskId()}><Search/>Buscar</Button>
+    </div>}
     {error && <p role="alert" className="text-destructive rounded-lg border border-destructive/30 p-3 text-sm">{error}</p>}
     <div className="border-border/60 overflow-x-auto rounded-xl border">
       <table className="w-full min-w-[760px] text-left text-sm">
