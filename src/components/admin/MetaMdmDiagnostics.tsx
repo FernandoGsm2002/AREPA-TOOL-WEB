@@ -64,7 +64,9 @@ function saveOriginal(runId: string, item: CapturedText) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export default function MetaMdmDiagnostics() {
+export default function MetaMdmDiagnostics({ operation = "meta_mdm" }: {
+  operation?: "meta_mdm" | "payjoy_newsec";
+}) {
   const [reports, setReports] = useState<Report[]>([]);
   const [selected, setSelected] = useState<Report | null>(null);
   const [page, setPage] = useState(0);
@@ -77,7 +79,7 @@ export default function MetaMdmDiagnostics() {
     setError("");
     try {
       const result = await webApiFetch("/api/admin/meta-mdm/list",
-        { limit: pageSize, offset: nextPage * pageSize });
+        { limit: pageSize, offset: nextPage * pageSize, operation });
       if (!result?.success) throw new Error(result?.error || "No se pudo cargar el historial.");
       setReports(result.reports || []);
       setTotal(result.total || 0);
@@ -104,8 +106,10 @@ export default function MetaMdmDiagnostics() {
   return <section className="space-y-5">
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div>
-        <h2 className="font-display text-xl font-semibold">Diagnósticos MDM META</h2>
-        <p className="text-muted-foreground mt-1 max-w-2xl text-sm">Cada intento conserva el log y la evidencia disponible. “Aplicado” es el resultado verificado y reportado por V3; la etapa de la VPS se muestra por separado.</p>
+        <h2 className="font-display text-xl font-semibold">{operation === "payjoy_newsec" ? "Diagnósticos PayJoy NewSec" : "Diagnósticos MDM META"}</h2>
+        <p className="text-muted-foreground mt-1 max-w-2xl text-sm">{operation === "payjoy_newsec"
+          ? "Cada intento conserva el registro técnico. En otros modelos se captura solo la lectura diagnóstica, sin escritura ni cobro."
+          : "Cada intento conserva el log y la evidencia disponible. “Aplicado” es el resultado verificado y reportado por V3; la etapa de la VPS se muestra por separado."}</p>
       </div>
       <Button variant="outline" size="sm" disabled={busy} onClick={() => void load(page)}><RefreshCw/>Actualizar</Button>
     </div>
@@ -114,15 +118,15 @@ export default function MetaMdmDiagnostics() {
       <table className="w-full min-w-[760px] text-left text-sm">
         <thead className="bg-muted/50 text-muted-foreground text-xs"><tr>
           <th className="p-3">Fecha</th><th className="p-3">Usuario</th><th className="p-3">Dispositivo</th>
-          <th className="p-3">Resultado V3</th><th className="p-3">Etapa VPS</th><th className="p-3">Evidencia</th>
+          <th className="p-3">Resultado V3</th><th className="p-3">{operation === "payjoy_newsec" ? "Build" : "Etapa VPS"}</th><th className="p-3">Evidencia</th>
         </tr></thead>
         <tbody>{reports.map(report => <tr key={report.run_id} className="border-border/50 border-t">
           <td className="p-3 whitespace-nowrap">{new Date(report.updated_at).toLocaleString("es-PE")}</td>
           <td className="p-3"><b>{report.username}</b><span className="text-muted-foreground block text-xs">{report.email}</span></td>
           <td className="p-3"><b>{report.identity?.model || "Sin lectura"}</b><span className="text-muted-foreground block text-xs">{report.identity?.brand || ""} · Android {report.identity?.android || "—"}</span></td>
           <td className="p-3"><span className={`rounded-full px-2 py-1 text-xs font-medium ${report.client_outcome === "applied" ? "bg-emerald-500/15 text-emerald-600" : report.client_outcome === "failed" ? "bg-destructive/10 text-destructive" : "bg-amber-500/15 text-amber-700"}`}>{labels[report.client_outcome] || report.client_outcome}</span></td>
-          <td className="p-3 text-xs">{report.server_stage || "Sin etapa"}</td>
-          <td className="p-3"><span className="text-muted-foreground block text-xs">{report.has_plan ? "Candidato preparado" : report.has_analysis ? "Análisis disponible" : "Sin candidato"}{report.has_profile_evidence ? " · Perfil capturado" : ""}</span><Button className="mt-1" variant="outline" size="sm" disabled={busy} onClick={() => void open(report.run_id)}><FileText/>Ver archivos</Button></td>
+          <td className="p-3 text-xs break-all">{operation === "payjoy_newsec" ? report.identity?.build || "Sin lectura" : report.server_stage || "Sin etapa"}</td>
+          <td className="p-3"><span className="text-muted-foreground block text-xs">{operation === "payjoy_newsec" ? report.client_outcome === "analysis_only" ? "Solo lectura" : "Registro técnico" : `${report.has_plan ? "Candidato preparado" : report.has_analysis ? "Análisis disponible" : "Sin candidato"}${report.has_profile_evidence ? " · Perfil capturado" : ""}`}</span><Button className="mt-1" variant="outline" size="sm" disabled={busy} onClick={() => void open(report.run_id)}><FileText/>Ver archivos</Button></td>
         </tr>)}{reports.length === 0 && <tr><td colSpan={6} className="text-muted-foreground p-8 text-center">Aún no hay intentos beta reportados.</td></tr>}</tbody>
       </table>
     </div>
@@ -132,10 +136,10 @@ export default function MetaMdmDiagnostics() {
     </div>}
     {selected && <div className="border-border/60 bg-card rounded-xl border p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div><h3 className="font-semibold">Intento {selected.run_id}</h3><p className="text-muted-foreground mt-1 text-xs">{selected.profile_id || selected.family_id || "Sin perfil"} · {labels[selected.client_outcome] || selected.client_outcome}</p></div>
+        <div><h3 className="font-semibold">Intento {selected.run_id}</h3><p className="text-muted-foreground mt-1 text-xs">{operation === "payjoy_newsec" ? selected.identity?.build || "Sin lectura" : selected.profile_id || selected.family_id || "Sin perfil"} · {labels[selected.client_outcome] || selected.client_outcome}</p></div>
         <Button size="sm" variant="outline" onClick={() => setSelected(null)}>Cerrar</Button>
       </div>
-      {(() => {
+      {operation === "meta_mdm" && (() => {
         const analysis = readSummary(selected.files?.["server_analysis.json"]);
         const plan = readSummary(selected.files?.["plan-summary.json"]);
         const evidence = readSummary(selected.files?.["profile-evidence.json"]);
