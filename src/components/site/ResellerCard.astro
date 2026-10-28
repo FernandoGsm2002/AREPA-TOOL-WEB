@@ -20,40 +20,88 @@ const labelFor = locale === "en"
     : { whatsapp: "WhatsApp", telegram: "Telegram", globe: "Sitio web" };
 ---
 
-<article class="group border-border/70 relative overflow-hidden border p-5 transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-primary/60 sm:p-6">
-  <span class="bg-primary/12 text-primary absolute top-4 right-4 inline-flex items-center gap-1 rounded-full border border-primary/20 px-2 py-1 text-[10px] font-bold tracking-[0.08em] uppercase" title={verifiedLabel}>
-    <ShieldCheck className="size-3.5" />
-    {verifiedLabel}
-  </span>
-  <div class="border-primary/20 bg-background/45 mx-auto flex size-20 items-center justify-center overflow-hidden border p-1.5">
-    <img src={reseller.logo} alt={reseller.name} class="size-full rounded-xl object-cover" loading="lazy" />
-  </div>
-  <h4 class="mt-4 pr-20 text-left text-base font-bold tracking-[-0.02em]">{reseller.name}</h4>
-  <p class="text-muted-foreground mt-2 flex items-center gap-1.5 text-xs font-medium">
-    <MapPin className="text-primary size-3.5 shrink-0" />
-    {reseller.region}
-  </p>
-  <p class="border-border/55 bg-background/35 text-primary mt-4 truncate border px-3 py-2 text-left text-xs font-semibold" title={reseller.details}>{reseller.details}</p>
-  <div class="mt-4 flex items-center justify-between border-t border-border/55 pt-4">
-    <span class="text-muted-foreground text-[10px] font-bold tracking-[0.1em] uppercase">{copy.footer.contact}</span>
-    <div class="flex gap-2">
-      {
-        reseller.links.map((link) => {
+{reseller.owner ? (
+  <article class="fox-owner-card">
+    <div class="fox-owner-card__art">
+      <img src={reseller.logo} alt={`${reseller.name} — ${copy.resellers.ownerTitle}`} loading="lazy" />
+    </div>
+    <div class="fox-owner-card__content">
+      <span class="fox-owner-card__badge"><ShieldCheck className="size-4" />{copy.resellers.ownerTitle}</span>
+      <h4>{reseller.name}</h4>
+      <p class="fox-owner-card__region"><MapPin className="size-4" />{reseller.region}</p>
+      <div class="fox-owner-card__payments"><span>{copy.resellers.ownerPayments}</span></div>
+      <a class="fox-owner-card__phone" href="https://wa.me/12087573915" target="_blank" rel="noopener noreferrer">
+        <WhatsAppIcon className="size-4" />
+        <span>{copy.resellers.ownerContact}</span>
+        <strong>{reseller.phone}</strong>
+      </a>
+      <div class="fox-owner-card__links">
+        {reseller.links.map((link) => {
           const LinkIcon = iconFor[link.icon];
           return (
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${labelFor[link.icon]} de ${reseller.name}`}
-              title={`${labelFor[link.icon]} de ${reseller.name}`}
-              class="border-border/70 bg-background/50 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-primary/70 text-muted-foreground flex size-10 items-center justify-center border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-card"
-            >
+            <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`${labelFor[link.icon]} de ${reseller.name}`}>
               <LinkIcon className="size-4" />
+              {link.icon === "globe" ? "foxunlockers.com" : "WhatsApp"}
             </a>
           );
-        })
-      }
+        })}
+      </div>
     </div>
-  </div>
-</article>
+  </article>
+) : (
+  <article class="group reseller-card border-border/70 relative overflow-hidden border p-5 transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-primary/60 sm:p-6">
+    <span class="bg-primary/12 text-primary absolute top-4 right-4 inline-flex items-center gap-1 rounded-full border border-primary/20 px-2 py-1 text-[10px] font-bold tracking-[0.08em] uppercase" title={verifiedLabel}>
+      <ShieldCheck class="size-3.5" />{verifiedLabel}
+    </span>
+    <div class="border-primary/20 bg-background/45 mx-auto flex size-20 items-center justify-center overflow-hidden border p-1.5">
+      <img src={reseller.logo} alt={reseller.name} class="size-full rounded-xl object-cover" loading="lazy" />
+    </div>
+    <h4 class="mt-4 pr-20 text-left text-base font-bold tracking-[-0.02em]">{reseller.name}</h4>
+    <p class="text-muted-foreground mt-2 flex items-center gap-1.5 text-xs font-medium">
+      <MapPin class="text-primary size-3.5 shrink-0" />{reseller.region}
+    </p>
+    <p class="border-border/55 bg-background/35 text-primary mt-4 truncate border px-3 py-2 text-left text-xs font-semibold" title={reseller.details}>{reseller.details}</p>
+    <div class="mt-4 flex items-center justify-between border-t border-border/55 pt-4">
+      <span class="text-muted-foreground text-[10px] font-bold tracking-[0.1em] uppercase">{copy.footer.contact}</span>
+      <div class="flex gap-2">
+        {reseller.links.map((link) => {
+          const LinkIcon = iconFor[link.icon];
+          return (
+            <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`${labelFor[link.icon]} de ${reseller.name}`} title={`${labelFor[link.icon]} de ${reseller.name}`} class="border-border/70 bg-background/50 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-primary/70 text-muted-foreground flex size-10 items-center justify-center border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-card">
+              <LinkIcon class="size-4" />
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </article>
+)}
+
+<style>
+  .fox-owner-card {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid rgb(255 123 37 / 72%);
+    border-radius: 1.2rem;
+    background: radial-gradient(ellipse at 88% 8%, rgb(255 95 26 / 19%), transparent 42%), linear-gradient(135deg, #17100d, #0c1015 60%, #1c0d08);
+    box-shadow: 0 0 0 1px rgb(255 172 74 / 12%), 0 24px 70px rgb(239 79 22 / 18%), inset 0 1px rgb(255 220 171 / 12%);
+  }
+  .fox-owner-card__art { min-height: 15rem; overflow: hidden; background: #080808; }
+  .fox-owner-card__art img { display: block; width: 100%; height: 100%; min-height: 15rem; max-height: 25rem; object-fit: cover; object-position: center 52%; }
+  .fox-owner-card__content { display: flex; flex-direction: column; align-items: flex-start; padding: clamp(1.25rem, 3.4vw, 2.4rem); }
+  .fox-owner-card__badge { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid rgb(255 151 70 / 38%); border-radius: 999px; background: rgb(255 111 35 / 10%); padding: .48rem .75rem; color: #ffbd78; font-size: .7rem; font-weight: 800; letter-spacing: .04em; }
+  .fox-owner-card h4 { margin-top: 1.15rem; color: #fff8f0; font-family: var(--font-display); font-size: clamp(1.7rem, 4vw, 2.5rem); font-weight: 900; letter-spacing: -.055em; line-height: 1; }
+  .fox-owner-card__region { display: flex; align-items: center; gap: .45rem; margin-top: .8rem; color: #c6b7ab; font-size: .85rem; }
+  .fox-owner-card__region svg { color: #ff9a4f; }
+  .fox-owner-card__payments { margin-top: 1.25rem; border-left: 2px solid #ff8239; padding: .15rem 0 .15rem .75rem; color: #f1d1b0; font-size: .88rem; font-weight: 700; }
+  .fox-owner-card__phone { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; margin-top: 1.15rem; color: #f7d8bd; font-size: .78rem; text-decoration: none; }
+  .fox-owner-card__phone svg { color: #39d98a; }
+  .fox-owner-card__phone strong { color: #fff; font-size: .95rem; }
+  .fox-owner-card__phone:hover strong { color: #ffb268; }
+  .fox-owner-card__links { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.4rem; }
+  .fox-owner-card__links a { display: inline-flex; min-height: 2.65rem; align-items: center; gap: .55rem; border: 1px solid rgb(255 154 79 / 45%); border-radius: .65rem; background: rgb(255 255 255 / 4%); padding: .65rem .9rem; color: #fff2e5; font-size: .8rem; font-weight: 700; text-decoration: none; transition: background .18s, border-color .18s, transform .18s; }
+  .fox-owner-card__links a:hover { transform: translateY(-1px); border-color: #ff9a4f; background: rgb(255 116 42 / 16%); }
+  .fox-owner-card__links a:focus-visible, .fox-owner-card__phone:focus-visible { outline: 2px solid #ffb268; outline-offset: 3px; }
+  @media (min-width: 760px) { .fox-owner-card { grid-template-columns: minmax(18rem, .9fr) minmax(0, 1.1fr); } .fox-owner-card__art img { max-height: none; } }
+  @media (prefers-reduced-motion: reduce) { .fox-owner-card__links a { transition: none; } }
+</style>

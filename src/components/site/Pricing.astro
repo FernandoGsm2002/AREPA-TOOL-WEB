@@ -43,8 +43,8 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
 
 <style>
   .pricing-section {
-    border-bottom: 1px solid rgb(23 34 45 / 12%);
-    background: #f1f0ea;
+    border-bottom: 1px solid rgb(255 255 255 / 9%);
+    background: #0a0e13;
     padding-block: 5rem 6rem;
   }
 
@@ -56,7 +56,7 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
 
   .pricing-kicker,
   .pricing-plan__eyebrow {
-    color: #a27a23;
+    color: #f4a64b;
     font-family: var(--font-mono);
     font-size: .68rem;
     font-weight: 700;
@@ -66,7 +66,7 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
 
   .pricing-heading h2 {
     margin-top: .55rem;
-    color: #17222d;
+    color: #f4f3ef;
     font-family: 'Avenir Next', 'Segoe UI', sans-serif;
     font-size: clamp(2.35rem, 5vw, 3.8rem);
     letter-spacing: -.065em;
@@ -75,7 +75,7 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
 
   .pricing-heading > p:last-child {
     margin-top: 1.05rem;
-    color: #68747d;
+    color: #aab3bd;
     font-size: 1rem;
     line-height: 1.6;
   }
@@ -93,22 +93,22 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
     flex-direction: column;
     align-items: center;
     padding: 2rem 1.25rem 1.25rem;
-    border: 1px solid #d4d6d3;
+    border: 1px solid rgb(255 255 255 / 14%);
     border-radius: .95rem;
-    background: #faf9f4;
-    color: #17222d;
+    background: #111821;
+    color: #f4f3ef;
     text-align: center;
   }
 
   .pricing-plan--accent {
     border-color: #e98a24;
-    background: #fff0dc;
-    color: #5a3518;
+    background: #21170f;
+    color: #f5e3d0;
   }
 
   .pricing-plan--accent .pricing-plan__eyebrow,
   .pricing-plan--accent .pricing-plan__duration,
-  .pricing-plan--accent .pricing-plan__description { color: #795a3f; }
+  .pricing-plan--accent .pricing-plan__description { color: #d9b895; }
 
   .pricing-plan--featured {
     border: 2px solid #e0a916;
@@ -121,7 +121,7 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
     padding: .4rem .85rem;
     border-radius: 999px;
     background: #eab51b;
-    color: #4b370b;
+    color: #241a05;
     font-family: var(--font-mono);
     font-size: .6rem;
     font-weight: 800;
@@ -139,7 +139,7 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
 
   .pricing-plan__duration {
     margin-top: .3rem;
-    color: #77828a;
+    color: #adb6bf;
     font-size: .88rem;
   }
 
@@ -151,11 +151,11 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
   }
 
   .pricing-plan__price span {
-    color: #85909a;
+    color: #aab3bd;
     font-size: .72rem;
   }
 
-  .pricing-plan--accent .pricing-plan__price span { color: #795a3f; }
+  .pricing-plan--accent .pricing-plan__price span { color: #d9b895; }
 
   .pricing-plan__price strong {
     color: inherit;
@@ -170,7 +170,7 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
     max-width: 15rem;
     min-height: 2.7rem;
     margin-top: .85rem;
-    color: #71808a;
+    color: #b6c0ca;
     font-size: .78rem;
     line-height: 1.5;
   }
@@ -198,21 +198,21 @@ const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: inde
 
   .pricing-button--primary {
     background: #e98a24;
-    color: #3e2206;
+    color: #211407;
     box-shadow: 0 8px 18px rgb(216 155 36 / 18%);
   }
 
   .pricing-button--primary:hover { background: #d97916; }
 
   .pricing-button--secondary {
-    border: 1px solid #c6d1df;
+    border: 1px solid rgb(255 255 255 / 22%);
     background: transparent;
-    color: #53616d;
+    color: #c3cbd3;
   }
 
   .pricing-plan--accent .pricing-button--secondary {
     border-color: #dfa96f;
-    color: #8e4d14;
+    color: #ffd49d;
   }
 
   @media (min-width: 760px) {

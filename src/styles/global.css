@@ -51,38 +51,39 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
+    color-scheme: dark;
+    --background: oklch(0.12 0.014 250);
+    --foreground: oklch(0.97 0.006 90);
+    --card: oklch(0.16 0.018 250);
+    --card-foreground: oklch(0.97 0.006 90);
+    --popover: oklch(0.16 0.018 250);
+    --popover-foreground: oklch(0.97 0.006 90);
     --primary: oklch(0.78 0.16 74);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
+    --primary-foreground: oklch(0.16 0.03 65);
+    --secondary: oklch(0.21 0.02 250);
+    --secondary-foreground: oklch(0.97 0.006 90);
+    --muted: oklch(0.2 0.018 250);
+    --muted-foreground: oklch(0.72 0.018 250);
+    --accent: oklch(0.78 0.16 74 / 16%);
+    --accent-foreground: oklch(0.88 0.1 74);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(0.78 0.02 250 / 16%);
+    --input: oklch(0.78 0.02 250 / 18%);
+    --ring: oklch(0.78 0.16 74);
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar: oklch(0.14 0.016 250);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.78 0.16 74);
     --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --sidebar-accent: oklch(0.205 0.018 255);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
 }
 
 .dark {
@@ -149,7 +150,7 @@
 .hero-kicker { color: #a27a23; font-family: 'JetBrains Mono', monospace; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
 .hero-copy h1 { max-width: 38rem; margin-top: .75rem; font-family: 'Avenir Next', 'Segoe UI', sans-serif; font-size: clamp(2.45rem, 5.5vw, 4.45rem); line-height: .99; letter-spacing: -.065em; }
 .hero-copy h1 span { color: var(--primary); }
-.hero-copy > p:not(.hero-kicker) { max-width: 31rem; margin-top: 1.25rem; color: #52616e; font-size: 1rem; line-height: 1.65; }
+.hero-copy > p:not(.hero-kicker) { max-width: 31rem; margin-top: 1.25rem; color: #aab5c0; font-size: 1rem; line-height: 1.65; }
 .hero-release { display: flex; flex-wrap: wrap; gap: .65rem 1rem; margin-top: 1.25rem; color: #9da7b4; font-family: 'JetBrains Mono', monospace; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
 .hero-release strong { color: var(--primary); font-weight: 700; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
@@ -208,72 +209,43 @@
   .site-brand-copy { display: none; }
 }
 
-/* Light workspace: the public site uses the same calm, paper-like surface on every route. */
-:root {
-  --background: oklch(0.985 0.008 90);
-  --foreground: oklch(0.2 0.018 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.018 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.018 250);
-  --primary: oklch(0.69 0.16 72);
-  --primary-foreground: oklch(0.18 0.025 72);
-  --secondary: oklch(0.94 0.012 90);
-  --secondary-foreground: oklch(0.25 0.018 250);
-  --muted: oklch(0.94 0.012 90);
-  --muted-foreground: oklch(0.47 0.018 250);
-  --accent: oklch(0.94 0.025 80);
-  --accent-foreground: oklch(0.26 0.04 72);
-  --border: oklch(0.78 0.018 250 / 32%);
-  --input: oklch(0.78 0.018 250 / 38%);
-  --ring: oklch(0.69 0.16 72);
-  --sidebar: oklch(0.97 0.009 90);
-  --sidebar-foreground: oklch(0.2 0.018 250);
-  --sidebar-primary: oklch(0.69 0.16 72);
-  --sidebar-primary-foreground: oklch(0.18 0.025 72);
-  --sidebar-accent: oklch(0.94 0.025 80);
-  --sidebar-accent-foreground: oklch(0.26 0.04 72);
-  --sidebar-border: oklch(0.78 0.018 250 / 28%);
-  --sidebar-ring: oklch(0.69 0.16 72);
-}
-
-.site-body { background: #f1f0ea; color: #17222d; }
-.site-header { border-bottom-color: rgb(23 34 45 / 12%); background: rgb(241 240 234 / 92%); }
-.site-brand { color: #17222d; }
-.site-brand-logo { border-radius: .78rem; background: linear-gradient(145deg, #fff7d7 0%, #f3c044 42%, #e8751a 100%); box-shadow: 0 .35rem .9rem rgb(214 133 23 / 20%); }
+.site-body { background: #0a0e13; color: #f4f3ef; }
+.site-header { border-bottom-color: rgb(255 255 255 / 9%); background: rgb(10 14 19 / 94%); }
+.site-brand { color: #fff; }
+.site-brand-logo { border-radius: .78rem; background: linear-gradient(145deg, #29221a 0%, #a8671d 48%, #e8751a 100%); box-shadow: 0 .35rem .9rem rgb(214 133 23 / 16%); }
 .site-brand-logo img { width: 100%; height: auto; }
-.site-brand-copy strong { color: #e27b1c; }
-.site-brand-copy span { color: #71808c; }
-.site-nav-links a { color: #63717d; }
-.site-nav-links a:hover, .site-nav-links a[aria-current='page'] { color: #17222d; background: rgb(23 34 45 / 7%); }
-.mobile-sheet-brand { display: flex; align-items: center; gap: .7rem; padding-inline: .5rem; color: #17222d; text-align: left; }
-.mobile-sheet-brand__logo { display: grid; width: 2.45rem; height: 2.45rem; place-items: center; overflow: hidden; border-radius: .7rem; background: linear-gradient(145deg, #fff7d7 0%, #f3c044 42%, #e8751a 100%); }
+.site-brand-copy strong { color: #f4a64b; }
+.site-brand-copy span { color: #929aa4; }
+.site-nav-links a { color: #aab3bd; }
+.site-nav-links a:hover, .site-nav-links a[aria-current='page'] { color: #fff; background: rgb(255 255 255 / 7%); }
+.mobile-sheet-brand { display: flex; align-items: center; gap: .7rem; padding-inline: .5rem; color: #f4f3ef; text-align: left; }
+.mobile-sheet-brand__logo { display: grid; width: 2.45rem; height: 2.45rem; place-items: center; overflow: hidden; border-radius: .7rem; background: linear-gradient(145deg, #29221a 0%, #a8671d 48%, #e8751a 100%); }
 .mobile-sheet-brand__logo img { width: 100%; height: auto; max-width: none; }
 .mobile-sheet-brand strong, .mobile-sheet-brand small { display: block; }
-.mobile-sheet-brand strong { color: #e27b1c; font-family: 'Avenir Next', 'Segoe UI', sans-serif; font-size: 1.05rem; letter-spacing: -.04em; }
-.mobile-sheet-brand small { margin-top: .25rem; color: #71808c; font-family: 'JetBrains Mono', monospace; font-size: .53rem; letter-spacing: .12em; text-transform: uppercase; }
-.hero-section { border-bottom-color: rgb(23 34 45 / 12%); background: #f0f2ee; }
-.hero-copy > p { color: #52616e; }
-.hero-release { color: #687581; }
-.hero-proof span { border-color: rgb(23 34 45 / 16%); color: #4e5c68; }
+.mobile-sheet-brand strong { color: #f4a64b; font-family: 'Avenir Next', 'Segoe UI', sans-serif; font-size: 1.05rem; letter-spacing: -.04em; }
+.mobile-sheet-brand small { margin-top: .25rem; color: #aab3bd; font-family: 'JetBrains Mono', monospace; font-size: .53rem; letter-spacing: .12em; text-transform: uppercase; }
+.hero-section { border-bottom-color: rgb(255 255 255 / 8%); background: linear-gradient(180deg, #101823 0%, #0a0e13 74%); }
+.hero-copy > p { color: #aab5c0; }
+.hero-release { color: #aab3bd; }
+.hero-proof span { border-color: rgb(255 255 255 / 16%); color: #d3d7dc; }
 .hero-mascot { width: min(100%, 28rem); }
-.section-plain { border-bottom-color: rgb(23 34 45 / 12%); }
-.section-heading p { color: #5f6d78; }
-.feature-panel { border-top-color: rgb(23 34 45 / 16%); background: #fff; }
-.feature-panel > div:first-child { background: #eef1ed; }
-.pricing-card { border-color: rgb(216 155 36 / 62%); background: #fff; }
-.reseller-grid article { background: #fff; }
-.site-footer { border-top-color: rgb(23 34 45 / 12%); background: #eef1ed; }
+.section-plain { border-bottom-color: rgb(255 255 255 / 9%); }
+.section-heading p { color: #aab3bd; }
+.feature-panel { border-top-color: rgb(255 255 255 / 16%); background: #111821; }
+.feature-panel > div:first-child { background: #17202b; }
+.pricing-card { border-color: rgb(246 177 44 / 50%); background: #141b24; }
+.reseller-grid article { background: #111821; }
+.site-footer { border-top-color: rgb(255 255 255 / 9%); background: #090e14; }
 .docs-page { padding-block: 5.5rem 7rem; }
 .page-heading { max-width: 44rem; }
 .page-heading h1 { font-family: 'Avenir Next', 'Segoe UI', sans-serif; font-size: clamp(2.5rem, 6vw, 5rem); line-height: .98; letter-spacing: -.07em; }
-.page-heading p { max-width: 38rem; margin-top: 1.25rem; color: #5f6d78; font-size: 1.05rem; line-height: 1.7; }
+.page-heading p { max-width: 38rem; margin-top: 1.25rem; color: #aab3bd; font-size: 1.05rem; line-height: 1.7; }
 .instruction-grid { display: grid; gap: 1rem; margin-top: 3.5rem; }
-.instruction-step { display: grid; grid-template-columns: auto 1fr; gap: 1rem; border-top: 1px solid rgb(23 34 45 / 16%); padding: 1.35rem 0; }
-.instruction-icon { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; background: #e9b23c; color: #fff; }
-.instruction-number { color: #a27a23; font: 600 .68rem/1 'JetBrains Mono', monospace; letter-spacing: .08em; }
+.instruction-step { display: grid; grid-template-columns: auto 1fr; gap: 1rem; border-top: 1px solid rgb(255 255 255 / 16%); padding: 1.35rem 0; }
+.instruction-icon { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; background: #a8671d; color: #fff; }
+.instruction-number { color: #f4a64b; font: 600 .68rem/1 'JetBrains Mono', monospace; letter-spacing: .08em; }
 .instruction-step h2 { margin-top: .5rem; font-family: 'Avenir Next', 'Segoe UI', sans-serif; font-size: 1.2rem; letter-spacing: -.03em; }
-.instruction-step p { max-width: 42rem; margin-top: .45rem; color: #65737e; line-height: 1.6; }
+.instruction-step p { max-width: 42rem; margin-top: .45rem; color: #aab3bd; line-height: 1.6; }
 @media (min-width: 760px) {
   .instruction-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 3.5rem; }
 }

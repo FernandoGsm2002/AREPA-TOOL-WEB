@@ -47,8 +47,8 @@ const copy = getLocaleCopy(locale);
 
 <style>
   .release-console-section {
-    border-bottom: 1px solid rgb(23 34 45 / 12%);
-    background: #e9e8e1;
+    border-bottom: 1px solid rgb(255 255 255 / 9%);
+    background: #0d131b;
     padding-block: 4.5rem 5.5rem;
   }
 
@@ -63,7 +63,7 @@ const copy = getLocaleCopy(locale);
   .release-console-heading h2 {
     width: 100%;
     margin: 0;
-    color: #17222d;
+    color: #f4f3ef;
     font-family: 'Avenir Next', 'Segoe UI', sans-serif;
     font-size: clamp(1.85rem, 4vw, 3rem);
     letter-spacing: -.055em;
@@ -71,13 +71,13 @@ const copy = getLocaleCopy(locale);
 
   .release-console-heading p:last-child {
     margin: 0;
-    color: #65727c;
+    color: #aab3bd;
     font-size: .95rem;
   }
 
   .release-console-kicker,
   .release-console__status {
-    color: #a27a23;
+    color: #f4a64b;
     font-family: var(--font-mono);
     font-size: .68rem;
     letter-spacing: .08em;
@@ -88,11 +88,11 @@ const copy = getLocaleCopy(locale);
 
   .release-console {
     overflow: hidden;
-    border: 1px solid #c8c6bc;
+    border: 1px solid rgb(255 255 255 / 13%);
     border-radius: .65rem;
-    background: #f8f7f1 !important;
-    color-scheme: light;
-    box-shadow: 0 22px 50px rgb(23 34 45 / 14%);
+    background: #0a0f15 !important;
+    color-scheme: dark;
+    box-shadow: 0 22px 50px rgb(0 0 0 / 28%);
   }
 
   .release-console__bar {
@@ -101,9 +101,9 @@ const copy = getLocaleCopy(locale);
     align-items: center;
     gap: .45rem;
     padding-inline: 1rem;
-    border-bottom: 1px solid #cfcdc4;
-    background: #e1e0d8;
-    color: #68737b;
+    border-bottom: 1px solid rgb(255 255 255 / 10%);
+    background: #111821;
+    color: #aab3bd;
     font-family: var(--font-mono);
     font-size: .67rem;
   }
@@ -120,8 +120,8 @@ const copy = getLocaleCopy(locale);
     overflow: auto;
     margin: 0;
     padding: 1.35rem clamp(1rem, 3vw, 2rem) 1.6rem;
-    background: #f8f7f1 !important;
-    color: #34404a;
+    background: #0a0f15 !important;
+    color: #dbe1e7;
     font-family: var(--font-mono);
     font-size: clamp(.69rem, 1.2vw, .8rem);
     line-height: 1.75;
@@ -130,20 +130,20 @@ const copy = getLocaleCopy(locale);
 
   .release-console__code code { background: transparent !important; color: inherit; }
   .terminal-line { display: block; opacity: 0; transform: translateY(.2rem); animation: terminal-line-in .34s ease-out var(--line-delay, 0ms) forwards; }
-  .terminal-shebang { color: #7e5c17; }
+  .terminal-shebang { color: #f4c274; }
   .terminal-strong { font-weight: 800; }
-  .terminal-command { color: #263641; }
-  .terminal-prompt { color: #aa7618; }
-  .terminal-comment { color: #7b858b; }
-  .terminal-heading { color: #476d91; }
-  .terminal-brand { color: #7d4f8f; }
-  .terminal-variable { color: #476d91; }
-  .terminal-output { color: #327b59; }
-  .terminal-cpu { color: #416f9a; }
-  .terminal-note { color: #7c6b4d; }
-  .terminal-warning { color: #a16b14; }
-  .terminal-fixed { color: #2b7b83; }
-  .terminal-success { color: #327b59; }
+  .terminal-command { color: #dbe1e7; }
+  .terminal-prompt { color: #f4a64b; }
+  .terminal-comment { color: #aab3bd; }
+  .terminal-heading { color: #9dc9f2; }
+  .terminal-brand { color: #d7a9e8; }
+  .terminal-variable { color: #9dc9f2; }
+  .terminal-output { color: #8de0b4; }
+  .terminal-cpu { color: #9dc9f2; }
+  .terminal-note { color: #d9c4a4; }
+  .terminal-warning { color: #ffd47f; }
+  .terminal-fixed { color: #7fd7dc; }
+  .terminal-success { color: #8de0b4; }
 
   @keyframes terminal-line-in {
     to { opacity: 1; transform: translateY(0); }

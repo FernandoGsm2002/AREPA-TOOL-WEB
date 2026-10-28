@@ -331,16 +331,31 @@ export interface Reseller {
   region: string;
   details: string;
   role: "distributor" | "reseller";
+  owner?: boolean;
+  phone?: string;
   links: { icon: "whatsapp" | "telegram" | "globe"; href: string }[];
 }
 
 export const resellers: Reseller[] = [
   {
+    name: "FOXUNLOCKERS",
+    logo: "/pngs/foxunlockers.png",
+    region: "Perú · Worldwide",
+    details: "Perú: Yape · Worldwide: Binance",
+    role: "distributor",
+    owner: true,
+    phone: "+1 (208) 757-3915",
+    links: [
+      { icon: "globe", href: "https://foxunlockers.com/" },
+      { icon: "whatsapp", href: "https://wa.me/12087573915" },
+    ],
+  },
+  {
     name: "Leope-Gsm",
     logo: "/pngs/leopepe.png",
     region: "Worldwide",
     details: "Payments: USDT - BINANCE - PEN",
-    role: "distributor",
+    role: "reseller",
     links: [
       { icon: "whatsapp", href: "https://chat.whatsapp.com/ItqFr6uwlrOEvkXZQLiYaj" },
       { icon: "telegram", href: "https://t.me/ctrone21" },

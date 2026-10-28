@@ -18,7 +18,7 @@ const resellerList = resellers.filter((reseller) => reseller.role === "reseller"
     <p>{copy.resellers.description}</p>
   </div>
 
-  <div class="mx-auto mt-10 max-w-sm">
+  <div class="mx-auto mt-10 max-w-5xl">
     <h3 class="font-display mb-4 text-lg font-bold">{copy.resellers.official}</h3>
     {
       distributor.map((reseller) => <ResellerCard reseller={reseller} verifiedLabel={copy.resellers.officialLabel} locale={locale} />)

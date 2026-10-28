@@ -9,13 +9,13 @@ const liveLabel = locale === "es" ? "● registro de cambios activo" : locale ==
 const changelogFile = locale === "es" ? "REGISTRO.md" : locale === "pt-br" ? "ALTERACOES.md" : "CHANGELOG.md";
 
 const lineClass: Record<string, string> = {
-  h1: "text-[#a84e0d] font-bold",
-  comment: "text-[#7b7169] italic",
-  h2: "text-[#2f6c6a] font-semibold mt-2",
-  plus: "text-[#2f7b5a] before:content-['+_'] before:text-[#3d9b68]/70 pl-3",
-  bullet: "text-[#2f7b5a] before:content-['-_'] before:text-[#3d9b68]/70 pl-3",
-  fixed: "text-[#2b6c83] before:content-['✓_'] before:text-[#2b6c83]/80 pl-3",
-  pending: "text-[#986a18] before:content-['•_'] before:text-[#986a18]/70 pl-3",
+  h1: "text-orange-300 font-bold",
+  comment: "text-slate-400 italic",
+  h2: "text-cyan-300 font-semibold mt-2",
+  plus: "text-emerald-300 before:content-['+_'] before:text-emerald-400/70 pl-3",
+  bullet: "text-emerald-300 before:content-['-_'] before:text-emerald-400/70 pl-3",
+  fixed: "text-sky-300 before:content-['✓_'] before:text-sky-400/80 pl-3",
+  pending: "text-amber-300 before:content-['•_'] before:text-amber-400/70 pl-3",
   blank: "block h-3",
 };
 ---
@@ -28,18 +28,18 @@ const lineClass: Record<string, string> = {
       <div class="changelog-meta"><strong>{liveLabel}</strong><span>2026 · 3.0.3</span></div>
     </div>
     <div class="changelog-window">
-      <div class="flex items-center gap-2 border-b border-[#cfcdc4] bg-[#e1e0d8] px-4 py-2.5">
+      <div class="flex items-center gap-2 border-b border-white/10 bg-[#111821] px-4 py-2.5">
       <div class="flex gap-1.5">
         <span class="size-3 rounded-full bg-red-500/70"></span>
         <span class="size-3 rounded-full bg-amber-500/70"></span>
         <span class="size-3 rounded-full bg-emerald-500/70"></span>
       </div>
-      <span class="ml-2 font-mono text-xs text-[#68737b]">arepatool@3.0.3 ~ {changelogFile}</span>
+      <span class="ml-2 font-mono text-xs text-slate-400">arepatool@3.0.3 ~ {changelogFile}</span>
       <span class="ml-auto text-[0.62rem] font-bold tracking-[0.1em] text-[#a27a23] uppercase">
         {copy.updates.current}
       </span>
       </div>
-      <pre class="max-h-[28rem] overflow-y-auto bg-[#f8f7f1] p-6 font-mono text-[0.82rem] leading-relaxed text-[#34404a] whitespace-pre-wrap">{
+      <pre class="max-h-[28rem] overflow-y-auto bg-[#0b1016] p-6 font-mono text-[0.82rem] leading-relaxed text-slate-200 whitespace-pre-wrap">{
       changelog.map((line) =>
         line.type === "blank" ? (
           <span class={lineClass.blank} />
@@ -55,10 +55,10 @@ const lineClass: Record<string, string> = {
 <style>
   .changelog-window {
     overflow: hidden;
-    border: 1px solid #c8c6bc;
+    border: 1px solid rgb(255 255 255 / 13%);
     border-radius: .65rem;
-    background: #f8f7f1;
-    box-shadow: 0 22px 50px rgb(23 34 45 / 12%);
+    background: #0b1016;
+    box-shadow: 0 22px 50px rgb(0 0 0 / 28%);
   }
 
   .changelog-window pre {
