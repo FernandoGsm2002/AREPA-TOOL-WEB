@@ -90,7 +90,7 @@ export default function CreditAccessPrices() {
     </div>
     {message && <p className="border-border bg-muted/40 rounded-lg border p-3 text-sm">{message}</p>}
     <div className="border-border/70 bg-card divide-border/60 divide-y rounded-xl border">
-      {prices.map(row => <div key={row.operation_code} className="flex flex-wrap items-end justify-between gap-4 p-4">
+      {prices.filter(row => row.operation_code !== "xiaomi_auth_server3").map(row => <div key={row.operation_code} className="flex flex-wrap items-end justify-between gap-4 p-4">
         <div className="min-w-48 flex-1"><p className="font-medium">{row.label}</p><p className="text-muted-foreground mt-1 font-mono text-xs">{row.operation_code}</p></div>
         <label className="grid gap-1 text-xs font-medium">Créditos sin licencia
           <Input type="number" min="0.01" max="10000" step="0.01" placeholder="Por definir" value={drafts[row.operation_code] ?? ""}
