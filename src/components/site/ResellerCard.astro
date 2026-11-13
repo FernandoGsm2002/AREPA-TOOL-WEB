@@ -60,6 +60,7 @@ const labelFor = locale === "en"
     <p class="text-muted-foreground mt-2 flex items-center gap-1.5 text-xs font-medium">
       <MapPin class="text-primary size-3.5 shrink-0" />{reseller.region}
     </p>
+    {reseller.phone && <p class="text-muted-foreground mt-2 text-xs">WhatsApp: <span class="text-foreground font-semibold">{reseller.phone}</span></p>}
     <p class="border-border/55 bg-background/35 text-primary mt-4 truncate border px-3 py-2 text-left text-xs font-semibold" title={reseller.details}>{reseller.details}</p>
     <div class="mt-4 flex items-center justify-between border-t border-border/55 pt-4">
       <span class="text-muted-foreground text-[10px] font-bold tracking-[0.1em] uppercase">{copy.footer.contact}</span>

@@ -362,6 +362,19 @@ export const resellers: Reseller[] = [
     ],
   },
   {
+    name: "PowerUnlock",
+    logo: "/pngs/powerunlock.jpg",
+    region: "Colombia · México",
+    details: "USDT - BINANCE - COP - MXN",
+    role: "reseller",
+    phone: "+57 304 330 316",
+    links: [
+      { icon: "whatsapp", href: "https://wa.me/57304330316" },
+      { icon: "globe", href: "https://www.powerunlock.net" },
+      { icon: "telegram", href: "https://t.me/PowerUnlockNew" },
+    ],
+  },
+  {
     name: "SmartBeUnlock",
     logo: "/pngs/smartbeunlock.png",
     region: "Worldwide",
