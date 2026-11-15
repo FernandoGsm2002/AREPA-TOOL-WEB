@@ -88,7 +88,7 @@ export default function LoginForm() {
           <h2 className="text-xl font-bold">Activación de licencia pendiente</h2>
           <p className="text-muted-foreground mt-2 text-sm leading-6">
             Tu registro está completo y tu cuenta ya existe. Solo falta activar la licencia con un reseller oficial.
-            No necesitas una activación para el registro y otra para la cuenta.
+            Contacta a uno de los resellers oficiales para completar la activación.
           </p>
         </div>
 

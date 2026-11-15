@@ -36,7 +36,7 @@ export default function RegisterForm() {
         return;
       }
       setComplete(true);
-      setStatus("¡Registro completado!\n\nTu cuenta ya está creada y tu licencia está pendiente de activación. No necesitas activar el registro por separado. Contacta a un reseller oficial para activar tu licencia.");
+      setStatus("¡Registro completado!\n\nTu cuenta ya está creada y tu licencia está pendiente de activación. Contacta a un reseller oficial para activar tu licencia.");
     } catch {
       setStatus("Error de red");
     } finally {

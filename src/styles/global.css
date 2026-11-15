@@ -236,6 +236,43 @@
 .pricing-card { border-color: rgb(246 177 44 / 50%); background: #141b24; }
 .reseller-grid article { background: #111821; }
 .site-footer { border-top-color: rgb(255 255 255 / 9%); background: #090e14; }
+.site-body.christmas-site {
+  position: relative;
+  isolation: isolate;
+  background-color: #07130f;
+  background-image: radial-gradient(ellipse at 14% 4%, rgb(35 110 72 / 13%), transparent 34%), radial-gradient(ellipse at 90% 20%, rgb(160 35 42 / 9%), transparent 30%);
+}
+.christmas-site::after {
+  position: fixed;
+  z-index: 70;
+  pointer-events: none;
+  inset: -12rem 0 0;
+  content: "";
+  opacity: .38;
+  background-image: radial-gradient(2px 2px at 12% 18%, rgb(245 250 248 / 85%) 52%, transparent 58%), radial-gradient(1.5px 1.5px at 68% 32%, rgb(245 250 248 / 75%) 52%, transparent 58%), radial-gradient(2px 2px at 88% 71%, rgb(245 250 248 / 82%) 52%, transparent 58%), radial-gradient(1px 1px at 34% 86%, rgb(245 250 248 / 70%) 52%, transparent 58%);
+  background-size: 290px 310px, 370px 410px, 460px 370px, 230px 280px;
+  animation: christmas-snowfall 30s linear infinite;
+}
+.christmas-site .site-header {
+  border-image: linear-gradient(90deg, #a52c34, #d8b76c 48%, #20764b) 1;
+  border-top: 2px solid transparent;
+}
+.christmas-site .hero-section {
+  border-top: 1px solid rgb(228 190 112 / 45%);
+  background: radial-gradient(ellipse at 76% 40%, rgb(28 105 67 / 22%), transparent 38%), radial-gradient(ellipse at 7% 2%, rgb(156 39 47 / 19%), transparent 34%), linear-gradient(180deg, #0d2118 0%, #07130f 80%);
+}
+.christmas-site .hero-kicker { color: #d9bd78; }
+.christmas-site .release-console-section { background: #081610; }
+.christmas-site .release-console { border-color: rgb(71 158 103 / 35%); }
+.christmas-site .changelog-window { border-color: rgb(71 158 103 / 35%); }
+.christmas-site .site-footer { background: #050d09; }
+@keyframes christmas-snowfall {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-1.5rem, 14rem, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .christmas-site::after { animation: none; }
+}
 .docs-page { padding-block: 5.5rem 7rem; }
 .page-heading { max-width: 44rem; }
 .page-heading h1 { font-family: 'Avenir Next', 'Segoe UI', sans-serif; font-size: clamp(2.5rem, 6vw, 5rem); line-height: .98; letter-spacing: -.07em; }
