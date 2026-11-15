@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LockKeyhole, Loader2 } from "lucide-react";
+import { ExternalLink, Globe, LockKeyhole, Loader2, MapPin, MessageCircle, Send } from "lucide-react";
 import { saveSession } from "@/lib/web-session";
 import { webLoginStep1 } from "@/lib/web-login-api";
 import Turnstile from "@/components/auth/Turnstile";
 import TermsConsent from "@/components/auth/TermsConsent";
+import { resellers } from "@/lib/site-data";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -13,6 +14,7 @@ export default function LoginForm() {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileKey, setTurnstileKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [activationPending, setActivationPending] = useState(false);
   const [loading, setLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
@@ -33,12 +35,17 @@ export default function LoginForm() {
 
     setLoading(true);
     setError(null);
+    setActivationPending(false);
 
     try {
       const data = await webLoginStep1(username.trim(), password, turnstileToken);
 
       if (!data.success) {
-        setError(data.error || "No se pudo iniciar sesión.");
+        if (data.category === "license_pending" || data.error?.startsWith("Cuenta pendiente de aprobación")) {
+          setActivationPending(true);
+        } else {
+          setError(data.error || "No se pudo iniciar sesión.");
+        }
         setTurnstileToken(null);
         setTurnstileKey((key) => key + 1);
         setLoading(false);
@@ -72,6 +79,54 @@ export default function LoginForm() {
       setTurnstileKey((key) => key + 1);
       setLoading(false);
     }
+  }
+
+  if (activationPending) {
+    return (
+      <section className="space-y-5" aria-live="polite">
+        <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
+          <h2 className="text-xl font-bold">Activación de licencia pendiente</h2>
+          <p className="text-muted-foreground mt-2 text-sm leading-6">
+            Tu registro está completo y tu cuenta ya existe. Solo falta activar la licencia con un reseller oficial.
+            No necesitas una activación para el registro y otra para la cuenta.
+          </p>
+        </div>
+
+        <div>
+          <h3 className="font-semibold">Resellers oficiales</h3>
+          <p className="text-muted-foreground mt-1 text-sm">Elige uno para consultar la activación.</p>
+          <div className="mt-3 max-h-[45vh] space-y-3 overflow-y-auto pr-1">
+            {resellers.map((reseller) => (
+              <article key={reseller.name} className="bg-card rounded-xl border p-4">
+                <h4 className="font-semibold">{reseller.name}</h4>
+                <p className="text-muted-foreground mt-1 flex items-center gap-1.5 text-xs">
+                  <MapPin className="size-3.5 shrink-0" />{reseller.region}
+                </p>
+                {reseller.phone && <p className="mt-2 text-xs">WhatsApp: {reseller.phone}</p>}
+                <p className="text-muted-foreground mt-2 text-xs">{reseller.details}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {reseller.links.map((link) => {
+                    const Icon = link.icon === "whatsapp" ? MessageCircle : link.icon === "telegram" ? Send : Globe;
+                    const label = link.icon === "whatsapp" ? "WhatsApp" : link.icon === "telegram" ? "Telegram" : "Sitio web";
+                    return (
+                      <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer"
+                         className="border-border hover:border-primary hover:text-primary inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors">
+                        <Icon className="size-3.5" />{label}<ExternalLink className="size-3" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <Button type="button" variant="outline" className="w-full"
+                onClick={() => setActivationPending(false)}>
+          Volver al inicio de sesión
+        </Button>
+      </section>
+    );
   }
 
   return (

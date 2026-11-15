@@ -3,6 +3,7 @@ import { API_BASE } from "@/lib/web-session";
 export interface WebLoginStep1Result {
   success: boolean;
   error?: string;
+  category?: string;
   requiresTotp?: boolean;
   loginTicket?: string;
   token?: string;
