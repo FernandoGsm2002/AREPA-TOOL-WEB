@@ -44,10 +44,10 @@ export const localeCopy = {
       register: "Registro",
     },
     announcement: {
-      aria: "ArepaTool v3.0.9 Christmas Edition",
-      label: "🎄 3.0.9",
-      text: "ArepaTool Christmas Edition",
-      brands: "Motorola MTK · Infinix SPD / MTK · Samsung",
+      aria: "Xiaomi Sideload FRP Auth",
+      label: "Xiaomi",
+      text: "Xiaomi Sideload FRP Auth",
+      brands: "Mi Assistant Mode",
       action: "Inicia sesión y ve a Descargas",
     },
     hero: {
@@ -168,7 +168,7 @@ export const localeCopy = {
       login: "Log in",
       register: "Sign up",
     },
-    announcement: { aria: "ArepaTool v3.0.9 Christmas Edition", label: "🎄 3.0.9", text: "ArepaTool Christmas Edition", brands: "Motorola MTK · Infinix SPD / MTK · Samsung", action: "Log in to open Downloads" },
+    announcement: { aria: "Xiaomi Sideload FRP Auth", label: "Xiaomi", text: "Xiaomi Sideload FRP Auth", brands: "Mi Assistant Mode", action: "Log in to open Downloads" },
     hero: { kicker: "🎄 CHRISTMAS EDITION", titleAccent: "Season’s new service methods.", description: "A Christmas release with new Motorola and Infinix methods, Samsung improvements and a refreshed interface.", platform: "Windows", license: "Protected license", licenseCta: "View license", downloadCta: "Download latest version", proofLabel: "Core modules", tagline: "More device support for the season", mascotAlt: "Christmas ArepaTool mascot working on a Windows computer" },
     release: { kicker: "CHRISTMAS EDITION", whatsNew: "11/14/2026 · ArepaTool v3.0.9", stable: "current" },
     pricing: { kicker: "ArepaTool licensing", title: "Choose your plan", description: "Our updates are always free. Access every release with an active ArepaTool license.", popular: "Popular", price: "Price /", buyNow: "Buy Now", reseller: "Buy From Resellers", plans: [
@@ -192,7 +192,7 @@ export const localeCopy = {
   "pt-br": {
     language: "Idioma",
     nav: { home: "Início", models: "Modelos compatíveis", updates: "Atualizações", features: "Recursos", tutorials: "Tutoriais", instructions: "Manuais", pricing: "Preços", resellers: "Revendedores", whatsapp: "Grupo do WhatsApp", login: "Entrar", register: "Criar conta" },
-    announcement: { aria: "ArepaTool v3.0.9 Christmas Edition", label: "🎄 3.0.9", text: "ArepaTool Christmas Edition", brands: "Motorola MTK · Infinix SPD / MTK · Samsung", action: "Entre para abrir os Downloads" },
+    announcement: { aria: "Xiaomi Sideload FRP Auth", label: "Xiaomi", text: "Xiaomi Sideload FRP Auth", brands: "Mi Assistant Mode", action: "Entre para abrir os Downloads" },
     hero: { kicker: "🎄 CHRISTMAS EDITION", titleAccent: "Novos métodos para esta temporada.", description: "Uma edição de Natal com novos métodos Motorola e Infinix, melhorias Samsung e uma interface renovada.", platform: "Windows", license: "Licença protegida", licenseCta: "Ver licença", downloadCta: "Baixar versão atual", proofLabel: "Módulos principais", tagline: "Mais suporte a aparelhos nesta temporada", mascotAlt: "Mascote natalino da ArepaTool trabalhando em um computador Windows" },
     release: { kicker: "CHRISTMAS EDITION", whatsNew: "14/11/2026 · ArepaTool v3.0.9", stable: "atual" },
     pricing: { kicker: "Licenciamento ArepaTool", title: "Escolha seu plano", description: "Nossas atualizações são sempre gratuitas. Acesse cada versão com uma licença ArepaTool ativa.", popular: "Popular", price: "Preço /", buyNow: "Comprar agora", reseller: "Comprar com revendedores", plans: [
