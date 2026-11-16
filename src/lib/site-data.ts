@@ -380,9 +380,9 @@ export const resellers: Reseller[] = [
     region: "Colombia · México",
     details: "USDT - BINANCE - COP - MXN",
     role: "reseller",
-    phone: "+57 304 330 316",
+    phone: "+57 304 330 0316",
     links: [
-      { icon: "whatsapp", href: "https://wa.me/57304330316" },
+      { icon: "whatsapp", href: "https://wa.me/573043300316" },
       { icon: "globe", href: "https://www.powerunlock.net" },
       { icon: "telegram", href: "https://t.me/PowerUnlockNew" },
     ],
