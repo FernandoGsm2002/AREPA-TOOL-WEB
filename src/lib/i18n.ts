@@ -73,9 +73,9 @@ export const localeCopy = {
       reseller: "Comprar a distribuidores",
       plans: [
         { eyebrow: "ArepaTool Credits", name: "Crédito de servicio", duration: "1 crédito", price: "1.5", description: "1 crédito = 1.5 USDT para servicios compatibles." },
-        { eyebrow: "ArepaTool Pro", name: "Profesional", duration: "3 meses", price: "12", description: "Acceso profesional para tu taller." },
-        { eyebrow: "ArepaTool Pro", name: "Profesional", duration: "6 meses", price: "19", description: "El plan equilibrado para técnicos activos." },
-        { eyebrow: "ArepaTool Pro", name: "Profesional", duration: "1 año", price: "26", description: "Acceso anual para tu trabajo diario." },
+        { eyebrow: "ArepaTool Pro", name: "Profesional", duration: "3 meses", price: "15", description: "Acceso profesional para tu taller." },
+        { eyebrow: "ArepaTool Pro", name: "Profesional", duration: "6 meses", price: "21", description: "El plan equilibrado para técnicos activos." },
+        { eyebrow: "ArepaTool Pro", name: "Profesional", duration: "1 año", price: "32", description: "Acceso anual para tu trabajo diario." },
       ],
     },
     updates: {
@@ -173,9 +173,9 @@ export const localeCopy = {
     release: { kicker: "NOW AVAILABLE", whatsNew: "11/16/2026 · ArepaTool v3.1.0", stable: "current" },
     pricing: { kicker: "ArepaTool licensing", title: "Choose your plan", description: "Our updates are always free. Access every release with an active ArepaTool license.", popular: "Popular", price: "Price /", buyNow: "Buy Now", reseller: "Buy From Resellers", plans: [
       { eyebrow: "ArepaTool Credits", name: "Service credit", duration: "1 credit", price: "1.5", description: "1 credit = 1.5 USDT for supported services." },
-      { eyebrow: "ArepaTool Pro", name: "Professional", duration: "3 months", price: "12", description: "Professional access for your workshop." },
-      { eyebrow: "ArepaTool Pro", name: "Professional", duration: "6 months", price: "19", description: "The balanced plan for active unlockers." },
-      { eyebrow: "ArepaTool Pro", name: "Professional", duration: "1 year", price: "26", description: "Full-year access for your daily work." },
+      { eyebrow: "ArepaTool Pro", name: "Professional", duration: "3 months", price: "15", description: "Professional access for your workshop." },
+      { eyebrow: "ArepaTool Pro", name: "Professional", duration: "6 months", price: "21", description: "The balanced plan for active unlockers." },
+      { eyebrow: "ArepaTool Pro", name: "Professional", duration: "1 year", price: "32", description: "Full-year access for your daily work." },
     ] },
     updates: { title: "ArepaTool change log.", description: "Keep up with updates; we publish new improvements frequently.", current: "Current version" },
     tutorials: { title: "Official ArepaTool tutorials.", description: "Prepare your setup, choose the right method and run every operation with more context.", videoTitle: "YouTube video player" },
@@ -197,9 +197,9 @@ export const localeCopy = {
     release: { kicker: "JÁ DISPONÍVEL", whatsNew: "16/11/2026 · ArepaTool v3.1.0", stable: "atual" },
     pricing: { kicker: "Licenciamento ArepaTool", title: "Escolha seu plano", description: "Nossas atualizações são sempre gratuitas. Acesse cada versão com uma licença ArepaTool ativa.", popular: "Popular", price: "Preço /", buyNow: "Comprar agora", reseller: "Comprar com revendedores", plans: [
       { eyebrow: "ArepaTool Credits", name: "Crédito de serviço", duration: "1 crédito", price: "1.5", description: "1 crédito = 1.5 USDT para serviços compatíveis." },
-      { eyebrow: "ArepaTool Pro", name: "Profissional", duration: "3 meses", price: "12", description: "Acesso profissional para sua oficina." },
-      { eyebrow: "ArepaTool Pro", name: "Profissional", duration: "6 meses", price: "19", description: "O plano equilibrado para unlockers ativos." },
-      { eyebrow: "ArepaTool Pro", name: "Profissional", duration: "1 ano", price: "26", description: "Acesso anual para o seu trabalho diário." },
+      { eyebrow: "ArepaTool Pro", name: "Profissional", duration: "3 meses", price: "15", description: "Acesso profissional para sua oficina." },
+      { eyebrow: "ArepaTool Pro", name: "Profissional", duration: "6 meses", price: "21", description: "O plano equilibrado para unlockers ativos." },
+      { eyebrow: "ArepaTool Pro", name: "Profissional", duration: "1 ano", price: "32", description: "Acesso anual para o seu trabalho diário." },
     ] },
     updates: { title: "Changelog de alterações da ArepaTool.", description: "Fique por dentro das atualizações; publicamos novidades com frequência.", current: "Versão atual" },
     tutorials: { title: "Tutoriais oficiais da ArepaTool.", description: "Prepare seu equipamento, escolha o método certo e execute cada operação com mais contexto.", videoTitle: "player de vídeo do YouTube" },

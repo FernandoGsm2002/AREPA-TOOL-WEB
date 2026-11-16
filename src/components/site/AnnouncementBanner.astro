@@ -6,10 +6,10 @@ interface Props { locale?: Locale; }
 const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
 const copy = getLocaleCopy(locale);
 const labels = locale === "es"
-  ? { checking: "Consultando…", online: "Servidor activo", offline: "Servidor offline", unavailable: "Estado no disponible", price: "Precio", credits: "créditos", cooldown: "Cooldown", estimate: "≈ 1.6 USD por 1.5 créditos · según tu reseller" }
+  ? { checking: "Consultando…", online: "Servidor activo", offline: "Servidor offline", unavailable: "Estado no disponible", price: "Precio", credits: "créditos", cooldown: "Cooldown", estimate: "1 crédito = 1.5 USDT · según tu reseller" }
   : locale === "pt-br"
-    ? { checking: "Consultando…", online: "Servidor ativo", offline: "Servidor offline", unavailable: "Status indisponível", price: "Preço", credits: "créditos", cooldown: "Cooldown", estimate: "≈ 1.6 USD por 1.5 créditos · conforme seu revendedor" }
-    : { checking: "Checking…", online: "Server online", offline: "Server offline", unavailable: "Status unavailable", price: "Price", credits: "credits", cooldown: "Cooldown", estimate: "≈ 1.6 USD per 1.5 credits · depending on your reseller" };
+    ? { checking: "Consultando…", online: "Servidor ativo", offline: "Servidor offline", unavailable: "Status indisponível", price: "Preço", credits: "créditos", cooldown: "Cooldown", estimate: "1 crédito = 1.5 USDT · conforme seu revendedor" }
+    : { checking: "Checking…", online: "Server online", offline: "Server offline", unavailable: "Status unavailable", price: "Price", credits: "credits", cooldown: "Cooldown", estimate: "1 credit = 1.5 USDT · depending on your reseller" };
 ---
 
 <aside class="xiaomi-announcement" aria-label={copy.announcement.aria} data-xiaomi-announcement>
