@@ -6,7 +6,7 @@ import { modalCopy, type Locale } from "@/lib/i18n";
 export default function UpdateLaunchModal({ locale = "es" }: { locale?: Locale }) {
   const [open, setOpen] = useState(true);
   const copy = modalCopy[locale];
-  const reopenLabel = locale === "es" ? "Novedades 3.0.9" : locale === "pt-br" ? "Novidades 3.0.9" : "What’s new in 3.0.9";
+  const reopenLabel = locale === "es" ? "Novedades 3.1.0" : locale === "pt-br" ? "Novidades 3.1.0" : "What’s new in 3.1.0";
 
   return (
     <>
@@ -22,12 +22,13 @@ export default function UpdateLaunchModal({ locale = "es" }: { locale?: Locale }
               <X className="size-5" />
             </button>
           </DialogClose>
-          <div className="relative overflow-hidden bg-[radial-gradient(circle_at_18%_0%,rgba(187,45,50,.28),transparent_36%),radial-gradient(circle_at_85%_20%,rgba(63,164,106,.24),transparent_32%),linear-gradient(135deg,#07150f,#10271b_55%,#07150f)] px-6 py-7 text-center sm:px-12 sm:py-9">
-            <img src="/pngs/windowslog-christmas.png" alt="" className="pointer-events-none absolute -right-6 -bottom-14 w-36 opacity-60 sm:right-4 sm:-bottom-16 sm:w-48" />
-            <p className="relative text-sm font-black uppercase tracking-[0.28em] text-emerald-200">🎄 AREPATOOL · CHRISTMAS EDITION 🎄</p>
-            <p className="relative mt-3 font-display text-5xl font-black tracking-[-0.08em] text-white sm:text-7xl">v3.0.9</p>
-            <p className="relative mx-auto mt-3 max-w-xl text-sm font-semibold text-emerald-50/85 sm:text-base">{copy.updateHeading}</p>
-          </div>
+          <img
+            src="/pngs/arepatool-v3.1.0-update.png"
+            alt={copy.updateTitle}
+            width={1024}
+            height={1536}
+            className="block h-auto w-full"
+          />
           <div className="flex items-center justify-center gap-2 border-t border-emerald-300/20 bg-[#0c1e14] px-6 py-4 text-center">
             <Rocket className="size-5 shrink-0 text-red-300" />
             <p className="font-display text-sm font-bold tracking-tight text-white sm:text-base">
@@ -41,7 +42,7 @@ export default function UpdateLaunchModal({ locale = "es" }: { locale?: Locale }
                 <h2 className="font-display font-bold text-emerald-200">{copy.updateHeading}</h2>
                 <p>{copy.updateIntro}</p>
                 <ul className="list-disc space-y-2 pl-5 text-slate-200 marker:text-red-300">
-                  {copy.updateBullets.map((bullet) => <li>{bullet}</li>)}
+                  {copy.updateBullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
                 </ul>
                 <p className="font-semibold text-amber-200">{copy.updateImportant}</p>
               </div>
