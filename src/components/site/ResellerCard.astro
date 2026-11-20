@@ -40,7 +40,7 @@ const labelFor = locale === "en"
           const LinkIcon = iconFor[link.icon];
           return (
             <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`${labelFor[link.icon]} de ${reseller.name}`}>
-              <LinkIcon className="size-4" />
+              <LinkIcon width={16} height={16} className="size-4" />
               {link.icon === "globe" ? "foxunlockers.com" : "WhatsApp"}
             </a>
           );
@@ -69,7 +69,7 @@ const labelFor = locale === "en"
           const LinkIcon = iconFor[link.icon];
           return (
             <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`${link.label || labelFor[link.icon]} de ${reseller.name}`} title={`${link.label || labelFor[link.icon]} de ${reseller.name}`} class="border-border/70 bg-background/50 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-primary/70 text-muted-foreground flex size-10 items-center justify-center border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-card">
-              <LinkIcon class="size-4" />
+              <LinkIcon width={16} height={16} class="size-4" />
             </a>
           );
         })}
