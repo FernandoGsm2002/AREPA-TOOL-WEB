@@ -62,13 +62,13 @@ const labelFor = locale === "en"
     </p>
     {reseller.phone && <p class="text-muted-foreground mt-2 text-xs">WhatsApp: <span class="text-foreground font-semibold">{reseller.phone}</span></p>}
     <p class="border-border/55 bg-background/35 text-primary mt-4 truncate border px-3 py-2 text-left text-xs font-semibold" title={reseller.details}>{reseller.details}</p>
-    <div class="mt-4 flex items-center justify-between border-t border-border/55 pt-4">
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/55 pt-4">
       <span class="text-muted-foreground text-[10px] font-bold tracking-[0.1em] uppercase">{copy.footer.contact}</span>
       <div class="flex gap-2">
         {reseller.links.map((link) => {
           const LinkIcon = iconFor[link.icon];
           return (
-            <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`${labelFor[link.icon]} de ${reseller.name}`} title={`${labelFor[link.icon]} de ${reseller.name}`} class="border-border/70 bg-background/50 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-primary/70 text-muted-foreground flex size-10 items-center justify-center border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-card">
+            <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`${link.label || labelFor[link.icon]} de ${reseller.name}`} title={`${link.label || labelFor[link.icon]} de ${reseller.name}`} class="border-border/70 bg-background/50 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-primary/70 text-muted-foreground flex size-10 items-center justify-center border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-card">
               <LinkIcon class="size-4" />
             </a>
           );

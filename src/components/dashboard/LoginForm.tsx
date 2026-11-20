@@ -107,7 +107,7 @@ export default function LoginForm() {
                 <div className="mt-3 flex flex-wrap gap-2">
                   {reseller.links.map((link) => {
                     const Icon = link.icon === "whatsapp" ? MessageCircle : link.icon === "telegram" ? Send : Globe;
-                    const label = link.icon === "whatsapp" ? "WhatsApp" : link.icon === "telegram" ? "Telegram" : "Sitio web";
+                    const label = link.label || (link.icon === "whatsapp" ? "WhatsApp" : link.icon === "telegram" ? "Telegram" : "Sitio web");
                     return (
                       <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer"
                          className="border-border hover:border-primary hover:text-primary inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors">

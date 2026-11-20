@@ -377,7 +377,7 @@ export interface Reseller {
   role: "distributor" | "reseller";
   owner?: boolean;
   phone?: string;
-  links: { icon: "whatsapp" | "telegram" | "globe"; href: string }[];
+  links: { icon: "whatsapp" | "telegram" | "globe"; href: string; label?: string }[];
 }
 
 export const resellers: Reseller[] = [
@@ -403,6 +403,20 @@ export const resellers: Reseller[] = [
     links: [
       { icon: "whatsapp", href: "https://chat.whatsapp.com/ItqFr6uwlrOEvkXZQLiYaj" },
       { icon: "telegram", href: "https://t.me/ctrone21" },
+    ],
+  },
+  {
+    name: "PK Unlocker",
+    logo: "/pngs/pk-unlocker.jpg",
+    region: "Worldwide",
+    details: "pkgsmhub.com · @pkgsm0 · @pkunlocker",
+    role: "reseller",
+    phone: "+92 301 0096186",
+    links: [
+      { icon: "globe", href: "https://www.pkgsmhub.com" },
+      { icon: "telegram", href: "https://t.me/pkgsm0", label: "Telegram @pkgsm0" },
+      { icon: "telegram", href: "https://t.me/pkunlocker", label: "Telegram @pkunlocker" },
+      { icon: "whatsapp", href: "https://wa.me/923010096186" },
     ],
   },
   {
