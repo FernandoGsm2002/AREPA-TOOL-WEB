@@ -18,7 +18,7 @@ type Tab = "users" | "rentals" | "credit-prices" | "task" | "mtk" | "meta-mdm" |
 const tabs: { id: Tab; label: string; icon: typeof Users }[] = [
   { id: "users", label: "Usuarios", icon: Users }, { id: "task", label: "Task IDs", icon: Search },
   { id: "rentals", label: "Licencias de alquiler", icon: KeyRound },
-  { id: "credit-prices", label: "Cuentas por saldo · Tarifas", icon: KeyRound },
+  { id: "credit-prices", label: "Créditos · Recargas y tarifas", icon: KeyRound },
   { id: "mtk", label: "MTK · Historial", icon: AlertTriangle },
   { id: "meta-mdm", label: "MDM META · Diagnósticos", icon: ShieldAlert },
   { id: "payjoy-newsec", label: "PayJoy NewSec · Diagnósticos", icon: ShieldAlert },

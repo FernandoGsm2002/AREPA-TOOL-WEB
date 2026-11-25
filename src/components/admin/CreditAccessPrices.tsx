@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { webApiFetch } from "@/lib/web-session";
 import CreditAccountActivation from "./CreditAccountActivation";
+import DesktopResetSettings from "./DesktopResetSettings";
 
-type Price = {
-  operation_code: string;
-  label: string;
-  credit_cost: number | string | null;
-  enabled: boolean;
-};
 type Charge = {
   request_id: string;
   created_at: string;
@@ -23,54 +17,20 @@ type Charge = {
 };
 
 export default function CreditAccessPrices() {
-  const [prices, setPrices] = useState<Price[]>([]);
-  const [drafts, setDrafts] = useState<Record<string, string>>({});
-  const [enabledDrafts, setEnabledDrafts] = useState<Record<string, boolean>>({});
-  const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [charges, setCharges] = useState<Charge[]>([]);
   const [selected, setSelected] = useState<Charge | null>(null);
 
   const load = async () => {
     try {
-      const result = await webApiFetch("/api/admin/credit-access/prices", {});
-      if (!result?.success) throw new Error(result?.error || "No se pudieron cargar las tarifas.");
-      const rows = result.prices as Price[];
-      setPrices(rows);
-      setDrafts(Object.fromEntries(rows.map(row => [row.operation_code, row.credit_cost == null ? "" : String(row.credit_cost)])));
-      setEnabledDrafts(Object.fromEntries(rows.map(row => [row.operation_code, row.enabled])));
       const attempts = await webApiFetch("/api/admin/credit-access/charges", {});
       if (attempts?.success) setCharges(attempts.charges as Charge[]);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudieron cargar las tarifas.");
+      setMessage(error instanceof Error ? error.message : "No se pudo cargar el historial.");
     }
   };
 
   useEffect(() => { void load(); }, []);
-
-  const save = async (row: Price) => {
-    const raw = drafts[row.operation_code]?.trim() || "";
-    const cost = Number(raw);
-    const enabled = enabledDrafts[row.operation_code] ?? false;
-    if (raw && (!Number.isFinite(cost) || cost <= 0 || cost > 10000 || !/^\d+(?:\.\d{1,2})?$/.test(raw))) {
-      setMessage("Usa un precio mayor que cero, con hasta dos decimales.");
-      return;
-    }
-    if (enabled && !raw) { setMessage("Define el precio antes de activar esta operación."); return; }
-    setBusy(row.operation_code); setMessage("");
-    try {
-      const result = await webApiFetch("/api/admin/credit-access/prices/save", {
-        operationCode: row.operation_code,
-        creditCost: raw ? cost : null,
-        enabled,
-      });
-      if (!result?.success) throw new Error(result?.error || "No se pudo guardar el precio.");
-      setPrices(current => current.map(item => item.operation_code === row.operation_code ? result.price as Price : item));
-      setMessage(`Precio de ${row.label} guardado.`);
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo guardar el precio.");
-    } finally { setBusy(null); }
-  };
 
   const openCharge = async (requestId: string) => {
     try {
@@ -84,30 +44,12 @@ export default function CreditAccessPrices() {
 
   return <section className="max-w-4xl space-y-5">
     <CreditAccountActivation />
-    <div className="border-border/70 bg-card rounded-xl border p-5">
-      <h2 className="font-display text-lg font-semibold">Tarifas para cuentas por saldo</h2>
-      <p className="text-muted-foreground mt-1 text-sm">Define el precio y activa cada operación cuando quieras ofrecerla a cuentas por saldo.</p>
-    </div>
+    <DesktopResetSettings />
     {message && <p className="border-border bg-muted/40 rounded-lg border p-3 text-sm">{message}</p>}
-    <div className="border-border/70 bg-card divide-border/60 divide-y rounded-xl border">
-      {prices.filter(row => row.operation_code !== "xiaomi_auth_server3").map(row => <div key={row.operation_code} className="flex flex-wrap items-end justify-between gap-4 p-4">
-        <div className="min-w-48 flex-1"><p className="font-medium">{row.label}</p><p className="text-muted-foreground mt-1 font-mono text-xs">{row.operation_code}</p></div>
-        <label className="grid gap-1 text-xs font-medium">Créditos sin licencia
-          <Input type="number" min="0.01" max="10000" step="0.01" placeholder="Por definir" value={drafts[row.operation_code] ?? ""}
-            onChange={event => setDrafts(current => ({ ...current, [row.operation_code]: event.target.value }))} className="w-36" />
-        </label>
-        <label className="flex items-center gap-2 text-xs font-medium"><input type="checkbox"
-          checked={enabledDrafts[row.operation_code] ?? false}
-          onChange={event => setEnabledDrafts(current => ({ ...current, [row.operation_code]: event.target.checked }))}/>
-          Activa</label>
-        <Button variant="outline" disabled={busy !== null} onClick={() => save(row)}>{busy === row.operation_code ? "Guardando…" : "Guardar"}</Button>
-      </div>)}
-      {prices.length === 0 && <p className="text-muted-foreground p-5 text-sm">No hay tarifas configuradas.</p>}
-    </div>
     <div className="border-border/70 bg-card rounded-xl border p-5">
       <div className="flex items-center justify-between gap-3">
-        <div><h3 className="font-semibold">Intentos cobrados</h3>
-          <p className="text-muted-foreground text-sm">Últimos 100 intentos. Abre uno para revisar el resultado y el log.</p></div>
+        <div><h3 className="font-semibold">Historial de operaciones por saldo</h3>
+          <p className="text-muted-foreground text-sm">Histórico de los últimos 100 intentos anteriores al retiro del ingreso por saldo. Abre uno para consultar su resultado y log.</p></div>
         <Button variant="outline" onClick={() => void load()}>Actualizar</Button>
       </div>
       <div className="mt-4 max-h-80 overflow-auto">
