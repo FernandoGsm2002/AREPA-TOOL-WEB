@@ -1,0 +1,159 @@
+---
+const playProtectIntent = "intent://com.google.android.gsf.login.LoginActivity/#Intent;scheme=android-app;end";
+const apiBase = import.meta.env.PUBLIC_ARPKNXGUARD_API_URL || "https://api2.arepatool.com/api/arpknxguard";
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080b12" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <title>ARPKNXGUARD · ArepaTool</title>
+    <link rel="icon" type="image/x-icon" href="/pngs/logo.ico" />
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 50% 0, #12251b 0, #080b12 42%); color: #e5e7eb; font-family: system-ui, sans-serif; display: grid; place-items: center; padding: 24px; }
+      main { width: min(100%, 480px); }
+      .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+      .brand img { width: 42px; height: 42px; object-fit: contain; }
+      .eyebrow { color: #22c55e; font-size: 12px; letter-spacing: .16em; }
+      h1 { margin: 6px 0 0; font-size: 28px; letter-spacing: .04em; }
+      .intro { color: #94a3b8; line-height: 1.55; margin: 0 0 26px; }
+      .step { border: 1px solid #253044; border-radius: 18px; padding: 20px; margin: 14px 0; background: rgb(16 22 34 / 94%); }
+      .number { color: #64748b; font-size: 12px; font-weight: 700; }
+      h2 { font-size: 19px; margin: 8px 0; }
+      p { color: #94a3b8; font-size: 14px; line-height: 1.5; }
+      .button { display: block; width: 100%; border: 0; border-radius: 12px; padding: 15px; text-align: center; text-decoration: none; font: inherit; font-weight: 750; color: #07120c; background: #22c55e; margin-top: 16px; cursor: pointer; }
+      .button:disabled { opacity: .55; cursor: wait; }
+      .secondary { color: #e5e7eb; background: #253044; }
+      label { display: block; color: #cbd5e1; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+      input { width: 100%; border: 1px solid #334155; border-radius: 12px; background: #080b12; color: #e5e7eb; padding: 15px; font: 700 25px/1 monospace; letter-spacing: .35em; text-align: center; outline: none; }
+      input:focus { border-color: #22c55e; box-shadow: 0 0 0 3px rgb(34 197 94 / 15%); }
+      .status { min-height: 21px; margin: 12px 0 0; }
+      .error { color: #fca5a5; }
+      .success { color: #86efac; }
+      .note { border-left: 3px solid #22c55e; padding-left: 12px; margin-top: 22px; }
+      strong { color: #e5e7eb; }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <main data-api-base={apiBase}>
+      <div class="brand">
+        <img src="/pngs/arepatool-logo-mark.png" alt="" />
+        <div>
+          <div class="eyebrow">AREPATOOL · SECURE DELIVERY</div>
+          <h1>ARPKNXGUARD</h1>
+        </div>
+      </div>
+      <p class="intro">Conecta el Samsung bloqueado a Wi-Fi. Necesitarás el código de seis dígitos generado por ArepaTool o por el panel.</p>
+
+      <section class="step">
+        <div class="number">PASO 1</div>
+        <h2>Disable Play Protect</h2>
+        <p>Abre Google Play y desactiva <strong>Buscar amenazas de seguridad</strong> manualmente. Después vuelve a esta página.</p>
+        <a class="button secondary" href={playProtectIntent}>Abrir Play Protect</a>
+      </section>
+
+      <section class="step">
+        <div class="number">PASO 2</div>
+        <h2>Descargar ARPKNXGUARD</h2>
+        <p>Valida el código para obtener un enlace temporal. <strong>Descargar la APK no consume el código.</strong></p>
+        <form id="authorize-form">
+          <label for="ticket-code">Código de seis dígitos</label>
+          <input id="ticket-code" name="code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" required placeholder="000000" />
+          <button class="button" id="authorize-button" type="submit">Autorizar descarga</button>
+        </form>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <div id="download-section" hidden>
+          <a class="button" id="download-link" href="#" download="ARPKNXGUARD.apk">Descargar ARPKNXGUARD.apk</a>
+          <p id="download-expiry"></p>
+        </div>
+      </section>
+
+      <section class="step">
+        <div class="number">PASO 3</div>
+        <h2>Run ArpKnxGuard Exploit</h2>
+        <p>Instala y abre la APK, introduce el mismo código y pulsa <strong>Run ArpKnxGuard Exploit</strong>. El código muere en ese momento y no podrá reutilizarse.</p>
+      </section>
+
+      <p class="note">No cierres la aplicación ni apagues el teléfono durante el proceso. Al completarse correctamente, ARPKNXGUARD se elimina y solo permanece la protección anti-relock.</p>
+    </main>
+
+    <script>
+      const main = document.querySelector("main");
+      const form = document.getElementById("authorize-form");
+      const input = document.getElementById("ticket-code");
+      const button = document.getElementById("authorize-button");
+      const status = document.getElementById("status");
+      const downloadSection = document.getElementById("download-section");
+      const downloadLink = document.getElementById("download-link");
+      const downloadExpiry = document.getElementById("download-expiry");
+      const apiBase = main.dataset.apiBase.replace(/\/$/, "");
+      const apiOrigin = new URL(apiBase).origin;
+      const messages = {
+        CODE_INVALID: "El código no es válido. Revísalo e inténtalo de nuevo.",
+        CODE_EXPIRED: "El código expiró. Genera uno nuevo en ArepaTool.",
+        CODE_ALREADY_USED: "Este código ya fue utilizado y no puede reutilizarse.",
+        CODE_REVOKED: "Este código fue revocado. Solicita uno nuevo.",
+        DOWNLOAD_EXPIRED: "El enlace expiró. Vuelve a validar el código."
+      };
+
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/\D/g, "").slice(0, 6);
+        status.textContent = "";
+        status.className = "status";
+      });
+
+      form.addEventListener("submit", async event => {
+        event.preventDefault();
+        const code = input.value;
+        if (!/^[0-9]{6}$/.test(code)) {
+          status.textContent = messages.CODE_INVALID;
+          status.className = "status error";
+          return;
+        }
+        button.disabled = true;
+        downloadSection.hidden = true;
+        downloadLink.removeAttribute("href");
+        status.textContent = "Validando código…";
+        status.className = "status";
+        try {
+          const response = await fetch(`${apiBase}/download-authorize`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({ code }),
+            cache: "no-store",
+            credentials: "omit",
+            referrerPolicy: "no-referrer"
+          });
+          const result = await response.json().catch(() => null);
+          if (!response.ok || result?.success !== true) {
+            const error = new Error(result?.error || `HTTP_${response.status}`);
+            error.userMessage = messages[error.message] || "No se pudo autorizar la descarga. Inténtalo nuevamente.";
+            throw error;
+          }
+          if (typeof result.downloadPath !== "string" || !/^\/api\/arpknxguard\/download\/[A-Za-z0-9_-]{43}$/.test(result.downloadPath)
+            || !Number.isFinite(result.expiresAt)) {
+            throw new Error("INVALID_RESPONSE");
+          }
+          const downloadUrl = new URL(result.downloadPath, apiOrigin);
+          if (downloadUrl.origin !== apiOrigin) throw new Error("INVALID_RESPONSE");
+          downloadLink.href = downloadUrl.href;
+          downloadExpiry.textContent = `Enlace disponible hasta: ${new Date(result.expiresAt).toLocaleTimeString()}. Si expira, valida nuevamente el mismo código.`;
+          downloadSection.hidden = false;
+          status.textContent = "Código autorizado. Ya puedes descargar la APK.";
+          status.className = "status success";
+        } catch (error) {
+          status.textContent = error.userMessage || "No hay conexión con el servidor. Revisa Internet e inténtalo de nuevo.";
+          status.className = "status error";
+        } finally {
+          button.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

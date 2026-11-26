@@ -45,6 +45,20 @@
   ],
   "headers": [
     {
+      "source": "/kg/(.*).apk",
+      "headers": [
+        { "key": "Content-Type", "value": "application/vnd.android.package-archive" },
+        { "key": "Content-Disposition", "value": "attachment; filename=\"ArepaKnoxGuard-test.apk\"" }
+      ]
+    },
+    {
+      "source": "/kg2/(.*).apk",
+      "headers": [
+        { "key": "Content-Type", "value": "application/vnd.android.package-archive" },
+        { "key": "Content-Disposition", "value": "attachment; filename=\"ArepaKnoxGuard2-test.apk\"" }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {

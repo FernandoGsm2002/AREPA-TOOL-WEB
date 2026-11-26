@@ -1,0 +1,61 @@
+---
+const playProtectIntent = "intent://com.google.android.gsf.login.LoginActivity/#Intent;scheme=android-app;end";
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080b12" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>ArepaKnoxGuard · ArepaTool</title>
+    <link rel="icon" type="image/x-icon" href="/pngs/logo.ico" />
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: #080b12; color: #e5e7eb; font-family: system-ui, sans-serif; display: grid; place-items: center; padding: 24px; }
+      main { width: min(100%, 460px); }
+      .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+      .brand img { width: 38px; height: 38px; object-fit: contain; }
+      .eyebrow { color: #22c55e; font-size: 12px; letter-spacing: .16em; }
+      h1 { margin: 6px 0 0; font-size: 28px; }
+      .intro { color: #94a3b8; line-height: 1.55; margin: 0 0 26px; }
+      .step { border: 1px solid #253044; border-radius: 18px; padding: 20px; margin: 14px 0; background: #101622; }
+      .number { color: #64748b; font-size: 12px; font-weight: 700; }
+      h2 { font-size: 19px; margin: 8px 0; }
+      p { color: #94a3b8; font-size: 14px; line-height: 1.5; }
+      a.button { display: block; border-radius: 12px; padding: 15px; text-align: center; text-decoration: none; font-weight: 750; color: #07120c; background: #22c55e; margin-top: 16px; }
+      a.secondary { color: #e5e7eb; background: #253044; }
+      .note { border-left: 3px solid #22c55e; padding-left: 12px; margin-top: 22px; }
+      strong { color: #e5e7eb; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="brand">
+        <img src="/pngs/arepatool-logo-mark.png" alt="" />
+        <div>
+          <div class="eyebrow">AREPATOOL · PRUEBA LOCAL</div>
+          <h1>ArepaKnoxGuard</h1>
+        </div>
+      </div>
+      <p class="intro">Conecta el Samsung a Wi-Fi y sigue los pasos. La APK ejecuta localmente ArepaSu y KnoxGuard, sin ADB ni VPS.</p>
+
+      <section class="step">
+        <div class="number">PASO 1</div>
+        <h2>Desactivar Play Protect</h2>
+        <p>El botón abre Google. Desactiva <strong>Buscar amenazas de seguridad</strong> manualmente y vuelve a esta página.</p>
+        <a class="button secondary" href={playProtectIntent}>Abrir Play Protect</a>
+      </section>
+
+      <section class="step">
+        <div class="number">PASO 2</div>
+        <h2>KG Active Step</h2>
+        <p>Descarga e instala ArepaKnoxGuard <strong>0.30-local</strong>. Permite instalar aplicaciones desde este origen. Después abre la APK y pulsa <strong>KG Active Step</strong>. La aplicación activará ADB para el diagnóstico, verificará la APK persistente y el registro de arranque, y reiniciará automáticamente el runtime Android cuando sea necesario.</p>
+        <a class="button" href="/kg/ArepaKnoxGuard-test.apk" download>Descargar KG Active Step</a>
+      </section>
+
+      <p class="note">La aplicación mostrará cada etapa y enviará el diagnóstico técnico automáticamente al receptor de pruebas de esta red. Si aparece <strong>REBOOT_REQUIRED</strong>, la aplicación reiniciará automáticamente el runtime Android una vez para cargar el guardián, sin apagar el kernel; no configures el teléfono antes de ese reinicio. Después comprueba que KnoxGuard sigue activo y que el guardián está en ejecución.</p>
+    </main>
+  </body>
+</html>
