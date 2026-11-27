@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Check, Copy, ExternalLink, KeyRound, LoaderCircle, ShieldCheck } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Check, Copy, ExternalLink, KeyRound, LoaderCircle, ShieldCheck, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { webApiFetch } from "@/lib/web-session";
 
@@ -15,6 +15,37 @@ export default function ArpKnxGuardAdmin() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
   const [copied, setCopied] = useState("");
+  const [creditCost, setCreditCost] = useState("0");
+  const [costBusy, setCostBusy] = useState(false);
+  const [costNotice, setCostNotice] = useState("");
+
+  useEffect(() => {
+    webApiFetch("/api/arpknxguard/admin/settings/get")
+      .then(result => {
+        if (result?.success && typeof result.creditCost === "number") {
+          setCreditCost(String(result.creditCost));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const saveCost = async () => {
+    if (costBusy) return;
+    setCostBusy(true);
+    setCostNotice("");
+    try {
+      const result = await webApiFetch("/api/arpknxguard/admin/settings/save", {
+        creditCost: Number(creditCost),
+      });
+      if (!result?.success) throw new Error(result?.error || "No se pudo guardar el costo.");
+      setCreditCost(String(result.creditCost));
+      setCostNotice("Costo actualizado.");
+    } catch (error) {
+      setCostNotice(error instanceof Error ? error.message : "No se pudo guardar el costo.");
+    } finally {
+      setCostBusy(false);
+    }
+  };
 
   const generate = async () => {
     if (busy) return;
@@ -55,6 +86,26 @@ export default function ArpKnxGuardAdmin() {
         {busy ? "Generando…" : ticket ? "Generar otro código" : "Generar código"}
       </Button>
       {notice && <p className="text-destructive mt-4 text-sm" role="alert">{notice}</p>}
+    </div>
+
+    <div className="border-border/70 bg-card rounded-xl border p-6">
+      <div className="flex items-center gap-3">
+        <div className="bg-primary/10 text-primary flex size-11 items-center justify-center rounded-xl"><Wallet className="size-5" /></div>
+        <div><h2 className="font-display text-lg font-semibold">Costo en créditos</h2>
+          <p className="text-muted-foreground mt-1 text-sm">Créditos que se descuentan al generar un código desde ArepaTool. Usa 0 para dejarlo sin costo.</p></div>
+      </div>
+      <div className="mt-6 flex items-center gap-3">
+        <input
+          type="number" min="0" max="1000" step="0.5" value={creditCost}
+          onChange={event => setCreditCost(event.target.value)}
+          className="border-border bg-background w-32 rounded-lg border px-3 py-2 font-mono text-sm"
+          aria-label="Costo en créditos" />
+        <Button onClick={() => void saveCost()} disabled={costBusy}>
+          {costBusy ? <LoaderCircle className="animate-spin" /> : null}
+          {costBusy ? "Guardando…" : "Guardar costo"}
+        </Button>
+      </div>
+      {costNotice && <p className="text-muted-foreground mt-4 text-sm" role="status">{costNotice}</p>}
     </div>
 
     {ticket && <div className="border-primary/30 bg-primary/5 rounded-xl border p-6">
