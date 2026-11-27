@@ -1,0 +1,7 @@
+---
+import ResellerPage from '../components/reseller/ResellerPage.astro';
+import ResellerWorkspace from '../components/reseller/ResellerWorkspace';
+---
+<ResellerPage title="Panel de distribuidores">
+  <ResellerWorkspace client:only="react" />
+</ResellerPage>

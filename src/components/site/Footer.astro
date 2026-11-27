@@ -39,6 +39,7 @@ const marketing = marketingCopy[locale];
         <h2>{copy.footer.account}</h2>
         <nav class="site-footer-links" aria-label="Enlaces de cuenta">
           <a href="/login">{copy.footer.login}</a>
+          <a href="/loginreseller">{locale === 'en' ? 'Reseller access' : locale === 'pt-br' ? 'Acesso de revendedores' : 'Acceso de resellers'}</a>
           <a href="/register">{copy.footer.signup}</a>
           <a href="/recover">{copy.footer.forgot}</a>
         </nav>

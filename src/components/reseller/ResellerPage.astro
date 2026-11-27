@@ -1,0 +1,24 @@
+---
+import '@fontsource-variable/geist';
+import '../../styles/reseller.css';
+interface Props { title: string }
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="same-origin" />
+    <title>{title} · ArepaTool</title>
+    <link rel="icon" href="/pngs/logo.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet" />
+  </head>
+  <body class="reseller-page">
+    <slot />
+    <noscript><p style="padding:2rem">Activa JavaScript para acceder al panel. / Enable JavaScript to access the workspace. / Ative o JavaScript para acessar o painel.</p></noscript>
+  </body>
+</html>

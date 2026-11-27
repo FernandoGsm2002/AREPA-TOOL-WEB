@@ -16,6 +16,7 @@ const resellerList = resellers.filter((reseller) => reseller.role === "reseller"
   <div class="section-heading">
     <h2>{copy.resellers.title}</h2>
     <p>{copy.resellers.description}</p>
+    <p><a href="/loginreseller" class="text-primary underline underline-offset-4">{locale === 'en' ? 'Already a reseller? Access your portal' : locale === 'pt-br' ? 'Já é revendedor? Acesse seu portal' : '¿Ya eres reseller? Ingresa a tu portal'}</a></p>
   </div>
 
   <div class="resellers-official">

@@ -16,6 +16,15 @@
         ],
         "createdAt": "2026-11-27T19:03:30.188Z",
         "reason": "Agent review: these 8 pre-existing base heading/brand declarations were retained in bb4f204. DESIGN.md covers the public marketing override, not wholesale replacement of shared legacy/account styles."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "avenir next",
+        "files": [
+          "src/components/site/Footer.astro"
+        ],
+        "createdAt": "2026-11-27T20:34:00.561Z",
+        "reason": "Existing footer brand typography retained under DESIGN.md legacy branding allowance; this task only adds a reseller login link."
       }
     ]
   }

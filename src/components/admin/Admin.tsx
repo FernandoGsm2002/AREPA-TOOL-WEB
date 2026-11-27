@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Activity, AlertTriangle, Box, Users, KeyRound, RefreshCw, LogOut, Search, ShieldAlert, ShieldCheck, Upload, Copy, Check, Eye, EyeOff, ExternalLink, Pencil, Trash2, X, LoaderCircle, HardDriveUpload, Megaphone, Smartphone, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,11 +13,12 @@ import AppleServiceAdmin from "./AppleServiceAdmin";
 import CreditAccessPrices from "./CreditAccessPrices";
 import MetaMdmDiagnostics from "./MetaMdmDiagnostics";
 import DesktopAnnouncementAdmin from "./DesktopAnnouncementAdmin";
+import ResellerPortalAdmin, { ResellerTopUp } from "./ResellerPortalAdmin";
 import ArpKnxGuardAdmin from "./ArpKnxGuardAdmin";
 import CorePackageAdmin, { type CoreRelease } from "./CorePackageAdmin";
 import { readApkMetadata } from "@/lib/apk-metadata";
 
-type Tab = "users" | "rentals" | "credit-prices" | "task" | "mtk" | "meta-mdm" | "payjoy-newsec" | "xiaomi" | "apple" | "arpknxguard" | "apks" | "roms" | "samsung-root" | "version" | "announcements" | "resellers" | "partners" | "security";
+type Tab = "users" | "rentals" | "credit-prices" | "task" | "mtk" | "meta-mdm" | "payjoy-newsec" | "xiaomi" | "apple" | "arpknxguard" | "apks" | "roms" | "samsung-root" | "version" | "announcements" | "resellers" | "reseller-portal" | "partners" | "security";
 const tabs: { id: Tab; label: string; icon: typeof Users }[] = [
   { id: "users", label: "Usuarios", icon: Users }, { id: "task", label: "Task IDs", icon: Search },
   { id: "rentals", label: "Licencias de alquiler", icon: KeyRound },
@@ -31,6 +32,7 @@ const tabs: { id: Tab; label: string; icon: typeof Users }[] = [
   { id: "apks", label: "APK Catalog", icon: Box }, { id: "roms", label: "ROMs", icon: HardDriveUpload }, { id: "samsung-root", label: "Samsung Root", icon: Smartphone }, { id: "version", label: "Actualización", icon: Upload },
   { id: "announcements", label: "Anuncio V3", icon: Megaphone },
   { id: "resellers", label: "Revendedores", icon: KeyRound },
+  { id: "reseller-portal", label: "Portal de revendedores", icon: Megaphone },
   { id: "partners", label: "API Partners", icon: Activity },
   { id: "security", label: "Seguridad", icon: ShieldCheck },
 ];
@@ -71,6 +73,9 @@ export default function Admin() {
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [tab, setTab] = useState<Tab>("users");
   const [appleReloadKey, setAppleReloadKey] = useState(0);
+  const [portalReloadKey, setPortalReloadKey] = useState(0);
+  const [portalVisited, setPortalVisited] = useState(false);
+  const [topUpReseller, setTopUpReseller] = useState<{ id: string; name: string; username: string } | null>(null);
   const [allowed, setAllowed] = useState<boolean | null>(null);
   const [needsLogin, setNeedsLogin] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
@@ -92,6 +97,8 @@ export default function Admin() {
   const [resellerDraft, setResellerDraft] = useState<ResellerDraft | null>(null); const [resellerBusy, setResellerBusy] = useState(false);
   const [partnerDraft, setPartnerDraft] = useState<PartnerDraft | null>(null); const [partnerBusy, setPartnerBusy] = useState(false); const [partnerCredentials, setPartnerCredentials] = useState<any>(null);
   const [rentalCount, setRentalCount] = useState("1"); const [rentalPrefix, setRentalPrefix] = useState("arepatoolrent"); const [rentalBusy, setRentalBusy] = useState(false); const [rentalAccounts, setRentalAccounts] = useState<Array<{username:string;email:string;password:string}>>([]);
+
+  const onPortalSessionExpired = useCallback(() => { setNeedsLogin(true); setAllowed(null); setTopUpReseller(null); }, []);
 
   const call = async (path: string, body: Record<string, unknown> = {}) => {
     const data = await webApiFetch(`/api/admin/${path}`, body);
@@ -130,6 +137,7 @@ export default function Admin() {
     } finally { setServer3Busy(false); }
   };
   const loadTab = async (next: Tab = tab) => {
+    if (next === "reseller-portal") { setPortalVisited(true); setPortalReloadKey(value => value + 1); }
     if (next === "apple") setAppleReloadKey(value => value + 1);
     if (next === "users") await loadUsers();
     if (next === "apks") { const d = await call("apks/list"); if (d) { setApks(d.apks); const icons = await Promise.all((d.apks as any[]).filter(a=>a.icon_file?.startsWith("catalog/icons/")).map(async a => { try { const result = await webApiFetch("/api/admin/apks/icon-url", { key: a.icon_file }); return [a.icon_file, result?.url || ""] as const; } catch { return [a.icon_file, ""] as const; } })); setApkIconUrls(Object.fromEntries(icons)); } }
@@ -201,7 +209,7 @@ export default function Admin() {
     finally { setApkBusy(false); }
   };
   const deleteApk = async (apk: any) => { if (!confirm(`¿Eliminar “${apk.name}” del catálogo y de R2? Esta acción no se puede deshacer.`)) return; const done = await call("apks/delete", { id: apk.id }); if (done) { await loadTab("apks"); setNotice("APK eliminado del catálogo y R2."); } };
-  const credit = async (id:string) => { const amount=prompt("Monto a recargar:"); if (!amount) return; await call("resellers/add-balance", {resellerId:id,amount:Number(amount),description:"Recarga administrativa"}); loadTab("resellers"); };
+  const credit = (id: string) => { const reseller = resellers.find(item => item.id === id); if (reseller) setTopUpReseller({ id: reseller.id, name: reseller.name || "", username: reseller.username }); };
   const createReseller = () => setResellerDraft({ username:"", name:"", email:"", status:"active", price3m:"3.99", price6m:"5.99", price12m:"7.99", creditPrice:"1.50", rentalPrice:"", telegramChatId:"" });
   const editReseller = (r:any) => setResellerDraft({ id:r.id, username:r.username||"", name:r.name||"", email:r.email||"", status:r.status||"active", price3m:String(r.service_price_3m??""), price6m:String(r.service_price_6m??""), price12m:String(r.service_price??""), creditPrice:String(r.credit_price??""), rentalPrice:String(r.rental_price??""), telegramChatId:r.telegram_chat_id||"" });
   const saveReseller = async (e:React.FormEvent) => { e.preventDefault(); if (!resellerDraft || resellerBusy) return; const creating=!resellerDraft.id; setResellerBusy(true); setNotice(""); try { const saved=await call("resellers/save", resellerDraft); if (!saved) return; setResellerDraft(null); await loadTab("resellers"); setNotice(creating?"Revendedor creado. Su API key ya está disponible en su tarjeta.":"Precios y datos del revendedor guardados. Dhru los aplicará en la siguiente consulta."); } finally { setResellerBusy(false); } };
@@ -349,6 +357,8 @@ export default function Admin() {
         <div className="border-border/60 bg-card mt-6 overflow-x-auto rounded-xl border"><div className="border-border/60 border-b p-4"><h3 className="font-display font-semibold">Últimas operaciones partner</h3><p className="text-muted-foreground mt-1 text-xs">No se almacenan seriales en claro.</p></div><table className="w-full text-left text-sm"><thead className="bg-muted/50 text-xs"><tr><th className="p-3">Partner</th><th className="p-3">Operación</th><th className="p-3">Equipo</th><th className="p-3">Resultado</th><th className="p-3">Fecha</th></tr></thead><tbody>{partnerLogs.map(log=><tr key={log.id} className="border-border/50 border-t"><td className="p-3">{log.partner_name}</td><td className="p-3">{log.operation}</td><td className="p-3">{log.sku||"—"}<span className="text-muted-foreground block text-xs">Android {log.android_version||"—"}</span></td><td className="p-3">{log.success===true?"Correcta":log.success===false?`Error ${log.status_code||""}`:"En proceso"}</td><td className="p-3 text-xs">{date(log.created_at)}</td></tr>)}{partnerLogs.length===0&&<tr><td className="text-muted-foreground p-6 text-center" colSpan={5}>Aún no hay operaciones.</td></tr>}</tbody></table></div>
       </section>}
       {tab==="announcements" && <DesktopAnnouncementAdmin/>}
+      <div hidden={tab!=="reseller-portal"}>{portalVisited && <ResellerPortalAdmin reloadKey={portalReloadKey} onSessionExpired={onPortalSessionExpired}/>}</div>
+      <ResellerTopUp reseller={topUpReseller} onClose={()=>setTopUpReseller(null)} onComplete={()=>loadTab("resellers")} onSessionExpired={onPortalSessionExpired}/>
       {tab==="security" && <TotpSecurity/>}
     </main></div>;
 }
