@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-27T19:01:29.638Z",
+  "generatedAt": "2026-11-27T19:51:05.278Z",
   "title": "Design System: ArepaTool",
   "extensions": {
     "colorMeta": {
@@ -138,6 +138,141 @@
           "oklch(84% 0.0051 248.1)",
           "oklch(95% 0.0051 248.1)"
         ]
+      },
+      "app-line": {
+        "role": "neutral",
+        "displayName": "app line",
+        "canonical": "#303539",
+        "tonalRamp": [
+          "oklch(15% 0.0099 242.0)",
+          "oklch(26% 0.0099 242.0)",
+          "oklch(38% 0.0099 242.0)",
+          "oklch(49% 0.0099 242.0)",
+          "oklch(61% 0.0099 242.0)",
+          "oklch(72% 0.0099 242.0)",
+          "oklch(84% 0.0099 242.0)",
+          "oklch(95% 0.0099 242.0)"
+        ]
+      },
+      "input-line": {
+        "role": "neutral",
+        "displayName": "input line",
+        "canonical": "#454c52",
+        "tonalRamp": [
+          "oklch(15% 0.0135 243.9)",
+          "oklch(26% 0.0135 243.9)",
+          "oklch(38% 0.0135 243.9)",
+          "oklch(49% 0.0135 243.9)",
+          "oklch(61% 0.0135 243.9)",
+          "oklch(72% 0.0135 243.9)",
+          "oklch(84% 0.0135 243.9)",
+          "oklch(95% 0.0135 243.9)"
+        ]
+      },
+      "input-surface": {
+        "role": "neutral",
+        "displayName": "input surface",
+        "canonical": "#0e1012",
+        "tonalRamp": [
+          "oklch(15% 0.0053 248.1)",
+          "oklch(26% 0.0053 248.1)",
+          "oklch(38% 0.0053 248.1)",
+          "oklch(49% 0.0053 248.1)",
+          "oklch(61% 0.0053 248.1)",
+          "oklch(72% 0.0053 248.1)",
+          "oklch(84% 0.0053 248.1)",
+          "oklch(95% 0.0053 248.1)"
+        ]
+      },
+      "sidebar-surface": {
+        "role": "neutral",
+        "displayName": "sidebar surface",
+        "canonical": "#101214",
+        "tonalRamp": [
+          "oklch(15% 0.0052 248.1)",
+          "oklch(26% 0.0052 248.1)",
+          "oklch(38% 0.0052 248.1)",
+          "oklch(49% 0.0052 248.1)",
+          "oklch(61% 0.0052 248.1)",
+          "oklch(72% 0.0052 248.1)",
+          "oklch(84% 0.0052 248.1)",
+          "oklch(95% 0.0052 248.1)"
+        ]
+      },
+      "modal-surface": {
+        "role": "neutral",
+        "displayName": "modal surface",
+        "canonical": "#15181b",
+        "tonalRamp": [
+          "oklch(15% 0.0076 248.2)",
+          "oklch(26% 0.0076 248.2)",
+          "oklch(38% 0.0076 248.2)",
+          "oklch(49% 0.0076 248.2)",
+          "oklch(61% 0.0076 248.2)",
+          "oklch(72% 0.0076 248.2)",
+          "oklch(84% 0.0076 248.2)",
+          "oklch(95% 0.0076 248.2)"
+        ]
+      },
+      "success": {
+        "role": "semantic",
+        "displayName": "success",
+        "canonical": "#8ed5ab",
+        "tonalRamp": [
+          "oklch(15% 0.0931 157.6)",
+          "oklch(26% 0.0931 157.6)",
+          "oklch(38% 0.0931 157.6)",
+          "oklch(49% 0.0931 157.6)",
+          "oklch(61% 0.0931 157.6)",
+          "oklch(72% 0.0931 157.6)",
+          "oklch(84% 0.0931 157.6)",
+          "oklch(95% 0.0931 157.6)"
+        ]
+      },
+      "warning": {
+        "role": "semantic",
+        "displayName": "warning",
+        "canonical": "#eec983",
+        "tonalRamp": [
+          "oklch(15% 0.0976 82.7)",
+          "oklch(26% 0.0976 82.7)",
+          "oklch(38% 0.0976 82.7)",
+          "oklch(49% 0.0976 82.7)",
+          "oklch(61% 0.0976 82.7)",
+          "oklch(72% 0.0976 82.7)",
+          "oklch(84% 0.0976 82.7)",
+          "oklch(95% 0.0976 82.7)"
+        ]
+      },
+      "danger": {
+        "role": "semantic",
+        "displayName": "danger",
+        "canonical": "#ff9292",
+        "tonalRamp": [
+          "oklch(15% 0.1317 20.5)",
+          "oklch(26% 0.1317 20.5)",
+          "oklch(38% 0.1317 20.5)",
+          "oklch(49% 0.1317 20.5)",
+          "oklch(61% 0.1317 20.5)",
+          "oklch(72% 0.1317 20.5)",
+          "oklch(84% 0.1317 20.5)",
+          "oklch(95% 0.1317 20.5)"
+        ]
+      },
+      "info": {
+        "role": "semantic",
+        "displayName": "info",
+        "canonical": "#9ec4ef",
+        "tonalRamp": [
+          "oklch(15% 0.0735 251.8)",
+          "oklch(26% 0.0735 251.8)",
+          "oklch(38% 0.0735 251.8)",
+          "oklch(49% 0.0735 251.8)",
+          "oklch(61% 0.0735 251.8)",
+          "oklch(72% 0.0735 251.8)",
+          "oklch(84% 0.0735 251.8)",
+          "oklch(95% 0.0735 251.8)"
+        ]
       }
     },
     "typographyMeta": {
@@ -156,6 +291,22 @@
       "label": {
         "displayName": "Label",
         "purpose": "Navigation and supporting controls"
+      },
+      "app-heading": {
+        "displayName": "App Heading",
+        "purpose": "User workspace titles; smaller on mobile"
+      },
+      "admin-heading": {
+        "displayName": "Admin Heading",
+        "purpose": "Admin and reseller workspace titles"
+      },
+      "table": {
+        "displayName": "Table",
+        "purpose": "Compact operational table copy with tabular numerals"
+      },
+      "technical-metadata": {
+        "displayName": "Technical Metadata",
+        "purpose": "Normative JetBrains Mono role for identifiers, hostnames, filenames, code/logs and technical values; loaded via Google Fonts in src/layouts/Layout.astro with display=swap, not a legacy exception"
       }
     },
     "shadows": [
@@ -163,6 +314,11 @@
         "name": "product-window",
         "value": "0 26px 70px -22px #000",
         "purpose": "Depth for the illustrative desktop preview"
+      },
+      {
+        "name": "app-modal",
+        "value": "0 20px 70px rgb(0 0 0 / 40%)",
+        "purpose": "Operational dialogs over a 70% black overlay without blur"
       }
     ],
     "motion": [
@@ -175,6 +331,11 @@
         "name": "control-state",
         "value": ".2s",
         "purpose": "Button and disclosure state changes"
+      },
+      {
+        "name": "app-control-state",
+        "value": "160–180ms",
+        "purpose": "Operational controls; suppressed for reduced motion"
       }
     ],
     "breakpoints": [
@@ -189,12 +350,59 @@
       {
         "name": "navigation",
         "value": "1100px"
+      },
+      {
+        "name": "user-sidebar-compact",
+        "value": "1279px"
+      },
+      {
+        "name": "admin-sidebar-compact",
+        "value": "1199px"
+      },
+      {
+        "name": "public-auth-compact",
+        "value": "1099px"
+      },
+      {
+        "name": "admin-navigation-sheet",
+        "value": "1023px"
+      },
+      {
+        "name": "user-navigation-grid",
+        "value": "899px"
+      },
+      {
+        "name": "app-mobile-controls",
+        "value": "639px"
+      },
+      {
+        "name": "user-mobile-content",
+        "value": "599px"
+      },
+      {
+        "name": "admin-public-mobile",
+        "value": "539px"
+      },
+      {
+        "name": "narrow-catalog",
+        "value": "359px"
       }
     ],
     "reference": {
       "url": "https://cerberustoolpro.com/#pricing",
       "seed": "0659cdb2",
       "authority": "Pinned user reference overrides exploratory form seed"
+    },
+    "focus": {
+      "app": "2px solid #f6b94c; offset 3px",
+      "public-interior": "2px solid #f6b94c; offset 4px"
+    },
+    "containment": {
+      "app-modal": "max-height: calc(100dvh - 2rem); overflow-y: auto",
+      "auth-terms-mobile": "max-height: calc(100dvh - 1rem) at 479px",
+      "user-history-table": "min-width: 56rem; local keyboard-scrollable overflow",
+      "admin-table-mobile": "min-width: 38rem at 1023px; local overflow",
+      "admin-mobile-sidebar": "width: min(21rem, 90vw)"
     }
   },
   "components": [
@@ -228,11 +436,42 @@
       "description": "Contrasting license plan",
       "html": "<article><span>Annual access</span><h3>1 year</h3><p>Updates while your license is active</p><strong>32 <small>USDT</small></strong></article>",
       "css": "article{font-family:Geist,sans-serif;background:#eeefeb;color:#151719;border-radius:16px;padding:32px}span,p{color:#4b5358;font-size:14px}h3{font-size:36px;font-weight:500}strong{font-size:64px;font-weight:500}small{font-size:14px}"
+    },
+    {
+      "name": "App text field",
+      "kind": "input",
+      "refersTo": "app-input",
+      "description": "Visible label, dark input, gold focus; existing validation and behavior preserved",
+      "html": "<label class=\"ds-field\">Field<input class=\"ds-input\" type=\"text\"></label>",
+      "css": ".ds-field{display:grid;gap:.55rem;font:500 .875rem/1.5 Geist,sans-serif;color:#f5f5f2}.ds-input{box-sizing:border-box;min-width:0;min-height:2.75rem;padding:.65rem .85rem;border:1px solid #454c52;border-radius:9px;background:#0e1012;color:#f5f5f2;font:.875rem/1.4 Geist,sans-serif}.ds-input:focus-visible{border-color:#f6b94c;outline:2px solid #f6b94c;outline-offset:3px}.ds-input:disabled{opacity:.6;cursor:not-allowed}@media(max-width:639px){.ds-input{font-size:1rem}}"
+    },
+    {
+      "name": "Operational table",
+      "kind": "table",
+      "refersTo": "admin-table-cell",
+      "description": "Illustrative preview; preserve real headers, records and actions",
+      "html": "<div class=\"ds-table-scroll\" tabindex=\"0\" role=\"region\" aria-label=\"Table preview\"><table class=\"ds-table\"><thead><tr><th scope=\"col\">ID</th><th scope=\"col\">Status</th></tr></thead><tbody><tr><td class=\"ds-technical\">example-id</td><td>—</td></tr></tbody></table></div>",
+      "css": ".ds-table-scroll{max-width:100%;overflow:auto;border:1px solid #303539;border-radius:14px;background:#121416}.ds-table-scroll:focus-visible{outline:2px solid #f6b94c;outline-offset:3px}.ds-table{width:100%;border-collapse:collapse;color:#f5f5f2;font:.8rem/1.55 Geist,sans-serif;font-variant-numeric:tabular-nums}.ds-table th{padding:.9rem 1.1rem;text-align:left;background:#1b1e21;color:#bfc6cc;font-size:.72rem;font-weight:500}.ds-table td{padding:1rem 1.1rem;border-top:1px solid #2a2e32}.ds-table tbody tr:hover{background:#181c20}.ds-technical{font-family:\"JetBrains Mono\",monospace;overflow-wrap:anywhere}"
+    },
+    {
+      "name": "Admin sidebar",
+      "kind": "nav",
+      "refersTo": "admin-sidebar",
+      "description": "Existing current-page gold treatment; preserve order and role visibility",
+      "html": "<nav class=\"ds-sidebar\" aria-label=\"Navigation preview\"><a class=\"ds-nav-item\" href=\"#current\" aria-current=\"page\">Current page</a><a class=\"ds-nav-item\" href=\"#next\">Next page</a></nav>",
+      "css": ".ds-sidebar{display:grid;gap:.2rem;background:#101214;padding:1.5rem .85rem .85rem;border-right:1px solid #303539}.ds-nav-item{display:flex;align-items:center;min-height:2.7rem;padding:.6rem .7rem;border-radius:8px;color:#aeb3b8;font:.8rem/1.4 Geist,sans-serif;text-decoration:none}.ds-nav-item:hover{background:#202428;color:white}.ds-nav-item[aria-current=\"page\"]{background:#30271a;color:#ffe0a5}.ds-nav-item:focus-visible{outline:2px solid #f6b94c;outline-offset:3px}"
+    },
+    {
+      "name": "Technical file tag",
+      "kind": "chip",
+      "description": "Existing file-tag shape with the normative technical-metadata font",
+      "html": "<span class=\"ds-file-tag\">example.zip</span>",
+      "css": ".ds-file-tag{display:inline-flex;max-width:100%;padding:.25rem .625rem;border:1px solid #2a2d30;border-radius:6px;color:#aeb3b8;font:.75rem/1.5 \"JetBrains Mono\",monospace;overflow-wrap:anywhere}"
     }
   ],
   "narrative": {
     "northStar": "A clear workspace for the next repair",
-    "overview": "The public site presents a practical desktop product with generous spacing, calm near-black surfaces and a warm gold identity. The user's pinned reference, Cerberus Tool Pro, informs capsule navigation, the paired hero and contrasting annual card. ArepaTool content, colors and assets remain authoritative.",
+    "overview": "**Creative North Star: \"A clear workspace for the next repair\"**\n\nThe public site presents a practical desktop product with generous spacing, calm near-black surfaces and a warm gold identity. The user's pinned reference, Cerberus Tool Pro, informs capsule navigation, the paired hero and contrasting annual card. ArepaTool content, colors and assets remain authoritative.\n\nDirection contract: TYPE is Geist with strong scale and moderate weights; MATERIAL is existing logo/mascot artwork and an illustrative workspace; GROUND is black with restrained gold; FORM follows the pinned reference, taking precedence over exploratory seed 0659cdb2; the quality target is its clarity, spacing and pricing hierarchy rather than its brand treatment.\n\nThe approved landing composition and its guidance below remain intact. The same pinned world extends across secondary public pages, authentication, user accounts, administration and reseller tools. Operational surfaces use denser layouts without changing copy or workflows. Source evidence: `src/styles/application.css`, `auth.css`, `dashboard.css`, `admin.css` and `public-interior.css`.",
     "keyCharacteristics": [
       "Large, restrained sans-serif headings.",
       "Tonal dark surfaces with gold actions.",
@@ -242,7 +481,7 @@
     "rules": [
       {
         "name": "Scope",
-        "body": "Apply this system to public pages through the explicit marketing layout flag. Private account and admin interfaces retain their own styles.",
+        "body": "Apply the shared black/gold identity to the entire website: landing and public interior pages, authentication, user, admin and reseller interfaces. Keep the marketing layout flag and app/interior selectors as styling boundaries; they do not exclude private screens from the refresh or change access permissions.",
         "section": "Colors"
       },
       {
@@ -254,6 +493,16 @@
         "name": "Clear Controls",
         "body": "At widths up to 799px, WhatsApp and the update reopening button live in document flow below the footer so they cannot cover content. Desktop retains corner shortcuts.",
         "section": "Layout"
+      },
+      {
+        "name": "Containment",
+        "body": "Keep wide tables and logs inside their own keyboard-scrollable regions, never the page viewport. Preserve columns, record values and actions; wrap long identifiers and translated labels rather than dropping data. Component height tokens describe current heights/minima; allow labels to wrap and retain larger controls in auth/mobile contexts.",
+        "section": "Layout"
+      },
+      {
+        "name": "Preservation",
+        "body": "This is a visual refresh only. Original copy in every locale, authentication/authorization, routes, API behavior, prices and pricing logic, balances, licensing and reseller operations remain unchanged.",
+        "section": "Components"
       },
       {
         "name": "Access",

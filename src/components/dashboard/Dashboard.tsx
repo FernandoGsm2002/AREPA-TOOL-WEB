@@ -10,6 +10,7 @@ import Downloads from "./views/Downloads";
 import Tutorials from "./views/Tutorials";
 import SamsungRootFiles from "./views/SamsungRootFiles";
 import WelcomeConfetti from "./WelcomeConfetti";
+import "@/styles/dashboard.css";
 
 type Tab = "dns" | "operations" | "account" | "downloads" | "root-files" | "tutorials";
 
@@ -42,7 +43,7 @@ export default function Dashboard() {
 
   if (user === undefined) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="arepa-dashboard dashboard-loading">
         <Loader2 className="text-muted-foreground size-6 animate-spin" />
       </div>
     );
@@ -50,83 +51,66 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    <div className="bg-background flex min-h-screen">
+    <div className="arepa-dashboard">
       <WelcomeConfetti username={user.username} />
-      <aside className="border-border/70 bg-sidebar/95 sticky top-0 hidden h-screen w-72 shrink-0 flex-col overflow-hidden border-r py-5 pr-4 pl-6 shadow-[12px_0_35px_rgba(0,0,0,0.12)] sm:flex">
-        <a href="/" className="font-display text-primary mx-1 mb-6 block text-2xl font-black tracking-[-0.06em]">ArepaTool</a>
+      <aside className="dashboard-sidebar">
+        <a href="/" className="dashboard-brand">
+          <img src="/pngs/arepatool-logo-mark.webp" alt="" width="36" height="36" />
+          ArepaTool
+        </a>
 
-        <div className="border-border/60 mx-1 border-t pt-5">
-          <p className="text-muted-foreground mb-2 px-2 text-[0.65rem] font-semibold tracking-[0.16em] uppercase">Panel de control</p>
-        </div>
-        <nav className="flex flex-1 flex-col gap-1.5 px-1">
+        <nav className="dashboard-navigation" aria-label="Panel de control">
           {tabs.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               type="button"
               onClick={() => setTab(id)}
-              className={`group flex items-center gap-2.5 rounded-lg border px-2.5 py-2.5 text-left text-sm font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
-                tab === id
-                  ? "border-primary/55 bg-primary text-primary-foreground shadow-lg shadow-primary/25"
-                  : "border-transparent text-muted-foreground hover:border-border/80 hover:bg-accent hover:text-foreground"
-              }`}
+              aria-current={tab === id ? "page" : undefined}
+              aria-controls="dashboard-content"
+              className="dashboard-nav-item"
             >
-              <span className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${tab === id ? "bg-white/15" : "bg-muted/80 group-hover:bg-background"}`}>
-                <Icon className="size-4" />
-              </span>
-              <span className="flex-1">{label}</span>
-              {tab === id && <ChevronRight className="size-4 opacity-80" />}
+              <Icon className="size-[18px] shrink-0" aria-hidden="true" />
+              <span>{label}</span>
+              {tab === id && <ChevronRight className="dashboard-nav-chevron size-4" aria-hidden="true" />}
             </button>
           ))}
           {user.status === "admin" && (
-            <a href="/admin" className="text-muted-foreground hover:bg-accent hover:text-foreground group mt-4 flex items-center gap-2.5 rounded-lg border border-transparent px-2.5 py-2.5 text-sm font-medium transition-all duration-200 hover:border-border/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
-              <span className="bg-muted/80 group-hover:bg-background flex size-8 shrink-0 items-center justify-center rounded-lg"><Settings2 className="size-4" /></span>
+            <a href="/admin" className="dashboard-nav-item dashboard-admin-link">
+              <Settings2 className="size-[18px] shrink-0" aria-hidden="true" />
               Administración
             </a>
           )}
         </nav>
 
-        <div className="border-border/70 bg-muted/35 mx-1 mt-5 rounded-xl border p-3 shadow-lg shadow-black/5">
-          <div className="mb-3 flex items-center gap-2.5">
-            <span className="bg-primary/15 text-primary flex size-9 shrink-0 items-center justify-center rounded-full">
-              <ShieldCheck className="size-[18px]" />
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">{user.username}</p>
-              <p className="text-muted-foreground truncate text-xs">Sesión protegida</p>
-            </div>
-          </div>
-          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground w-full justify-start" onClick={signOut}>
-            <LogOut className="size-4" />
-            Cerrar sesión
-          </Button>
-        </div>
       </aside>
 
-      <div className="border-border/60 bg-sidebar/95 fixed inset-x-0 bottom-0 z-40 flex gap-1 overflow-x-auto border-t p-2 shadow-[0_-10px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl sm:hidden">
-        {tabs.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setTab(id)}
-            aria-label={label}
-            className={`flex shrink-0 flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-[0.65rem] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
-              tab === id ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent hover:text-foreground"
-            }`}
-          >
-            <Icon className="size-5" />
-            {label}
-          </button>
-        ))}
-      </div>
+      <div className="dashboard-workspace">
+        <header className="dashboard-topbar">
+          <p className="dashboard-topbar-title">Panel de control</p>
+          <div className="dashboard-session">
+            <span className="dashboard-session-icon">
+              <ShieldCheck className="size-[18px]" aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <p className="dashboard-username text-sm font-medium">{user.username}</p>
+              <p className="text-muted-foreground text-xs">Sesión protegida</p>
+            </div>
+          </div>
+          <Button variant="ghost" size="sm" className="dashboard-signout" onClick={signOut}>
+            <LogOut className="size-4" aria-hidden="true" />
+            Cerrar sesión
+          </Button>
+        </header>
 
-      <main className="flex-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(64,112,255,0.07),transparent_36rem)] p-6 pb-24 sm:p-10 sm:pb-10">
-        {tab === "dns" && <CreateDns />}
-        {tab === "operations" && <MyOperations />}
-        {tab === "account" && <AccountLicense />}
-        {tab === "downloads" && <Downloads />}
-        {tab === "root-files" && <SamsungRootFiles />}
-        {tab === "tutorials" && <Tutorials />}
-      </main>
+        <main id="dashboard-content" className="dashboard-content" aria-label={tabs.find((item) => item.id === tab)?.label}>
+          {tab === "dns" && <CreateDns />}
+          {tab === "operations" && <MyOperations />}
+          {tab === "account" && <AccountLicense />}
+          {tab === "downloads" && <Downloads />}
+          {tab === "root-files" && <SamsungRootFiles />}
+          {tab === "tutorials" && <Tutorials />}
+        </main>
+      </div>
       <InstallerAccessModal />
     </div>
   );

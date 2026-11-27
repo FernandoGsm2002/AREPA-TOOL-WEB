@@ -40,55 +40,55 @@ export default function MyOperations() {
   }, []);
 
   return (
-    <div>
-      <h2 className="font-display text-2xl font-bold">Mis Operaciones</h2>
-      <p className="text-muted-foreground mt-1 text-sm">Historial de lo que hiciste desde la app y el panel web.</p>
+    <div className="dashboard-view dashboard-operations">
+      <h2 className="dashboard-heading">Mis Operaciones</h2>
+      <p className="dashboard-description">Historial de lo que hiciste desde la app y el panel web.</p>
 
-      {error && <p className="text-destructive mt-4 text-sm">{error}</p>}
+      {error && <p className="dashboard-error text-destructive text-sm" role="alert">{error}</p>}
 
       {!items && !error && (
-        <div className="text-muted-foreground mt-8 flex items-center gap-2 text-sm">
+        <div className="dashboard-state text-muted-foreground flex items-center gap-2 text-sm" role="status">
           <Loader2 className="size-4 animate-spin" />
           Cargando…
         </div>
       )}
 
       {items && items.length === 0 && (
-        <div className="border-border/60 text-muted-foreground mt-6 flex flex-col items-center gap-2 rounded-lg border border-dashed p-10 text-center text-sm">
+        <div className="dashboard-empty text-muted-foreground flex flex-col items-center gap-3 text-center text-sm">
           <History className="size-6" />
           Todavía no tienes operaciones registradas.
         </div>
       )}
 
       {items && items.length > 0 && (
-        <div className="border-border/60 mt-6 overflow-x-auto rounded-lg border">
-          <table className="w-full text-sm">
+        <div className="dashboard-table-scroll" tabIndex={0} role="region" aria-label="Mis Operaciones">
+          <table className="dashboard-operations-table w-full text-sm">
             <thead>
               <tr className="border-border/60 bg-muted/40 border-b text-left">
-                <th className="px-3 py-2 font-medium">Task ID</th>
-                <th className="px-3 py-2 font-medium">Módulo</th>
-                <th className="px-3 py-2 font-medium">Operación</th>
-                <th className="px-3 py-2 font-medium">Detalle</th>
-                <th className="px-3 py-2 font-medium">Estado</th>
-                <th className="px-3 py-2 font-medium">Fecha</th>
+                <th scope="col">Task ID</th>
+                <th scope="col">Módulo</th>
+                <th scope="col">Operación</th>
+                <th scope="col">Detalle</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Fecha</th>
               </tr>
             </thead>
             <tbody>
               {items.map((item) => (
                 <tr key={item.task_id} className="border-border/40 border-b last:border-0">
-                  <td className="px-3 py-2 font-mono text-xs">{item.task_id}</td>
+                  <td className="dashboard-task-id font-mono text-xs">{item.task_id}</td>
                   <td className="px-3 py-2">{item.module}</td>
                   <td className="px-3 py-2">{item.operation}</td>
-                  <td className="text-muted-foreground max-w-64 truncate px-3 py-2 text-xs" title={detailSummary(item.details) ?? undefined}>
+                  <td className="dashboard-operation-detail text-muted-foreground text-xs" title={detailSummary(item.details) ?? undefined}>
                     {detailSummary(item.details) ?? "—"}
                   </td>
                   <td className="px-3 py-2">
                     {item.success ? (
-                      <span className="inline-flex items-center gap-1 text-emerald-500">
+                      <span className="dashboard-operation-status inline-flex items-center gap-1 text-emerald-400">
                         <CheckCircle2 className="size-4" /> OK
                       </span>
                     ) : (
-                      <span className="text-destructive inline-flex items-center gap-1" title={item.error_message ?? undefined}>
+                      <span className="dashboard-operation-status text-destructive inline-flex items-center gap-1" title={item.error_message ?? undefined}>
                         <XCircle className="size-4" /> Error
                       </span>
                     )}

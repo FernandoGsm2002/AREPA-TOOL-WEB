@@ -1,4 +1,6 @@
 ---
+import "@fontsource-variable/geist";
+import "@/styles/public-interior.css";
 const playProtectIntent = "intent://com.google.android.gsf.login.LoginActivity/#Intent;scheme=android-app;end";
 const apiBase = import.meta.env.PUBLIC_ARPKNXGUARD_API_URL || "https://api2.arepatool.com/api/arpknxguard";
 ---
@@ -8,153 +10,13 @@ const apiBase = import.meta.env.PUBLIC_ARPKNXGUARD_API_URL || "https://api2.arep
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#070a0d" />
+    <meta name="theme-color" content="#090a0b" />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="referrer" content="no-referrer" />
     <title>ARPKNXGUARD · ArepaTool</title>
     <link rel="icon" type="image/png" href="/arpknxguard/icon.png" />
-    <style>
-      :root { color-scheme: dark; }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        min-height: 100svh;
-        display: grid;
-        place-items: center;
-        padding: 28px 18px;
-        overflow-x: hidden;
-        color: #f3f7f4;
-        background:
-          radial-gradient(circle at 50% -10%, rgb(34 197 94 / 14%), transparent 42%),
-          radial-gradient(circle at 100% 100%, rgb(34 197 94 / 6%), transparent 34%),
-          #070a0d;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        opacity: .18;
-        background-image: linear-gradient(rgb(255 255 255 / 3%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 3%) 1px, transparent 1px);
-        background-size: 42px 42px;
-        mask-image: linear-gradient(to bottom, black, transparent 75%);
-      }
-      main { position: relative; width: min(100%, 440px); }
-      .card {
-        position: relative;
-        overflow: hidden;
-        padding: 30px 24px 24px;
-        border: 1px solid rgb(255 255 255 / 9%);
-        border-radius: 28px;
-        background: linear-gradient(155deg, rgb(20 27 29 / 97%), rgb(10 14 17 / 98%));
-        box-shadow: 0 28px 80px rgb(0 0 0 / 48%), inset 0 1px 0 rgb(255 255 255 / 4%);
-      }
-      .card::before {
-        content: "";
-        position: absolute;
-        width: 190px;
-        height: 190px;
-        top: -110px;
-        right: -70px;
-        border-radius: 50%;
-        background: #22c55e;
-        filter: blur(85px);
-        opacity: .13;
-        pointer-events: none;
-      }
-      .hero { position: relative; text-align: center; margin-bottom: 28px; }
-      .logo-wrap {
-        width: 92px;
-        height: 92px;
-        display: grid;
-        place-items: center;
-        margin: 0 auto 16px;
-        border: 1px solid rgb(74 222 128 / 22%);
-        border-radius: 26px;
-        background: linear-gradient(145deg, rgb(34 197 94 / 12%), rgb(255 255 255 / 2%));
-        box-shadow: 0 12px 35px rgb(0 0 0 / 30%);
-      }
-      .logo { display: block; width: 78px; height: 78px; object-fit: contain; }
-      .eyebrow { display: flex; align-items: center; justify-content: center; gap: 7px; color: #75e69c; font-size: 10px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
-      .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 12px #4ade80; }
-      h1 { margin: 9px 0 6px; font-size: clamp(25px, 7vw, 31px); line-height: 1.1; letter-spacing: .025em; }
-      .subtitle { margin: 0; color: #8d9a94; font-size: 14px; }
-      .steps { display: grid; gap: 0; }
-      .step { position: relative; display: grid; grid-template-columns: 34px 1fr; column-gap: 13px; padding: 0 0 24px; }
-      .step:last-child { padding-bottom: 0; }
-      .step:not(:last-child)::after { content: ""; position: absolute; left: 16px; top: 36px; bottom: 2px; width: 1px; background: linear-gradient(#2c3b33, rgb(44 59 51 / 15%)); }
-      .number { position: relative; z-index: 1; width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid #31433a; border-radius: 11px; color: #86efac; background: #142019; font-size: 12px; font-weight: 800; }
-      .content { min-width: 0; padding-top: 1px; }
-      .title-row { min-height: 32px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-      h2 { margin: 0; color: #ecf2ee; font-size: 15px; line-height: 1.35; font-weight: 700; }
-      .hint { margin: 5px 0 0; color: #829087; font-size: 12px; line-height: 1.45; }
-      .tag { flex: none; padding: 4px 7px; border: 1px solid rgb(255 255 255 / 7%); border-radius: 6px; color: #6f7f75; font-size: 9px; font-weight: 800; letter-spacing: .08em; }
-      .button {
-        width: 100%;
-        min-height: 47px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 9px;
-        border: 0;
-        border-radius: 13px;
-        padding: 13px 16px;
-        color: #07160d;
-        background: linear-gradient(135deg, #4ade80, #22c55e);
-        box-shadow: 0 8px 24px rgb(34 197 94 / 14%);
-        font: inherit;
-        font-size: 13px;
-        font-weight: 800;
-        text-decoration: none;
-        cursor: pointer;
-        transition: transform .18s ease, filter .18s ease;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .button:active { transform: scale(.985); }
-      .button:disabled { opacity: .58; cursor: wait; }
-      .button svg { width: 17px; height: 17px; flex: none; }
-      .secondary { margin-top: 12px; border: 1px solid rgb(255 255 255 / 9%); color: #d6dfd9; background: rgb(255 255 255 / 4%); box-shadow: none; }
-      .code-form { margin-top: 13px; }
-      .input-wrap { position: relative; }
-      .input-wrap svg { position: absolute; left: 15px; top: 50%; width: 18px; height: 18px; color: #64746a; transform: translateY(-50%); pointer-events: none; }
-      input {
-        width: 100%;
-        height: 56px;
-        border: 1px solid #2d3b33;
-        border-radius: 14px;
-        outline: none;
-        padding: 0 16px 0 44px;
-        color: #f0fdf4;
-        background: rgb(3 7 5 / 55%);
-        caret-color: #4ade80;
-        font: 750 23px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-        letter-spacing: .35em;
-        text-align: center;
-        transition: border-color .18s, box-shadow .18s;
-      }
-      input::placeholder { color: #405047; }
-      input:focus { border-color: #34d374; box-shadow: 0 0 0 3px rgb(52 211 116 / 10%); }
-      .code-form .button { margin-top: 10px; }
-      .status { min-height: 0; margin: 0; color: #9eaaa2; font-size: 12px; line-height: 1.45; }
-      .status:not(:empty) { margin-top: 10px; }
-      .error { color: #fda4a4; }
-      .success { color: #86efac; }
-      .download-section { margin-top: 12px; }
-      .download-section .button { animation: reveal .25s ease-out; }
-      .download-expiry { margin: 8px 0 0; color: #718078; font-size: 11px; text-align: center; }
-      .run-label { display: inline-flex; align-items: center; gap: 7px; margin-top: 11px; padding: 8px 11px; border: 1px solid rgb(74 222 128 / 12%); border-radius: 9px; color: #a6b4aa; background: rgb(74 222 128 / 4%); font-size: 11px; font-weight: 650; }
-      .run-label svg { width: 13px; height: 13px; color: #4ade80; }
-      .footer { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 20px 0 0; color: #59685f; font-size: 11px; text-align: center; }
-      .footer svg { width: 13px; height: 13px; flex: none; }
-      [hidden] { display: none !important; }
-      @keyframes reveal { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-      @media (max-width: 380px) { .card { padding: 25px 19px 21px; border-radius: 24px; } .logo-wrap { width: 82px; height: 82px; } .logo { width: 70px; height: 70px; } }
-      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
-    </style>
   </head>
-  <body>
+  <body class="public-kg public-kg--access">
     <main data-api-base={apiBase}>
       <section class="card" aria-labelledby="page-title">
         <header class="hero">

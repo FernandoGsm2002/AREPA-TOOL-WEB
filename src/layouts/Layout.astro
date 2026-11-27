@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/marketing.css';
+import '../styles/application.css';
 import { marketingCopy } from '@/lib/marketing-copy';
 import { localeFromPath, type Locale } from "@/lib/i18n";
 
@@ -45,13 +46,13 @@ const { title, description, locale = localeFromPath(Astro.url.pathname), marketi
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap"
       rel="stylesheet"
     />
 
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   </head>
-  <body class:list={["site-body bg-background text-foreground font-sans antialiased", marketing ? "marketing-site" : "christmas-site"]}>
+  <body class:list={["site-body bg-background text-foreground font-sans antialiased", marketing ? "marketing-site" : "app-site"]}>
     {marketing && <a class="skip-link" href="#main-content">{marketingCopy[locale].skip}</a>}
     <slot />
   </body>

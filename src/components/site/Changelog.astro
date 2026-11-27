@@ -28,40 +28,26 @@ const lineClass: Record<string, string> = {
       <div class="changelog-meta"><strong>{liveLabel}</strong><span>2026 · 3.1.0</span></div>
     </div>
     <div class="changelog-window">
-      <div class="flex items-center gap-2 border-b border-white/10 bg-[#111821] px-4 py-2.5">
-      <div class="flex gap-1.5">
+      <div class="changelog-toolbar">
+      <div class="changelog-dots" aria-hidden="true">
         <span class="size-3 rounded-full bg-red-500/70"></span>
         <span class="size-3 rounded-full bg-amber-500/70"></span>
         <span class="size-3 rounded-full bg-emerald-500/70"></span>
       </div>
-      <span class="ml-2 font-mono text-xs text-slate-400">arepatool@3.1.0 ~ {changelogFile}</span>
-      <span class="ml-auto text-[0.62rem] font-bold tracking-[0.1em] text-[#a27a23] uppercase">
+      <span class="changelog-filename">arepatool@3.1.0 ~ {changelogFile}</span>
+      <span class="changelog-current">
         {copy.updates.current}
       </span>
       </div>
-      <pre class="max-h-[28rem] overflow-y-auto bg-[#0b1016] p-6 font-mono text-[0.82rem] leading-relaxed text-slate-200 whitespace-pre-wrap">{
+      <pre class="changelog-body" tabindex="0" aria-label={copy.updates.title}>{
       changelog.map((line) =>
         line.type === "blank" ? (
           <span class={lineClass.blank} />
         ) : (
-          <span class={`block ${lineClass[line.type]}`}>{line.text}</span>
+          <span data-line-type={line.type} class={`block ${lineClass[line.type]}`}>{line.text}</span>
         ),
       )
       }</pre>
     </div>
   </div>
 </section>
-
-<style>
-  .changelog-window {
-    overflow: hidden;
-    border: 1px solid rgb(255 255 255 / 13%);
-    border-radius: .65rem;
-    background: #0b1016;
-    box-shadow: 0 22px 50px rgb(0 0 0 / 28%);
-  }
-
-  .changelog-window pre {
-    margin: 0;
-  }
-</style>

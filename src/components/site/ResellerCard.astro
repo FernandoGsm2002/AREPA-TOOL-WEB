@@ -49,26 +49,30 @@ const labelFor = locale === "en"
     </div>
   </article>
 ) : (
-  <article class="group reseller-card border-border/70 relative overflow-hidden border p-5 transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-primary/60 sm:p-6">
-    <span class="bg-primary/12 text-primary absolute top-4 right-4 inline-flex items-center gap-1 rounded-full border border-primary/20 px-2 py-1 text-[10px] font-bold tracking-[0.08em] uppercase" title={verifiedLabel}>
+  <article class="reseller-card">
+    <span class="reseller-card__badge" title={verifiedLabel}>
       <ShieldCheck class="size-3.5" />{verifiedLabel}
     </span>
-    <div class="border-primary/20 bg-background/45 mx-auto flex size-20 items-center justify-center overflow-hidden border p-1.5">
-      <img src={reseller.logo} alt={reseller.name} class="size-full rounded-xl object-cover" loading="lazy" />
+    <div class="reseller-card__identity">
+      <div class="reseller-card__logo">
+        <img src={reseller.logo} alt={reseller.name} class="size-full rounded-xl object-cover" loading="lazy" />
+      </div>
+      <div>
+        <h4 class="reseller-card__name">{reseller.name}</h4>
+        <p class="reseller-card__region">
+          <MapPin class="text-primary size-3.5 shrink-0" />{reseller.region}
+        </p>
+      </div>
     </div>
-    <h4 class="mt-4 pr-20 text-left text-base font-bold tracking-[-0.02em]">{reseller.name}</h4>
-    <p class="text-muted-foreground mt-2 flex items-center gap-1.5 text-xs font-medium">
-      <MapPin class="text-primary size-3.5 shrink-0" />{reseller.region}
-    </p>
-    {reseller.phone && <p class="text-muted-foreground mt-2 text-xs">WhatsApp: <span class="text-foreground font-semibold">{reseller.phone}</span></p>}
-    <p class="border-border/55 bg-background/35 text-primary mt-4 truncate border px-3 py-2 text-left text-xs font-semibold" title={reseller.details}>{reseller.details}</p>
-    <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/55 pt-4">
-      <span class="text-muted-foreground text-[10px] font-bold tracking-[0.1em] uppercase">{copy.footer.contact}</span>
-      <div class="flex gap-2">
+    {reseller.phone && <p class="reseller-card__phone">WhatsApp: <span class="text-foreground font-semibold">{reseller.phone}</span></p>}
+    <p class="reseller-card__details" title={reseller.details}>{reseller.details}</p>
+    <div class="reseller-card__contact">
+      <span>{copy.footer.contact}</span>
+      <div class="reseller-card__links">
         {reseller.links.map((link) => {
           const LinkIcon = iconFor[link.icon];
           return (
-            <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`${link.label || labelFor[link.icon]} de ${reseller.name}`} title={`${link.label || labelFor[link.icon]} de ${reseller.name}`} class="border-border/70 bg-background/50 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-primary/70 text-muted-foreground flex size-10 items-center justify-center border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-card">
+            <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`${link.label || labelFor[link.icon]} de ${reseller.name}`} title={`${link.label || labelFor[link.icon]} de ${reseller.name}`} class="reseller-card__link">
               <LinkIcon width={16} height={16} class="size-4" />
             </a>
           );

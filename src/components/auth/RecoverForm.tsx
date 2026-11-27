@@ -1,3 +1,4 @@
+import "@/styles/auth.css";
 import { useEffect, useState } from "react";
 import { Check, Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -52,16 +53,16 @@ export default function RecoverForm() {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4">
+    <form onSubmit={submit} className="auth-form" aria-busy={loading}>
       {token ? <>
-        <div className="space-y-1.5"><label className="text-sm font-medium" htmlFor="new-password">Nueva Contraseña</label><Input id="new-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mínimo 6 caracteres" minLength={6} autoComplete="new-password" required disabled={complete} /></div>
-        <div className="space-y-1.5"><label className="text-sm font-medium" htmlFor="confirm-password">Confirmar Contraseña</label><Input id="confirm-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Repite la contraseña" minLength={6} autoComplete="new-password" required disabled={complete} /></div>
+        <div className="auth-field"><label className="auth-field-label" htmlFor="new-password">Nueva Contraseña</label><Input id="new-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mínimo 6 caracteres" minLength={6} autoComplete="new-password" required disabled={complete} /></div>
+        <div className="auth-field"><label className="auth-field-label" htmlFor="confirm-password">Confirmar Contraseña</label><Input id="confirm-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Repite la contraseña" minLength={6} autoComplete="new-password" required disabled={complete} /></div>
       </> : <>
-        <div className="space-y-1.5"><label className="text-sm font-medium" htmlFor="email">Email Registrado</label><Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@email.com" autoComplete="email" required disabled={complete} /></div>
-        {!complete && <Turnstile onToken={setTurnstileToken} />}
+        <div className="auth-field"><label className="auth-field-label" htmlFor="email">Email Registrado</label><Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@email.com" autoComplete="email" required disabled={complete} /></div>
+        {!complete && <div className="auth-verification"><Turnstile onToken={setTurnstileToken} /></div>}
       </>}
-      {status && <p className={complete ? "text-emerald-400 whitespace-pre-line text-sm" : "text-destructive whitespace-pre-line text-sm"}>{status}</p>}
-      {!complete && <Button type="submit" className="w-full" disabled={loading}>
+      {status && <p role="status" className={complete ? "auth-message auth-message--success" : "auth-message"}>{status}</p>}
+      {!complete && <Button type="submit" className="auth-submit" disabled={loading}>
         {loading ? <Loader2 className="size-4 animate-spin" /> : token ? <Check className="size-4" /> : <Send className="size-4" />}
         {token ? "Guardar Cambios" : "Enviar Link"}
       </Button>}

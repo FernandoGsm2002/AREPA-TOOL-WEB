@@ -15,27 +15,27 @@ const copy = getLocaleCopy(locale);
       <p>{copy.tutorials.description}</p>
     </div>
 
-  <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <div class="tutorial-grid">
     {
       tutorials.map((tutorial) => (
         <button
           type="button"
-          class="group text-left"
+          class="tutorial-card"
           data-video-card
           data-video-id={tutorial.videoId}
         >
-          <div class="border-border/60 bg-muted relative aspect-video overflow-hidden rounded-2xl border shadow-lg transition-shadow group-hover:shadow-primary/15" data-video-container>
+          <div class="tutorial-thumbnail" data-video-container>
             <img
               src={`https://img.youtube.com/vi/${tutorial.videoId}/hqdefault.jpg`}
               alt={tutorial.title}
-              class="size-full object-cover transition-transform group-hover:scale-105"
+              class="tutorial-image"
               loading="lazy"
             />
-            <div class="bg-primary text-primary-foreground absolute inset-0 m-auto flex size-14 items-center justify-center rounded-full shadow-lg">
+            <div class="tutorial-play">
               <Play className="ml-0.5 size-6 fill-current" />
             </div>
           </div>
-          <h4 class="text-foreground/90 mt-3 text-center text-base font-semibold">{tutorial.title}</h4>
+          <h4 class="tutorial-title">{tutorial.title}</h4>
         </button>
       ))
     }

@@ -1,0 +1,344 @@
+.arepa-dashboard {
+  --dashboard-background: #090a0b;
+  --dashboard-surface: #121416;
+  --dashboard-raised: #1b1e21;
+  --dashboard-text: #f5f5f2;
+  --dashboard-muted: #aeb3b8;
+  --dashboard-line: #2a2d30;
+  --dashboard-gold: #f6b94c;
+  display: grid;
+  grid-template-columns: 15.5rem minmax(0, 1fr);
+  min-height: 100svh;
+  background: var(--dashboard-background);
+  color: var(--dashboard-text);
+  font-family: "Geist Variable", Geist, sans-serif;
+  font-variant-numeric: tabular-nums;
+  color-scheme: dark;
+  scrollbar-color: var(--dashboard-line) var(--dashboard-background);
+  scrollbar-width: thin;
+}
+
+.arepa-dashboard ::selection {
+  background: var(--dashboard-gold);
+  color: #1b1509;
+}
+
+.arepa-dashboard :where(button, a, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--dashboard-gold);
+  outline-offset: 3px;
+}
+
+.arepa-dashboard input { caret-color: var(--dashboard-gold); }
+.arepa-dashboard :where(button, a) { -webkit-tap-highlight-color: transparent; }
+.arepa-dashboard :where(button, a, input) { scroll-margin-block: 1rem; }
+.arepa-dashboard :where(svg) { flex-shrink: 0; }
+
+.arepa-dashboard.dashboard-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arepa-dashboard .dashboard-sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  height: 100dvh;
+  min-width: 0;
+  padding: 1.75rem 1rem;
+  overflow-y: auto;
+  border-right: 1px solid var(--dashboard-line);
+  background: var(--dashboard-surface);
+}
+
+.arepa-dashboard .dashboard-brand {
+  display: flex;
+  align-items: center;
+  gap: .625rem;
+  width: fit-content;
+  padding-inline: .5rem;
+  color: var(--dashboard-text);
+  font-size: 1.375rem;
+  font-weight: 550;
+  letter-spacing: -.035em;
+  text-decoration: none;
+}
+
+.arepa-dashboard .dashboard-brand img { object-fit: contain; }
+.arepa-dashboard .dashboard-navigation { display: flex; flex-direction: column; gap: .375rem; }
+
+.arepa-dashboard .dashboard-nav-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-width: 0;
+  min-height: 3rem;
+  padding: .75rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--dashboard-muted);
+  background: transparent;
+  font-size: .875rem;
+  font-weight: 450;
+  line-height: 1.4;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 160ms ease-out, color 160ms ease-out, border-color 160ms ease-out;
+}
+
+.arepa-dashboard .dashboard-nav-item > span { min-width: 0; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-nav-chevron { margin-left: auto; }
+.arepa-dashboard .dashboard-nav-item:hover { background: var(--dashboard-raised); color: var(--dashboard-text); }
+.arepa-dashboard .dashboard-nav-item[aria-current="page"] {
+  border-color: #65502e;
+  background: #292318;
+  color: var(--dashboard-gold);
+}
+.arepa-dashboard .dashboard-admin-link { margin-top: 1.25rem; }
+.arepa-dashboard .dashboard-workspace { min-width: 0; }
+
+.arepa-dashboard .dashboard-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  min-height: 5.5rem;
+  padding: 1rem 2.5rem;
+  border-bottom: 1px solid var(--dashboard-line);
+}
+
+.arepa-dashboard .dashboard-topbar-title { flex: 1; color: var(--dashboard-muted); font-size: .875rem; }
+.arepa-dashboard .dashboard-session { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+.arepa-dashboard .dashboard-session-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border: 1px solid var(--dashboard-line);
+  border-radius: 50%;
+  color: var(--dashboard-gold);
+}
+.arepa-dashboard .dashboard-username { max-width: 18rem; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-signout { color: var(--dashboard-muted); }
+
+.arepa-dashboard .dashboard-content {
+  min-width: 0;
+  padding: 2.5rem 2.5rem 4rem;
+}
+.arepa-dashboard .dashboard-view { width: 100%; min-width: 0; max-width: 84rem; margin-inline: auto; }
+.arepa-dashboard .dashboard-heading {
+  margin: 0;
+  color: var(--dashboard-text);
+  font: 550 2rem/1.2 "Geist Variable", Geist, sans-serif;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.arepa-dashboard .dashboard-description {
+  max-width: 70ch;
+  margin-top: .625rem;
+  color: var(--dashboard-muted);
+  font-size: .9375rem;
+  line-height: 1.7;
+}
+.arepa-dashboard .dashboard-section-title {
+  color: var(--dashboard-text);
+  font: 550 1.125rem/1.4 "Geist Variable", Geist, sans-serif;
+  letter-spacing: -.02em;
+  overflow-wrap: anywhere;
+}
+.arepa-dashboard .dashboard-section-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 1.5rem; }
+.arepa-dashboard .dashboard-section-header > div { min-width: 0; flex: 1 1 18rem; }
+.arepa-dashboard .dashboard-section-header > button { flex-shrink: 0; }
+.arepa-dashboard .dashboard-state { margin-top: 1.5rem; padding-block: 2rem; }
+.arepa-dashboard .dashboard-empty {
+  margin-top: 1.5rem;
+  padding: 3rem 1.5rem;
+  border: 1px dashed var(--dashboard-line);
+  border-radius: 14px;
+  background: var(--dashboard-surface);
+  line-height: 1.7;
+}
+.arepa-dashboard .dashboard-error { margin-top: 1.5rem; padding: 1rem 1.25rem; border: 1px solid var(--destructive); border-radius: 12px; background: var(--dashboard-surface); overflow-wrap: anywhere; }
+
+/* DNS selection stays a single working surface, with a clear action below it. */
+.arepa-dashboard .dashboard-dns { max-width: 60rem; margin-inline: 0; }
+.arepa-dashboard .dashboard-dns-profiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; margin-top: 2rem; }
+.arepa-dashboard .dashboard-dns-profile {
+  display: flex;
+  align-items: flex-start;
+  gap: .875rem;
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--dashboard-line);
+  border-radius: 12px;
+  background: var(--dashboard-surface);
+  text-align: left;
+  line-height: 1.6;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  transition: border-color 160ms ease-out, background-color 160ms ease-out;
+}
+.arepa-dashboard .dashboard-dns-profile:hover { border-color: #62666a; background: var(--dashboard-raised); }
+.arepa-dashboard .dashboard-dns-profile[aria-pressed="true"] { border-color: var(--dashboard-gold); background: #221e16; }
+.arepa-dashboard .dashboard-profile-marker { display: flex; align-items: center; justify-content: center; width: 1.125rem; height: 1.125rem; flex-shrink: 0; margin-top: .1875rem; border: 1px solid #62666a; border-radius: 50%; }
+.arepa-dashboard .dashboard-dns-profile[aria-pressed="true"] .dashboard-profile-marker { border-color: var(--dashboard-gold); background: var(--dashboard-gold); color: #1b1509; }
+.arepa-dashboard .dashboard-dns-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--dashboard-line); }
+.arepa-dashboard .dashboard-dns-action { min-width: 10rem; }
+.arepa-dashboard .dashboard-dns-result { margin-top: 2rem; padding: 1.5rem; border: 1px solid var(--dashboard-line); border-radius: 14px; background: var(--dashboard-surface); }
+.arepa-dashboard .dashboard-hostname-row { display: flex; align-items: flex-start; gap: .75rem; margin-top: .75rem; }
+.arepa-dashboard .dashboard-hostname { flex: 1; min-width: 0; padding: .875rem 1rem; border: 1px solid var(--dashboard-line); border-radius: 10px; background: var(--dashboard-background); color: var(--dashboard-gold); font-size: .9375rem; line-height: 1.5; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-hostname-row button { flex-shrink: 0; }
+.arepa-dashboard .dashboard-result-meta { margin-top: 1rem; line-height: 1.7; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-device-steps { padding-block: 2rem; }
+.arepa-dashboard .dashboard-device-steps ol { display: grid; gap: .875rem; margin-top: 1rem; padding-left: 1.25rem; }
+.arepa-dashboard .dashboard-device-steps li { padding-left: .375rem; line-height: 1.6; }
+.arepa-dashboard .dashboard-device-steps li::marker { color: var(--dashboard-text); font-weight: 550; }
+.arepa-dashboard .dashboard-hostname-inline { overflow-wrap: anywhere; }
+
+/* Account details use one readable record, with no clipped email or order ID. */
+.arepa-dashboard .dashboard-account { max-width: 56rem; margin-inline: 0; }
+.arepa-dashboard .dashboard-account-details { margin-top: 2rem; padding: 2rem; border: 1px solid var(--dashboard-line); border-radius: 16px; background: var(--dashboard-surface); }
+.arepa-dashboard .dashboard-account-identity { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--dashboard-line); font-size: 1.375rem; font-weight: 550; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-account-identity > span { min-width: 0; }
+.arepa-dashboard .dashboard-account-avatar { width: 3rem; height: 3rem; padding: .75rem; border-radius: 12px; background: var(--dashboard-raised); color: var(--dashboard-gold); }
+.arepa-dashboard .dashboard-account-row { display: flex; align-items: center; gap: 1rem; padding-block: .875rem; font-size: .9375rem; line-height: 1.6; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-account-row > span { min-width: 0; }
+.arepa-dashboard .dashboard-account-order { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--dashboard-line); line-height: 1.7; overflow-wrap: anywhere; }
+
+/* Keep wide history data inside a keyboard-scrollable region. */
+.arepa-dashboard .dashboard-table-scroll { max-width: 100%; margin-top: 2rem; overflow: auto; border: 1px solid var(--dashboard-line); border-radius: 14px; background: var(--dashboard-surface); scrollbar-color: #62666a var(--dashboard-surface); }
+.arepa-dashboard .dashboard-operations-table { min-width: 56rem; border-collapse: collapse; text-align: left; }
+.arepa-dashboard .dashboard-operations-table th { padding: 1rem; background: var(--dashboard-raised); color: var(--dashboard-muted); font-size: .75rem; font-weight: 500; white-space: nowrap; }
+.arepa-dashboard .dashboard-operations-table td { padding: 1.125rem 1rem; line-height: 1.6; vertical-align: top; }
+.arepa-dashboard .dashboard-operations-table tbody tr { border-bottom: 1px solid var(--dashboard-line); transition: background-color 160ms ease-out; }
+.arepa-dashboard .dashboard-operations-table tbody tr:hover { background: var(--dashboard-raised); }
+.arepa-dashboard .dashboard-operations-table tbody tr:last-child { border-bottom: 0; }
+.arepa-dashboard .dashboard-task-id { min-width: 10rem; max-width: 14rem; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-operation-detail { min-width: 13rem; max-width: 24rem; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-operation-status { white-space: nowrap; }
+
+/* Downloads separate the primary installer from supporting file lists. */
+.arepa-dashboard .dashboard-installer { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; margin-top: 2rem; padding: 1.75rem; border: 1px solid var(--dashboard-line); border-radius: 16px; background: var(--dashboard-surface); }
+.arepa-dashboard .dashboard-installer-icon { width: 2.5rem; height: 2.5rem; color: var(--dashboard-gold); }
+.arepa-dashboard .dashboard-installer-details { flex: 1 1 15rem; min-width: 0; }
+.arepa-dashboard .dashboard-installer-label { margin-top: 1rem; color: var(--dashboard-muted); }
+.arepa-dashboard .dashboard-installer-action { flex-shrink: 0; }
+.arepa-dashboard .dashboard-download-section { margin-top: 2.5rem; }
+.arepa-dashboard .dashboard-download-list { margin-top: 1.25rem; border-top: 1px solid var(--dashboard-line); }
+.arepa-dashboard .dashboard-download-item { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr) auto; align-items: center; gap: 1rem; padding: 1.5rem 0; border-bottom: 1px solid var(--dashboard-line); }
+.arepa-dashboard .dashboard-file-icon { display: flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 10px; background: var(--dashboard-raised); color: var(--dashboard-muted); }
+.arepa-dashboard .dashboard-download-copy { min-width: 0; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-download-copy > p { max-width: 70ch; }
+.arepa-dashboard .dashboard-file-title { display: flex; flex-wrap: wrap; align-items: center; gap: .625rem 1rem; min-width: 0; }
+.arepa-dashboard .dashboard-file-title h4 { min-width: 0; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-file-tag { display: inline-flex; width: fit-content; max-width: 100%; padding: .25rem .625rem; border: 1px solid var(--dashboard-line); border-radius: 6px; color: var(--dashboard-muted); font-size: .75rem; line-height: 1.5; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-rom-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+.arepa-dashboard .dashboard-rom { display: flex; flex-direction: column; min-width: 0; padding: 1.5rem; border: 1px solid var(--dashboard-line); border-radius: 14px; background: var(--dashboard-surface); overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-rom-action { align-self: flex-start; margin-top: auto; }
+.arepa-dashboard .dashboard-rom > :nth-last-child(2) { margin-bottom: 1.5rem; }
+
+/* A fluid file catalogue keeps technical values visible at every width. */
+.arepa-dashboard .dashboard-catalog-search { position: relative; max-width: 44rem; margin-top: 2rem; }
+.arepa-dashboard .dashboard-catalog-search > svg { position: absolute; left: 1rem; top: 50%; translate: 0 -50%; pointer-events: none; }
+.arepa-dashboard .dashboard-catalog-search input { min-width: 0; min-height: 3rem; padding-left: 2.875rem; }
+.arepa-dashboard .dashboard-root-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: 1rem; margin-top: 1.5rem; }
+.arepa-dashboard .dashboard-root-file { display: flex; flex-direction: column; min-width: 0; padding: 1.5rem; border: 1px solid var(--dashboard-line); border-radius: 14px; background: var(--dashboard-surface); }
+.arepa-dashboard .dashboard-root-file-heading { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: .75rem; }
+.arepa-dashboard .dashboard-root-metadata { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: .75rem 1rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--dashboard-line); }
+.arepa-dashboard .dashboard-root-metadata dt { color: var(--dashboard-muted); }
+.arepa-dashboard .dashboard-root-metadata dd { overflow-wrap: anywhere; line-height: 1.6; }
+.arepa-dashboard .dashboard-root-filename { margin-top: 1.25rem; margin-bottom: 1.5rem; line-height: 1.7; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-root-action { width: 100%; margin-top: auto; }
+.arepa-dashboard .dashboard-root-grid > .dashboard-empty { margin-top: 0; }
+
+/* Tutorials prioritize playback and keep the full library in a usable list. */
+.arepa-dashboard .dashboard-tutorial-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 1.25rem 2rem; }
+.arepa-dashboard .dashboard-tutorial-header > div:first-child { flex: 1 1 25rem; }
+.arepa-dashboard .dashboard-tutorial-intro { margin-top: 1rem; }
+.arepa-dashboard .dashboard-tutorial-count { display: flex; align-items: center; gap: .75rem; padding-block: .375rem; }
+.arepa-dashboard .dashboard-tutorial-layout { display: grid; grid-template-columns: minmax(0, 1fr) 19rem; gap: 1.5rem; align-items: start; margin-top: 2rem; }
+.arepa-dashboard .dashboard-tutorial-player { min-width: 0; overflow: hidden; border: 1px solid var(--dashboard-line); border-radius: 14px; background: var(--dashboard-surface); }
+.arepa-dashboard .dashboard-player-topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--dashboard-line); overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-player-media { position: relative; aspect-ratio: 16 / 9; min-height: 15rem; overflow: hidden; background: var(--dashboard-background); }
+.arepa-dashboard .dashboard-video-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: inherit; height: 100%; padding: 1.5rem; text-align: center; }
+.arepa-dashboard .dashboard-tutorial-detail { padding: 1.5rem; overflow-wrap: anywhere; }
+.arepa-dashboard .dashboard-tutorial-detail > p { max-width: 70ch; }
+.arepa-dashboard .dashboard-tutorial-library { min-width: 0; }
+.arepa-dashboard .dashboard-library-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; padding: .5rem .25rem 1rem; }
+.arepa-dashboard .dashboard-tutorial-list { display: grid; gap: .375rem; }
+.arepa-dashboard .dashboard-tutorial-choice { display: flex; align-items: center; gap: .75rem; min-width: 0; width: 100%; padding: .875rem .75rem; border: 1px solid transparent; border-radius: 10px; color: var(--dashboard-text); background: transparent; text-align: left; overflow-wrap: anywhere; cursor: pointer; transition: background-color 160ms ease-out, border-color 160ms ease-out; }
+.arepa-dashboard .dashboard-tutorial-choice:hover { background: var(--dashboard-surface); }
+.arepa-dashboard .dashboard-tutorial-choice[aria-pressed="true"] { border-color: #65502e; background: #292318; color: var(--dashboard-gold); }
+.arepa-dashboard .dashboard-tutorial-number { display: flex; align-items: center; justify-content: center; width: 1.75rem; height: 1.75rem; flex-shrink: 0; color: var(--dashboard-muted); font-size: .75rem; font-weight: 500; }
+.arepa-dashboard .dashboard-tutorial-module { color: var(--dashboard-muted); }
+.arepa-dashboard .dashboard-tutorial-choice[aria-pressed="true"] .dashboard-tutorial-number { color: var(--dashboard-gold); }
+.arepa-dashboard .welcome-confetti-message { max-width: calc(100% - 2rem); overflow-wrap: anywhere; text-align: center; }
+
+@media (max-width: 1279px) {
+  .arepa-dashboard { grid-template-columns: 14rem minmax(0, 1fr); }
+  .arepa-dashboard .dashboard-content { padding-inline: 2rem; }
+  .arepa-dashboard .dashboard-topbar { padding-inline: 2rem; gap: 1rem; }
+  .arepa-dashboard .dashboard-tutorial-layout { grid-template-columns: minmax(0, 1fr); }
+  .arepa-dashboard .dashboard-tutorial-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 899px) {
+  .arepa-dashboard { display: block; }
+  .arepa-dashboard .dashboard-sidebar { position: static; height: auto; gap: 1.25rem; padding: 1.25rem 1.5rem; overflow: visible; border-right: 0; border-bottom: 1px solid var(--dashboard-line); }
+  .arepa-dashboard .dashboard-brand { font-size: 1.25rem; padding-inline: 0; }
+  .arepa-dashboard .dashboard-brand img { width: 2rem; height: 2rem; }
+  .arepa-dashboard .dashboard-navigation { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .375rem; }
+  .arepa-dashboard .dashboard-nav-item { gap: .5rem; font-size: .8125rem; padding: .75rem .625rem; }
+  .arepa-dashboard .dashboard-nav-chevron { display: none; }
+  .arepa-dashboard .dashboard-admin-link { grid-column: 1 / -1; margin-top: .25rem; }
+  .arepa-dashboard .dashboard-topbar { padding: 1rem 1.5rem; }
+  .arepa-dashboard .dashboard-content { padding: 2rem 1.5rem 3rem; }
+  .arepa-dashboard .dashboard-heading { font-size: 1.75rem; }
+}
+
+@media (max-width: 599px) {
+  .arepa-dashboard .dashboard-sidebar { padding: 1rem; gap: 1rem; }
+  .arepa-dashboard .dashboard-nav-item { flex-direction: column; justify-content: center; gap: .5rem; min-height: 4.5rem; padding: .625rem .375rem; text-align: center; font-size: .75rem; }
+  .arepa-dashboard .dashboard-admin-link { flex-direction: row; min-height: 2.75rem; }
+  .arepa-dashboard .dashboard-topbar { gap: .75rem; padding: 1rem; }
+  .arepa-dashboard .dashboard-topbar-title { flex-basis: 100%; }
+  .arepa-dashboard .dashboard-session { flex: 1; gap: .5rem; }
+  .arepa-dashboard .dashboard-session-icon { width: 2rem; height: 2rem; }
+  .arepa-dashboard .dashboard-username { max-width: none; }
+  .arepa-dashboard .dashboard-signout { padding-inline: .5rem; font-size: .75rem; }
+  .arepa-dashboard .dashboard-content { padding: 1.75rem 1rem 3rem; }
+  .arepa-dashboard .dashboard-dns-profiles { grid-template-columns: minmax(0, 1fr); margin-top: 1.5rem; }
+  .arepa-dashboard .dashboard-dns-profile { padding: 1rem; }
+  .arepa-dashboard .dashboard-dns-action { width: 100%; }
+  .arepa-dashboard .dashboard-dns-result { padding: 1rem; }
+  .arepa-dashboard .dashboard-hostname { padding: .75rem; font-size: .8125rem; }
+  .arepa-dashboard .dashboard-account-details { padding: 1.25rem; }
+  .arepa-dashboard .dashboard-account-identity { font-size: 1.125rem; }
+  .arepa-dashboard .dashboard-account-row { gap: .75rem; font-size: .875rem; }
+  .arepa-dashboard .dashboard-installer { gap: 1rem; padding: 1.25rem; }
+  .arepa-dashboard .dashboard-installer-icon { width: 2rem; height: 2rem; }
+  .arepa-dashboard .dashboard-installer-details { flex-basis: calc(100% - 3rem); }
+  .arepa-dashboard .dashboard-installer-action { width: 100%; }
+  .arepa-dashboard .dashboard-download-item { grid-template-columns: 2.5rem minmax(0, 1fr); align-items: start; gap: .875rem; }
+  .arepa-dashboard .dashboard-file-icon { width: 2.5rem; height: 2.5rem; }
+  .arepa-dashboard .dashboard-file-action { grid-column: 2; width: fit-content; max-width: 100%; }
+  .arepa-dashboard .dashboard-rom-grid { grid-template-columns: minmax(0, 1fr); }
+  .arepa-dashboard .dashboard-rom { padding: 1.25rem; }
+  .arepa-dashboard .dashboard-rom-action { width: 100%; }
+  .arepa-dashboard .dashboard-root-file { padding: 1.25rem; }
+  .arepa-dashboard .dashboard-tutorial-layout { margin-top: 1.5rem; }
+  .arepa-dashboard .dashboard-tutorial-list { grid-template-columns: minmax(0, 1fr); }
+  .arepa-dashboard .dashboard-player-topbar { padding: 1rem; }
+  .arepa-dashboard .dashboard-tutorial-detail { padding: 1.25rem; }
+  .arepa-dashboard .dashboard-video-empty { padding: 1.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arepa-dashboard :where(.dashboard-nav-item, .dashboard-dns-profile, .dashboard-tutorial-choice, .dashboard-operations-table tbody tr) { transition: none; }
+}

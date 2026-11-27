@@ -1,0 +1,77 @@
+/* Shared visual language for account, authentication and administration routes. */
+body.site-body.app-site {
+  --background: #090a0b;
+  --foreground: #f5f5f2;
+  --card: #121416;
+  --card-foreground: #f5f5f2;
+  --popover: #191c1f;
+  --popover-foreground: #f5f5f2;
+  --primary: #f6b94c;
+  --primary-foreground: #1b1509;
+  --secondary: #25292d;
+  --secondary-foreground: #f5f5f2;
+  --muted: #1b1e21;
+  --muted-foreground: #aeb3b8;
+  --accent: #24282c;
+  --accent-foreground: #f5f5f2;
+  --destructive: #ff9292;
+  --border: #303539;
+  --input: #454c52;
+  --ring: #f6b94c;
+  --sidebar: #101214;
+  --sidebar-foreground: #f5f5f2;
+  --sidebar-primary: #f6b94c;
+  --sidebar-primary-foreground: #1b1509;
+  --sidebar-accent: #25292d;
+  --sidebar-accent-foreground: #f5f5f2;
+  --sidebar-border: #303539;
+  --sidebar-ring: #f6b94c;
+  --font-display: 'Geist Variable', 'Geist', sans-serif;
+  --font-heading: 'Geist Variable', 'Geist', sans-serif;
+  --site-bg: #090a0b;
+  --site-surface: #121416;
+  --site-raised: #1b1e21;
+  --site-text: #f5f5f2;
+  --site-muted: #aeb3b8;
+  --site-line: #303539;
+  --site-gold: #f6b94c;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  color-scheme: dark;
+  caret-color: var(--primary);
+  scrollbar-color: #596168 var(--background);
+}
+.app-site ::selection { background: #f6b94c; color: #1b1509; }
+.app-site :is(h1,h2,h3,h4) { font-family: var(--font-display); letter-spacing: -.025em; text-wrap: balance; }
+.app-site :is(p,li) { text-wrap: pretty; }
+.app-site :is(button,a,summary,input,select,textarea):focus-visible { outline: 2px solid #f6b94c; outline-offset: 3px; }
+.app-site [data-slot='button'] { min-height: 2.65rem; border-radius: 9px; gap: .5rem; padding-inline: .95rem; transition: background-color .18s, color .18s, border-color .18s; }
+.app-site [data-slot='button'][data-size='xs'], .app-site [data-slot='button'][data-size='sm'] { min-height: 2.25rem; }
+.app-site [data-slot='button'][data-size^='icon'] { min-width: 2.65rem; min-height: 2.65rem; padding: 0; }
+.app-site [data-slot='button'][data-variant='default']:hover:not(:disabled) { background: #ffd17b; }
+.app-site [data-slot='button'][data-variant='outline'] { background: #191c1f; border-color: #454c52; }
+.app-site [data-slot='button'][data-variant='outline']:hover:not(:disabled) { background: #292e33; border-color: #69737b; }
+.app-site [data-slot='button']:disabled { opacity: .5; cursor: not-allowed; }
+.app-site :is([data-slot='input'],select,textarea) { min-height: 2.75rem; border-radius: 9px; border: 1px solid #454c52; background: #0e1012; padding: .65rem .85rem; color: #f5f5f2; box-shadow: none; font-size: .875rem; line-height: 1.4; }
+.app-site :is(input,textarea)::placeholder { color: #939ba2; opacity: 1; }
+.app-site :is([data-slot='input'],select,textarea):focus-visible { border-color: var(--primary); box-shadow: none; }
+.app-site :is([data-slot='input'],select,textarea):disabled { opacity: .6; background: #1b1e21; cursor: not-allowed; }
+.app-site input[type='file'] { padding-block: .5rem; overflow: hidden; }
+.app-site input[type='file']::file-selector-button { height: 1.8rem; margin-right: .7rem; border-radius: 5px; border: 0; padding-inline: .65rem; background: #2b3035; color: #f5f5f2; }
+.app-site input:is([type='checkbox'],[type='radio']) { accent-color: var(--primary); width: 1rem; height: 1rem; flex-shrink: 0; }
+.app-site [data-slot='dialog-overlay'] { background: rgb(0 0 0 / 70%); backdrop-filter: none; }
+.app-site [data-slot='dialog-content'] { border: 1px solid #454c52; border-radius: 16px; max-height: calc(100dvh - 2rem); overflow-y: auto; background: #15181b; box-shadow: 0 20px 70px rgb(0 0 0 / 40%); }
+.app-site [data-slot='card'] { border: 1px solid #303539; box-shadow: none; }
+.app-site pre { scrollbar-width: thin; tab-size: 2; }
+.app-site :is(.text-emerald-600,.text-green-600) { color: #8ed5ab; }
+.app-site :is(.text-amber-700,.text-yellow-700) { color: #eec983; }
+.app-site :is(.text-red-600,.text-red-500) { color: #ff9292; }
+.app-site :is(.text-sky-600,.text-blue-600) { color: #9ec4ef; }
+@media (max-width: 639px) {
+  .app-site :is([data-slot='input'],select,textarea) { font-size: 1rem; }
+  .app-site [data-slot='button'][data-size='sm'] { min-height: 2.75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-site *, .app-site *::before, .app-site *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}

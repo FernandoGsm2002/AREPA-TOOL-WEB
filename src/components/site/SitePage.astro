@@ -1,4 +1,5 @@
 ---
+import "@/styles/public-interior.css";
 import Layout from "@/layouts/Layout.astro";
 import Navbar from "@/components/site/Navbar.astro";
 import Footer from "@/components/site/Footer.astro";
@@ -16,7 +17,7 @@ const { title, description, locale = localeFromPath(Astro.url.pathname) } = Astr
 
 <Layout title={title} description={description} locale={locale} marketing>
   <Navbar locale={locale} />
-  <div id="main-content"><slot /></div>
+  <div id="main-content" class="public-interior"><slot /></div>
   <Footer locale={locale} />
   <WhatsAppModal client:load locale={locale} />
 </Layout>

@@ -1,3 +1,4 @@
+import "@/styles/auth.css";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -99,34 +100,43 @@ export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="border-border/60 bg-card w-full max-w-sm rounded-2xl border p-8 shadow-xl">
-        <div className="mb-6 text-center">
-          <div className="font-display text-primary text-2xl font-black tracking-[-0.06em]">ArepaTool</div>
-          <h1 className="font-display mt-4 text-xl font-bold">Administración</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Acceso restringido a personal autorizado</p>
+    <main className="auth-shell">
+      <div className="auth-shell__intro">
+        <div className="auth-brand">
+          <img src="/pngs/arepatool-logo-mark.webp" width="120" height="92" alt="" />
+          <span>ArepaTool</span>
         </div>
+        <div className="auth-shell__heading">
+          <h1 id="admin-auth-title">Administración</h1>
+          <p>Acceso restringido a personal autorizado</p>
+        </div>
+        <div className="auth-shell__art" aria-hidden="true">
+          <img src="/pngs/arepatool-logo-mark.png" width="920" height="660" alt="" />
+        </div>
+      </div>
+      <section className="auth-shell__content" aria-labelledby="admin-auth-title">
+        <div className="auth-shell__form">
 
         {stage === "credentials" ? (
-          <form onSubmit={submitCredentials} className="space-y-4">
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium" htmlFor="admin-username">Usuario</label>
+          <form onSubmit={submitCredentials} className="auth-form" aria-busy={loading}>
+            <div className="auth-field">
+              <label className="auth-field-label" htmlFor="admin-username">Usuario</label>
               <Input id="admin-username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" autoFocus />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium" htmlFor="admin-password">Contraseña</label>
+            <div className="auth-field">
+              <label className="auth-field-label" htmlFor="admin-password">Contraseña</label>
               <Input id="admin-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
             </div>
-            <Turnstile key={turnstileKey} action="web_login" onToken={setTurnstileToken} />
-            {error && <p className="text-destructive text-sm">{error}</p>}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <div className="auth-verification"><Turnstile key={turnstileKey} action="web_login" onToken={setTurnstileToken} /></div>
+            {error && <p role="alert" className="auth-message">{error}</p>}
+            <Button type="submit" className="auth-submit" disabled={loading}>
               {loading ? <Loader2 className="size-4 animate-spin" /> : <LockKeyhole className="size-4" />}
               Continuar
             </Button>
           </form>
         ) : (
-          <form onSubmit={submitTotp} className="space-y-4">
-            <p className="text-muted-foreground text-center text-sm">
+          <form onSubmit={submitTotp} className="auth-form" aria-busy={loading}>
+            <p id="admin-otp-instructions" className="auth-otp-instructions">
               Abre tu app de autenticación (Google Authenticator, Authy, etc.) e ingresa el código actual.
             </p>
             <Input
@@ -136,23 +146,25 @@ export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
               inputMode="numeric"
               autoComplete="one-time-code"
               autoFocus
-              className="text-center font-mono text-lg tracking-[0.5em]"
+              aria-labelledby="admin-otp-instructions"
+              className="auth-otp"
             />
-            {error && <p className="text-destructive text-center text-sm">{error}</p>}
-            <Button type="submit" className="w-full" disabled={loading}>
+            {error && <p role="alert" className="auth-message">{error}</p>}
+            <Button type="submit" className="auth-submit" disabled={loading}>
               {loading ? <Loader2 className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />}
               Verificar
             </Button>
             <button
               type="button"
               onClick={() => { setStage("credentials"); setCode(""); setError(null); }}
-              className="text-muted-foreground hover:text-foreground block w-full text-center text-xs"
+              className="auth-back"
             >
               ← Volver
             </button>
           </form>
         )}
-      </div>
-    </div>
+        </div>
+      </section>
+    </main>
   );
 }

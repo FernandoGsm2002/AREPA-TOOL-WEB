@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Activity, AlertTriangle, Box, Users, KeyRound, RefreshCw, LogOut, Search, ShieldAlert, ShieldCheck, Upload, Copy, Check, Eye, EyeOff, ExternalLink, Pencil, Trash2, X, LoaderCircle, HardDriveUpload, Megaphone, Smartphone } from "lucide-react";
+import { Activity, AlertTriangle, Box, Users, KeyRound, RefreshCw, LogOut, Search, ShieldAlert, ShieldCheck, Upload, Copy, Check, Eye, EyeOff, ExternalLink, Pencil, Trash2, X, LoaderCircle, HardDriveUpload, Megaphone, Smartphone, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import "@/styles/admin.css";
 import { clearSession, loadSession, webApiFetch } from "@/lib/web-session";
 import AdminLogin from "./AdminLogin";
 import TotpSecurity from "./TotpSecurity";
@@ -66,6 +68,7 @@ const formatFileSize = (bytes?: number | null) => bytes
   : "";
 
 export default function Admin() {
+  const [navigationOpen, setNavigationOpen] = useState(false);
   const [tab, setTab] = useState<Tab>("users");
   const [appleReloadKey, setAppleReloadKey] = useState(0);
   const [allowed, setAllowed] = useState<boolean | null>(null);
@@ -285,14 +288,15 @@ export default function Admin() {
   if (needsLogin) return <AdminLogin onSuccess={onLoginSuccess} />;
   if (allowed === null) return <div className="flex min-h-screen items-center justify-center text-muted-foreground"><RefreshCw className="mr-2 size-4 animate-spin"/>Comprobando acceso…</div>;
   if (!allowed) return <div className="flex min-h-screen items-center justify-center p-6"><div className="border-destructive/30 bg-card max-w-md rounded-2xl border p-7 text-center"><ShieldAlert className="text-destructive mx-auto size-8"/><h1 className="font-display mt-4 text-xl font-bold">Acceso restringido</h1><p className="text-muted-foreground mt-2 text-sm">Esta cuenta no tiene permisos administrativos.</p><a href="/dashboard" className="text-primary mt-5 inline-block text-sm">Volver al panel</a></div></div>;
-  return <div className="bg-background min-h-screen lg:flex">
-    <aside className="border-border/70 bg-card/70 flex shrink-0 flex-col border-b p-4 lg:w-68 lg:border-r lg:border-b-0">
-      <a href="/" className="font-display text-primary mb-6 block px-3 text-2xl font-black tracking-[-0.06em]">ArepaTool</a>
-      <p className="text-muted-foreground mb-2 px-3 text-[10px] font-bold tracking-[.16em] uppercase">Administración</p>
-      <nav className="grid gap-1 sm:grid-cols-2 lg:block">{tabs.map(({id,label,icon:Icon}) => <button key={id} onClick={()=>choose(id)} className={`flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium transition ${tab===id?"bg-primary text-primary-foreground shadow-lg shadow-primary/20":"text-muted-foreground hover:bg-muted hover:text-foreground"}`}><Icon className="size-4"/>{label}</button>)}</nav>
-      <div className="mt-auto hidden border-t pt-4 lg:block"><p className="text-muted-foreground px-2 text-xs">Sesión: {loadSession()?.user.username}</p><Button variant="ghost" className="mt-1 w-full justify-start" onClick={()=>{clearSession();setAllowed(null);setNeedsLogin(true)}}><LogOut/>Cerrar sesión</Button></div>
-    </aside>
-    <main className="min-w-0 flex-1 p-5 sm:p-9"><header className="mb-7 flex items-start justify-between gap-4"><div><p className="text-primary text-xs font-bold tracking-[.14em] uppercase">Control operativo</p><h1 className="font-display mt-1 text-3xl font-bold tracking-tight">{tabs.find(x=>x.id===tab)?.label}</h1></div><Button variant="outline" size="sm" onClick={()=>loadTab()}><RefreshCw className="size-4"/>Actualizar</Button></header>{notice&&<p className="border-destructive/25 bg-destructive/8 text-destructive mb-5 rounded-lg border px-3 py-2 text-sm">{notice}</p>}
+  const navigation = <>
+    <a href="/" className="admin-brand"><img src="/pngs/arepatool-logo-mark.webp" alt="" width="36" height="36"/>ArepaTool</a>
+    <p className="admin-sidebar-label">Administración</p>
+    <nav className="admin-navigation">{tabs.map(({id,label,icon:Icon}) => <button key={id} type="button" aria-current={tab===id?"page":undefined} onClick={()=>{choose(id);setNavigationOpen(false)}} className="admin-navigation-item"><Icon className="size-4" aria-hidden="true"/><span>{label}</span></button>)}</nav>
+    <div className="admin-session"><p>Sesión: <strong>{loadSession()?.user.username}</strong></p><Button variant="ghost" className="w-full justify-start" onClick={()=>{clearSession();setAllowed(null);setNeedsLogin(true)}}><LogOut/>Cerrar sesión</Button></div>
+  </>;
+  return <div className="admin-shell">
+    <aside className="admin-sidebar">{navigation}</aside>
+    <main className="admin-main"><header className="admin-page-header"><div className="admin-page-title"><Sheet open={navigationOpen} onOpenChange={setNavigationOpen}><SheetTrigger asChild><Button variant="outline" size="icon" className="admin-menu-toggle" aria-label="Administración"><Menu/></Button></SheetTrigger><SheetContent side="left" className="admin-mobile-sidebar"><SheetTitle className="sr-only">Administración</SheetTitle>{navigation}</SheetContent></Sheet><div><h1>{tabs.find(x=>x.id===tab)?.label}</h1><p>Control operativo</p></div></div><Button variant="outline" size="sm" onClick={()=>loadTab()}><RefreshCw className="size-4"/>Actualizar</Button></header>{notice&&<p className="admin-notice" role="status">{notice}</p>}
       {tab==="apple" && <AppleServiceAdmin key={appleReloadKey} />}
       {tab==="credit-prices" && <CreditAccessPrices />}
       {tab==="meta-mdm" && <MetaMdmDiagnostics />}

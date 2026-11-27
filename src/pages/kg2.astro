@@ -1,4 +1,6 @@
 ---
+import "@fontsource-variable/geist";
+import "@/styles/public-interior.css";
 const playProtectIntent = "intent://com.google.android.gsf.login.LoginActivity/#Intent;scheme=android-app;end";
 ---
 
@@ -7,31 +9,12 @@ const playProtectIntent = "intent://com.google.android.gsf.login.LoginActivity/#
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#080b12" />
+    <meta name="theme-color" content="#090a0b" />
     <meta name="robots" content="noindex, nofollow" />
     <title>ArepaKnoxGuard2 · ArepaTool</title>
     <link rel="icon" type="image/x-icon" href="/pngs/logo.ico" />
-    <style>
-      * { box-sizing: border-box; }
-      body { margin: 0; min-height: 100vh; background: #080b12; color: #e5e7eb; font-family: system-ui, sans-serif; display: grid; place-items: center; padding: 24px; }
-      main { width: min(100%, 460px); }
-      .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-      .brand img { width: 38px; height: 38px; object-fit: contain; }
-      .eyebrow { color: #22c55e; font-size: 12px; letter-spacing: .16em; }
-      h1 { margin: 6px 0 0; font-size: 28px; }
-      .intro { color: #94a3b8; line-height: 1.55; margin: 0 0 26px; }
-      .step { border: 1px solid #253044; border-radius: 18px; padding: 20px; margin: 14px 0; background: #101622; }
-      .number { color: #64748b; font-size: 12px; font-weight: 700; }
-      h2 { font-size: 19px; margin: 8px 0; }
-      p { color: #94a3b8; font-size: 14px; line-height: 1.5; }
-      a.button { display: block; border-radius: 12px; padding: 15px; text-align: center; text-decoration: none; font-weight: 750; color: #07120c; background: #22c55e; margin-top: 16px; }
-      a.secondary { color: #e5e7eb; background: #253044; }
-      .note { border-left: 3px solid #22c55e; padding-left: 12px; margin-top: 22px; }
-      .fallback { display: block; color: #94a3b8; margin-top: 18px; text-align: center; }
-      strong { color: #e5e7eb; }
-    </style>
   </head>
-  <body>
+  <body class="public-kg public-kg--guide">
     <main>
       <div class="brand">
         <img src="/pngs/arepatool-logo-mark.png" alt="" />

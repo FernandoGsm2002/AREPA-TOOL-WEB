@@ -35,7 +35,7 @@ export default function AccountLicense() {
 
   if (!user) {
     return (
-      <div className="text-muted-foreground flex items-center gap-2 text-sm">
+      <div className="dashboard-state text-muted-foreground flex items-center gap-2 text-sm" role="status">
         <Loader2 className="size-4 animate-spin" />
         Cargando…
       </div>
@@ -47,31 +47,31 @@ export default function AccountLicense() {
     : "Sin fecha de vencimiento";
 
   return (
-    <div className="max-w-lg">
-      <h2 className="font-display text-2xl font-bold">Cuenta y Licencia</h2>
-      <p className="text-muted-foreground mt-1 text-sm">Estado de tu cuenta ArepaTool.</p>
+    <div className="dashboard-view dashboard-account">
+      <h2 className="dashboard-heading">Cuenta y Licencia</h2>
+      <p className="dashboard-description">Estado de tu cuenta ArepaTool.</p>
 
-      <div className="border-border/60 bg-card mt-6 space-y-4 rounded-xl border p-6">
-        <div className="flex items-center gap-3">
-          <User className="text-muted-foreground size-4" />
-          <span className="font-medium">{user.username}</span>
+      <div className="dashboard-account-details">
+        <div className="dashboard-account-identity">
+          <User className="dashboard-account-avatar" aria-hidden="true" />
+          <span>{user.username}</span>
         </div>
-        <div className="flex items-center gap-3">
-          <Mail className="text-muted-foreground size-4" />
+        <div className="dashboard-account-row">
+          <Mail className="text-muted-foreground size-4 shrink-0" aria-hidden="true" />
           <span>{user.email}</span>
         </div>
-        <div className="flex items-center gap-3">
-          <BadgeCheck className="text-muted-foreground size-4" />
+        <div className="dashboard-account-row">
+          <BadgeCheck className="text-muted-foreground size-4 shrink-0" aria-hidden="true" />
           <Badge variant={user.status === "suspended" ? "destructive" : "default"}>
             {statusLabel[user.status] ?? user.status}
           </Badge>
         </div>
-        <div className="flex items-center gap-3">
-          <CalendarClock className="text-muted-foreground size-4" />
+        <div className="dashboard-account-row">
+          <CalendarClock className="text-muted-foreground size-4 shrink-0" aria-hidden="true" />
           <span>Vence: {expiresText}</span>
         </div>
         {user.dhruOrderId && (
-          <p className="text-muted-foreground border-border/60 border-t pt-3 font-mono text-xs">
+          <p className="dashboard-account-order text-muted-foreground font-mono text-xs">
             Orden: {user.dhruOrderId}
           </p>
         )}

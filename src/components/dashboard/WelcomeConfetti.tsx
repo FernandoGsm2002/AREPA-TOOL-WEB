@@ -6,7 +6,7 @@ const particles = Array.from({ length: 30 }, (_, index) => ({
   delay: (index % 8) * 55,
   duration: 1150 + ((index * 71) % 650),
   drift: -80 + ((index * 29) % 160),
-  color: ["#a855f7", "#f59e0b", "#2dd4bf", "#f472b6"][index % 4],
+  color: ["#f6b94c", "#f5f5f2", "#aeb3b8", "#d49934"][index % 4],
   rotation: (index * 47) % 360,
 }));
 
@@ -22,7 +22,7 @@ export default function WelcomeConfetti({ username }: { username: string }) {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 top-0 z-50 overflow-hidden" aria-hidden="true">
-      <div className="welcome-confetti-message mx-auto mt-6 w-fit rounded-full border border-primary/30 bg-card/95 px-4 py-2 text-sm font-medium shadow-xl shadow-primary/15 backdrop-blur">
+      <div className="welcome-confetti-message mx-auto mt-6 w-fit rounded-full border border-primary/30 bg-card px-4 py-2 text-sm font-medium">
         ¡Bienvenido, {username}!
       </div>
       {particles.map((particle) => (

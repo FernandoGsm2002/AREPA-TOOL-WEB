@@ -14,16 +14,16 @@ const icons = [ShieldCheck, Download, Wrench, CheckCircle2];
       <h1>{copy.instructions.title}</h1>
       <p>{copy.instructions.description}</p>
     </div>
-    <div class="instruction-grid">
+    <ol class="instruction-grid">
       {copy.instructions.steps.map(([title, description], index) => {
         const Icon = icons[index];
         return (
-          <article class="instruction-step">
+          <li class="instruction-step">
             <span class="instruction-icon"><Icon className="size-5" /></span>
             <div><span class="instruction-number">{String(index + 1).padStart(2, "0")}</span><h2>{title}</h2><p>{description}</p></div>
-          </article>
+          </li>
         );
       })}
-    </div>
+    </ol>
   </section>
 </main>

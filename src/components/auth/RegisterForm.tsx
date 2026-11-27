@@ -1,3 +1,4 @@
+import "@/styles/auth.css";
 import { useState } from "react";
 import { Eye, EyeOff, Loader2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -51,38 +52,38 @@ export default function RegisterForm() {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4">
-      <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="username">Usuario</label>
+    <form onSubmit={submit} className="auth-form" aria-busy={loading}>
+      <div className="auth-field">
+        <label className="auth-field-label" htmlFor="username">Usuario</label>
         <Input id="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Mínimo 3 caracteres" minLength={3} required disabled={complete} />
       </div>
-      <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="email">Email</label>
+      <div className="auth-field">
+        <label className="auth-field-label" htmlFor="email">Email</label>
         <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ejemplo@correo.com" autoComplete="email" required disabled={complete} />
       </div>
-      <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="password">Contraseña</label>
-        <div className="relative">
+      <div className="auth-field">
+        <label className="auth-field-label" htmlFor="password">Contraseña</label>
+        <div className="auth-password">
           <Input id="password" type={showPassword ? "text" : "password"} className="pr-12" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Crea tu contraseña" minLength={8} maxLength={256} autoComplete="new-password" aria-describedby="password-requirements" required disabled={complete || loading} />
-          <button type="button" className="text-muted-foreground hover:text-foreground focus-visible:ring-ring absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-md focus-visible:ring-2" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"} aria-pressed={showPassword} disabled={complete}>
+          <button type="button" className="auth-password-toggle" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"} aria-pressed={showPassword} disabled={complete}>
             {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
         </div>
-        <p id="password-requirements" className="text-muted-foreground text-xs">Mínimo 8 caracteres, una mayúscula y un número.</p>
+        <p id="password-requirements" className="auth-field-note">Mínimo 8 caracteres, una mayúscula y un número.</p>
       </div>
-      <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="confirm-password">Repetir contraseña</label>
-        <div className="relative">
+      <div className="auth-field">
+        <label className="auth-field-label" htmlFor="confirm-password">Repetir contraseña</label>
+        <div className="auth-password">
           <Input id="confirm-password" type={showConfirmation ? "text" : "password"} className="pr-12" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Repite tu contraseña" minLength={8} maxLength={256} autoComplete="new-password" required disabled={complete || loading} />
-          <button type="button" className="text-muted-foreground hover:text-foreground focus-visible:ring-ring absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-md focus-visible:ring-2" onClick={() => setShowConfirmation(!showConfirmation)} aria-label={showConfirmation ? "Ocultar confirmación de contraseña" : "Mostrar confirmación de contraseña"} aria-pressed={showConfirmation} disabled={complete}>
+          <button type="button" className="auth-password-toggle" onClick={() => setShowConfirmation(!showConfirmation)} aria-label={showConfirmation ? "Ocultar confirmación de contraseña" : "Mostrar confirmación de contraseña"} aria-pressed={showConfirmation} disabled={complete}>
             {showConfirmation ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
         </div>
       </div>
       <TermsConsent accepted={terms} onAcceptedChange={setTerms} disabled={complete || loading} />
-      {!complete && <Turnstile onToken={setTurnstileToken} />}
-      {status && <p role="status" className={complete ? "text-emerald-400 whitespace-pre-line text-sm" : "text-destructive whitespace-pre-line text-sm"}>{status}</p>}
-      {!complete && <Button type="submit" className="w-full" disabled={loading || !terms}>
+      {!complete && <div className="auth-verification"><Turnstile onToken={setTurnstileToken} /></div>}
+      {status && <p role="status" className={complete ? "auth-message auth-message--success" : "auth-message"}>{status}</p>}
+      {!complete && <Button type="submit" className="auth-submit" disabled={loading || !terms}>
         {loading ? <Loader2 className="size-4 animate-spin" /> : <UserPlus className="size-4" />}
         Crear Cuenta
       </Button>}

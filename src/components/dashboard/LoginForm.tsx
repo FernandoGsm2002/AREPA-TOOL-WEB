@@ -1,7 +1,8 @@
+import "@/styles/auth.css";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ExternalLink, Globe, LockKeyhole, Loader2, MapPin, MessageCircle, Send } from "lucide-react";
+import { Clock3, ExternalLink, Globe, LockKeyhole, Loader2, MapPin, MessageCircle, Send } from "lucide-react";
 import { saveSession } from "@/lib/web-session";
 import { webLoginStep1 } from "@/lib/web-login-api";
 import Turnstile from "@/components/auth/Turnstile";
@@ -83,35 +84,36 @@ export default function LoginForm() {
 
   if (activationPending) {
     return (
-      <section className="space-y-5" aria-live="polite">
-        <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
-          <h2 className="text-xl font-bold">Activación de licencia pendiente</h2>
-          <p className="text-muted-foreground mt-2 text-sm leading-6">
+      <section className="auth-pending" aria-live="polite">
+        <div className="auth-pending__notice">
+          <Clock3 aria-hidden="true" />
+          <h2>Activación de licencia pendiente</h2>
+          <p>
             Tu registro está completo y tu cuenta ya existe. Solo falta activar la licencia con un reseller oficial.
             Contacta a uno de los resellers oficiales para completar la activación.
           </p>
         </div>
 
         <div>
-          <h3 className="font-semibold">Resellers oficiales</h3>
-          <p className="text-muted-foreground mt-1 text-sm">Elige uno para consultar la activación.</p>
-          <div className="mt-3 max-h-[45vh] space-y-3 overflow-y-auto pr-1">
+          <h3 id="auth-resellers-title">Resellers oficiales</h3>
+          <p className="auth-pending__description">Elige uno para consultar la activación.</p>
+          <div className="auth-resellers" role="region" aria-labelledby="auth-resellers-title" tabIndex={0}>
             {resellers.map((reseller) => (
-              <article key={reseller.name} className="bg-card rounded-xl border p-4">
-                <h4 className="font-semibold">{reseller.name}</h4>
-                <p className="text-muted-foreground mt-1 flex items-center gap-1.5 text-xs">
-                  <MapPin className="size-3.5 shrink-0" />{reseller.region}
+              <article key={reseller.name} className="auth-reseller">
+                <h4>{reseller.name}</h4>
+                <p className="auth-reseller__region">
+                  <MapPin className="size-3.5 shrink-0" aria-hidden="true" />{reseller.region}
                 </p>
-                {reseller.phone && <p className="mt-2 text-xs">WhatsApp: {reseller.phone}</p>}
-                <p className="text-muted-foreground mt-2 text-xs">{reseller.details}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
+                {reseller.phone && <p className="auth-reseller__phone">WhatsApp: {reseller.phone}</p>}
+                <p className="auth-reseller__details">{reseller.details}</p>
+                <div className="auth-reseller__links">
                   {reseller.links.map((link) => {
                     const Icon = link.icon === "whatsapp" ? MessageCircle : link.icon === "telegram" ? Send : Globe;
                     const label = link.label || (link.icon === "whatsapp" ? "WhatsApp" : link.icon === "telegram" ? "Telegram" : "Sitio web");
                     return (
                       <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer"
-                         className="border-border hover:border-primary hover:text-primary inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors">
-                        <Icon className="size-3.5" />{label}<ExternalLink className="size-3" />
+                         className="auth-reseller__link">
+                        <Icon className="size-3.5" aria-hidden="true" />{label}<ExternalLink className="size-3" aria-hidden="true" />
                       </a>
                     );
                   })}
@@ -121,7 +123,7 @@ export default function LoginForm() {
           </div>
         </div>
 
-        <Button type="button" variant="outline" className="w-full"
+        <Button type="button" variant="outline" className="auth-submit"
                 onClick={() => setActivationPending(false)}>
           Volver al inicio de sesión
         </Button>
@@ -130,9 +132,9 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4">
-      <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="username">
+    <form onSubmit={submit} className="auth-form" aria-busy={loading}>
+      <div className="auth-field">
+        <label className="auth-field-label" htmlFor="username">
           Usuario o email
         </label>
         <Input
@@ -143,8 +145,8 @@ export default function LoginForm() {
           placeholder="tu.usuario"
         />
       </div>
-      <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="password">
+      <div className="auth-field">
+        <label className="auth-field-label" htmlFor="password">
           Contraseña
         </label>
         <Input
@@ -157,7 +159,7 @@ export default function LoginForm() {
         />
       </div>
 
-      <Turnstile key={turnstileKey} action="web_login" onToken={setTurnstileToken} />
+      <div className="auth-verification"><Turnstile key={turnstileKey} action="web_login" onToken={setTurnstileToken} /></div>
 
       <TermsConsent
         accepted={termsAccepted}
@@ -165,24 +167,26 @@ export default function LoginForm() {
         disabled={loading}
       />
 
-      {error && <p className="text-destructive text-sm">{error}</p>}
+      {error && <p role="alert" className="auth-message">{error}</p>}
 
-      <Button type="submit" className="w-full" disabled={loading || !termsAccepted}>
+      <Button type="submit" className="auth-submit" disabled={loading || !termsAccepted}>
         {loading ? <Loader2 className="size-4 animate-spin" /> : <LockKeyhole className="size-4" />}
         Iniciar sesión
       </Button>
 
-      <p className="text-muted-foreground text-center text-sm">
-        ¿No tienes cuenta?{" "}
-        <a href="/register" className="text-primary font-medium hover:underline">
-          Regístrate
-        </a>
-      </p>
-      <p className="text-center text-sm">
-        <a href="/recover" className="text-muted-foreground hover:text-foreground">
-          ¿Olvidaste tu contraseña?
-        </a>
-      </p>
+      <div className="auth-links">
+        <p>
+          ¿No tienes cuenta?{" "}
+          <a href="/register">
+            Regístrate
+          </a>
+        </p>
+        <p>
+          <a href="/recover">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </p>
+      </div>
     </form>
   );
 }
