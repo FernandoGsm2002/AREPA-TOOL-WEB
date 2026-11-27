@@ -139,7 +139,6 @@ export default function ResellerLogin() {
         <main className="rs-auth-main">
           <section className="rs-auth-story">
             <span className="rs-brand-label">{t("workspace")}</span>
-            <h1>{t("loginTitle")}</h1>
             <p>{t("loginIntro")}</p>
             <div className="rs-auth-note">
               <ShieldCheck aria-hidden="true" size={22} />
@@ -160,7 +159,7 @@ export default function ResellerLogin() {
                 <div className="rs-auth-symbol">
                   <KeyRound aria-hidden="true" size={24} />
                 </div>
-                <h2>{title}</h2>
+                <h1>{title}</h1>
                 <p className="rs-muted">
                   {t(
                     step === "login"
@@ -187,10 +186,7 @@ export default function ResellerLogin() {
                             onChange={(e) => setUsername(e.target.value)}
                           />
                         </Field>
-                        <Field
-                          label={t("password")}
-                          hint={t("loginPasswordHelp")}
-                        >
+                        <Field label={t("password")}>
                           <span className="rs-password">
                             <input
                               type={visible ? "text" : "password"}

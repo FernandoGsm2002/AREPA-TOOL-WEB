@@ -1,11 +1,6 @@
 import type { ResellerLanguage } from "./reseller-api";
 // Every UI string has an explicit ES / EN / PT-BR translation. Server messages remain plain text.
 const copy = {
-  loginPasswordHelp: [
-    "En tu primer acceso, utiliza tu clave API. Si configuraste una contraseña del panel, utiliza esa contraseña.",
-    "For your first sign-in, use your API key. If you have set a workspace password, use that password.",
-    "No primeiro acesso, use sua chave API. Se você configurou uma senha do painel, use essa senha.",
-  ],
   enrollmentApprovalRequired: [
     "Contacta a administración para que apruebe tu acceso con el Telegram vinculado a tu cuenta antes de configurar el autenticador.",
     "Contact an administrator to approve access using the Telegram linked to your account before setting up your authenticator.",
@@ -135,11 +130,6 @@ const copy = {
     "A atividade aparecerá aqui quando houver operações.",
   ],
   login: ["Iniciar sesión", "Sign in", "Entrar"],
-  loginTitle: [
-    "Tu negocio, en orden.",
-    "Your business, in order.",
-    "Seu negócio, em ordem.",
-  ],
   loginIntro: [
     "Administra licencias, créditos y alquileres desde tu cuenta de distribuidor.",
     "Manage licenses, credits and rentals from your reseller account.",
