@@ -89,6 +89,8 @@ Primary gold marks key actions, selected modules and headline emphasis. Neutral 
 
 Geist is self-hosted by the project. Headings use balanced wrapping, negative tracking and weights around 500–550. Body copy uses comfortable line heights. Supporting preview text is smaller; prices use tabular numerals.
 
+Retained typography outside this new token inventory: shared base styles still declare Avenir Next (with Segoe UI fallback) for legacy headings/branding, and JetBrains Mono for technical metadata. The existing Features component also declares Avenir Next. These declarations predate the public refresh and remain scoped exceptions; do not introduce them into new marketing components. Their detector exceptions are limited by font value and source file.
+
 **The Hierarchy Rule.** Use size and spacing before extra decoration. Preserve readable technical names and localized content in ES, EN and PT-BR.
 
 ## Layout

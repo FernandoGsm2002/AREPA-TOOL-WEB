@@ -1,0 +1,46 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "roboto",
+        "createdAt": "2026-07-29T19:36:03.499Z"
+      },
+      {
+        "rule": "overused-font",
+        "value": "space grotesk",
+        "createdAt": "2026-09-17T05:07:58.927Z",
+        "reason": "Agent: Space Grotesk is intentionally loaded in Layout.astro and used as the site's display type token across the existing visual system."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "avenir next",
+        "files": [
+          "src/styles/global.css"
+        ],
+        "createdAt": "2026-11-27T19:03:30.188Z",
+        "reason": "Agent review: these 8 pre-existing base heading/brand declarations were retained in bb4f204. DESIGN.md covers the public marketing override, not wholesale replacement of shared legacy/account styles."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "jetbrains mono",
+        "files": [
+          "src/styles/global.css"
+        ],
+        "createdAt": "2026-11-27T19:03:30.638Z",
+        "reason": "Agent review: these 6 pre-existing technical metadata declarations remain intentional. Shared --font-mono is preserved; the public redesign does not replace account or legacy metadata typography."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "avenir next",
+        "files": [
+          "src/components/site/Features.astro"
+        ],
+        "createdAt": "2026-11-27T19:03:31.086Z",
+        "reason": "Agent review: this existing feature heading declaration predates bb4f204. Retained component typography is outside the new public shell's token inventory; preserve it rather than broadening the refresh."
+      }
+    ]
+  }
+}
