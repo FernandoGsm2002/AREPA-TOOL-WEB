@@ -1,0 +1,18 @@
+---
+import { ArrowRight, Search, Layers, BookOpen, ChevronDown, Download } from 'lucide-react';
+import { localizedPath, type Locale } from '@/lib/i18n';
+import { marketingCopy } from '@/lib/marketing-copy';
+interface Props { locale: Locale; part: 'resources' | 'start'; }
+const { locale, part } = Astro.props;
+const copy = marketingCopy[locale];
+const icons = [Search, Layers, BookOpen];
+---
+{part === 'resources' ? <section class="resource-section">
+  <div class="site-container">
+    <div class="marketing-heading"><h2>{copy.coverageTitle}</h2><p>{copy.coverageIntro}</p></div>
+    <div class="resource-grid">{copy.resources.map((resource, index) => { const Icon = icons[index]; return <a class="resource-item" href={localizedPath(locale, resource.href)}><Icon size={26} /><h3>{resource.title}</h3><p>{resource.text}</p><span>{resource.action}<ArrowRight size={17} /></span></a>; })}</div>
+  </div>
+</section> : <>
+  <section class="faq-section"><div class="site-container faq-grid"><div class="marketing-heading"><h2>{copy.faqTitle}</h2><a class="marketing-text-link" href={localizedPath(locale, '/instructions')}>{copy.resources[2].title}<ArrowRight size={17} /></a></div><div>{copy.faq.map(([question, answer]) => <details class="faq-item"><summary>{question}<ChevronDown size={19} /></summary><p>{answer}</p></details>)}</div></div></section>
+  <section class="start-section"><div class="site-container start-section__inner"><div class="marketing-heading"><h2>{copy.startTitle}</h2><p>{copy.startIntro}</p></div><ol>{copy.steps.map((step,index) => <li><span>{index+1}</span>{step}</li>)}</ol><div class="start-section__actions"><a class="marketing-button marketing-button--primary" href="/register">{copy.createAccount}<ArrowRight size={18} /></a><a class="marketing-button marketing-button--secondary" href="https://api2.arepatool.com/api/app-version/download"><Download size={18} />{copy.download}</a></div></div></section>
+</>}

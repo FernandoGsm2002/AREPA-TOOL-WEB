@@ -14,9 +14,9 @@ interface Props {
 const { title, description, locale = localeFromPath(Astro.url.pathname) } = Astro.props;
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} locale={locale} marketing>
   <Navbar locale={locale} />
-  <slot />
+  <div id="main-content"><slot /></div>
   <Footer locale={locale} />
-  <WhatsAppModal client:load />
+  <WhatsAppModal client:load locale={locale} />
 </Layout>

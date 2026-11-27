@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-27T19:01:29.638Z",
+  "title": "Design System: ArepaTool",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "primary",
+        "canonical": "#f6b94c",
+        "tonalRamp": [
+          "oklch(15% 0.1413 78.8)",
+          "oklch(26% 0.1413 78.8)",
+          "oklch(38% 0.1413 78.8)",
+          "oklch(49% 0.1413 78.8)",
+          "oklch(61% 0.1413 78.8)",
+          "oklch(72% 0.1413 78.8)",
+          "oklch(84% 0.1413 78.8)",
+          "oklch(95% 0.1413 78.8)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "background",
+        "canonical": "#090a0b",
+        "tonalRamp": [
+          "oklch(15% 0.0028 247.1)",
+          "oklch(26% 0.0028 247.1)",
+          "oklch(38% 0.0028 247.1)",
+          "oklch(49% 0.0028 247.1)",
+          "oklch(61% 0.0028 247.1)",
+          "oklch(72% 0.0028 247.1)",
+          "oklch(84% 0.0028 247.1)",
+          "oklch(95% 0.0028 247.1)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "surface",
+        "canonical": "#121416",
+        "tonalRamp": [
+          "oklch(15% 0.0051 248.1)",
+          "oklch(26% 0.0051 248.1)",
+          "oklch(38% 0.0051 248.1)",
+          "oklch(49% 0.0051 248.1)",
+          "oklch(61% 0.0051 248.1)",
+          "oklch(72% 0.0051 248.1)",
+          "oklch(84% 0.0051 248.1)",
+          "oklch(95% 0.0051 248.1)"
+        ]
+      },
+      "raised": {
+        "role": "neutral",
+        "displayName": "raised",
+        "canonical": "#1b1e21",
+        "tonalRamp": [
+          "oklch(15% 0.0073 248.1)",
+          "oklch(26% 0.0073 248.1)",
+          "oklch(38% 0.0073 248.1)",
+          "oklch(49% 0.0073 248.1)",
+          "oklch(61% 0.0073 248.1)",
+          "oklch(72% 0.0073 248.1)",
+          "oklch(84% 0.0073 248.1)",
+          "oklch(95% 0.0073 248.1)"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "text",
+        "canonical": "#f5f5f2",
+        "tonalRamp": [
+          "oklch(15% 0.0040 106.5)",
+          "oklch(26% 0.0040 106.5)",
+          "oklch(38% 0.0040 106.5)",
+          "oklch(49% 0.0040 106.5)",
+          "oklch(61% 0.0040 106.5)",
+          "oklch(72% 0.0040 106.5)",
+          "oklch(84% 0.0040 106.5)",
+          "oklch(95% 0.0040 106.5)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "muted",
+        "canonical": "#aeb3b8",
+        "tonalRamp": [
+          "oklch(15% 0.0091 247.9)",
+          "oklch(26% 0.0091 247.9)",
+          "oklch(38% 0.0091 247.9)",
+          "oklch(49% 0.0091 247.9)",
+          "oklch(61% 0.0091 247.9)",
+          "oklch(72% 0.0091 247.9)",
+          "oklch(84% 0.0091 247.9)",
+          "oklch(95% 0.0091 247.9)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "line",
+        "canonical": "#2a2d30",
+        "tonalRamp": [
+          "oklch(15% 0.0069 248.1)",
+          "oklch(26% 0.0069 248.1)",
+          "oklch(38% 0.0069 248.1)",
+          "oklch(49% 0.0069 248.1)",
+          "oklch(61% 0.0069 248.1)",
+          "oklch(72% 0.0069 248.1)",
+          "oklch(84% 0.0069 248.1)",
+          "oklch(95% 0.0069 248.1)"
+        ]
+      },
+      "annual-surface": {
+        "role": "neutral",
+        "displayName": "annual surface",
+        "canonical": "#eeefeb",
+        "tonalRamp": [
+          "oklch(15% 0.0054 117.9)",
+          "oklch(26% 0.0054 117.9)",
+          "oklch(38% 0.0054 117.9)",
+          "oklch(49% 0.0054 117.9)",
+          "oklch(61% 0.0054 117.9)",
+          "oklch(72% 0.0054 117.9)",
+          "oklch(84% 0.0054 117.9)",
+          "oklch(95% 0.0054 117.9)"
+        ]
+      },
+      "annual-text": {
+        "role": "neutral",
+        "displayName": "annual text",
+        "canonical": "#151719",
+        "tonalRamp": [
+          "oklch(15% 0.0051 248.1)",
+          "oklch(26% 0.0051 248.1)",
+          "oklch(38% 0.0051 248.1)",
+          "oklch(49% 0.0051 248.1)",
+          "oklch(61% 0.0051 248.1)",
+          "oklch(72% 0.0051 248.1)",
+          "oklch(84% 0.0051 248.1)",
+          "oklch(95% 0.0051 248.1)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headings"
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings"
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Explanations and descriptions"
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Navigation and supporting controls"
+      }
+    },
+    "shadows": [
+      {
+        "name": "product-window",
+        "value": "0 26px 70px -22px #000",
+        "purpose": "Depth for the illustrative desktop preview"
+      }
+    ],
+    "motion": [
+      {
+        "name": "preview-in",
+        "value": ".28s cubic-bezier(.16,1,.3,1)",
+        "purpose": "Subtle module transition; disabled with reduced motion"
+      },
+      {
+        "name": "control-state",
+        "value": ".2s",
+        "purpose": "Button and disclosure state changes"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile-details",
+        "value": "479px"
+      },
+      {
+        "name": "stacked-content",
+        "value": "799px"
+      },
+      {
+        "name": "navigation",
+        "value": "1100px"
+      }
+    ],
+    "reference": {
+      "url": "https://cerberustoolpro.com/#pricing",
+      "seed": "0659cdb2",
+      "authority": "Pinned user reference overrides exploratory form seed"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main download or account action",
+      "html": "<button class=\"button\">Download for Windows</button>",
+      "css": ".button{font:600 14px Geist,sans-serif;background:#f6b94c;color:#1b1509;padding:14px 20px;min-height:50px;border:1px solid transparent;border-radius:10px}.button:hover{background:#ffd17b}.button:focus-visible{outline:2px solid #f6b94c;outline-offset:4px}"
+    },
+    {
+      "name": "Secondary action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Supporting navigation action",
+      "html": "<button class=\"button\">View licenses</button>",
+      "css": ".button{font:600 14px Geist,sans-serif;background:#17191b;color:#f5f5f2;padding:14px 20px;min-height:50px;border:1px solid #383c40;border-radius:10px}.button:hover{background:#262a2e;border-color:#62686d}.button:focus-visible{outline:2px solid #f6b94c;outline-offset:4px}"
+    },
+    {
+      "name": "Capsule navigation",
+      "kind": "nav",
+      "description": "Public desktop navigation",
+      "html": "<nav><strong>ArepaTool</strong><a href=\"#home\">Home</a><a href=\"#pricing\">Pricing</a><a href=\"#resellers\">Resellers</a></nav>",
+      "css": "nav{display:flex;align-items:center;gap:24px;background:#101112;border:1px solid #2a2d30;border-radius:999px;padding:16px 24px;font:14px Geist,sans-serif;color:#f5f5f2}a{color:#aeb3b8;text-decoration:none}a:hover{color:white}"
+    },
+    {
+      "name": "Annual plan",
+      "kind": "card",
+      "refersTo": "annual-plan",
+      "description": "Contrasting license plan",
+      "html": "<article><span>Annual access</span><h3>1 year</h3><p>Updates while your license is active</p><strong>32 <small>USDT</small></strong></article>",
+      "css": "article{font-family:Geist,sans-serif;background:#eeefeb;color:#151719;border-radius:16px;padding:32px}span,p{color:#4b5358;font-size:14px}h3{font-size:36px;font-weight:500}strong{font-size:64px;font-weight:500}small{font-size:14px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "A clear workspace for the next repair",
+    "overview": "The public site presents a practical desktop product with generous spacing, calm near-black surfaces and a warm gold identity. The user's pinned reference, Cerberus Tool Pro, informs capsule navigation, the paired hero and contrasting annual card. ArepaTool content, colors and assets remain authoritative.",
+    "keyCharacteristics": [
+      "Large, restrained sans-serif headings.",
+      "Tonal dark surfaces with gold actions.",
+      "Clearly separated license and credit offers.",
+      "An interactive, explicitly illustrative module preview."
+    ],
+    "rules": [
+      {
+        "name": "Scope",
+        "body": "Apply this system to public pages through the explicit marketing layout flag. Private account and admin interfaces retain their own styles.",
+        "section": "Colors"
+      },
+      {
+        "name": "Hierarchy",
+        "body": "Use size and spacing before extra decoration. Preserve readable technical names and localized content in ES, EN and PT-BR.",
+        "section": "Typography"
+      },
+      {
+        "name": "Clear Controls",
+        "body": "At widths up to 799px, WhatsApp and the update reopening button live in document flow below the footer so they cannot cover content. Desktop retains corner shortcuts.",
+        "section": "Layout"
+      },
+      {
+        "name": "Access",
+        "body": "Preserve focus rings, the skip link, translated control labels and reduced-motion support. Check mobile overflow after content changes.",
+        "section": "Components"
+      }
+    ],
+    "dos": [
+      "**Do** preserve real prices, reseller contacts and release content.",
+      "**Do** optimize existing artwork without changing its identity.",
+      "**Do** keep public presentation separate from billing and account behavior.",
+      "**Do** check desktop, mobile and all three languages."
+    ],
+    "donts": [
+      "**Don't** present the preview as a live connected device.",
+      "**Don't** invent statistics, reviews or popularity claims.",
+      "**Don't** cover mobile controls with floating shortcuts.",
+      "**Don't** apply the FOXUNLOCKERS fire exception to ordinary cards."
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 ---
 import { ArrowRight, Mail } from "lucide-react";
 import { TelegramIcon, WhatsAppIcon } from "@/components/icons/BrandIcons";
+import { marketingCopy } from "@/lib/marketing-copy";
 import { getLocaleCopy, getNavLinks, localeFromPath, localizedPath, type Locale } from "@/lib/i18n";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
 const copy = getLocaleCopy(locale);
 const navLinks = getNavLinks(locale);
+const marketing = marketingCopy[locale];
 ---
 
 <footer class="site-footer">
@@ -44,9 +46,9 @@ const navLinks = getNavLinks(locale);
 
       <section class="site-footer-column site-footer-downloads">
         <h2>{copy.footer.download}</h2>
-        <p>{copy.footer.downloadText}</p>
-        <a class="site-footer-download" href="/login">
-          <span>{copy.footer.downloadAction}</span>
+        <p>{marketing.downloadFooter}</p>
+        <a class="site-footer-download" href="https://api2.arepatool.com/api/app-version/download">
+          <span>{marketing.download}</span>
           <ArrowRight aria-hidden="true" />
         </a>
       </section>
@@ -64,11 +66,11 @@ const navLinks = getNavLinks(locale);
     <div class="site-footer-bottom">
       <a class="site-footer-brand" href={localizedPath(locale, "/")} aria-label={copy.footer.homeLabel}>
         <span class="site-footer-brand__logo" aria-hidden="true">
-          <img src="/pngs/arepatool-logo-mark.png" alt="" />
+          <img src="/pngs/arepatool-logo-mark.webp" alt="" />
         </span>
         <span class="site-footer-brand__copy">
           <strong>ArepaTool</strong>
-          <small>MDM Tool</small>
+          <small>Mobile service tools</small>
         </span>
       </a>
       <p>{copy.footer.copyright}</p>
@@ -79,10 +81,11 @@ const navLinks = getNavLinks(locale);
 <button
   type="button"
   data-open-wa
-  aria-label="Abrir grupo de WhatsApp"
+  aria-label={locale === "es" ? "Abrir grupo de WhatsApp" : locale === "en" ? "Open WhatsApp group" : "Abrir grupo do WhatsApp"}
   class="site-wa-float fixed right-5 bottom-5 z-40 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl shadow-[#25D366]/30 transition-transform hover:scale-105"
 >
   <WhatsAppIcon className="size-6" />
+  <span class="site-wa-label hidden">WhatsApp</span>
 </button>
 
 <script>

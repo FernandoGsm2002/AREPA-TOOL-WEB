@@ -1,225 +1,36 @@
 ---
-import { getLocaleCopy, localeFromPath, localizedPath, type Locale } from "@/lib/i18n";
-
+import { ArrowRight, CalendarDays, Check, Coins, KeyRound } from 'lucide-react';
+import { getLocaleCopy, localeFromPath, localizedPath, withoutLocale, type Locale } from '@/lib/i18n';
+import { marketingCopy } from '@/lib/marketing-copy';
 interface Props { locale?: Locale; }
 const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
-const copy = getLocaleCopy(locale);
-const plans = copy.pricing.plans.map((plan, index) => ({ ...plan, featured: index === 2, accent: index === 0 }));
+const plans = getLocaleCopy(locale).pricing.plans;
+const copy = marketingCopy[locale];
+const [credit, ...licenses] = plans;
+const Heading = withoutLocale(Astro.url.pathname) === "/pricing" ? "h1" : "h2";
 ---
-
-<section id="pricing" class="pricing-section">
+<section id="pricing" class="license-section" aria-labelledby="license-title">
   <div class="site-container">
-    <div class="pricing-heading">
-      <p class="pricing-kicker">{copy.pricing.kicker}</p>
-      <h2>{copy.pricing.title}</h2>
-      <p>{copy.pricing.description}</p>
+    <div class="marketing-heading marketing-heading--center">
+      <Heading id="license-title">{copy.pricingTitle}</Heading>
+      <p>{copy.pricingIntro}</p>
     </div>
-
-    <div class="pricing-grid">
-      {plans.map((plan) => (
-        <article class:list={[
-          "pricing-plan",
-          plan.accent && "pricing-plan--accent",
-          plan.featured && "pricing-plan--featured",
-        ]}>
-          {plan.featured && <span class="pricing-plan__badge">{copy.pricing.popular}</span>}
-          <p class="pricing-plan__eyebrow">{plan.eyebrow}</p>
-          <h3>{plan.name}</h3>
-          <p class="pricing-plan__duration">{plan.duration}</p>
-          <div class="pricing-plan__price">
-            <span>{copy.pricing.price}</span>
-            <strong>{`${plan.price} USDT`}</strong>
-          </div>
-          <p class="pricing-plan__description">{plan.description}</p>
-          <div class="pricing-plan__actions">
-            <a class="pricing-button pricing-button--primary" href={localizedPath(locale, "/resellers")}>{copy.pricing.buyNow}</a>
-            <a class="pricing-button pricing-button--secondary" href={localizedPath(locale, "/resellers")}>{copy.pricing.reseller}</a>
-          </div>
-        </article>
-      ))}
+    <div class="license-grid">
+      {licenses.map((plan, index) => <article class:list={['license-plan', index === 2 && 'license-plan--annual']}>
+        <div class="license-plan__top"><CalendarDays size={22} />{index === 2 && <span>{copy.annual}</span>}</div>
+        <h3>{plan.duration}</h3><p class="license-plan__description">{plan.description}</p>
+        <ul>{copy.included.map(item => <li><Check size={16} />{item}</li>)}</ul>
+        <div class="license-plan__price"><strong>{plan.price}</strong><span>USDT</span></div>
+        <a class="marketing-button" href={localizedPath(locale, '/resellers')}>{copy.buyPlan}<ArrowRight size={18} /></a>
+        <p class="license-plan__activation"><KeyRound size={13} />{copy.activation}</p>
+      </article>)}
     </div>
+    <div class="service-credits">
+      <Coins size={30} aria-hidden="true" />
+      <div><h3>{copy.creditTitle}</h3><p>{copy.creditNote}</p></div>
+      <div class="service-credits__price"><strong>{credit.price} <small>USDT</small></strong><span>{credit.duration}</span></div>
+      <a class="marketing-button marketing-button--secondary" href={localizedPath(locale, '/resellers')}>{copy.buyCredits}<ArrowRight size={16} /></a>
+    </div>
+    <p class="license-section__signup">{copy.newAccount} <a href="/register">{copy.createAccount}<ArrowRight size={14} /></a></p>
   </div>
 </section>
-
-<style>
-  .pricing-section {
-    border-bottom: 1px solid rgb(255 255 255 / 9%);
-    background: #0a0e13;
-    padding-block: 5rem 6rem;
-  }
-
-  .pricing-heading {
-    max-width: 42rem;
-    margin-inline: auto;
-    text-align: center;
-  }
-
-  .pricing-kicker,
-  .pricing-plan__eyebrow {
-    color: #f4a64b;
-    font-family: var(--font-mono);
-    font-size: .68rem;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  .pricing-heading h2 {
-    margin-top: .55rem;
-    color: #f4f3ef;
-    font-family: 'Avenir Next', 'Segoe UI', sans-serif;
-    font-size: clamp(2.35rem, 5vw, 3.8rem);
-    letter-spacing: -.065em;
-    line-height: .98;
-  }
-
-  .pricing-heading > p:last-child {
-    margin-top: 1.05rem;
-    color: #aab3bd;
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-
-  .pricing-grid {
-    display: grid;
-    gap: 1rem;
-    margin-top: 3.25rem;
-  }
-
-  .pricing-plan {
-    position: relative;
-    display: flex;
-    min-height: 22rem;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1.25rem 1.25rem;
-    border: 1px solid rgb(255 255 255 / 14%);
-    border-radius: .95rem;
-    background: #111821;
-    color: #f4f3ef;
-    text-align: center;
-  }
-
-  .pricing-plan--accent {
-    border-color: #e98a24;
-    background: #21170f;
-    color: #f5e3d0;
-  }
-
-  .pricing-plan--accent .pricing-plan__eyebrow,
-  .pricing-plan--accent .pricing-plan__duration,
-  .pricing-plan--accent .pricing-plan__description { color: #d9b895; }
-
-  .pricing-plan--featured {
-    border: 2px solid #e0a916;
-    box-shadow: 0 18px 40px rgb(216 155 36 / 15%);
-  }
-
-  .pricing-plan__badge {
-    position: absolute;
-    top: -.8rem;
-    padding: .4rem .85rem;
-    border-radius: 999px;
-    background: #eab51b;
-    color: #241a05;
-    font-family: var(--font-mono);
-    font-size: .6rem;
-    font-weight: 800;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  .pricing-plan h3 {
-    margin-top: .75rem;
-    color: inherit;
-    font-family: 'Avenir Next', 'Segoe UI', sans-serif;
-    font-size: 1.25rem;
-    letter-spacing: -.035em;
-  }
-
-  .pricing-plan__duration {
-    margin-top: .3rem;
-    color: #adb6bf;
-    font-size: .88rem;
-  }
-
-  .pricing-plan__price {
-    display: flex;
-    align-items: baseline;
-    gap: .35rem;
-    margin-top: 1.3rem;
-  }
-
-  .pricing-plan__price span {
-    color: #aab3bd;
-    font-size: .72rem;
-  }
-
-  .pricing-plan--accent .pricing-plan__price span { color: #d9b895; }
-
-  .pricing-plan__price strong {
-    color: inherit;
-    font-family: 'Avenir Next', 'Segoe UI', sans-serif;
-    font-size: 2.55rem;
-    font-weight: 500;
-    letter-spacing: -.065em;
-    line-height: 1;
-  }
-
-  .pricing-plan__description {
-    max-width: 15rem;
-    min-height: 2.7rem;
-    margin-top: .85rem;
-    color: #b6c0ca;
-    font-size: .78rem;
-    line-height: 1.5;
-  }
-
-  .pricing-plan__actions {
-    display: grid;
-    width: 100%;
-    gap: .5rem;
-    margin-top: auto;
-    padding-top: 1.25rem;
-  }
-
-  .pricing-button {
-    display: inline-flex;
-    min-height: 3rem;
-    align-items: center;
-    justify-content: center;
-    border-radius: .75rem;
-    font-size: .78rem;
-    font-weight: 700;
-    transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
-  }
-
-  .pricing-button:hover { transform: translateY(-2px); }
-
-  .pricing-button--primary {
-    background: #e98a24;
-    color: #211407;
-    box-shadow: 0 8px 18px rgb(216 155 36 / 18%);
-  }
-
-  .pricing-button--primary:hover { background: #d97916; }
-
-  .pricing-button--secondary {
-    border: 1px solid rgb(255 255 255 / 22%);
-    background: transparent;
-    color: #c3cbd3;
-  }
-
-  .pricing-plan--accent .pricing-button--secondary {
-    border-color: #dfa96f;
-    color: #ffd49d;
-  }
-
-  @media (min-width: 760px) {
-    .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-
-  @media (min-width: 1100px) {
-    .pricing-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  }
-</style>

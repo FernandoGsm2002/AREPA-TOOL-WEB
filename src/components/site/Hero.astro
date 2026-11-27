@@ -1,54 +1,25 @@
 ---
-import { ArrowRight, Download } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import { getLocaleCopy, localeFromPath, localizedPath, type Locale } from "@/lib/i18n";
-
+import { ArrowRight, Download, Check, Monitor } from 'lucide-react';
+import { localeFromPath, localizedPath, type Locale } from '@/lib/i18n';
+import { marketingCopy } from '@/lib/marketing-copy';
+import ProductPreview from './ProductPreview.astro';
 interface Props { locale?: Locale; }
 const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
-const copy = getLocaleCopy(locale);
+const copy = marketingCopy[locale];
 ---
-
-<section class="hero-section">
-  <div class="site-container hero-grid">
-    <div class="hero-copy">
-      <p class="hero-kicker">{copy.hero.kicker}</p>
-      <h1>ArepaTool <span>{copy.hero.titleAccent}</span></h1>
-      <p>{copy.hero.description}</p>
-      <div class="hero-release" aria-label="Versión y plataforma">
-        <strong>v3.1.0</strong>
-        <span>{copy.hero.platform}</span>
-        <span>{copy.hero.license}</span>
+<section class="product-hero" aria-labelledby="hero-title">
+  <div class="site-container product-hero__grid">
+    <div class="product-hero__copy">
+      <h1 id="hero-title">{copy.headline}<br /><span>{copy.accent}</span></h1>
+      <p>{copy.intro}</p>
+      <div class="product-hero__actions">
+        <a class="marketing-button marketing-button--primary" href="https://api2.arepatool.com/api/app-version/download"><Download size={18} />{copy.download}</a>
+        <a class="marketing-button marketing-button--secondary" href="#pricing">{copy.plans}<ArrowRight size={18} /></a>
       </div>
-
-      <div class="hero-actions">
-        <a href={localizedPath(locale, "/pricing")} class={buttonVariants({ size: "lg", className: "shadow-lg shadow-primary/15" })}>
-          {copy.hero.licenseCta}
-          <ArrowRight className="size-4" />
-        </a>
-        <a href="https://api2.arepatool.com/api/app-version/download" class={buttonVariants({ size: "lg", variant: "secondary" })}>
-          <Download className="size-4" />
-          {copy.hero.downloadCta}
-        </a>
-      </div>
-
-      <div class="hero-proof" aria-label={copy.hero.proofLabel}>
-        <span>FRP</span>
-        <span>MDM</span>
-        <span>iCloud</span>
-        <span>DNS</span>
-        <span>MTK</span>
-      </div>
+      <div class="product-hero__platform"><Monitor size={15} /><span>Windows</span><span>ArepaTool v3.1.0</span></div>
+      <ul class="product-hero__proof">{copy.proof.map(item => <li><Check size={15} />{item}</li>)}</ul>
     </div>
-
-    <div class="hero-visual">
-      <img
-        class="hero-mascot"
-        src="/pngs/windowslog-christmas.png"
-        alt={copy.hero.mascotAlt}
-        loading="eager"
-        decoding="async"
-      />
-    </div>
+    <ProductPreview locale={locale} />
   </div>
-  <p class="site-container hero-tagline">{copy.hero.tagline}</p>
+  <div class="site-container product-hero__foot"><p>{copy.brands}</p><a href={localizedPath(locale, '/supportedmodels')}>{copy.models}<ArrowRight size={16} /></a></div>
 </section>

@@ -1,0 +1,34 @@
+---
+import { Smartphone, Cpu, Apple, Wrench, ArrowUpRight, Layers, ChevronRight, Minus, Square, X } from 'lucide-react';
+import { localizedPath, type Locale } from '@/lib/i18n';
+import { marketingCopy } from '@/lib/marketing-copy';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const copy = marketingCopy[locale];
+const icons = [Smartphone, Cpu, Apple, Wrench];
+---
+<figure class="product-preview">
+  <div class="product-preview__window">
+    <div class="product-preview__titlebar"><span><img src="/pngs/arepatool-logo-mark.webp" alt="" width="24" height="24" />ArepaTool</span><div aria-hidden="true"><Minus size={12} /><Square size={10} /><X size={12} /></div></div>
+    <fieldset class="product-preview__workspace">
+      <legend class="sr-only">{copy.preview}</legend>
+      {copy.modules.map((module, index) => <input class="product-preview__radio" type="radio" name="preview-module" id={`preview-${index}`} checked={index === 0} aria-label={module.name} />)}
+      <div class="product-preview__sidebar">
+        <span class="product-preview__label">{copy.workspace}</span>
+        {copy.modules.map((module, index) => { const Icon = icons[index]; return <label for={`preview-${index}`} class={`product-preview__tab product-preview__tab--${index}`}><Icon size={18} /><span>{module.name}</span></label>; })}
+        <img class="product-preview__mascot" src="/pngs/windowslog-christmas.webp" alt="" width="170" height="170" loading="eager" />
+      </div>
+      <div class="product-preview__panels">
+        {copy.modules.map((module, index) => <section class={`product-preview__panel product-preview__panel--${index}`} aria-label={module.name}>
+          <div class="product-preview__module"><Layers size={15} />{module.name}<span>ArepaTool</span></div>
+          <h2>{module.title}</h2><p>{module.description}</p>
+          <span class="product-preview__label">{copy.available}</span>
+          <ul>{module.items.map(item => <li><span>{item}</span><ChevronRight size={14} aria-hidden="true" /></li>)}</ul>
+          <a href={localizedPath(locale, '/features')}>{copy.resources[1].action}<ArrowUpRight size={15} /></a>
+        </section>)}
+      </div>
+    </fieldset>
+    <div class="product-preview__status"><i aria-hidden="true"></i>Android & Apple<span>Windows</span></div>
+  </div>
+  <figcaption>{copy.previewNote}</figcaption>
+</figure>

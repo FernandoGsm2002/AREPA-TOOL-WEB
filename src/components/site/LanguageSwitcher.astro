@@ -11,7 +11,7 @@ const options = localeOptions.map((option) => ({ ...option, href: localizedPath(
 
 <label class="language-switcher">
   <span class="sr-only">{localeOptions.find((option) => option.code === locale)?.label ?? "Idioma"}</span>
-  <select aria-label="Cambiar idioma" data-language-switcher>
+  <select aria-label={locale === "en" ? "Change language" : locale === "pt-br" ? "Mudar idioma" : "Cambiar idioma"} data-language-switcher>
     {options.map((option) => <option value={option.href} selected={option.code === locale}>{option.flag} {option.short}</option>)}
   </select>
 </label>

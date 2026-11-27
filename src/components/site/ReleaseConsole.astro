@@ -1,151 +1,30 @@
 ---
-import { changelog } from "@/lib/site-data";
-import { getLocaleCopy, localeFromPath, type Locale } from "@/lib/i18n";
-
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import { changelog } from '@/lib/site-data';
+import { getLocaleCopy, localeFromPath, localizedPath, type Locale } from '@/lib/i18n';
+import { marketingCopy } from '@/lib/marketing-copy';
 interface Props { locale?: Locale; }
 const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
-const copy = getLocaleCopy(locale);
-const releaseLines = changelog.slice(0, changelog.findIndex((line, index) => index > 0 && line.type === "h1"));
+const copy = marketingCopy[locale];
+const nextRelease = changelog.findIndex((line, index) => index > 0 && line.type === 'h1');
+const releaseLines = nextRelease < 0 ? changelog : changelog.slice(0, nextRelease);
 ---
-
-<section class="release-console-section" aria-labelledby="release-console-title">
-  <div class="site-container">
-    <div class="release-console-heading">
-      <p class="release-console-kicker">{copy.release.kicker}</p>
-      <h2 id="release-console-title">ArepaTool v3.1.0</h2>
-      <p>{copy.release.whatsNew}</p>
+<section class="release-showcase" aria-labelledby="release-title">
+  <div class="site-container release-showcase__grid">
+    <div class="marketing-heading">
+      <h2 id="release-title">{copy.latest}</h2>
+      <p>{copy.releaseIntro}</p>
+      <a class="marketing-text-link" href={localizedPath(locale, '/updates')}>{copy.releaseAction}<ArrowRight size={17} /></a>
     </div>
-
-    <div class="release-console" role="region" aria-label="ArepaTool version 3.1.0 changelog">
-      <div class="release-console__bar" aria-hidden="true">
-        <span class="release-console__dot release-console__dot--red"></span>
-        <span class="release-console__dot release-console__dot--yellow"></span>
-        <span class="release-console__dot release-console__dot--green"></span>
-        <span class="release-console__path">arepatool@workstation: ~/releases/3.1.0</span>
-        <span class="release-console__status">{copy.release.stable}</span>
-      </div>
-
-      <pre class="release-console__code"><code>{releaseLines.map((line) =>
-        line.type === "blank" ? <span class="terminal-line">{"\u00a0"}</span> :
-        <span class={`terminal-line ${line.type === "h1" || line.type === "h2" ? "terminal-heading" : line.type === "plus" ? "terminal-output" : "terminal-note"}`}>{line.text}</span>
-      )}</code></pre>
+    <div class="release-showcase__content">
+      <div class="release-showcase__version"><strong>ArepaTool v3.1.0</strong><time datetime="2026-11-16">16.11.2026</time></div>
+      <h3>Motorola MTK <span>Repair IMEI · ADB</span></h3>
+      <p>Moto G05 · G15 · G15 Power · E15 · G24 · G24 Power · G22</p>
+      <h3>Samsung MTK V6 <span>FRP · Download Mode</span></h3>
+      <p>{getLocaleCopy(locale).hero.description}</p>
+      <details class="release-notes"><summary>{copy.releaseDetails}<ChevronDown size={18} /></summary>
+        <div>{releaseLines.map(line => line.type === 'blank' ? <br /> : line.type === 'h1' || line.type === 'h2' ? <h4>{line.text.replace(/^#\s*/, '')}</h4> : <p>{line.text}</p>)}</div>
+      </details>
     </div>
   </div>
 </section>
-
-<style>
-  .release-console-section {
-    border-bottom: 1px solid rgb(255 255 255 / 9%);
-    background: #0d131b;
-    padding-block: 4.5rem 5.5rem;
-  }
-
-  .release-console-heading {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: .55rem 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .release-console-heading h2 {
-    width: 100%;
-    margin: 0;
-    color: #f4f3ef;
-    font-family: 'Avenir Next', 'Segoe UI', sans-serif;
-    font-size: clamp(1.85rem, 4vw, 3rem);
-    letter-spacing: -.055em;
-  }
-
-  .release-console-heading p:last-child {
-    margin: 0;
-    color: #aab3bd;
-    font-size: .95rem;
-  }
-
-  .release-console-kicker,
-  .release-console__status {
-    color: #f4a64b;
-    font-family: var(--font-mono);
-    font-size: .68rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  .release-console-kicker { width: 100%; margin: 0; }
-
-  .release-console {
-    overflow: hidden;
-    border: 1px solid rgb(255 255 255 / 13%);
-    border-radius: .65rem;
-    background: #0a0f15 !important;
-    color-scheme: dark;
-    box-shadow: 0 22px 50px rgb(0 0 0 / 28%);
-  }
-
-  .release-console__bar {
-    display: flex;
-    min-height: 2.65rem;
-    align-items: center;
-    gap: .45rem;
-    padding-inline: 1rem;
-    border-bottom: 1px solid rgb(255 255 255 / 10%);
-    background: #111821;
-    color: #aab3bd;
-    font-family: var(--font-mono);
-    font-size: .67rem;
-  }
-
-  .release-console__dot { width: .5rem; height: .5rem; border-radius: 50%; }
-  .release-console__dot--red { background: #e87878; }
-  .release-console__dot--yellow { background: #e7bd68; }
-  .release-console__dot--green { background: #75c49a; }
-  .release-console__path { margin-left: .45rem; }
-  .release-console__status { margin-left: auto; color: #75c49a; font-size: .6rem; }
-
-  .release-console__code {
-    max-height: 34rem;
-    overflow: auto;
-    margin: 0;
-    padding: 1.35rem clamp(1rem, 3vw, 2rem) 1.6rem;
-    background: #0a0f15 !important;
-    color: #dbe1e7;
-    font-family: var(--font-mono);
-    font-size: clamp(.69rem, 1.2vw, .8rem);
-    line-height: 1.75;
-    white-space: pre-wrap;
-  }
-
-  .release-console__code code { background: transparent !important; color: inherit; }
-  .terminal-line { display: block; opacity: 0; transform: translateY(.2rem); animation: terminal-line-in .34s ease-out var(--line-delay, 0ms) forwards; }
-  .terminal-shebang { color: #f4c274; }
-  .terminal-strong { font-weight: 800; }
-  .terminal-command { color: #dbe1e7; }
-  .terminal-prompt { color: #f4a64b; }
-  .terminal-comment { color: #aab3bd; }
-  .terminal-heading { color: #9dc9f2; }
-  .terminal-brand { color: #d7a9e8; }
-  .terminal-variable { color: #9dc9f2; }
-  .terminal-output { color: #8de0b4; }
-  .terminal-cpu { color: #9dc9f2; }
-  .terminal-note { color: #d9c4a4; }
-  .terminal-warning { color: #ffd47f; }
-  .terminal-fixed { color: #7fd7dc; }
-  .terminal-success { color: #8de0b4; }
-
-  @keyframes terminal-line-in {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .release-console__code { scroll-behavior: auto; }
-    .terminal-line { opacity: 1; transform: none; animation: none; }
-  }
-</style>
-
-<script>
-  const releaseLines = document.querySelectorAll<HTMLElement>(".release-console__code .terminal-line");
-  releaseLines.forEach((line, index) => {
-    line.style.setProperty("--line-delay", `${index * 42}ms`);
-  });
-</script>

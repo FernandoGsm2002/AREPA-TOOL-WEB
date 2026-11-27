@@ -15,15 +15,15 @@ const labels = locale === "es"
 <aside class="xiaomi-announcement" aria-label={copy.announcement.aria} data-xiaomi-announcement>
   <div class="xiaomi-announcement__inner">
     <div class="xiaomi-announcement__main">
-      <img class="xiaomi-announcement__art" src="/pngs/xiaomi-arepa-christmas.png" alt="" width="144" height="144" />
+      <img class="xiaomi-announcement__art" src="/pngs/xiaomi-arepa-christmas.webp" alt="" width="144" height="144" />
       <div class="xiaomi-announcement__copy">
         <p><strong>{copy.announcement.text}</strong></p>
         <p class="xiaomi-announcement__subline">{copy.announcement.brands}</p>
       </div>
     </div>
     <div class="xiaomi-announcement__details">
-    <div class="xiaomi-announcement__facts" aria-live="polite">
-      <span class="xiaomi-announcement__fact" data-xiaomi-status><Server className="size-5" aria-hidden="true" /><span>{labels.checking}</span></span>
+    <div class="xiaomi-announcement__facts">
+      <span class="xiaomi-announcement__fact" data-xiaomi-status role="status"><Server className="size-5" aria-hidden="true" /><span>{labels.checking}</span></span>
       <span class="xiaomi-announcement__fact" data-xiaomi-price><Tag className="size-5" aria-hidden="true" /><span>{labels.price}: —</span></span>
       <span class="xiaomi-announcement__fact" data-xiaomi-cooldown><Clock3 className="size-5" aria-hidden="true" /><span>{labels.cooldown}: —</span></span>
     </div>

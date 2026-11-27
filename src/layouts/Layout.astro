@@ -1,14 +1,17 @@
 ---
 import '../styles/global.css';
+import '../styles/marketing.css';
+import { marketingCopy } from '@/lib/marketing-copy';
 import { localeFromPath, type Locale } from "@/lib/i18n";
 
 interface Props {
   title: string;
   description: string;
   locale?: Locale;
+  marketing?: boolean;
 }
 
-const { title, description, locale = localeFromPath(Astro.url.pathname) } = Astro.props;
+const { title, description, locale = localeFromPath(Astro.url.pathname), marketing = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -48,7 +51,8 @@ const { title, description, locale = localeFromPath(Astro.url.pathname) } = Astr
 
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   </head>
-  <body class="site-body christmas-site bg-background text-foreground font-sans antialiased">
+  <body class:list={["site-body bg-background text-foreground font-sans antialiased", marketing ? "marketing-site" : "christmas-site"]}>
+    {marketing && <a class="skip-link" href="#main-content">{marketingCopy[locale].skip}</a>}
     <slot />
   </body>
 </html>

@@ -1,7 +1,6 @@
 ---
-import { UserPlus, LogIn } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { WhatsAppIcon } from "@/components/icons/BrandIcons";
+import { UserPlus, LogIn, ChevronDown } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import MobileNav from "./MobileNav";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { getLocaleCopy, getNavLinks, localeFromPath, localizedPath, withoutLocale, type Locale } from "@/lib/i18n";
@@ -13,18 +12,21 @@ interface Props {
 const locale = Astro.props.locale ?? localeFromPath(Astro.url.pathname);
 const currentPath = withoutLocale(Astro.url.pathname);
 const copy = getLocaleCopy(locale);
-const navLinks = getNavLinks(locale);
+const allLinks = getNavLinks(locale);
+const navLinks = ['/', '/supportedmodels', '/pricing', '/resellers'].map(path => allLinks.find(link => link.href === path)!);
+const resourceLinks = allLinks.filter(link => !navLinks.includes(link));
+const resourceLabel = locale === 'es' ? 'Recursos' : locale === 'pt-br' ? 'Recursos' : 'Resources';
 ---
 
 <header class="site-header">
   <div class="site-container site-nav-inner">
     <a href={localizedPath(locale, "/")} class="site-brand">
       <span class="site-brand-logo" aria-hidden="true">
-        <img src="/pngs/arepatool-logo-mark.png" alt="" />
+        <img src="/pngs/arepatool-logo-mark.webp" alt="" />
       </span>
       <span class="site-brand-copy">
         <strong>ArepaTool</strong>
-        <span>MDM Tool</span>
+        <span>Mobile service tools</span>
       </span>
     </a>
 
@@ -42,18 +44,14 @@ const navLinks = getNavLinks(locale);
           </a>
         ))
       }
+      <details class="nav-resources">
+        <summary>{resourceLabel}<ChevronDown size={14} /></summary>
+        <div>{resourceLinks.map(link => <a href={localizedPath(locale, link.href)} aria-current={currentPath === link.href ? 'page' : undefined}>{link.label}</a>)}</div>
+      </details>
     </nav>
 
     <div class="site-nav-actions">
       <LanguageSwitcher locale={locale} />
-      <Button
-        data-open-wa
-        className="site-nav-whatsapp bg-[#25D366] text-white shadow-lg shadow-[#25D366]/15 hover:bg-[#1ea952]"
-        size="sm"
-      >
-        <WhatsAppIcon className="size-4" />
-        {copy.nav.whatsapp}
-      </Button>
       <a
         href="/login"
         class={`site-nav-login ${buttonVariants({ size: "sm", variant: "outline" })}`}
@@ -73,3 +71,16 @@ const navLinks = getNavLinks(locale);
     <MobileNav client:load locale={locale} />
   </div>
 </header>
+
+<script>
+  const resourceMenu = document.querySelector<HTMLDetailsElement>('.nav-resources');
+  document.addEventListener('click', (event) => {
+    if (resourceMenu && event.target instanceof Node && !resourceMenu.contains(event.target)) resourceMenu.open = false;
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && resourceMenu?.open) {
+      resourceMenu.open = false;
+      resourceMenu.querySelector('summary')?.focus();
+    }
+  });
+</script>

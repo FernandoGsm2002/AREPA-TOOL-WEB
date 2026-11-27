@@ -23,19 +23,19 @@ export default function MobileNav({ locale }: { locale: Locale }) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="site-mobile-nav-trigger" aria-label="Abrir menú">
+        <Button variant="ghost" size="icon" className="site-mobile-nav-trigger" aria-label={locale === "en" ? "Open menu" : locale === "pt-br" ? "Abrir menu" : "Abrir menú"}>
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-72">
+      <SheetContent side="right" className="w-80 max-w-[90vw] overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="mobile-sheet-brand">
             <span className="mobile-sheet-brand__logo" aria-hidden="true">
-              <img src="/pngs/arepatool-logo-mark.png" alt="" />
+              <img src="/pngs/arepatool-logo-mark.webp" alt="" />
             </span>
             <span>
               <strong>ArepaTool</strong>
-              <small>MDM Tool</small>
+              <small>Mobile service tools</small>
             </span>
           </SheetTitle>
         </SheetHeader>

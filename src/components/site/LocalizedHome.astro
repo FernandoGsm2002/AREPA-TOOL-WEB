@@ -9,6 +9,7 @@ import Pricing from "@/components/site/Pricing.astro";
 import Footer from "@/components/site/Footer.astro";
 import WhatsAppModal from "@/components/site/WhatsAppModal";
 import UpdateLaunchModal from "@/components/site/UpdateLaunchModal";
+import HomeGuide from "./HomeGuide.astro";
 import type { Locale } from "@/lib/i18n";
 
 interface Props { locale: Locale; }
@@ -20,13 +21,17 @@ const metadata = {
 }[locale];
 ---
 
-<Layout title={metadata.title} description={metadata.description} locale={locale}>
+<Layout title={metadata.title} description={metadata.description} locale={locale} marketing>
   <Navbar locale={locale} />
-  <AnnouncementBanner locale={locale} />
-  <main class="landing-shell"><Hero locale={locale} /></main>
-  <BrandMarquee />
-  <ReleaseConsole locale={locale} />
-  <Pricing locale={locale} />
+  <main id="main-content">
+    <Hero locale={locale} />
+    <BrandMarquee />
+    <AnnouncementBanner locale={locale} />
+    <HomeGuide locale={locale} part="resources" />
+    <Pricing locale={locale} />
+    <ReleaseConsole locale={locale} />
+    <HomeGuide locale={locale} part="start" />
+  </main>
   <Footer locale={locale} />
   <WhatsAppModal client:load locale={locale} />
   <UpdateLaunchModal client:load locale={locale} />
