@@ -455,17 +455,6 @@ export const resellers: Reseller[] = [
     ],
   },
   {
-    name: "JavierBaronGSM",
-    logo: "/pngs/javierbarongsm.png",
-    region: "Worldwide",
-    details: "Payments: BINANCE",
-    role: "reseller",
-    links: [
-      { icon: "globe", href: "https://javierbarongsm.com" },
-      { icon: "whatsapp", href: "https://wa.me/15419309244" },
-    ],
-  },
-  {
     name: "Elmexicanounlock.com",
     logo: "/pngs/elmexicanounlock.jpeg",
     region: "México",
