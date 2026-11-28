@@ -444,17 +444,6 @@ export const resellers: Reseller[] = [
     ],
   },
   {
-    name: "Ohidera Unlocker",
-    logo: "/pngs/ohideraunlocker.jpg",
-    region: "Worldwide",
-    details: "Payments: USDT - BINANCE",
-    role: "reseller",
-    links: [
-      { icon: "globe", href: "https://ohideraunlocker.com" },
-      { icon: "whatsapp", href: "https://wa.me/+8801660122234" },
-    ],
-  },
-  {
     name: "Elmexicanounlock.com",
     logo: "/pngs/elmexicanounlock.jpeg",
     region: "México",
